@@ -88,7 +88,7 @@ export abstract class BaseProtocolAdapter implements IProtocolAdapter {
   async initialize(provider: ethers.Provider, config: BenchmarkConfig): Promise<void> {
     this.provider = provider;
     this.config = config;
-    
+
     // Get a signer from the provider
     if ("getSigner" in provider) {
       this.signer = await (provider as ethers.JsonRpcProvider).getSigner();
@@ -119,7 +119,6 @@ export abstract class BaseProtocolAdapter implements IProtocolAdapter {
   }
 
   async cleanup(): Promise<void> {
-    // Base cleanup - can be overridden
     this.provider = undefined;
     this.config = undefined;
     this.signer = undefined;

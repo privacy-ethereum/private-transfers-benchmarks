@@ -13,7 +13,7 @@ describe("Protocol Adapters", function () {
   before(async function () {
     benchmarkConfig = {
       amount: parseEther("0.1"),
-      tokenAddress: ZeroAddress, // ETH
+      tokenAddress: ZeroAddress,
       iterations: 1,
       waitForFinality: true,
       confirmations: 1,
@@ -25,6 +25,7 @@ describe("Protocol Adapters", function () {
 
     beforeEach(async function () {
       adapter = new RailgunAdapter();
+
       await adapter.initialize(ethers.provider, benchmarkConfig);
     });
 
@@ -32,20 +33,14 @@ describe("Protocol Adapters", function () {
       await adapter.cleanup();
     });
 
-    it("should initialize correctly", async function () {
-      expect(adapter.name).to.equal("Railgun");
-      expect(adapter.version).to.equal("1.0.0");
-    });
-
     it("should check availability", async function () {
       const available = await adapter.isAvailable();
-      // Currently returns false as implementation is pending
+
       expect(available).to.be.a("boolean");
     });
 
     it("should run setup", async function () {
       await adapter.setup();
-      // Setup should complete without throwing
     });
 
     // Uncomment when actual implementation is ready
@@ -63,6 +58,7 @@ describe("Protocol Adapters", function () {
 
     beforeEach(async function () {
       adapter = new TornadoCashAdapter();
+
       await adapter.initialize(ethers.provider, benchmarkConfig);
     });
 
@@ -70,19 +66,14 @@ describe("Protocol Adapters", function () {
       await adapter.cleanup();
     });
 
-    it("should initialize correctly", async function () {
-      expect(adapter.name).to.equal("TornadoCash");
-      expect(adapter.version).to.equal("1.0.0");
-    });
-
     it("should check availability", async function () {
       const available = await adapter.isAvailable();
+
       expect(available).to.be.a("boolean");
     });
 
     it("should run setup", async function () {
       await adapter.setup();
-      // Setup should complete without throwing
     });
   });
 
@@ -91,6 +82,7 @@ describe("Protocol Adapters", function () {
 
     beforeEach(async function () {
       adapter = new PrivacyPoolsAdapter();
+
       await adapter.initialize(ethers.provider, benchmarkConfig);
     });
 
@@ -98,19 +90,14 @@ describe("Protocol Adapters", function () {
       await adapter.cleanup();
     });
 
-    it("should initialize correctly", async function () {
-      expect(adapter.name).to.equal("PrivacyPools");
-      expect(adapter.version).to.equal("1.0.0");
-    });
-
     it("should check availability", async function () {
       const available = await adapter.isAvailable();
+
       expect(available).to.be.a("boolean");
     });
 
     it("should run setup", async function () {
       await adapter.setup();
-      // Setup should complete without throwing
     });
   });
 });

@@ -6,7 +6,7 @@ import { BenchmarkResult, BenchmarkScenario } from "../types/benchmark";
 export function formatGasMetrics(result: BenchmarkResult): string {
   const gasUsed = result.gas.gasUsed.toString();
   const gasCostEth = Number(result.gas.totalCost) / 1e18;
-  
+
   return `Gas Used: ${gasUsed}, Cost: ${gasCostEth.toFixed(6)} ETH`;
 }
 
@@ -17,7 +17,7 @@ export function formatProofMetrics(result: BenchmarkResult): string {
   if (!result.proof) {
     return "No proof metrics available";
   }
-  
+
   return `Proof Time: ${result.proof.generationTimeMs}ms, Size: ${result.proof.proofSizeBytes} bytes`;
 }
 
@@ -26,7 +26,7 @@ export function formatProofMetrics(result: BenchmarkResult): string {
  */
 export function calculateAverageGas(results: BenchmarkResult[]): bigint {
   if (results.length === 0) return BigInt(0);
-  
+
   const total = results.reduce((sum, r) => sum + r.gas.gasUsed, BigInt(0));
   return total / BigInt(results.length);
 }
@@ -36,8 +36,9 @@ export function calculateAverageGas(results: BenchmarkResult[]): bigint {
  */
 export function calculateAverageProofTime(results: BenchmarkResult[]): number {
   const withProofs = results.filter(r => r.proof !== undefined);
+
   if (withProofs.length === 0) return 0;
-  
+
   const total = withProofs.reduce((sum, r) => sum + (r.proof?.generationTimeMs || 0), 0);
   return total / withProofs.length;
 }
@@ -47,7 +48,7 @@ export function calculateAverageProofTime(results: BenchmarkResult[]): number {
  */
 export function calculateAverageFinalityTime(results: BenchmarkResult[]): number {
   if (results.length === 0) return 0;
-  
+
   const total = results.reduce((sum, r) => sum + r.finality.finalityTimeMs, 0);
   return total / results.length;
 }
@@ -60,7 +61,9 @@ export function groupByScenario(results: BenchmarkResult[]): Record<BenchmarkSce
     if (!acc[result.scenario]) {
       acc[result.scenario] = [];
     }
+
     acc[result.scenario].push(result);
+
     return acc;
   }, {} as Record<BenchmarkScenario, BenchmarkResult[]>);
 }
@@ -80,10 +83,10 @@ export function exportToJSON(results: BenchmarkResult[]): string {
 export function generateSummaryReport(results: BenchmarkResult[]): string {
   const grouped = groupByScenario(results);
   let report = "=== Benchmark Summary ===\n\n";
-  
+
   for (const [scenario, scenarioResults] of Object.entries(grouped)) {
     if (scenarioResults.length === 0) continue;
-    
+
     report += `${scenario.toUpperCase()}:\n`;
     report += `  Runs: ${scenarioResults.length}\n`;
     report += `  Avg Gas: ${calculateAverageGas(scenarioResults)}\n`;
@@ -91,6 +94,6 @@ export function generateSummaryReport(results: BenchmarkResult[]): string {
     report += `  Avg Finality: ${calculateAverageFinalityTime(scenarioResults).toFixed(2)}ms\n`;
     report += "\n";
   }
-  
+
   return report;
 }
