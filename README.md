@@ -2,6 +2,8 @@
 
 A comprehensive benchmarking suite for evaluating and comparing private transfer protocols on Ethereum. This repository provides a standardized framework for measuring gas costs, proof generation times, and finality across different privacy-preserving protocols.
 
+> 🚀 **New here?** Check out the [Quick Start Guide](QUICKSTART.md) to get up and running in 5 minutes!
+
 ## 🎯 Overview
 
 This project benchmarks three major private transfer protocols:
