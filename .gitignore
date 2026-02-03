@@ -137,3 +137,17 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Hardhat
+cache/
+artifacts/
+typechain-types/
+
+# pnpm
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+
+# Test outputs
+gas-report.txt
