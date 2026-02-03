@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8.15.0
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+    
+    - name: Install dependencies
+      run: pnpm install
+    
+    - name: TypeScript type checking
+      run: pnpm typecheck
+    
+    - name: Lint
+      run: pnpm lint
+    
+    - name: Compile contracts
+      run: pnpm compile
+    
+    - name: Run tests
+      run: pnpm test
+      env:
+        REPORT_GAS: false
+    
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      if: matrix.node-version == '20.x'
+      with:
+        files: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella

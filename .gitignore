@@ -151,3 +151,6 @@ dist/
 
 # Test outputs
 gas-report.txt
+
+# Benchmark results
+benchmark-results/

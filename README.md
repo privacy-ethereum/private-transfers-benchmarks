@@ -82,6 +82,20 @@ REPORT_GAS=true
 
 ## 🧪 Running Benchmarks
 
+### Run Benchmark Script
+
+Run all protocol benchmarks and generate reports:
+
+```bash
+pnpm benchmark
+```
+
+This will:
+- Run benchmarks for all available protocols
+- Generate JSON results file with detailed metrics
+- Create a summary report
+- Save results to `benchmark-results/` directory
+
 ### Run All Tests
 
 ```bash
