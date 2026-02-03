@@ -149,15 +149,7 @@ export class YourProtocolAdapter extends BaseProtocolAdapter {
 }
 ```
 
-### 3. Create Index File
-
-Create `adapters/your-protocol/index.ts`:
-
-```typescript
-export { YourProtocolAdapter } from "./YourProtocolAdapter";
-```
-
-### 4. Add to Main Adapter Index
+### 3. Add to Main Adapter Index
 
 Update `adapters/index.ts`:
 
@@ -165,7 +157,7 @@ Update `adapters/index.ts`:
 export { YourProtocolAdapter } from "./your-protocol";
 ```
 
-### 5. Add Tests
+### 4. Add Tests
 
 Create tests in `test/your-protocol.test.ts`:
 
@@ -207,12 +199,6 @@ describe("YourProtocol Adapter", function () {
 });
 ```
 
-### 6. Update Documentation
-
-- Add your protocol to the README.md
-- Document any specific requirements or configuration
-- Add links to protocol documentation
-
 ## Testing Guidelines
 
 ### Test Structure
@@ -243,54 +229,6 @@ REPORT_GAS=true pnpm test
 # Run in parallel
 pnpm test:parallel
 ```
-
-## Code Style
-
-### TypeScript Guidelines
-
-1. **Type Safety**: Use explicit types, avoid `any`
-2. **Async/Await**: Prefer async/await over promises
-3. **Error Handling**: Always handle errors appropriately
-4. **Comments**: Add JSDoc comments for public APIs
-
-### Naming Conventions
-
-- **Files**: PascalCase for classes, kebab-case for utilities
-- **Classes**: PascalCase
-- **Functions**: camelCase
-- **Constants**: UPPER_SNAKE_CASE
-- **Interfaces**: PascalCase with `I` prefix
-
-### Formatting
-
-We use ESLint for code formatting. Run:
-
-```bash
-pnpm lint:fix
-```
-
-## Pull Request Process
-
-1. **Update Documentation**: Ensure README and other docs are updated
-2. **Add Tests**: Include tests for new functionality
-3. **Pass All Checks**: Ensure typecheck, lint, and tests pass
-4. **Clear Description**: Write a clear PR description explaining:
-   - What changes were made
-   - Why the changes were needed
-   - How to test the changes
-
-5. **Small PRs**: Keep PRs focused on a single feature or fix
-6. **Respond to Feedback**: Address review comments promptly
-
-### PR Checklist
-
-- [ ] Code follows the style guidelines
-- [ ] Tests added/updated and passing
-- [ ] Documentation updated
-- [ ] TypeScript checks pass (`pnpm typecheck`)
-- [ ] Linting passes (`pnpm lint`)
-- [ ] Commit messages are clear and descriptive
-
 ## Questions?
 
 If you have questions or need help, feel free to:

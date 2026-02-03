@@ -1,1 +1,0 @@
-export { PrivacyPoolsAdapter } from "./PrivacyPoolsAdapter";

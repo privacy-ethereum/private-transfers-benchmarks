@@ -1,35 +1,35 @@
-import { BaseProtocolAdapter } from "../../src/interfaces/IProtocolAdapter";
-import { BenchmarkResult, BenchmarkScenario } from "../../src/types/benchmark";
+import { BaseProtocolAdapter } from "../../interfaces/IProtocolAdapter";
+import { BenchmarkResult, BenchmarkScenario } from "../../types/benchmark";
 import { ethers } from "ethers";
 
 /**
- * Adapter for Privacy Pools protocol
- * 
- * Privacy Pools is a privacy-enhancing protocol that allows users to
- * prove dissociation from known bad actors while maintaining privacy.
- * 
- * @see https://github.com/ameensol/privacy-pools
+ * Adapter for Tornado Cash protocol
+ *
+ * Tornado Cash is a privacy solution that uses zero-knowledge proofs
+ * to break the on-chain link between source and destination addresses.
+ *
+ * @see https://tornado.cash/
  */
-export class PrivacyPoolsAdapter extends BaseProtocolAdapter {
-  readonly name = "PrivacyPools";
+export class TornadoCashAdapter extends BaseProtocolAdapter {
+  readonly name = "TornadoCash";
   readonly version = "1.0.0";
 
   async setup(): Promise<void> {
-    // TODO: Implement Privacy Pools-specific setup
-    // - Connect to Privacy Pools contracts
-    // - Set up association set tracking
-    // - Initialize merkle tree structures
+    // TODO: Implement Tornado Cash-specific setup
+    // - Connect to Tornado Cash contracts
+    // - Set up deposit/withdrawal circuits
+    // - Prepare merkle tree tracking
     console.log(`Setting up ${this.name} adapter...`);
   }
 
   async benchmarkShield(): Promise<BenchmarkResult> {
-    // TODO: Implement deposit operation for Privacy Pools
-    // - Generate deposit commitment
+    // TODO: Implement deposit operation for Tornado Cash
+    // - Generate commitment
     // - Execute deposit transaction
     // - Measure gas and timing
-    
+
     console.log(`${this.name}: Benchmarking shield (deposit) operation...`);
-    
+
     const startProof = Date.now();
     // Commitment generation would happen here
     const proofTime = Date.now() - startProof;
@@ -46,7 +46,7 @@ export class PrivacyPoolsAdapter extends BaseProtocolAdapter {
       gas: this.getGasMetrics(receipt),
       proof: {
         generationTimeMs: proofTime,
-        proofSizeBytes: 0, // TODO: Measure actual proof size
+        proofSizeBytes: 0, // TODO: Measure actual commitment size
         publicInputsSizeBytes: 0,
       },
       finality: {
@@ -63,15 +63,13 @@ export class PrivacyPoolsAdapter extends BaseProtocolAdapter {
   }
 
   async benchmarkSend(): Promise<BenchmarkResult> {
-    // TODO: Implement transfer operation for Privacy Pools
-    // - Generate association set proof
-    // - Execute transfer with privacy guarantees
-    // - Measure gas and timing
-    
-    console.log(`${this.name}: Benchmarking send operation...`);
-    
+    // NOTE: Tornado Cash doesn't have a direct "send" operation
+    // The protocol works with fixed denominations and pools
+    // This could be implemented as a deposit + withdrawal sequence
+
+    console.log(`${this.name}: Send operation not directly supported (using deposit+withdraw)...`);
+
     const startProof = Date.now();
-    // Association set proof generation would happen here
     const proofTime = Date.now() - startProof;
 
     const tx = await this.sendPlaceholderTransaction();
@@ -98,20 +96,21 @@ export class PrivacyPoolsAdapter extends BaseProtocolAdapter {
       timestamp: Date.now(),
       metadata: {
         implementation: "placeholder",
+        note: "Tornado Cash uses deposit+withdraw for transfers",
       },
     };
   }
 
   async benchmarkUnshield(): Promise<BenchmarkResult> {
-    // TODO: Implement withdrawal operation for Privacy Pools
-    // - Generate withdrawal proof with association set
-    // - Execute withdrawal transaction
+    // TODO: Implement withdrawal operation for Tornado Cash
+    // - Generate withdrawal proof (zk-SNARK)
+    // - Execute withdrawal transaction with proof
     // - Measure gas and timing
-    
+
     console.log(`${this.name}: Benchmarking unshield (withdraw) operation...`);
-    
+
     const startProof = Date.now();
-    // Withdrawal proof generation would happen here
+    // zk-SNARK proof generation would happen here
     const proofTime = Date.now() - startProof;
 
     const tx = await this.sendPlaceholderTransaction();
@@ -143,13 +142,14 @@ export class PrivacyPoolsAdapter extends BaseProtocolAdapter {
   }
 
   async isAvailable(): Promise<boolean> {
-    // TODO: Check if Privacy Pools contracts are deployed on current network
+    // TODO: Check if Tornado Cash contracts are deployed on current network
+    // Note: Tornado Cash may not be available on all networks due to regulatory concerns
     return false;
   }
 
   /**
    * Placeholder method for sending a simple transaction
-   * This will be replaced with actual Privacy Pools operations
+   * This will be replaced with actual Tornado Cash operations
    */
   private async sendPlaceholderTransaction(): Promise<ethers.TransactionResponse> {
     if (!this.signer) {

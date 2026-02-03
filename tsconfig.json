@@ -23,7 +23,7 @@
   "include": [
     "src/**/*",
     "test/**/*",
-    "adapters/**/*",
+    "src/adapters/**/*",
     "hardhat.config.ts"
   ],
   "exclude": [

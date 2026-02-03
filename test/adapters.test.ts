@@ -1,20 +1,19 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { RailgunAdapter } from "../adapters/railgun";
-import { TornadoCashAdapter } from "../adapters/tornado-cash";
-import { PrivacyPoolsAdapter } from "../adapters/privacy-pools";
+import { RailgunAdapter, TornadoCashAdapter, PrivacyPoolsAdapter } from "../src/adapters";
 import { BenchmarkConfig } from "../src/interfaces/IProtocolAdapter";
+import { parseEther, ZeroAddress } from "ethers";
 
 describe("Protocol Adapters", function () {
-  // Increase timeout for proof generation
+  // Increase default timeout for proof generation
   this.timeout(120000);
 
   let benchmarkConfig: BenchmarkConfig;
 
   before(async function () {
     benchmarkConfig = {
-      amount: ethers.parseEther("0.1"),
-      tokenAddress: ethers.ZeroAddress, // ETH
+      amount: parseEther("0.1"),
+      tokenAddress: ZeroAddress, // ETH
       iterations: 1,
       waitForFinality: true,
       confirmations: 1,

@@ -2,15 +2,6 @@
 
 A comprehensive benchmarking suite for evaluating and comparing private transfer protocols on Ethereum. This repository provides a standardized framework for measuring gas costs, proof generation times, and finality across different privacy-preserving protocols.
 
-> 🚀 **New here?** Check out the [Quick Start Guide](QUICKSTART.md) to get up and running in 5 minutes!
-
-## 🎯 Overview
-
-This project benchmarks three major private transfer protocols:
-- **Railgun** - Zero-knowledge privacy system for private transfers and DeFi
-- **Tornado Cash** - Privacy solution using zk-SNARKs for unlinkable transactions
-- **Privacy Pools** - Enhanced privacy with provable dissociation from bad actors
-
 ## 📊 Metrics Measured
 
 For each protocol, we measure three core scenarios:
@@ -34,7 +25,7 @@ For each protocol, we measure three core scenarios:
 
 ```
 private-transfers-benchmarks/
-├── adapters/                    # Protocol-specific implementations
+├── adapters/                   # Protocol-specific implementations
 │   ├── railgun/                # Railgun adapter
 │   ├── tornado-cash/           # Tornado Cash adapter
 │   └── privacy-pools/          # Privacy Pools adapter
@@ -53,8 +44,8 @@ private-transfers-benchmarks/
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
-- pnpm >= 8.0.0
+- Node.js >= 20.0.0
+- pnpm >= 8.15.0
 
 ### Installation
 
@@ -68,19 +59,7 @@ pnpm install
 
 ### Configuration
 
-Create a `.env` file in the root directory:
-
-```env
-# Optional: Fork from a specific network
-FORK_ENABLED=false
-SEPOLIA_RPC_URL=https://rpc.sepolia.org
-
-# Optional: For mainnet testing (not recommended for benchmarks)
-PRIVATE_KEY=your_private_key_here
-
-# Optional: Enable gas reporting
-REPORT_GAS=true
-```
+Create a `.env` file in the root directory following `env.example`
 
 ## 🧪 Running Benchmarks
 
@@ -129,64 +108,6 @@ pnpm hardhat test test/adapters.test.ts --grep "Privacy Pools"
 REPORT_GAS=true pnpm test
 ```
 
-## 📝 Development
-
-### Adding a New Protocol Adapter
-
-1. Create a new directory under `adapters/`:
-```bash
-mkdir adapters/your-protocol
-```
-
-2. Create an adapter class extending `BaseProtocolAdapter`:
-```typescript
-import { BaseProtocolAdapter } from "../../src/interfaces/IProtocolAdapter";
-import { BenchmarkResult, BenchmarkScenario } from "../../src/types/benchmark";
-
-export class YourProtocolAdapter extends BaseProtocolAdapter {
-  readonly name = "YourProtocol";
-  readonly version = "1.0.0";
-
-  async setup(): Promise<void> {
-    // Protocol-specific setup
-  }
-
-  async benchmarkShield(): Promise<BenchmarkResult> {
-    // Implement shield/deposit logic
-  }
-
-  async benchmarkSend(): Promise<BenchmarkResult> {
-    // Implement private transfer logic
-  }
-
-  async benchmarkUnshield(): Promise<BenchmarkResult> {
-    // Implement unshield/withdraw logic
-  }
-
-  async isAvailable(): Promise<boolean> {
-    // Check if protocol is available on current network
-  }
-}
-```
-
-3. Export your adapter in `adapters/index.ts`
-
-### Type Checking
-
-```bash
-pnpm typecheck
-```
-
-### Linting
-
-```bash
-# Check for issues
-pnpm lint
-
-# Auto-fix issues
-pnpm lint:fix
-```
-
 ## 🔬 Testing Strategy
 
 - **Local Testnet**: All tests run on Hardhat's local network
@@ -223,32 +144,8 @@ interface BenchmarkResult {
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please ensure:
-
-1. All tests pass: `pnpm test`
-2. Code is properly typed: `pnpm typecheck`
-3. Code follows style guidelines: `pnpm lint`
-4. New adapters include comprehensive tests
-
-## ⚠️ Current Status
-
-This repository is in active development. The adapter implementations are currently placeholders and need to be completed with actual protocol integrations.
-
-### TODO:
-- [ ] Implement actual Railgun integration
-- [ ] Implement actual Tornado Cash integration
-- [ ] Implement actual Privacy Pools integration
-- [ ] Add comparative reporting across protocols
-- [ ] Add visualization of benchmark results
-- [ ] Add CI/CD pipeline for automated benchmarking
+Contributions are welcome! Read more in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## 📄 License
 
 MIT License - See [LICENSE](LICENSE) file for details
-
-## 🔗 Resources
-
-- [Railgun Documentation](https://docs.railgun.org/)
-- [Tornado Cash Documentation](https://docs.tornado.cash/)
-- [Privacy Pools Paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4563364)
-- [Hardhat Documentation](https://hardhat.org/docs)
