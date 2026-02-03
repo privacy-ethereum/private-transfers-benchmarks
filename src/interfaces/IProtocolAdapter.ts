@@ -1,4 +1,4 @@
-import { BenchmarkResult, BenchmarkScenario } from "../types/benchmark";
+import { BenchmarkResult } from "../types/benchmark";
 import { ethers } from "ethers";
 
 /**

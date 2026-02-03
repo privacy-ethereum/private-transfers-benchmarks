@@ -9,12 +9,9 @@ describe("Protocol Adapters", function () {
   // Increase timeout for proof generation
   this.timeout(120000);
 
-  let provider: ethers.Provider;
   let benchmarkConfig: BenchmarkConfig;
 
   before(async function () {
-    provider = ethers.provider;
-    
     benchmarkConfig = {
       amount: ethers.parseEther("0.1"),
       tokenAddress: ethers.ZeroAddress, // ETH
@@ -29,7 +26,7 @@ describe("Protocol Adapters", function () {
 
     beforeEach(async function () {
       adapter = new RailgunAdapter();
-      await adapter.initialize(provider, benchmarkConfig);
+      await adapter.initialize(ethers.provider, benchmarkConfig);
     });
 
     afterEach(async function () {
@@ -48,7 +45,8 @@ describe("Protocol Adapters", function () {
     });
 
     it("should run setup", async function () {
-      await expect(adapter.setup()).to.not.be.rejected;
+      await adapter.setup();
+      // Setup should complete without throwing
     });
 
     // Uncomment when actual implementation is ready
@@ -66,7 +64,7 @@ describe("Protocol Adapters", function () {
 
     beforeEach(async function () {
       adapter = new TornadoCashAdapter();
-      await adapter.initialize(provider, benchmarkConfig);
+      await adapter.initialize(ethers.provider, benchmarkConfig);
     });
 
     afterEach(async function () {
@@ -84,7 +82,8 @@ describe("Protocol Adapters", function () {
     });
 
     it("should run setup", async function () {
-      await expect(adapter.setup()).to.not.be.rejected;
+      await adapter.setup();
+      // Setup should complete without throwing
     });
   });
 
@@ -93,7 +92,7 @@ describe("Protocol Adapters", function () {
 
     beforeEach(async function () {
       adapter = new PrivacyPoolsAdapter();
-      await adapter.initialize(provider, benchmarkConfig);
+      await adapter.initialize(ethers.provider, benchmarkConfig);
     });
 
     afterEach(async function () {
@@ -111,7 +110,8 @@ describe("Protocol Adapters", function () {
     });
 
     it("should run setup", async function () {
-      await expect(adapter.setup()).to.not.be.rejected;
+      await adapter.setup();
+      // Setup should complete without throwing
     });
   });
 });

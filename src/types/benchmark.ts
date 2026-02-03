@@ -38,7 +38,7 @@ export interface ProofMetrics {
  */
 export interface FinalityMetrics {
   /** Block number where transaction was included */
-  blockNumber: bigint;
+  blockNumber: number;
   /** Transaction hash */
   transactionHash: string;
   /** Number of confirmations waited for */
