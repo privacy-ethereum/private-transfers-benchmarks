@@ -143,8 +143,6 @@ cache/
 artifacts/
 typechain-types/
 
-# pnpm
-pnpm-lock.yaml
 
 # Build outputs
 dist/
