@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { RailgunAdapter, TornadoCashAdapter, PrivacyPoolsAdapter } from "../src/adapters";
+import { RailgunAdapter } from "../src/adapters";
 import { BenchmarkConfig } from "../src/interfaces/IProtocolAdapter";
 import { parseEther, ZeroAddress } from "ethers";
 
@@ -25,63 +25,6 @@ describe("Protocol Adapters", function () {
 
     beforeEach(async function () {
       adapter = new RailgunAdapter();
-
-      await adapter.initialize(ethers.provider, benchmarkConfig);
-    });
-
-    afterEach(async function () {
-      await adapter.cleanup();
-    });
-
-    it("should check availability", async function () {
-      const available = await adapter.isAvailable();
-
-      expect(available).to.be.a("boolean");
-    });
-
-    it("should run setup", async function () {
-      await adapter.setup();
-    });
-
-    // Uncomment when actual implementation is ready
-    // it("should benchmark shield operation", async function () {
-    //   await adapter.setup();
-    //   const result = await adapter.benchmarkShield();
-    //   expect(result.scenario).to.equal(BenchmarkScenario.SHIELD);
-    //   expect(result.protocol).to.equal("Railgun");
-    //   expect(result.gas.gasUsed).to.be.greaterThan(BigInt(0));
-    // });
-  });
-
-  describe("Tornado Cash Adapter", function () {
-    let adapter: TornadoCashAdapter;
-
-    beforeEach(async function () {
-      adapter = new TornadoCashAdapter();
-
-      await adapter.initialize(ethers.provider, benchmarkConfig);
-    });
-
-    afterEach(async function () {
-      await adapter.cleanup();
-    });
-
-    it("should check availability", async function () {
-      const available = await adapter.isAvailable();
-
-      expect(available).to.be.a("boolean");
-    });
-
-    it("should run setup", async function () {
-      await adapter.setup();
-    });
-  });
-
-  describe("Privacy Pools Adapter", function () {
-    let adapter: PrivacyPoolsAdapter;
-
-    beforeEach(async function () {
-      adapter = new PrivacyPoolsAdapter();
 
       await adapter.initialize(ethers.provider, benchmarkConfig);
     });

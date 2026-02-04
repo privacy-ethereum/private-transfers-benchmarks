@@ -1,7 +1,5 @@
 // Export all adapters
 export { RailgunAdapter } from "./railgun/RailgunAdapter";
-export { TornadoCashAdapter } from "./tornado-cash/TornadoCashAdapter";
-export { PrivacyPoolsAdapter } from "./privacy-pools/PrivacyPoolsAdapter";
 
 // Export types and interfaces
 export { BenchmarkScenario } from "../types/benchmark";

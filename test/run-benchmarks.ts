@@ -1,4 +1,4 @@
-import { RailgunAdapter, TornadoCashAdapter, PrivacyPoolsAdapter } from "../src/adapters";
+import { RailgunAdapter } from "../src/adapters";
 import { BenchmarkConfig } from "../src/interfaces/IProtocolAdapter";
 import { generateSummaryReport, exportToJSON } from "../src/utils/reporting";
 import * as fs from "fs";
@@ -21,8 +21,6 @@ async function main() {
 
   const adapters = [
     new RailgunAdapter(),
-    new TornadoCashAdapter(),
-    new PrivacyPoolsAdapter(),
   ];
 
   const allResults = [];
