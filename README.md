@@ -59,7 +59,7 @@ pnpm install
 
 ### Configuration
 
-Create a `.env` file in the root directory following `env.example`
+Create a `.env` file in the root directory following `.env.example`
 
 ## 🧪 Running Benchmarks
 
