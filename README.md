@@ -25,11 +25,11 @@ For each protocol, we measure three core scenarios:
 
 ```
 private-transfers-benchmarks/
-├── adapters/                   # Protocol-specific implementations
-│   ├── railgun/                # Railgun adapter
-│   ├── tornado-cash/           # Tornado Cash adapter
-│   └── privacy-pools/          # Privacy Pools adapter
 ├── src/
+│   ├── adapters/               # Protocol-specific implementations
+│   │   ├── railgun/            # Railgun adapter
+│   │   ├── tornado-cash/       # Tornado Cash adapter
+│   │   └── privacy-pools/      # Privacy Pools adapter
 │   ├── interfaces/             # Common interfaces
 │   │   └── IProtocolAdapter.ts # Base adapter interface
 │   ├── types/                  # Type definitions
