@@ -45,7 +45,7 @@ private-transfers-benchmarks/
 
 ### Prerequisites
 
-- Node.js >= 20.0.0
+- Node.js >= 22.0.0
 - pnpm >= 8.15.0
 
 ### Installation

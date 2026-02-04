@@ -4,10 +4,10 @@ export { TornadoCashAdapter } from "./tornado-cash/TornadoCashAdapter";
 export { PrivacyPoolsAdapter } from "./privacy-pools/PrivacyPoolsAdapter";
 
 // Export types and interfaces
+export { BenchmarkScenario } from "../types/benchmark";
 export type { IProtocolAdapter, BenchmarkConfig } from "../interfaces/IProtocolAdapter";
 export type {
   BenchmarkResult,
-  BenchmarkScenario,
   GasMetrics,
   ProofMetrics,
   FinalityMetrics,

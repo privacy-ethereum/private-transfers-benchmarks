@@ -90,7 +90,7 @@ export abstract class BaseProtocolAdapter implements IProtocolAdapter {
     this.config = config;
 
     // Get a signer from the provider
-    if ("getSigner" in provider) {
+    if ("getSigner" in provider && typeof (provider as ethers.JsonRpcProvider).getSigner === "function") {
       this.signer = await (provider as ethers.JsonRpcProvider).getSigner();
     }
   }

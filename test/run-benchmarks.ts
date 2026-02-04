@@ -1,4 +1,3 @@
-
 import { RailgunAdapter, TornadoCashAdapter, PrivacyPoolsAdapter } from "../src/adapters";
 import { BenchmarkConfig } from "../src/interfaces/IProtocolAdapter";
 import { generateSummaryReport, exportToJSON } from "../src/utils/reporting";

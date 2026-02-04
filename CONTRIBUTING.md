@@ -18,12 +18,6 @@ Please be respectful and professional in all interactions. We aim to maintain an
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js >= 18.0.0
-- pnpm >= 8.0.0
-- Basic understanding of Ethereum and zero-knowledge proofs
-
 ### Setup
 
 1. Fork the repository
@@ -79,16 +73,16 @@ To add support for a new privacy protocol:
 ### 1. Create Adapter Directory
 
 ```bash
-mkdir -p adapters/your-protocol
+mkdir -p src/adapters/your-protocol
 ```
 
 ### 2. Implement the Adapter
 
-Create `adapters/your-protocol/YourProtocolAdapter.ts`:
+Create `src/adapters/your-protocol/YourProtocolAdapter.ts`:
 
 ```typescript
-import { BaseProtocolAdapter } from "../../src/interfaces/IProtocolAdapter";
-import { BenchmarkResult, BenchmarkScenario } from "../../src/types/benchmark";
+import { BaseProtocolAdapter } from "../../interfaces/IProtocolAdapter";
+import { BenchmarkResult, BenchmarkScenario } from "../../types/benchmark";
 
 export class YourProtocolAdapter extends BaseProtocolAdapter {
   readonly name = "YourProtocol";
@@ -151,10 +145,10 @@ export class YourProtocolAdapter extends BaseProtocolAdapter {
 
 ### 3. Add to Main Adapter Index
 
-Update `adapters/index.ts`:
+Update `src/adapters/index.ts`:
 
 ```typescript
-export { YourProtocolAdapter } from "./your-protocol";
+export { YourProtocolAdapter } from "../src/adapters/your-protocol/YourProtocolAdapter";
 ```
 
 ### 4. Add Tests
