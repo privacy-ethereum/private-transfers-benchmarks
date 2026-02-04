@@ -40,3 +40,6 @@ jobs:
       run: pnpm test
       env:
         REPORT_GAS: false
+
+    - name: Run benchmarks
+      run: pnpm run benchmark

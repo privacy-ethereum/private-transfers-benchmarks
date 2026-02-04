@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "benchmark": "hardhat run scripts/run-benchmarks.ts"
+    "benchmark": "hardhat run test/run-benchmarks.ts"
   },
   "keywords": [
     "ethereum",

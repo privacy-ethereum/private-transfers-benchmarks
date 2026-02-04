@@ -4,12 +4,13 @@ import { BenchmarkConfig } from "../src/interfaces/IProtocolAdapter";
 import { generateSummaryReport, exportToJSON } from "../src/utils/reporting";
 import * as fs from "fs";
 import * as path from "path";
-import { getDefaultProvider, parseEther, ZeroAddress } from "ethers";
+import { parseEther, ZeroAddress } from "ethers";
+import { ethers } from "hardhat";
 /**
  * Run benchmarks for all protocols
  */
 async function main() {
-  const provider = getDefaultProvider();
+  const provider = ethers.provider;
 
   const config: BenchmarkConfig = {
     amount: parseEther("0.1"),

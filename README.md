@@ -37,6 +37,7 @@ private-transfers-benchmarks/
 │   └── utils/                  # Utility functions
 │       └── reporting.ts        # Report generation utilities
 ├── test/                       # Test files
+│   └── run-benchmarks.ts       # Benchmark runner
 └── hardhat.config.ts          # Hardhat configuration
 ```
 
@@ -133,7 +134,7 @@ interface BenchmarkResult {
     proofSizeBytes: number;
   };
   finality: {
-    blockNumber: bigint;
+    blockNumber: number;
     transactionHash: string;
     confirmations: number;
     finalityTimeMs: number;
