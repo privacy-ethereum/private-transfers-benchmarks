@@ -1,21 +1,5 @@
-import { BenchmarkResult } from "../types/benchmark";
+import type { BenchmarkConfig, BenchmarkResult } from "../types/benchmark.js";
 import { ethers } from "ethers";
-
-/**
- * Configuration for running benchmarks
- */
-export interface BenchmarkConfig {
-  /** Amount to transfer (in wei or smallest token unit) */
-  amount: bigint;
-  /** Token address (use zero address for native ETH) */
-  tokenAddress: string;
-  /** Number of iterations to run for each scenario */
-  iterations: number;
-  /** Whether to wait for finality */
-  waitForFinality: boolean;
-  /** Number of confirmations to wait for */
-  confirmations: number;
-}
 
 /**
  * Base interface that all protocol adapters must implement

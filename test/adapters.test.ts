@@ -1,8 +1,12 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
-import { RailgunAdapter } from "../src/adapters";
-import { BenchmarkConfig } from "../src/interfaces/IProtocolAdapter";
+import hre from "hardhat";
 import { parseEther, ZeroAddress } from "ethers";
+
+import { RailgunAdapter } from "../src/adapters/railgun/RailgunAdapter.js";
+import type { BenchmarkConfig } from "../src/types/benchmark.js";
+
+const { ethers } = await hre.network.connect();
+
 
 describe("Protocol Adapters", function () {
   // Increase default timeout for proof generation

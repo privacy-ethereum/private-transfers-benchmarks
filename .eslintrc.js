@@ -21,5 +21,8 @@ module.exports = {
       "error",
       { argsIgnorePattern: "^_" },
     ],
+    "@typescript-eslint/consistent-type-exports": ["warn", {
+      "fixMissingExportType": true
+    }],
   },
 };

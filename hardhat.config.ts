@@ -1,9 +1,9 @@
-import { HardhatUserConfig } from "hardhat/config";
-import "@nomicfoundation/hardhat-toolbox";
-import "hardhat-gas-reporter";
+import { defineConfig } from "hardhat/config";
+import hardhatToolboxMocheEthers from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
 
-const config: HardhatUserConfig = {
-  solidity: {
+
+export default defineConfig({
+    solidity: {
     version: "0.8.20",
     settings: {
       optimizer: {
@@ -14,32 +14,18 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      // Fork from Sepolia for testing
+      type: "edr-simulated",
       forking: {
-        url: process.env.SEPOLIA_RPC_URL || "https://rpc.sepolia.org",
-        enabled: process.env.FORK_ENABLED === "true",
+        url: process.env.SEPOLIA_RPC_URL || "https://sepolia.gateway.tenderly.co",
       },
-      // Large gas limit for privacy protocol operations
-      gas: 30000000,
+      gas: 30000000, // Large gas limit for privacy protocol operations
       blockGasLimit: 30000000,
     },
     sepolia: {
-      url: process.env.SEPOLIA_RPC_URL || "https://rpc.sepolia.org",
+      type: "http",
+      url: process.env.SEPOLIA_RPC_URL || "https://sepolia.gateway.tenderly.co",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
   },
-  gasReporter: {
-    enabled: process.env.REPORT_GAS === "true",
-    currency: "USD",
-    outputFile: "gas-report.txt",
-    noColors: true,
-  },
-  paths: {
-    sources: "./contracts",
-    tests: "./test",
-    cache: "./cache",
-    artifacts: "./artifacts",
-  },
-};
-
-export default config;
+  plugins: [hardhatToolboxMocheEthers]
+});

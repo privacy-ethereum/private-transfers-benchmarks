@@ -1,10 +1,13 @@
-import { RailgunAdapter } from "../src/adapters";
-import { BenchmarkConfig } from "../src/interfaces/IProtocolAdapter";
-import { generateSummaryReport, exportToJSON } from "../src/utils/reporting";
+import { RailgunAdapter } from "../src/adapters/railgun/RailgunAdapter.js";
+import { generateSummaryReport, exportToJSON } from "../src/utils/reporting.js";
 import * as fs from "fs";
 import * as path from "path";
+import hre from "hardhat";
 import { parseEther, ZeroAddress } from "ethers";
-import { ethers } from "hardhat";
+import type { BenchmarkConfig } from "../src/types/benchmark.js";
+
+const { ethers } = await hre.network.connect();
+
 /**
  * Run benchmarks for all protocols
  */

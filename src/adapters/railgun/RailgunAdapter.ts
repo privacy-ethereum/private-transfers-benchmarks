@@ -1,5 +1,5 @@
-import { BaseProtocolAdapter } from "../../interfaces/IProtocolAdapter";
-import { BenchmarkResult, BenchmarkScenario } from "../../types/benchmark";
+import { BaseProtocolAdapter } from "../../interfaces/IProtocolAdapter.js";
+import type { BenchmarkResult, BenchmarkScenario } from "../../types/benchmark.js";
 import { ethers } from "ethers";
 
 /**

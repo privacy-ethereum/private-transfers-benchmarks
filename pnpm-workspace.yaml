@@ -1,2 +1,5 @@
 packages:
-  - 'src/adapters/*'
+  - src/adapters/*
+
+onlyBuiltDependencies:
+  - esbuild

@@ -1,4 +1,4 @@
-import { BenchmarkResult, BenchmarkScenario } from "../types/benchmark";
+import type { BenchmarkResult, BenchmarkScenario } from "../types/benchmark.js";
 
 /**
  * Format gas metrics for display

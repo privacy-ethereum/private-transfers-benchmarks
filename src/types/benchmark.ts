@@ -3,7 +3,7 @@
  */
 export enum BenchmarkScenario {
   SHIELD = "shield",
-  SEND = "send", 
+  SEND = "send",
   UNSHIELD = "unshield",
 }
 
@@ -86,4 +86,20 @@ export interface AggregatedBenchmarkResults {
     averageProofTimeMs: Record<BenchmarkScenario, number>;
     averageFinalityMs: Record<BenchmarkScenario, number>;
   };
+}
+
+/**
+ * Configuration for running benchmarks
+ */
+export interface BenchmarkConfig {
+  /** Amount to transfer (in wei or smallest token unit) */
+  amount: bigint;
+  /** Token address (use zero address for native ETH) */
+  tokenAddress: string;
+  /** Number of iterations to run for each scenario */
+  iterations: number;
+  /** Whether to wait for finality */
+  waitForFinality: boolean;
+  /** Number of confirmations to wait for */
+  confirmations: number;
 }
