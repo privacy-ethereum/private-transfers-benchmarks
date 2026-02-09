@@ -19,19 +19,19 @@ interface IRailgunRelay {
     function transact(Transaction[] calldata transactions) external;
 }
 
-// Reference tx: 0x105e408f09685adccb1554a325710e90859efcd488fdb2912c8974e73b803cbd
-// Gas cost: cast receipt 0x105e408f09685adccb1554a325710e90859efcd488fdb2912c8974e73b803cbd gasUsed --rpc-url $ETH_RPC_URL
+// Reference tx: 0x9691b06aeb81ae709ad478942a5307c5e5cc4597074f5b60e11b2033c1584580
+// Gas cost: cast receipt 0x9691b06aeb81ae709ad478942a5307c5e5cc4597074f5b60e11b2033c1584580 gasUsed --rpc-url $ETH_RPC_URL
 contract RailgunSendBenchmark is Test {
     IRailgunRelay constant RELAY = IRailgunRelay(0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9);
 
-    address constant SENDER = 0x0D0Efc24db8fe005e24271c6F823CAC22B0641D8;
+    address constant SENDER = 0x03CbE58799c0EB9AABAB3212886bfcA10A418299;
 
-    // TODO: fork at latest once we have proof generation logic. We need
-    // to fork before the reference tx so nullifiers are unspent
-    uint256 constant FORK_BLOCK = 24_419_682;
+    // Fork at block before the reference tx so nullifiers are unspent.
+    // TODO: fork at latest once we have proof generation logic.
+    uint256 constant FORK_BLOCK = 24_421_959;
 
     // The reference tx's gas price
-    uint256 constant TX_GAS_PRICE = 157_243_696;
+    uint256 constant TX_GAS_PRICE = 283_628_746;
 
     function test_send() public {
         string memory rpcUrl = vm.envOr("ETH_RPC_URL", string("https://eth.llamarpc.com"));
@@ -54,63 +54,63 @@ contract RailgunSendBenchmark is Test {
     function _buildTransaction() internal pure returns (Transaction memory) {
         SnarkProof memory proof = SnarkProof({
             a: G1Point({
-                x: 0x015725cd8a15be4bf1f7837e7b8c2025d7ca4dbbbdb2f5fa665114e8c6c4c5a1,
-                y: 0x1f6fcfa3b23484c94e39f5b9634f30b442537703120465cbea8b4d4da71586b3
+                x: 0x03d6861e17bf2babb298bb06b69a003f55252b756eab01614acdc89217f5c232,
+                y: 0x26e0db51c595e77a7041450e8034484976a5ef1509543ba63a3c10f541be3ae0
             }),
             b: G2Point({
                 x: [
-                    uint256(0x022de54da17e30e78420c0cc02b0b38dd955562d36e77bbf80b3f7d945f20062),
-                    uint256(0x0937ada831923756d078a862c16c4b8c177952f4e8a588405f1a8b14f8c6f96f)
+                    uint256(0x2b286954d2cc7d4cea7b50450d5c7c072c2a8bd2c76bd8c921ada087d84d26e1),
+                    uint256(0x1091cd885152612e830fb275301648d5f0f0f891a9b0bbd39b3cf390fd907f4c)
                 ],
                 y: [
-                    uint256(0x1d796199025622d2b6a16ea9d61db03fbe347c51af8e3d7a5fcb7b10fd713f6a),
-                    uint256(0x1931d5ef9ae87beec74b1f6e68dc41c274f7074954504e7ae61a6b88327fac1e)
+                    uint256(0x11dc536a27865e54c3ec085a532814663448a8ff79b20a7824b949574c8bd9fd),
+                    uint256(0x1ac326f30e8798a39f48bc894f1fc94f644ef3b0089bf41eed564ee6e96cff6b)
                 ]
             }),
             c: G1Point({
-                x: 0x20bf9f3b7488bca5676eff605108792285b958167f49b2507a5183be926d14f7,
-                y: 0x21f070faf2042032eaf837092361dab0ec3da2c12979f05ea3991617c1b326e7
+                x: 0x2fa47504b90d2920e69465871244194d196550355551b9c5b23117e0e31c56b3,
+                y: 0x1d024b5ac8dd75a6f5f27c34e7c9c4c568bca186ddd6c64c4eeae051a7acf048
             })
         });
 
-        bytes32[] memory nullifiers = new bytes32[](1);
-        nullifiers[0] = 0x1859b778ec78a2eb608f2ec51a3c5fe8e9bab7a5f19a21044966227b2de12c6f;
+        bytes32[] memory nullifiers = new bytes32[](2);
+        nullifiers[0] = 0x13c9423325c5d638bf183d242aa9f9b864e4b42b749b00a19950d13d10529ef8;
+        nullifiers[1] = 0x2a7eb0332c12e3fb1920e62ee6bff72c53c9ac036b340f7003ba978a4b497855;
 
-        bytes32[] memory commitments = new bytes32[](3);
-        commitments[0] = 0x2ff10322d6b36b7b4f0062515c568c00f919a7fc6fbce0e958ba05fa44c73e80;
-        commitments[1] = 0x2530747fc11a38e51bf951fc9cb6aa2bfd29bd0a9939192a03e1f996520f4b22;
-        commitments[2] = 0x1ae2ff2f4d3e1dcb52b127193bc2806c7bc7c949936867e121557b1ce6eb7584;
+        bytes32[] memory commitments = new bytes32[](2);
+        commitments[0] = 0x088699b561e26726c43c482201168a153e623d4dc91c70d5ea15959dbe4aa370;
+        commitments[1] = 0x06e8dcbb2b237226f4cd2da22acde99d63bd75997a68d89ea660a90ad789d679;
 
         CommitmentCiphertext[] memory ciphertexts = new CommitmentCiphertext[](2);
         ciphertexts[0] = CommitmentCiphertext({
             ciphertext: [
-                bytes32(0x4f01dc2f8cd4f194d37dc3e81c4c50ed9856e4661d51a8cca19dc1c5f968b559),
-                bytes32(0x026c971af7058f3ce0d8e5c780738ef9199bd6985a911380ac07f96f8be3c579),
-                bytes32(0xc05d076bdfb5bd2d9723d9a75ac98032a0587551f91caa2482fc8578260a8323),
-                bytes32(0x5516c564e7f32556ee2fb8bf74d21412cc637f4e1ea34143f29dbf46207c44c5)
+                bytes32(0x7d429023249ead0df72b6fbcbc26fa7264033426d5b5934b89ae41e9088def76),
+                bytes32(0xb4b58e502443c2f79e8891d8c21653dcdc9af33b1af0b2fd662a260450075cbf),
+                bytes32(0xdc07ad6a7167345f0e798825786d2324f24505cadb6cea1602263dd146febb35),
+                bytes32(0x83d9085ce23ef4e52372dc68599853274ff383f05d4209cfd62dc10e41192226)
             ],
-            blindedSenderViewingKey: 0x3bd01f88b170da516e2797b923d13f809713d79666de845bb22e7275a39c4966,
-            blindedReceiverViewingKey: 0xae3daf0c538abb6d93da3f0198b3fb1b5bf29df2911fc5cb2e53b23b29ac3759,
-            annotationData: hex"2ba4d2403f37a3c5a029128945391232dc324c89390f1270688961ab6021b8de6fc2435172ba598d13c2eb2dc867f34073ac5d703ced936103f062479267",
+            blindedSenderViewingKey: 0x67c7c4f4bf7d695c49508d9341db62f258656cbd3680caa0524f6ceccf8dcfdb,
+            blindedReceiverViewingKey: 0x70db540142462d9f2e494928c8f473cba28c05a46c279b34c546042ad7e98209,
+            annotationData: hex"33f172f5005e9a92310ecc740c389523b147fc7e09d0f5df198a7496fae843ad2aaa3dba091c93c8716570c64ce04bcc711cc689c10bec659d28ffb487fa",
             memo: hex""
         });
         ciphertexts[1] = CommitmentCiphertext({
             ciphertext: [
-                bytes32(0x8739eda54b121b727f3692b482a471bf9b7e8832b9cc4db9f21e8642afe946b4),
-                bytes32(0x9b911f2d28388f225d222d55b7e124d872e9ce22eca707ae07bb863df524f074),
-                bytes32(0xd1b06bd6aad30e79899071bcd3353065d3fcd14bbcc42313e24a193e2f7fa708),
-                bytes32(0x94163ca9bff74ce0f3594f7906d0fd181628ca2ea737d2dde24627087a9eee91)
+                bytes32(0xbbd1240440d6679e22bb11eec05057373e8e1ef31a6ab0a964a4667517ca108e),
+                bytes32(0x35aaa5137133d43350b5f99a21dc97a793c638f3fc1207c3670cd73712fd6dd5),
+                bytes32(0x1c81ab00cd19b2d5db398f3140e2d2f2b95f4cf2d0475fc2bedbf3171aaa0654),
+                bytes32(0x2ac5a7eb3d337aaa488f172eb86c8a5e8eeca5883e38f7824baa9f9d09e39852)
             ],
-            blindedSenderViewingKey: 0xbd722e2a55d4d9ddc9dd4925f3d1f1664601fabcd2acb94e62e979e6620c2397,
-            blindedReceiverViewingKey: 0xbd722e2a55d4d9ddc9dd4925f3d1f1664601fabcd2acb94e62e979e6620c2397,
-            annotationData: hex"12c1bddb767444fc8a477364ce058394b991f989ca27c6895fd7d7290af50f92f6bb3d5e8c5dbd4e6fdfd50cff17b554670d548f8faa6dfcae95bb212f61",
+            blindedSenderViewingKey: 0xc422f463519d3ec701d9d763b477d580070f2d5d76feb3a55d6634de3064c8ba,
+            blindedReceiverViewingKey: 0x94e9d2e6d6507c9446062d750396c37d901f3a7d65517a74f66adecc11514539,
+            annotationData: hex"a5d946a5411a0f3c697ae08bf3f44f64b27f52be7491faaa7797d0ae9c88e193c5f5f5d180ceb044f9cc62bc9d8c46dc50d803f98237d304c9d3604f47a1",
             memo: hex""
         });
 
         BoundParams memory boundParams = BoundParams({
             treeNumber: 2,
-            minGasPrice: 155_686_828,
-            unshield: UnshieldType.NORMAL,
+            minGasPrice: 283_628_746,
+            unshield: UnshieldType.NONE,
             chainID: 1,
             adaptContract: address(0),
             adaptParams: bytes32(0),
@@ -118,16 +118,14 @@ contract RailgunSendBenchmark is Test {
         });
 
         CommitmentPreimage memory unshieldPreimage = CommitmentPreimage({
-            npk: bytes32(uint256(uint160(0x52CCD390416d0C68A57EBF2b48112F71A8083bDD))),
-            token: TokenData({
-                tokenType: TokenType.ERC20, tokenAddress: 0xdAC17F958D2ee523a2206206994597C13D831ec7, tokenSubID: 0
-            }),
-            value: 31_826_566_416
+            npk: bytes32(0),
+            token: TokenData({tokenType: TokenType.ERC20, tokenAddress: address(0), tokenSubID: 0}),
+            value: 0
         });
 
         return Transaction({
             proof: proof,
-            merkleRoot: 0x29cee84a6ded1b1a70e3aecc4c98cc7c409e1fe4ae00546139409b08bb8aaede,
+            merkleRoot: 0x03309f5fdc4b5c0d38e7c1fbe75be39758dfe5fa63982bf1663ee9ccf3471dc5,
             nullifiers: nullifiers,
             commitments: commitments,
             boundParams: boundParams,
