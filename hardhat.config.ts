@@ -1,9 +1,8 @@
 import { defineConfig } from "hardhat/config";
 import hardhatToolboxMocheEthers from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
 
-
 export default defineConfig({
-    solidity: {
+  solidity: {
     version: "0.8.20",
     settings: {
       optimizer: {
@@ -27,5 +26,5 @@ export default defineConfig({
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
     },
   },
-  plugins: [hardhatToolboxMocheEthers]
+  plugins: [hardhatToolboxMocheEthers],
 });

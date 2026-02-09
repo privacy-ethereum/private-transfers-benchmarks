@@ -3,10 +3,9 @@ import hre from "hardhat";
 import { parseEther, ZeroAddress } from "ethers";
 
 import { RailgunAdapter } from "../src/adapters/railgun/RailgunAdapter.js";
-import type { BenchmarkConfig } from "../src/types/benchmark.js";
+import { BenchmarkConfig } from "../src/utils/types.js";
 
 const { ethers } = await hre.network.connect();
-
 
 describe("Protocol Adapters", function () {
   // Increase default timeout for proof generation

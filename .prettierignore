@@ -1,0 +1,11 @@
+node_modules
+dist
+coverage
+cache
+artifacts
+*.lock
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+.git
+.env*

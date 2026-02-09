@@ -1,6 +1,7 @@
 import { BaseProtocolAdapter } from "../../interfaces/IProtocolAdapter.js";
-import type { BenchmarkResult, BenchmarkScenario } from "../../types/benchmark.js";
 import { ethers } from "ethers";
+import { BenchmarkScenario } from "../../utils/enums.js";
+import type { BenchmarkResult } from "../../utils/types.js";
 
 /**
  * Adapter for Railgun protocol
@@ -36,10 +37,7 @@ export class RailgunAdapter extends BaseProtocolAdapter {
 
     // Placeholder transaction
     const tx = await this.sendPlaceholderTransaction();
-    const { receipt, finalityTimeMs } = await this.waitForTransaction(
-      tx.hash,
-      this.config?.confirmations || 1
-    );
+    const { receipt, finalityTimeMs } = await this.waitForTransaction(tx.hash, this.config?.confirmations || 1);
 
     return {
       scenario: BenchmarkScenario.SHIELD,
@@ -76,10 +74,7 @@ export class RailgunAdapter extends BaseProtocolAdapter {
     const proofTime = Date.now() - startProof;
 
     const tx = await this.sendPlaceholderTransaction();
-    const { receipt, finalityTimeMs } = await this.waitForTransaction(
-      tx.hash,
-      this.config?.confirmations || 1
-    );
+    const { receipt, finalityTimeMs } = await this.waitForTransaction(tx.hash, this.config?.confirmations || 1);
 
     return {
       scenario: BenchmarkScenario.SEND,
@@ -116,10 +111,7 @@ export class RailgunAdapter extends BaseProtocolAdapter {
     const proofTime = Date.now() - startProof;
 
     const tx = await this.sendPlaceholderTransaction();
-    const { receipt, finalityTimeMs } = await this.waitForTransaction(
-      tx.hash,
-      this.config?.confirmations || 1
-    );
+    const { receipt, finalityTimeMs } = await this.waitForTransaction(tx.hash, this.config?.confirmations || 1);
 
     return {
       scenario: BenchmarkScenario.UNSHIELD,

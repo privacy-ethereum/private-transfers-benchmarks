@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import hre from "hardhat";
 import { parseEther, ZeroAddress } from "ethers";
-import type { BenchmarkConfig } from "../src/types/benchmark.js";
+import { BenchmarkConfig } from "../src/utils/types.js";
 
 const { ethers } = await hre.network.connect();
 
@@ -22,9 +22,7 @@ async function main() {
     confirmations: 1,
   };
 
-  const adapters = [
-    new RailgunAdapter(),
-  ];
+  const adapters = [new RailgunAdapter()];
 
   const allResults = [];
 

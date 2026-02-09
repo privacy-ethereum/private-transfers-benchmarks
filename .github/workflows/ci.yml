@@ -2,44 +2,44 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 10.28.2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.28.2
 
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 24
-        cache: 'pnpm'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
 
-    - name: Install dependencies
-      run: pnpm install
+      - name: Install dependencies
+        run: pnpm install
 
-    - name: TypeScript type checking
-      run: pnpm typecheck
+      - name: TypeScript type checking
+        run: pnpm typecheck
 
-    - name: Lint
-      run: pnpm lint
+      - name: Lint
+        run: pnpm lint
 
-    - name: Compile contracts
-      run: pnpm compile
+      - name: Compile contracts
+        run: pnpm compile
 
-    - name: Run tests
-      run: pnpm test
-      env:
-        REPORT_GAS: false
+      - name: Run tests
+        run: pnpm test
+        env:
+          REPORT_GAS: false
 
-    - name: Run benchmarks
-      run: pnpm run benchmark
+      - name: Run benchmarks
+        run: pnpm run benchmark

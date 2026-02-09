@@ -1,11 +1,4 @@
-/**
- * Benchmark scenario types
- */
-export enum BenchmarkScenario {
-  SHIELD = "shield",
-  SEND = "send",
-  UNSHIELD = "unshield",
-}
+import type { BenchmarkScenario } from "./enums.js";
 
 /**
  * Gas metrics for a single operation

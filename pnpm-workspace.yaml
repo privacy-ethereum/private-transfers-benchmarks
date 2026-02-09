@@ -1,5 +1,8 @@
 packages:
   - src/adapters/*
 
+ignoredBuiltDependencies:
+  - unrs-resolver
+
 onlyBuiltDependencies:
   - esbuild

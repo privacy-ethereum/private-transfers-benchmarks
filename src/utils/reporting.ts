@@ -1,4 +1,5 @@
-import type { BenchmarkResult, BenchmarkScenario } from "../types/benchmark.js";
+import { BenchmarkScenario } from "./enums.js";
+import { BenchmarkResult } from "./types.js";
 
 /**
  * Format gas metrics for display
@@ -35,7 +36,7 @@ export function calculateAverageGas(results: BenchmarkResult[]): bigint {
  * Calculate average proof generation time
  */
 export function calculateAverageProofTime(results: BenchmarkResult[]): number {
-  const withProofs = results.filter(r => r.proof !== undefined);
+  const withProofs = results.filter((r) => r.proof !== undefined);
 
   if (withProofs.length === 0) return 0;
 
@@ -57,24 +58,25 @@ export function calculateAverageFinalityTime(results: BenchmarkResult[]): number
  * Group results by scenario
  */
 export function groupByScenario(results: BenchmarkResult[]): Record<BenchmarkScenario, BenchmarkResult[]> {
-  return results.reduce((acc, result) => {
-    if (!acc[result.scenario]) {
-      acc[result.scenario] = [];
-    }
+  return results.reduce(
+    (acc, result) => {
+      if (!acc[result.scenario]) {
+        acc[result.scenario] = [];
+      }
 
-    acc[result.scenario].push(result);
+      acc[result.scenario].push(result);
 
-    return acc;
-  }, {} as Record<BenchmarkScenario, BenchmarkResult[]>);
+      return acc;
+    },
+    {} as Record<BenchmarkScenario, BenchmarkResult[]>
+  );
 }
 
 /**
  * Export results to JSON
  */
 export function exportToJSON(results: BenchmarkResult[]): string {
-  return JSON.stringify(results, (_, value) =>
-    typeof value === 'bigint' ? value.toString() : value
-  , 2);
+  return JSON.stringify(results, (_, value) => (typeof value === "bigint" ? value.toString() : value), 2);
 }
 
 /**

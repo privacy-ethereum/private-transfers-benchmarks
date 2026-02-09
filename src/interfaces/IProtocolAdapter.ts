@@ -1,5 +1,5 @@
-import type { BenchmarkConfig, BenchmarkResult } from "../types/benchmark.js";
 import { ethers } from "ethers";
+import { BenchmarkConfig, BenchmarkResult } from "../utils/types.js";
 
 /**
  * Base interface that all protocol adapters must implement
