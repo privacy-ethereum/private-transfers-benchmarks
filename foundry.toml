@@ -1,0 +1,8 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc = "0.8.28"
+
+[rpc_endpoints]
+mainnet = "${ETH_RPC_URL}"
