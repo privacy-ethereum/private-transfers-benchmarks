@@ -1,4 +1,7 @@
 {
+  "lib/contract": {
+    "rev": "9ec09123eb140fdaaf3a5ff1f29d634c353630cd"
+  },
   "lib/forge-std": {
     "tag": {
       "name": "v1.14.0",
