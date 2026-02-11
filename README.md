@@ -1,5 +1,2 @@
 # private-transfers-benchmarks
-
-## Test
-
-`forge test -vv`
+A set of adapters to run structured benchmarks for private transfers protocols
