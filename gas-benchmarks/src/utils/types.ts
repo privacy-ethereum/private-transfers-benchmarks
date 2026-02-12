@@ -6,7 +6,7 @@ export interface GasMetrics {
   averageTxFee: bigint | "no-data";
 }
 
-export interface GetShieldEventLogs {
+export interface GetEventLogs {
   contractAddress: Hex;
   event: AbiEvent;
   maxLogs: number;
