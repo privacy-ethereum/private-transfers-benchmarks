@@ -1,0 +1,52 @@
+{
+  "name": "private-transfers-gas-benchmarks",
+  "version": "1.0.0",
+  "description": "Benchmarks for private transfers protocols on Ethereum",
+  "repository": "https://github.com/privacy-ethereum/private-transfers-benchmarks",
+  "type": "module",
+  "scripts": {
+    "benchmark": "tsx src/index.ts",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --fix --ext .ts ."
+  },
+  "keywords": [
+    "private-transfers",
+    "benchmarks",
+    "ethereum"
+  ],
+  "author": "PSE",
+  "license": "MIT",
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": "24",
+    "pnpm": "10"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.0.2",
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^10.0.1",
+    "@eslint/json": "^1.0.0",
+    "@types/node": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.55.0",
+    "@typescript-eslint/parser": "^8.55.0",
+    "eslint": "^10.0.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-json": "^4.0.1",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "globals": "^17.3.0",
+    "prettier": "^3.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.55.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.4",
+    "viem": "^2.45.3"
+  }
+}
