@@ -1,9 +1,9 @@
-import type { AbiEvent } from "viem";
+import type { AbiEvent, Hex } from "viem";
 
 import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
 
 /**
- * Maximum number of logs with a Shield event to be search.
+ * Maximum number of logs with a Shield event to be searched.
  * Depends on the ratio of how many AA txs - EOA txs
  */
 export const MAX_OF_LOGS = NUMBER_OF_TRANSACTIONS * 5;
@@ -12,7 +12,7 @@ export const MAX_OF_LOGS = NUMBER_OF_TRANSACTIONS * 5;
  * Proxy contract that points to the RailgunSmartWallet contract:
  * https://github.com/Railgun-Privacy/contract/blob/main/contracts/logic/RailgunSmartWallet.sol
  */
-export const RAILGUN_SMART_WALLET_PROXY = "0xfa7093cdd9ee6932b4eb2c9e1cde7ce00b1fa4b9";
+export const RAILGUN_SMART_WALLET_PROXY: Hex = "0xfa7093cdd9ee6932b4eb2c9e1cde7ce00b1fa4b9";
 
 /**
  * Event ABI for the Shield event emitted by RailgunSmartWallet
@@ -55,9 +55,9 @@ export const SHIELD_EVENT_ABI = {
 } as const satisfies AbiEvent;
 
 /**
- * A shield function call emits 3 events:
- * Transfer() - Tokens sended to shielded pool
- * Transfer() - Shield fee sended to vault
+ * A shield function call emits:
+ * Transfer() - Tokens sent to shielded pool
+ * Transfer() - Shield fee sent to vault
  * Shield() - To notify the shield
  */
-export const NUMBER_OF_EVENTS = 3;
+export const NUMBER_OF_SHIELD_EVENTS = 3;

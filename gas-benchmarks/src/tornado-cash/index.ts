@@ -1,12 +1,12 @@
 import { getEventLogs, getTransactionsWithNEvents, getUniqueLogs } from "../utils/rpc.js";
 import { getAverageMetrics, saveGasMetrics } from "../utils/utils.js";
 
-import { MAX_OF_LOGS, NUMBER_OF_SHIELD_EVENTS, RAILGUN_SMART_WALLET_PROXY, SHIELD_EVENT_ABI } from "./constants.js";
+import { ENCRYPTED_NOTE_EVENT_ABI, MAX_OF_LOGS, NUMBER_OF_SHIELD_EVENTS, TORNADO_CASH_ROUTER } from "./constants.js";
 
-export class Railgun {
-  readonly name = "railgun";
+export class TornadoCash {
+  readonly name = "tornado-cash";
 
-  readonly version = "0.0.1";
+  readonly version = "unstoppable-release";
 
   async benchmark(): Promise<void> {
     await this.benchmarkShield();
@@ -14,8 +14,8 @@ export class Railgun {
 
   async benchmarkShield(): Promise<void> {
     const logs = await getEventLogs({
-      contractAddress: RAILGUN_SMART_WALLET_PROXY,
-      event: SHIELD_EVENT_ABI,
+      contractAddress: TORNADO_CASH_ROUTER,
+      event: ENCRYPTED_NOTE_EVENT_ABI,
       maxLogs: MAX_OF_LOGS,
     });
     const uniqueLogs = getUniqueLogs(logs);
