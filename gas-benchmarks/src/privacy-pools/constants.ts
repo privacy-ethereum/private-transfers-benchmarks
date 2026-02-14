@@ -35,3 +35,27 @@ export const DEPOSITED_EVENT_ABI = {
  * Deposited() - Emitted inside Entrypoint.sol contract (external)
  */
 export const NUMBER_OF_SHIELD_EVENTS = 3;
+
+/**
+ * Event ABI for the WithdrawalRelayed event emitted by Entrypoint.relay()
+ */
+export const WITHDRAWAL_RELAYED_EVENT_ABI = {
+  type: "event",
+  name: "WithdrawalRelayed",
+  inputs: [
+    { name: "_relayer", type: "address", indexed: true },
+    { name: "_recipient", type: "address", indexed: true },
+    { name: "_asset", type: "address", indexed: true },
+    { name: "_amount", type: "uint256", indexed: false },
+    { name: "_feeAmount", type: "uint256", indexed: false },
+  ],
+} as const satisfies AbiEvent;
+
+/**
+ * A relay (unshield) function call emits:
+ * Withdrawn() - Emitted inside PrivacyPool.withdraw()
+ * Transfer() - Net amount to recipient
+ * Transfer() - Fee to fee recipient
+ * WithdrawalRelayed() - Emitted inside Entrypoint.relay()
+ */
+export const NUMBER_OF_UNSHIELD_EVENTS = 4;

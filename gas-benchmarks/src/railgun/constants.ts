@@ -61,3 +61,53 @@ export const SHIELD_EVENT_ABI = {
  * Shield() - To notify the shield
  */
 export const NUMBER_OF_SHIELD_EVENTS = 3;
+
+/**
+ * Event ABI for the Unshield event emitted by RailgunLogic in function transferTokenOut
+ */
+export const UNSHIELD_EVENT_ABI = {
+  type: "event",
+  name: "Unshield",
+  inputs: [
+    { name: "to", type: "address", indexed: false },
+    {
+      name: "token",
+      type: "tuple",
+      indexed: false,
+      components: [
+        { name: "tokenType", type: "uint8" },
+        { name: "tokenAddress", type: "address" },
+        { name: "tokenSubID", type: "uint256" },
+      ],
+    },
+    { name: "amount", type: "uint256", indexed: false },
+    { name: "fee", type: "uint256", indexed: false },
+  ],
+} as const satisfies AbiEvent;
+
+/**
+ * An unshield function call emits:
+ * Nullified() - Nullifier being spent
+ * Transfer() - Transfer unshielded tokens to recipient
+ * Transfer() - Transfer unshield fee to vault
+ * Unshield() - To notify the unshield process
+ */
+export const NUMBER_OF_UNSHIELD_EVENTS = 4;
+
+/**
+ * Event ABI for the Nullified event emitted by RailgunLogic in function accumulateAndNullifyTransaction
+ */
+export const NULLIFIED_EVENT_ABI = {
+  type: "event",
+  name: "Nullified",
+  inputs: [
+    { name: "treeNumber", type: "uint16", indexed: false },
+    { name: "nullifier", type: "bytes32[]", indexed: false },
+  ],
+} as const satisfies AbiEvent;
+
+/**
+ * A transfer (private) function call emits:
+ * Nullified() - Nullifier being spent
+ */
+export const NUMBER_OF_TRANSFER_EVENTS = 1;

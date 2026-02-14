@@ -3,7 +3,7 @@ import { mainnet } from "viem/chains";
 
 import type { GetShieldEventLogs } from "./types.js";
 
-import { ETH_RPC_URL, NUMBER_OF_TRANSACTIONS } from "./constants.js";
+import { ETH_RPC_URL, MAX_NUMBER_OF_RPC_TRIES, NUMBER_OF_TRANSACTIONS } from "./constants.js";
 import { getBlockInRange } from "./utils.js";
 
 export const publicClient = createPublicClient({
@@ -16,6 +16,7 @@ export const getEventLogs = async ({ contractAddress, event, maxLogs }: GetShiel
   let toBlock = latestBlock;
   let fromBlock = getBlockInRange(toBlock);
 
+  let tries = 0;
   const logs: Log[] = [];
 
   while (logs.length < maxLogs) {
@@ -35,6 +36,12 @@ export const getEventLogs = async ({ contractAddress, event, maxLogs }: GetShiel
 
     toBlock = fromBlock - 1n;
     fromBlock = getBlockInRange(toBlock);
+
+    if (tries >= MAX_NUMBER_OF_RPC_TRIES) {
+      break;
+    }
+
+    tries += 1;
   }
 
   return logs;
