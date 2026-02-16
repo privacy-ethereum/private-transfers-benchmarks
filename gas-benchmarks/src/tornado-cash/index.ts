@@ -30,6 +30,11 @@ export class TornadoCash {
     const uniqueLogs = getUniqueLogs(logs);
 
     const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_SHIELD_EVENTS);
+
+    if (txs.length === 0) {
+      throw new Error(`No shield transactions found for ${this.name}.`);
+    }
+
     const metrics = getAverageMetrics(txs);
 
     await saveGasMetrics(metrics, `${this.name}_${this.version}`, "shield");
@@ -44,6 +49,11 @@ export class TornadoCash {
     const uniqueLogs = getUniqueLogs(logs);
 
     const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_UNSHIELD_EVENTS);
+
+    if (txs.length === 0) {
+      throw new Error(`No unshield transactions found for ${this.name}.`);
+    }
+
     const metrics = getAverageMetrics(txs);
 
     await saveGasMetrics(metrics, `${this.name}_${this.version}`, "unshield");
