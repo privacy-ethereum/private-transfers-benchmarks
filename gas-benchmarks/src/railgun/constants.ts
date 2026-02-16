@@ -59,5 +59,65 @@ export const SHIELD_EVENT_ABI = {
  * Transfer() - Tokens sent to shielded pool
  * Transfer() - Shield fee sent to vault
  * Shield() - To notify the shield
+ *
+ * Example:
+ * https://etherscan.io/tx/0x5c9bb21f9aa22f636e468bfb19b17093ccc5de7d86aad601b5b4b607f07f1143
  */
 export const NUMBER_OF_SHIELD_EVENTS = 3;
+
+/**
+ * Event ABI for the Unshield event emitted by RailgunLogic in function transferTokenOut
+ */
+export const UNSHIELD_EVENT_ABI = {
+  type: "event",
+  name: "Unshield",
+  inputs: [
+    { name: "to", type: "address", indexed: false },
+    {
+      name: "token",
+      type: "tuple",
+      indexed: false,
+      components: [
+        { name: "tokenType", type: "uint8" },
+        { name: "tokenAddress", type: "address" },
+        { name: "tokenSubID", type: "uint256" },
+      ],
+    },
+    { name: "amount", type: "uint256", indexed: false },
+    { name: "fee", type: "uint256", indexed: false },
+  ],
+} as const satisfies AbiEvent;
+
+/**
+ * RailgunSmartWallet.transact function call when unshielding emits:
+ * Nullified() - Nullifier being spent emitted in RailgunLogic.accumulateAndNullifyTransaction
+ * Transfer() - Transfer unshielded tokens to recipient emitted in RailgunLogic.transferTokenOut
+ * Transfer() - Transfer unshield fee to vault emitted in RailgunLogic.transferTokenOut
+ * Unshield() - To notify the unshield process emitted in RailgunLogic.transferTokenOut
+ *
+ * Example:
+ * https://etherscan.io/tx/0x2c3e8738f9d0d3e98b702a6dc375162fe21777e35f19d8b662088b2b6987e722
+ */
+export const NUMBER_OF_UNSHIELD_EVENTS = 4;
+
+/**
+ * Event ABI for the Nullified event emitted by RailgunLogic in function accumulateAndNullifyTransaction
+ */
+export const NULLIFIED_EVENT_ABI = {
+  type: "event",
+  name: "Nullified",
+  inputs: [
+    { name: "treeNumber", type: "uint16", indexed: false },
+    { name: "nullifier", type: "bytes32[]", indexed: false },
+  ],
+} as const satisfies AbiEvent;
+
+/**
+ * RailgunSmartWallet.transact (private transfer) function call emits:
+ * Nullified() - Nullifier being spent emitted in RailgunLogic.accumulateAndNullifyTransaction
+ * Transact() - To notify the commitment state update emitted in RailgunSmartWallet.transact
+ *
+ * Example:
+ * https://etherscan.io/tx/0xb010a8f2babfa78bb6945221817238c58234d06eb56177de6e002e761574fc53
+ */
+export const NUMBER_OF_TRANSFER_EVENTS = 2;

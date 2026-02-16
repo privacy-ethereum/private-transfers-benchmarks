@@ -33,5 +33,37 @@ export const DEPOSITED_EVENT_ABI = {
  * LeafInserted() - To notify the leaf insertion in the merkle tree
  * Deposited() - Emitted inside PrivacyPool.sol contract (internal)
  * Deposited() - Emitted inside Entrypoint.sol contract (external)
+ *
+ * Example:
+ * https://etherscan.io/tx/0x87320aaae4868c6f5b7c8b31ba2fc82005bdd7522fdf85f9eb8dcc93a34cb475
  */
 export const NUMBER_OF_SHIELD_EVENTS = 3;
+
+/**
+ * Event ABI for the WithdrawalRelayed event emitted by Entrypoint.relay()
+ */
+export const WITHDRAWAL_RELAYED_EVENT_ABI = {
+  type: "event",
+  name: "WithdrawalRelayed",
+  inputs: [
+    { name: "_relayer", type: "address", indexed: true },
+    { name: "_recipient", type: "address", indexed: true },
+    { name: "_asset", type: "address", indexed: true },
+    { name: "_amount", type: "uint256", indexed: false },
+    { name: "_feeAmount", type: "uint256", indexed: false },
+  ],
+} as const satisfies AbiEvent;
+
+/**
+ * Entrypoint.relay (unshield) function call emits:
+ * LeafInserted() - Emitted inside State.sol -> insert()
+ * Transfer() - move funds to entrypoint (Emitted inside PrivacyPoolComplex.sol -> _push)
+ * Withdrawn() - Emitted inside PrivacyPool.sol -> withdraw()
+ * Transfer() - Net amount to recipient
+ * Transfer() - Fee to fee recipient
+ * WithdrawalRelayed() - Emitted inside Entrypoint.relay()
+ *
+ * Example:
+ * https://etherscan.io/tx/0x47e918eda32bc332a5684aa986733eb4fde7a4f8189e21443f23adf0807974b7
+ */
+export const NUMBER_OF_UNSHIELD_EVENTS = 6;

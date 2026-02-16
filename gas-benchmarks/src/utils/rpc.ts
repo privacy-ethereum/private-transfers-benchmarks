@@ -1,9 +1,9 @@
 import { createPublicClient, http, type Hash, type Log, type TransactionReceipt } from "viem";
 import { mainnet } from "viem/chains";
 
-import type { GetShieldEventLogs } from "./types.js";
+import type { GetEventLogs } from "./types.js";
 
-import { ETH_RPC_URL, NUMBER_OF_TRANSACTIONS } from "./constants.js";
+import { ETH_RPC_URL, MAX_NUMBER_OF_RPC_TRIES, NUMBER_OF_TRANSACTIONS } from "./constants.js";
 import { getBlockInRange } from "./utils.js";
 
 export const publicClient = createPublicClient({
@@ -11,11 +11,12 @@ export const publicClient = createPublicClient({
   chain: mainnet,
 });
 
-export const getEventLogs = async ({ contractAddress, event, maxLogs }: GetShieldEventLogs): Promise<Log[]> => {
+export const getEventLogs = async ({ contractAddress, event, maxLogs }: GetEventLogs): Promise<Log[]> => {
   const latestBlock = await publicClient.getBlockNumber();
   let toBlock = latestBlock;
   let fromBlock = getBlockInRange(toBlock);
 
+  let tries = 0;
   const logs: Log[] = [];
 
   while (logs.length < maxLogs) {
@@ -35,6 +36,12 @@ export const getEventLogs = async ({ contractAddress, event, maxLogs }: GetShiel
 
     toBlock = fromBlock - 1n;
     fromBlock = getBlockInRange(toBlock);
+
+    if (tries >= MAX_NUMBER_OF_RPC_TRIES) {
+      break;
+    }
+
+    tries += 1;
   }
 
   return logs;
