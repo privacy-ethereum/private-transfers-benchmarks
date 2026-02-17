@@ -1,10 +1,10 @@
 import { createPublicClient, http, type Hash, type Log, type TransactionReceipt } from "viem";
 import { mainnet } from "viem/chains";
 
-import type { GetShieldEventLogs } from "./types.js";
+import type { GetShieldEventLogs, TopicFilterConfig } from "./types.js";
 
 import { ETH_RPC_URL, MAX_NUMBER_OF_RPC_TRIES, NUMBER_OF_TRANSACTIONS } from "./constants.js";
-import { getBlockInRange } from "./utils.js";
+import { getBlockInRange, receiptHasAnyTopic, receiptHasTopics } from "./utils.js";
 
 export const publicClient = createPublicClient({
   transport: http(ETH_RPC_URL),
@@ -68,24 +68,30 @@ export const getUniqueLogs = (logs: Log[]): Log[] => {
   return uniqueTxs;
 };
 
-export const getTransactionsWithNEvents = async (
+export const getMatchingTransactions = async (
   logs: Log[],
-  numberOfEvents: number,
+  topicFilter: TopicFilterConfig,
 ): Promise<TransactionReceipt[]> => {
-  const txs = await logs.reduce<Promise<TransactionReceipt[]>>(async (accumulatorPromise, log) => {
-    const accumulator = await accumulatorPromise;
+  const txs: TransactionReceipt[] = [];
 
-    if (accumulator.length >= NUMBER_OF_TRANSACTIONS) {
-      return accumulator;
+  for (const log of logs) {
+    if (txs.length >= NUMBER_OF_TRANSACTIONS) {
+      break;
     }
 
-    const receipt = await publicClient.getTransactionReceipt({ hash: log.transactionHash! });
-    if (receipt.logs.length === numberOfEvents) {
-      accumulator.push(receipt);
+    if (!log.transactionHash) {
+      continue;
     }
 
-    return accumulator;
-  }, Promise.resolve([]));
+    // eslint-disable-next-line no-await-in-loop
+    const receipt = await publicClient.getTransactionReceipt({ hash: log.transactionHash });
+    if (
+      receiptHasTopics(receipt, topicFilter.required) &&
+      !receiptHasAnyTopic(receipt, topicFilter.forbidden)
+    ) {
+      txs.push(receipt);
+    }
+  }
 
   return txs;
 };

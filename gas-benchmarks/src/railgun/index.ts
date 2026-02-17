@@ -1,15 +1,15 @@
-import { getEventLogs, getTransactionsWithNEvents, getUniqueLogs } from "../utils/rpc.js";
+import { getEventLogs, getMatchingTransactions, getUniqueLogs } from "../utils/rpc.js";
 import { getAverageMetrics, saveGasMetrics } from "../utils/utils.js";
 
 import {
   MAX_OF_LOGS,
   NULLIFIED_EVENT_ABI,
-  NUMBER_OF_SHIELD_EVENTS,
-  NUMBER_OF_TRANSFER_EVENTS,
-  NUMBER_OF_UNSHIELD_EVENTS,
   RAILGUN_SMART_WALLET_PROXY,
   SHIELD_EVENT_ABI,
+  SHIELD_TOPIC_FILTER,
+  TRANSFER_TOPIC_FILTER,
   UNSHIELD_EVENT_ABI,
+  UNSHIELD_TOPIC_FILTER,
 } from "./constants.js";
 
 export class Railgun {
@@ -31,7 +31,7 @@ export class Railgun {
     });
     const uniqueLogs = getUniqueLogs(logs);
 
-    const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_SHIELD_EVENTS);
+    const txs = await getMatchingTransactions(uniqueLogs, SHIELD_TOPIC_FILTER);
     const metrics = getAverageMetrics(txs);
 
     await saveGasMetrics(metrics, `${this.name}_${this.version}`, "shield");
@@ -45,7 +45,7 @@ export class Railgun {
     });
     const uniqueLogs = getUniqueLogs(logs);
 
-    const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_UNSHIELD_EVENTS);
+    const txs = await getMatchingTransactions(uniqueLogs, UNSHIELD_TOPIC_FILTER);
     const metrics = getAverageMetrics(txs);
 
     await saveGasMetrics(metrics, `${this.name}_${this.version}`, "unshield");
@@ -59,7 +59,7 @@ export class Railgun {
     });
     const uniqueLogs = getUniqueLogs(logs);
 
-    const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_TRANSFER_EVENTS);
+    const txs = await getMatchingTransactions(uniqueLogs, TRANSFER_TOPIC_FILTER);
     const metrics = getAverageMetrics(txs);
 
     await saveGasMetrics(metrics, `${this.name}_${this.version}`, "transfer");

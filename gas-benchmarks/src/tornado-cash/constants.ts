@@ -1,6 +1,7 @@
 import type { AbiEvent, Hex } from "viem";
 
 import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
+import type { TopicFilterConfig } from "../utils/types.js";
 
 /**
  * Maximum number of logs with a Shield event to be searched.
@@ -26,12 +27,8 @@ export const ENCRYPTED_NOTE_EVENT_ABI = {
   ],
 } as const satisfies AbiEvent;
 
-/**
- * A deposit function call emits:
- * Deposit() - To notify the token public deposit into the contract
- * EncryptedNote() - To notify the encrypted note generation
- */
-export const NUMBER_OF_SHIELD_EVENTS = 2;
+// keccak256 of EncryptedNote(address,bytes)
+const ENCRYPTED_NOTE_TOPIC: Hex = "0xfa28df43db3553771f7209dcef046f3bdfea15870ab625dcda30ac58b82b4008";
 
 /**
  * Tornado Cash Relayer Registry contract that emits a StakeBurned event when a relayed withdrawal is executed.
@@ -52,9 +49,23 @@ export const STAKE_BURNED_EVENT_ABI = {
   ],
 } as const satisfies AbiEvent;
 
+// keccak256 of StakeBurned(address,uint256)
+const STAKE_BURNED_TOPIC: Hex = "0x659f33fc6677bebf3a9bf3101092792e31f35766d0358e54577bdd91a655f6a0";
+
 /**
- * A withdraw function call emits:
- * StakeBurned() - To notify the stake burning of the withdrawal (emitted by the registry)
- * Withdrawal() - To notify the withdrawal (specific to the pool)
+ * Shield flow: requires EncryptedNote from Router, forbids StakeBurned from RelayerRegistry.
+ * A deposit tx emits EncryptedNote but never StakeBurned (that only happens on withdrawal).
  */
-export const NUMBER_OF_UNSHIELD_EVENTS = 2;
+export const SHIELD_TOPIC_FILTER: TopicFilterConfig = {
+  required: [{ contractAddress: TORNADO_CASH_ROUTER, topic: ENCRYPTED_NOTE_TOPIC }],
+  forbidden: [{ contractAddress: TORNADO_CASH_RELAYER_REGISTRY, topic: STAKE_BURNED_TOPIC }],
+};
+
+/**
+ * Unshield flow: requires StakeBurned from RelayerRegistry, forbids EncryptedNote from Router.
+ * A withdrawal tx emits StakeBurned but never EncryptedNote (that only happens on deposit).
+ */
+export const UNSHIELD_TOPIC_FILTER: TopicFilterConfig = {
+  required: [{ contractAddress: TORNADO_CASH_RELAYER_REGISTRY, topic: STAKE_BURNED_TOPIC }],
+  forbidden: [{ contractAddress: TORNADO_CASH_ROUTER, topic: ENCRYPTED_NOTE_TOPIC }],
+};

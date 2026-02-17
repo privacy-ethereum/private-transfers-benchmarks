@@ -1,6 +1,7 @@
 import type { AbiEvent, Hex } from "viem";
 
 import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
+import type { TopicFilterConfig } from "../utils/types.js";
 
 /**
  * Maximum number of logs with a Deposited event to be searched.
@@ -28,13 +29,8 @@ export const DEPOSITED_EVENT_ABI = {
   ],
 } as const satisfies AbiEvent;
 
-/**
- * A deposit function call emits:
- * LeafInserted() - To notify the leaf insertion in the merkle tree
- * Deposited() - Emitted inside PrivacyPool.sol contract (internal)
- * Deposited() - Emitted inside Entrypoint.sol contract (external)
- */
-export const NUMBER_OF_SHIELD_EVENTS = 3;
+// keccak256 of Deposited(address,address,uint256,uint256)
+const DEPOSITED_TOPIC: Hex = "0xf5681f9d0db1b911ac18ee83d515a1cf1051853a9eae418316a2fdf7dea427c5";
 
 /**
  * Event ABI for the WithdrawalRelayed event emitted by Entrypoint.relay()
@@ -51,11 +47,23 @@ export const WITHDRAWAL_RELAYED_EVENT_ABI = {
   ],
 } as const satisfies AbiEvent;
 
+// keccak256 of WithdrawalRelayed(address,address,address,uint256,uint256)
+const WITHDRAWAL_RELAYED_TOPIC: Hex = "0xe9b67844a7bb6e6ac95e8a0de02e4448dbb0c9460be9194348e4bbac6d13c2cf";
+
 /**
- * A relay (unshield) function call emits:
- * Withdrawn() - Emitted inside PrivacyPool.withdraw()
- * Transfer() - Net amount to recipient
- * Transfer() - Fee to fee recipient
- * WithdrawalRelayed() - Emitted inside Entrypoint.relay()
+ * Shield flow: requires Deposited from Entrypoint, forbids WithdrawalRelayed.
+ * A deposit tx emits Deposited but never WithdrawalRelayed.
  */
-export const NUMBER_OF_UNSHIELD_EVENTS = 4;
+export const SHIELD_TOPIC_FILTER: TopicFilterConfig = {
+  required: [{ contractAddress: PRIVACY_POOLS_ENTRYPOINT_PROXY, topic: DEPOSITED_TOPIC }],
+  forbidden: [{ contractAddress: PRIVACY_POOLS_ENTRYPOINT_PROXY, topic: WITHDRAWAL_RELAYED_TOPIC }],
+};
+
+/**
+ * Unshield flow: requires WithdrawalRelayed from Entrypoint, forbids Deposited.
+ * A relay/withdrawal tx emits WithdrawalRelayed but never Deposited.
+ */
+export const UNSHIELD_TOPIC_FILTER: TopicFilterConfig = {
+  required: [{ contractAddress: PRIVACY_POOLS_ENTRYPOINT_PROXY, topic: WITHDRAWAL_RELAYED_TOPIC }],
+  forbidden: [{ contractAddress: PRIVACY_POOLS_ENTRYPOINT_PROXY, topic: DEPOSITED_TOPIC }],
+};

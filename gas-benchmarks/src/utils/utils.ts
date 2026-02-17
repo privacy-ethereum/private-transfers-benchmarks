@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-import type { GasMetrics } from "./types.js";
+import type { GasMetrics, TopicEntry } from "./types.js";
 import type { TransactionReceipt } from "viem";
 
 import { BENCHMARKS_OUTPUT_PATH, BLOCK_RANGE } from "./constants.js";
@@ -60,3 +60,27 @@ export const saveGasMetrics = async (metrics: GasMetrics, protocolName: string, 
   const serialized = JSON.stringify(benchmarks, serializeBigInt, 2);
   await writeFile(BENCHMARKS_OUTPUT_PATH, `${serialized}\n`);
 };
+
+export const receiptHasTopics = (
+  receipt: TransactionReceipt,
+  requiredTopics: TopicEntry[],
+): boolean =>
+  requiredTopics.every((entry) =>
+    receipt.logs.some(
+      (log) =>
+        log.address.toLowerCase() === entry.contractAddress.toLowerCase() &&
+        log.topics[0] === entry.topic,
+    ),
+  );
+
+export const receiptHasAnyTopic = (
+  receipt: TransactionReceipt,
+  forbiddenTopics: TopicEntry[],
+): boolean =>
+  forbiddenTopics.some((entry) =>
+    receipt.logs.some(
+      (log) =>
+        log.address.toLowerCase() === entry.contractAddress.toLowerCase() &&
+        log.topics[0] === entry.topic,
+    ),
+  );

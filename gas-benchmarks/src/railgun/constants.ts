@@ -1,6 +1,7 @@
 import type { AbiEvent, Hex } from "viem";
 
 import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
+import type { TopicFilterConfig } from "../utils/types.js";
 
 /**
  * Maximum number of logs with a Shield event to be searched.
@@ -54,13 +55,8 @@ export const SHIELD_EVENT_ABI = {
   ],
 } as const satisfies AbiEvent;
 
-/**
- * A shield function call emits:
- * Transfer() - Tokens sent to shielded pool
- * Transfer() - Shield fee sent to vault
- * Shield() - To notify the shield
- */
-export const NUMBER_OF_SHIELD_EVENTS = 3;
+// keccak256 of Shield(uint256,uint256,(bytes32,(uint8,address,uint256),uint120)[],((bytes32[3]),bytes32)[],uint256[])
+const SHIELD_TOPIC: Hex = "0xd38e38773a674d12ff2feb5af5bffe1b6b67e428c0dcb57e2ba2e94b7d809694";
 
 /**
  * Event ABI for the Unshield event emitted by RailgunLogic in function transferTokenOut
@@ -85,14 +81,8 @@ export const UNSHIELD_EVENT_ABI = {
   ],
 } as const satisfies AbiEvent;
 
-/**
- * An unshield function call emits:
- * Nullified() - Nullifier being spent
- * Transfer() - Transfer unshielded tokens to recipient
- * Transfer() - Transfer unshield fee to vault
- * Unshield() - To notify the unshield process
- */
-export const NUMBER_OF_UNSHIELD_EVENTS = 4;
+// keccak256 of Unshield(address,(uint8,address,uint256),uint256,uint256)
+const UNSHIELD_TOPIC: Hex = "0xd93cf895c7d5b2cd7dc7a098b678b3089f37d91f48d9b83a0800a91cbdf05284";
 
 /**
  * Event ABI for the Nullified event emitted by RailgunLogic in function accumulateAndNullifyTransaction
@@ -106,8 +96,41 @@ export const NULLIFIED_EVENT_ABI = {
   ],
 } as const satisfies AbiEvent;
 
+// keccak256 of Nullified(uint16,bytes32[])
+const NULLIFIED_TOPIC: Hex = "0x781745c57906dc2f175fec80a9c691744c91c48a34a83672c41c2604774eb11f";
+
 /**
- * A transfer (private) function call emits:
- * Nullified() - Nullifier being spent
+ * Shield flow: requires Shield event, forbids Unshield and Nullified events.
+ * A pure shield tx only emits Transfer + Shield (no nullifier spend).
  */
-export const NUMBER_OF_TRANSFER_EVENTS = 1;
+export const SHIELD_TOPIC_FILTER: TopicFilterConfig = {
+  required: [{ contractAddress: RAILGUN_SMART_WALLET_PROXY, topic: SHIELD_TOPIC }],
+  forbidden: [
+    { contractAddress: RAILGUN_SMART_WALLET_PROXY, topic: UNSHIELD_TOPIC },
+    { contractAddress: RAILGUN_SMART_WALLET_PROXY, topic: NULLIFIED_TOPIC },
+  ],
+};
+
+/**
+ * Unshield flow: requires Nullified + Unshield events, forbids Shield event.
+ * An unshield tx spends a nullifier and emits an Unshield event.
+ */
+export const UNSHIELD_TOPIC_FILTER: TopicFilterConfig = {
+  required: [
+    { contractAddress: RAILGUN_SMART_WALLET_PROXY, topic: NULLIFIED_TOPIC },
+    { contractAddress: RAILGUN_SMART_WALLET_PROXY, topic: UNSHIELD_TOPIC },
+  ],
+  forbidden: [{ contractAddress: RAILGUN_SMART_WALLET_PROXY, topic: SHIELD_TOPIC }],
+};
+
+/**
+ * Transfer (private) flow: requires Nullified event, forbids Unshield and Shield events.
+ * A private transfer only spends a nullifier without shielding or unshielding.
+ */
+export const TRANSFER_TOPIC_FILTER: TopicFilterConfig = {
+  required: [{ contractAddress: RAILGUN_SMART_WALLET_PROXY, topic: NULLIFIED_TOPIC }],
+  forbidden: [
+    { contractAddress: RAILGUN_SMART_WALLET_PROXY, topic: UNSHIELD_TOPIC },
+    { contractAddress: RAILGUN_SMART_WALLET_PROXY, topic: SHIELD_TOPIC },
+  ],
+};
