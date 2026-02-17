@@ -10,4 +10,5 @@ export interface GetEventLogs {
   contractAddress: Hex;
   event: AbiEvent;
   maxLogs: number;
+  fromBlock?: bigint;
 }

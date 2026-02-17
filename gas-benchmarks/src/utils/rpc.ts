@@ -19,10 +19,15 @@ export const publicClient = createPublicClient({
   chain: mainnet,
 });
 
-export const getEventLogs = async ({ contractAddress, event, maxLogs }: GetEventLogs): Promise<Log[]> => {
+export const getEventLogs = async ({
+  contractAddress,
+  event,
+  maxLogs,
+  fromBlock: initialFromBlock,
+}: GetEventLogs): Promise<Log[]> => {
   const latestBlock = await publicClient.getBlockNumber();
   let toBlock = latestBlock;
-  let fromBlock = getBlockInRange(toBlock);
+  let fromBlock = initialFromBlock ?? getBlockInRange(toBlock);
 
   let tries = 0;
   const logs: Log[] = [];
@@ -79,8 +84,10 @@ export const getUniqueLogs = (logs: Log[]): Log[] => {
 export const getTransactionsWithEvents = async (
   logs: Log[],
   events: readonly AbiEvent[],
-): Promise<TransactionReceipt[]> =>
-  logs.reduce<Promise<TransactionReceipt[]>>(async (accumulatorPromise, log) => {
+): Promise<TransactionReceipt[]> => {
+  const eventTopics = events.map((event) => encodeEventTopics({ abi: [event] })[0]);
+
+  return logs.reduce<Promise<TransactionReceipt[]>>(async (accumulatorPromise, log) => {
     const accumulator = await accumulatorPromise;
 
     if (accumulator.length >= NUMBER_OF_TRANSACTIONS) {
@@ -93,9 +100,8 @@ export const getTransactionsWithEvents = async (
       return accumulator;
     }
 
-    const hasAllEvents = events.every((event, index) => {
+    const hasAllEvents = eventTopics.every((eventTopic, index) => {
       const logTopic = receipt.logs[index]!.topics[0];
-      const eventTopic = encodeEventTopics({ abi: [event] })[0];
 
       return logTopic === eventTopic;
     });
@@ -108,3 +114,4 @@ export const getTransactionsWithEvents = async (
 
     return accumulator;
   }, Promise.resolve([]));
+};

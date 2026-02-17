@@ -6,7 +6,7 @@ import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
  * Maximum number of logs with a Shield event to be searched.
  * Depends on the ratio of how many AA txs - EOA txs
  */
-export const MAX_OF_LOGS = NUMBER_OF_TRANSACTIONS * 5;
+export const MAX_OF_LOGS = NUMBER_OF_TRANSACTIONS * 10;
 
 /**
  * Proxy contract that points to the RailgunSmartWallet contract:
