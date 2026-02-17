@@ -1,14 +1,12 @@
-import { getEventLogs, getTransactionsWithNEvents, getUniqueLogs } from "../utils/rpc.js";
+import { getEventLogs, getTransactionsWithEvents, getUniqueLogs } from "../utils/rpc.js";
 import { getAverageMetrics, saveGasMetrics } from "../utils/utils.js";
 
 import {
-  ENCRYPTED_NOTE_EVENT_ABI,
   MAX_OF_LOGS,
-  NUMBER_OF_SHIELD_EVENTS,
-  NUMBER_OF_UNSHIELD_EVENTS,
-  STAKE_BURNED_EVENT_ABI,
+  SHIELD_ETH_EVENTS,
   TORNADO_CASH_RELAYER_REGISTRY,
   TORNADO_CASH_ROUTER,
+  UNSHIELD_ETH_EVENTS,
 } from "./constants.js";
 
 export class TornadoCash {
@@ -24,12 +22,12 @@ export class TornadoCash {
   async benchmarkShield(): Promise<void> {
     const logs = await getEventLogs({
       contractAddress: TORNADO_CASH_ROUTER,
-      event: ENCRYPTED_NOTE_EVENT_ABI,
+      event: SHIELD_ETH_EVENTS.at(-1)!,
       maxLogs: MAX_OF_LOGS,
     });
     const uniqueLogs = getUniqueLogs(logs);
 
-    const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_SHIELD_EVENTS);
+    const txs = await getTransactionsWithEvents(uniqueLogs, SHIELD_ETH_EVENTS);
 
     if (txs.length === 0) {
       throw new Error(`No shield transactions found for ${this.name}.`);
@@ -37,18 +35,18 @@ export class TornadoCash {
 
     const metrics = getAverageMetrics(txs);
 
-    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "shield");
+    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "shield_eth");
   }
 
   async benchmarkUnshield(): Promise<void> {
     const logs = await getEventLogs({
       contractAddress: TORNADO_CASH_RELAYER_REGISTRY,
-      event: STAKE_BURNED_EVENT_ABI,
+      event: UNSHIELD_ETH_EVENTS[0],
       maxLogs: MAX_OF_LOGS,
     });
     const uniqueLogs = getUniqueLogs(logs);
 
-    const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_UNSHIELD_EVENTS);
+    const txs = await getTransactionsWithEvents(uniqueLogs, UNSHIELD_ETH_EVENTS);
 
     if (txs.length === 0) {
       throw new Error(`No unshield transactions found for ${this.name}.`);
@@ -56,6 +54,6 @@ export class TornadoCash {
 
     const metrics = getAverageMetrics(txs);
 
-    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "unshield");
+    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "unshield_eth");
   }
 }

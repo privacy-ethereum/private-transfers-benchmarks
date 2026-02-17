@@ -1,4 +1,12 @@
-import { createPublicClient, http, type Hash, type Log, type TransactionReceipt } from "viem";
+import {
+  createPublicClient,
+  encodeEventTopics,
+  http,
+  type AbiEvent,
+  type Hash,
+  type Log,
+  type TransactionReceipt,
+} from "viem";
 import { mainnet } from "viem/chains";
 
 import type { GetEventLogs } from "./types.js";
@@ -68,11 +76,11 @@ export const getUniqueLogs = (logs: Log[]): Log[] => {
   return uniqueTxs;
 };
 
-export const getTransactionsWithNEvents = async (
+export const getTransactionsWithEvents = async (
   logs: Log[],
-  numberOfEvents: number,
-): Promise<TransactionReceipt[]> => {
-  const txs = await logs.reduce<Promise<TransactionReceipt[]>>(async (accumulatorPromise, log) => {
+  events: readonly AbiEvent[],
+): Promise<TransactionReceipt[]> =>
+  logs.reduce<Promise<TransactionReceipt[]>>(async (accumulatorPromise, log) => {
     const accumulator = await accumulatorPromise;
 
     if (accumulator.length >= NUMBER_OF_TRANSACTIONS) {
@@ -80,12 +88,23 @@ export const getTransactionsWithNEvents = async (
     }
 
     const receipt = await publicClient.getTransactionReceipt({ hash: log.transactionHash! });
-    if (receipt.logs.length === numberOfEvents) {
-      accumulator.push(receipt);
+
+    if (receipt.logs.length !== events.length) {
+      return accumulator;
     }
+
+    const hasAllEvents = events.every((event, index) => {
+      const logTopic = receipt.logs[index]!.topics[0];
+      const eventTopic = encodeEventTopics({ abi: [event] })[0];
+
+      return logTopic === eventTopic;
+    });
+
+    if (!hasAllEvents) {
+      return accumulator;
+    }
+
+    accumulator.push(receipt);
 
     return accumulator;
   }, Promise.resolve([]));
-
-  return txs;
-};
