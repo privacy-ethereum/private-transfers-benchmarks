@@ -1,7 +1,7 @@
 import { getEventLogs, getTransactionsWithEvents, getUniqueLogs } from "../utils/rpc.js";
 import { getAverageMetrics, saveGasMetrics } from "../utils/utils.js";
 
-import { INTMAX_LIQUIDITY, MAX_OF_LOGS, SHIELD_ETH_EVENTS, UNSHIELD_ETH_EVENTS } from "./constants.js";
+import { INTMAX_LIQUIDITY_PROXY, MAX_OF_LOGS, SHIELD_ETH_EVENTS, UNSHIELD_ETH_EVENTS } from "./constants.js";
 
 export class IntmaxV2 {
   readonly name = "intmax";
@@ -15,7 +15,7 @@ export class IntmaxV2 {
 
   async benchmarkShield(): Promise<void> {
     const logs = await getEventLogs({
-      contractAddress: INTMAX_LIQUIDITY,
+      contractAddress: INTMAX_LIQUIDITY_PROXY,
       event: SHIELD_ETH_EVENTS.at(-1)!,
       maxLogs: MAX_OF_LOGS,
     });
@@ -34,7 +34,7 @@ export class IntmaxV2 {
 
   async benchmarkUnshield(): Promise<void> {
     const logs = await getEventLogs({
-      contractAddress: INTMAX_LIQUIDITY,
+      contractAddress: INTMAX_LIQUIDITY_PROXY,
       event: UNSHIELD_ETH_EVENTS[0],
       maxLogs: MAX_OF_LOGS,
     });
