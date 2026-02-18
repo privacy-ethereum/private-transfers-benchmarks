@@ -1,4 +1,12 @@
-import { createPublicClient, http, type Hash, type Log, type TransactionReceipt } from "viem";
+import {
+  createPublicClient,
+  encodeEventTopics,
+  http,
+  type AbiEvent,
+  type Hash,
+  type Log,
+  type TransactionReceipt,
+} from "viem";
 import { mainnet } from "viem/chains";
 
 import type { GetEventLogs } from "./types.js";
@@ -11,10 +19,15 @@ export const publicClient = createPublicClient({
   chain: mainnet,
 });
 
-export const getEventLogs = async ({ contractAddress, event, maxLogs }: GetEventLogs): Promise<Log[]> => {
+export const getEventLogs = async ({
+  contractAddress,
+  event,
+  maxLogs,
+  fromBlock: initialFromBlock,
+}: GetEventLogs): Promise<Log[]> => {
   const latestBlock = await publicClient.getBlockNumber();
   let toBlock = latestBlock;
-  let fromBlock = getBlockInRange(toBlock);
+  let fromBlock = initialFromBlock ?? getBlockInRange(toBlock);
 
   let tries = 0;
   const logs: Log[] = [];
@@ -68,11 +81,13 @@ export const getUniqueLogs = (logs: Log[]): Log[] => {
   return uniqueTxs;
 };
 
-export const getTransactionsWithNEvents = async (
+export const getTransactionsWithEvents = async (
   logs: Log[],
-  numberOfEvents: number,
+  events: readonly AbiEvent[],
 ): Promise<TransactionReceipt[]> => {
-  const txs = await logs.reduce<Promise<TransactionReceipt[]>>(async (accumulatorPromise, log) => {
+  const eventTopics = events.map((event) => encodeEventTopics({ abi: [event] })[0]);
+
+  return logs.reduce<Promise<TransactionReceipt[]>>(async (accumulatorPromise, log) => {
     const accumulator = await accumulatorPromise;
 
     if (accumulator.length >= NUMBER_OF_TRANSACTIONS) {
@@ -80,12 +95,23 @@ export const getTransactionsWithNEvents = async (
     }
 
     const receipt = await publicClient.getTransactionReceipt({ hash: log.transactionHash! });
-    if (receipt.logs.length === numberOfEvents) {
-      accumulator.push(receipt);
+
+    if (receipt.logs.length !== events.length) {
+      return accumulator;
     }
+
+    const hasAllEvents = eventTopics.every((eventTopic, index) => {
+      const logTopic = receipt.logs[index]!.topics[0];
+
+      return logTopic === eventTopic;
+    });
+
+    if (!hasAllEvents) {
+      return accumulator;
+    }
+
+    accumulator.push(receipt);
 
     return accumulator;
   }, Promise.resolve([]));
-
-  return txs;
 };

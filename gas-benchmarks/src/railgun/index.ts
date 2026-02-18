@@ -1,15 +1,12 @@
-import { getEventLogs, getTransactionsWithNEvents, getUniqueLogs } from "../utils/rpc.js";
+import { getEventLogs, getTransactionsWithEvents, getUniqueLogs } from "../utils/rpc.js";
 import { getAverageMetrics, saveGasMetrics } from "../utils/utils.js";
 
 import {
   MAX_OF_LOGS,
-  NULLIFIED_EVENT_ABI,
-  NUMBER_OF_SHIELD_EVENTS,
-  NUMBER_OF_TRANSFER_EVENTS,
-  NUMBER_OF_UNSHIELD_EVENTS,
   RAILGUN_SMART_WALLET_PROXY,
-  SHIELD_EVENT_ABI,
-  UNSHIELD_EVENT_ABI,
+  SHIELD_ERC20_EVENTS,
+  TRANSFER_ERC20_EVENTS,
+  UNSHIELD_ERC20_EVENTS,
 } from "./constants.js";
 
 export class Railgun {
@@ -26,42 +23,57 @@ export class Railgun {
   async benchmarkShield(): Promise<void> {
     const logs = await getEventLogs({
       contractAddress: RAILGUN_SMART_WALLET_PROXY,
-      event: SHIELD_EVENT_ABI,
+      event: SHIELD_ERC20_EVENTS.at(-1)!,
       maxLogs: MAX_OF_LOGS,
     });
     const uniqueLogs = getUniqueLogs(logs);
 
-    const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_SHIELD_EVENTS);
+    const txs = await getTransactionsWithEvents(uniqueLogs, SHIELD_ERC20_EVENTS);
+
+    if (txs.length === 0) {
+      throw new Error(`No shield transactions found for ${this.name}.`);
+    }
+
     const metrics = getAverageMetrics(txs);
 
-    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "shield");
+    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "shield_erc20");
   }
 
   async benchmarkUnshield(): Promise<void> {
     const logs = await getEventLogs({
       contractAddress: RAILGUN_SMART_WALLET_PROXY,
-      event: UNSHIELD_EVENT_ABI,
+      event: UNSHIELD_ERC20_EVENTS.at(-1)!,
       maxLogs: MAX_OF_LOGS,
     });
     const uniqueLogs = getUniqueLogs(logs);
 
-    const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_UNSHIELD_EVENTS);
+    const txs = await getTransactionsWithEvents(uniqueLogs, UNSHIELD_ERC20_EVENTS);
+
+    if (txs.length === 0) {
+      throw new Error(`No unshield transactions found for ${this.name}.`);
+    }
+
     const metrics = getAverageMetrics(txs);
 
-    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "unshield");
+    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "unshield_erc20");
   }
 
   async benchmarkTransfer(): Promise<void> {
     const logs = await getEventLogs({
       contractAddress: RAILGUN_SMART_WALLET_PROXY,
-      event: NULLIFIED_EVENT_ABI,
+      event: TRANSFER_ERC20_EVENTS[0],
       maxLogs: MAX_OF_LOGS,
     });
     const uniqueLogs = getUniqueLogs(logs);
 
-    const txs = await getTransactionsWithNEvents(uniqueLogs, NUMBER_OF_TRANSFER_EVENTS);
+    const txs = await getTransactionsWithEvents(uniqueLogs, TRANSFER_ERC20_EVENTS);
+
+    if (txs.length === 0) {
+      throw new Error(`No transfer transactions found for ${this.name}.`);
+    }
+
     const metrics = getAverageMetrics(txs);
 
-    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "transfer");
+    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "transfer_erc20");
   }
 }
