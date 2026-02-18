@@ -1,0 +1,2 @@
+cd gas-benchmarks
+pnpm exec lint-staged

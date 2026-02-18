@@ -1,4 +1,4 @@
-import type { AbiEvent, Hex } from "viem";
+import { parseAbiItem, type Hex } from "viem";
 
 import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
 
@@ -27,37 +27,12 @@ export const PRIVACY_POOLS_ENTRYPOINT_PROXY: Hex = "0x6818809EefCe719E480a7526D7
  * https://etherscan.io/tx/0x87320aaae4868c6f5b7c8b31ba2fc82005bdd7522fdf85f9eb8dcc93a34cb475
  */
 export const SHIELD_ETH_EVENTS = [
-  {
-    type: "event",
-    name: "LeafInserted",
-    inputs: [
-      { name: "_index", type: "uint256", indexed: false },
-      { name: "_leaf", type: "uint256", indexed: false },
-      { name: "_root", type: "uint256", indexed: false },
-    ],
-  },
-  {
-    type: "event",
-    name: "Deposited",
-    inputs: [
-      { name: "_depositor", type: "address", indexed: true },
-      { name: "_commitment", type: "uint256", indexed: false },
-      { name: "_label", type: "uint256", indexed: false },
-      { name: "_value", type: "uint256", indexed: false },
-      { name: "_precommitmentHash", type: "uint256", indexed: false },
-    ],
-  },
-  {
-    type: "event",
-    name: "Deposited",
-    inputs: [
-      { name: "depositor", type: "address", indexed: true },
-      { name: "pool", type: "address", indexed: true },
-      { name: "commitment", type: "uint256", indexed: false },
-      { name: "amount", type: "uint256", indexed: false },
-    ],
-  },
-] as const satisfies readonly AbiEvent[];
+  parseAbiItem("event LeafInserted(uint256 _index, uint256 _leaf, uint256 _root)"),
+  parseAbiItem(
+    "event Deposited(address indexed _depositor, uint256 _commitment, uint256 _label, uint256 _value, uint256 _precommitmentHash)",
+  ),
+  parseAbiItem("event Deposited(address indexed depositor, address indexed pool, uint256 commitment, uint256 amount)"),
+] as const;
 
 /**
  * Entrypoint.relay function:
@@ -72,34 +47,11 @@ export const SHIELD_ETH_EVENTS = [
  * https://etherscan.io/tx/0x47e918eda32bc332a5684aa986733eb4fde7a4f8189e21443f23adf0807974b7
  */
 export const UNSHIELD_ETH_EVENTS = [
-  {
-    type: "event",
-    name: "LeafInserted",
-    inputs: [
-      { name: "_index", type: "uint256", indexed: false },
-      { name: "_leaf", type: "uint256", indexed: false },
-      { name: "_root", type: "uint256", indexed: false },
-    ],
-  },
-  {
-    type: "event",
-    name: "Withdrawn",
-    inputs: [
-      { name: "processor", type: "address", indexed: true },
-      { name: "value", type: "uint256", indexed: false },
-      { name: "spentNullifier", type: "uint256", indexed: false },
-      { name: "newCommitment", type: "uint256", indexed: false },
-    ],
-  },
-  {
-    type: "event",
-    name: "WithdrawalRelayed",
-    inputs: [
-      { name: "relayer", type: "address", indexed: true },
-      { name: "recipient", type: "address", indexed: true },
-      { name: "asset", type: "address", indexed: true },
-      { name: "amount", type: "uint256", indexed: false },
-      { name: "feeAmount", type: "uint256", indexed: false },
-    ],
-  },
-] as const satisfies readonly AbiEvent[];
+  parseAbiItem("event LeafInserted(uint256 _index, uint256 _leaf, uint256 _root)"),
+  parseAbiItem(
+    "event Withdrawn(address indexed processor, uint256 value, uint256 spentNullifier, uint256 newCommitment)",
+  ),
+  parseAbiItem(
+    "event WithdrawalRelayed(address indexed relayer, address indexed recipient, address indexed asset, uint256 amount, uint256 feeAmount)",
+  ),
+] as const;

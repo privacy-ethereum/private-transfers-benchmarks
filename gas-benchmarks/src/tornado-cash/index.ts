@@ -1,5 +1,7 @@
+import type { GasMetrics } from "../utils/types.js";
+
 import { getEventLogs, getTransactionsWithEvents, getUniqueLogs } from "../utils/rpc.js";
-import { getAverageMetrics, saveGasMetrics } from "../utils/utils.js";
+import { getAverageMetrics } from "../utils/utils.js";
 
 import {
   MAX_OF_LOGS,
@@ -14,46 +16,41 @@ export class TornadoCash {
 
   readonly version = "unstoppable-release";
 
-  async benchmark(): Promise<void> {
-    await this.benchmarkShield();
-    await this.benchmarkUnshield();
+  async benchmark(): Promise<Record<string, GasMetrics>> {
+    const [shieldEth, unshieldEth] = await Promise.all([this.benchmarkShieldETH(), this.benchmarkUnshieldETH()]);
+
+    return { shieldEth, unshieldEth };
   }
 
-  async benchmarkShield(): Promise<void> {
+  async benchmarkShieldETH(): Promise<GasMetrics> {
     const logs = await getEventLogs({
       contractAddress: TORNADO_CASH_ROUTER,
-      event: SHIELD_ETH_EVENTS.at(-1)!,
+      events: SHIELD_ETH_EVENTS,
       maxLogs: MAX_OF_LOGS,
     });
     const uniqueLogs = getUniqueLogs(logs);
-
     const txs = await getTransactionsWithEvents(uniqueLogs, SHIELD_ETH_EVENTS);
 
     if (txs.length === 0) {
-      throw new Error(`No shield transactions found for ${this.name}.`);
+      throw new Error(`No shield ETH transactions found for ${this.name}.`);
     }
 
-    const metrics = getAverageMetrics(txs);
-
-    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "shield_eth");
+    return getAverageMetrics(txs);
   }
 
-  async benchmarkUnshield(): Promise<void> {
+  async benchmarkUnshieldETH(): Promise<GasMetrics> {
     const logs = await getEventLogs({
       contractAddress: TORNADO_CASH_RELAYER_REGISTRY,
-      event: UNSHIELD_ETH_EVENTS[0],
+      events: UNSHIELD_ETH_EVENTS,
       maxLogs: MAX_OF_LOGS,
     });
     const uniqueLogs = getUniqueLogs(logs);
-
     const txs = await getTransactionsWithEvents(uniqueLogs, UNSHIELD_ETH_EVENTS);
 
     if (txs.length === 0) {
-      throw new Error(`No unshield transactions found for ${this.name}.`);
+      throw new Error(`No unshield ETH transactions found for ${this.name}.`);
     }
 
-    const metrics = getAverageMetrics(txs);
-
-    await saveGasMetrics(metrics, `${this.name}_${this.version}`, "unshield_eth");
+    return getAverageMetrics(txs);
   }
 }

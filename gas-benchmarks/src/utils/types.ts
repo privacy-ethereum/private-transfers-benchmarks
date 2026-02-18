@@ -8,7 +8,9 @@ export interface GasMetrics {
 
 export interface GetEventLogs {
   contractAddress: Hex;
-  event: AbiEvent;
+  events: readonly AbiEvent[];
   maxLogs: number;
   fromBlock?: bigint;
 }
+
+export type BenchmarkDb = Record<string, Record<string, GasMetrics | undefined>>;
