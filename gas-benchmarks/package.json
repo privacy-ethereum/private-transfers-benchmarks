@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "benchmark": "tsx src/index.ts",
+    "test": "vitest run",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint": "eslint --ext .ts .",
@@ -46,7 +47,8 @@
     "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.55.0"
+    "typescript-eslint": "^8.55.0",
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "dotenv": "^17.2.4",
