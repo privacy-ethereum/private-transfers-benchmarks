@@ -1,4 +1,4 @@
-import type { AbiEvent, Hex } from "viem";
+import { parseAbiItem, type Hex } from "viem";
 
 import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
 
@@ -26,24 +26,9 @@ export const TORNADO_CASH_ROUTER: Hex = "0xd90e2f925DA726b50C4Ed8D0Fb90Ad053324F
  * https://etherscan.io/tx/0x2e847019a164ebff78700fcd1d19b5ade27b78d3869770905e87eed38494b834
  */
 export const SHIELD_ETH_EVENTS = [
-  {
-    type: "event",
-    name: "Deposit",
-    inputs: [
-      { name: "commitment", type: "bytes32", indexed: true },
-      { name: "leafIndex", type: "uint32", indexed: false },
-      { name: "timestamp", type: "uint256", indexed: false },
-    ],
-  },
-  {
-    type: "event",
-    name: "EncryptedNote",
-    inputs: [
-      { name: "sender", type: "address", indexed: true },
-      { name: "encryptedNote", type: "bytes", indexed: false },
-    ],
-  },
-] as const satisfies readonly AbiEvent[];
+  parseAbiItem("event Deposit(bytes32 indexed commitment, uint32 leafIndex, uint256 timestamp)"),
+  parseAbiItem("event EncryptedNote(address indexed sender, bytes encryptedNote)"),
+] as const;
 
 /**
  * Tornado Cash Relayer Registry contract that emits a StakeBurned event when a relayed withdrawal is executed.
@@ -64,22 +49,6 @@ export const TORNADO_CASH_RELAYER_REGISTRY: Hex = "0x58E8dCC13BE9780fC42E8723D8E
  * https://etherscan.io/tx/0x99e1f27a5d7e8bfcaadad216a6130f66eedeeca43c5d917acd6952414e388331
  */
 export const UNSHIELD_ETH_EVENTS = [
-  {
-    type: "event",
-    name: "StakeBurned",
-    inputs: [
-      { name: "relayer", type: "address", indexed: false },
-      { name: "amountBurned", type: "uint256", indexed: false },
-    ],
-  },
-  {
-    type: "event",
-    name: "Withdrawal",
-    inputs: [
-      { name: "to", type: "address", indexed: false },
-      { name: "nullifierHash", type: "bytes32", indexed: false },
-      { name: "relayer", type: "address", indexed: true },
-      { name: "fee", type: "uint256", indexed: false },
-    ],
-  },
-] as const satisfies readonly AbiEvent[];
+  parseAbiItem("event StakeBurned(address relayer, uint256 amountBurned)"),
+  parseAbiItem("event Withdrawal(address to, bytes32 nullifierHash, address indexed relayer, uint256 fee)"),
+] as const;

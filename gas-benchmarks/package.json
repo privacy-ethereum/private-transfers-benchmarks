@@ -9,7 +9,8 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint": "eslint --ext .ts .",
-    "lint:fix": "eslint --fix --ext .ts ."
+    "lint:fix": "eslint --fix --ext .ts .",
+    "prepare": "husky"
   },
   "keywords": [
     "private-transfers",
@@ -40,6 +41,8 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
@@ -47,6 +50,13 @@
   },
   "dependencies": {
     "dotenv": "^17.2.4",
+    "lowdb": "^7.0.1",
     "viem": "^2.45.3"
+  },
+  "lint-staged": {
+    "*": [
+      "pnpm run lint:fix --",
+      "pnpm run format:fix --"
+    ]
   }
 }

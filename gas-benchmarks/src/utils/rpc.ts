@@ -21,7 +21,7 @@ export const publicClient = createPublicClient({
 
 export const getEventLogs = async ({
   contractAddress,
-  event,
+  events,
   maxLogs,
   fromBlock: initialFromBlock,
 }: GetEventLogs): Promise<Log[]> => {
@@ -36,7 +36,7 @@ export const getEventLogs = async ({
     // eslint-disable-next-line no-await-in-loop
     const batchLogs = await publicClient.getLogs({
       address: contractAddress,
-      event,
+      events,
       fromBlock,
       toBlock,
     });
