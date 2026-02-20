@@ -5,6 +5,24 @@ import { BLOCK_RANGE } from "./constants.js";
 
 export const getBlockInRange = (block: bigint): bigint => (block > BLOCK_RANGE ? block - BLOCK_RANGE + 1n : 0n);
 
+export const getFromAndToBlocks = (
+  latestBlock: bigint,
+  initialFromBlock?: bigint,
+): { fromBlock: bigint; toBlock: bigint } => {
+  let fromBlock;
+  let toBlock;
+
+  if (initialFromBlock) {
+    fromBlock = initialFromBlock;
+    toBlock = latestBlock - fromBlock > BLOCK_RANGE ? fromBlock + BLOCK_RANGE : latestBlock;
+  } else {
+    toBlock = latestBlock;
+    fromBlock = getBlockInRange(toBlock);
+  }
+
+  return { fromBlock, toBlock };
+};
+
 export const getAverageMetrics = (txs: TransactionReceipt[]): GasMetrics => {
   if (txs.length === 0) {
     return {

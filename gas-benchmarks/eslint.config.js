@@ -99,7 +99,13 @@ export default defineConfig([
       "import/no-extraneous-dependencies": [
         "error",
         {
-          devDependencies: ["**/*.test.ts", "**/__benchmarks__/**", "**/tests/**", "**/__tests__/**"],
+          devDependencies: [
+            "**/*.test.ts",
+            "**/__benchmarks__/**",
+            "**/tests/**",
+            "**/__tests__/**",
+            "**/vitest.config.ts",
+          ],
         },
       ],
       "no-debugger": isProduction ? "error" : "off",

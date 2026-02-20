@@ -5,36 +5,36 @@ import {
   type AbiEvent,
   type Hash,
   type Log,
+  type PublicClient,
   type TransactionReceipt,
 } from "viem";
-import { mainnet } from "viem/chains";
+import { mainnet, scroll } from "viem/chains";
 
 import type { GetEventLogs } from "./types.js";
 
-import { ETH_RPC_URL, MAX_NUMBER_OF_RPC_TRIES, NUMBER_OF_TRANSACTIONS } from "./constants.js";
-import { getBlockInRange } from "./utils.js";
+import { ETH_RPC_URL, MAX_NUMBER_OF_RPC_TRIES, NUMBER_OF_TRANSACTIONS, SCROLL_RPC_URL } from "./constants.js";
+import { getBlockInRange, getFromAndToBlocks } from "./utils.js";
 
-export const publicClient = createPublicClient({
-  transport: http(ETH_RPC_URL),
-  chain: mainnet,
-});
+export const publicClient = createPublicClient({ chain: mainnet, transport: http(ETH_RPC_URL) });
+
+export const scrollPublicClient = createPublicClient({ chain: scroll, transport: http(SCROLL_RPC_URL) });
 
 export const getEventLogs = async ({
   contractAddress,
   events,
   maxLogs,
   fromBlock: initialFromBlock,
+  client = publicClient,
 }: GetEventLogs): Promise<Log[]> => {
-  const latestBlock = await publicClient.getBlockNumber();
-  let toBlock = latestBlock;
-  let fromBlock = initialFromBlock ?? getBlockInRange(toBlock);
+  const latestBlock = await client.getBlockNumber();
+  let { fromBlock, toBlock } = getFromAndToBlocks(latestBlock, initialFromBlock);
 
   let tries = 0;
   const logs: Log[] = [];
 
   while (logs.length < maxLogs) {
     // eslint-disable-next-line no-await-in-loop
-    const batchLogs = await publicClient.getLogs({
+    const batchLogs = await client.getLogs({
       address: contractAddress,
       events,
       fromBlock,
@@ -84,6 +84,7 @@ export const getUniqueLogs = (logs: Log[]): Log[] => {
 export const getTransactionsWithEvents = async (
   logs: Log[],
   events: readonly AbiEvent[],
+  client: PublicClient = publicClient,
 ): Promise<TransactionReceipt[]> => {
   const eventTopics = events.map((event) => encodeEventTopics({ abi: [event] })[0]);
 
@@ -94,7 +95,7 @@ export const getTransactionsWithEvents = async (
       return accumulator;
     }
 
-    const receipt = await publicClient.getTransactionReceipt({ hash: log.transactionHash! });
+    const receipt = await client.getTransactionReceipt({ hash: log.transactionHash! });
 
     if (receipt.logs.length !== events.length) {
       return accumulator;

@@ -1,3 +1,4 @@
+import { Intmax } from "./intmax/index.js";
 import { PrivacyPools } from "./privacy-pools/index.js";
 import { Railgun } from "./railgun/index.js";
 import { TornadoCash } from "./tornado-cash/index.js";
@@ -6,15 +7,17 @@ import { db } from "./utils/db.js";
 const railgun = new Railgun();
 const tornadoCash = new TornadoCash();
 const privacyPools = new PrivacyPools();
+const intmax = new Intmax();
 
 await db.read();
 
 const start = Date.now();
 
-const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics] = await Promise.all([
+const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics] = await Promise.all([
   railgun.benchmark(),
   tornadoCash.benchmark(),
   privacyPools.benchmark(),
+  intmax.benchmark(),
 ]);
 
 await db.update((data) => {
@@ -35,6 +38,12 @@ await db.update((data) => {
   data[`${privacyPools.name}_${privacyPools.version}`] = {
     shield_eth: privacyPoolsMetrics.shieldEth,
     unshield_eth: privacyPoolsMetrics.unshieldEth,
+  };
+
+  // eslint-disable-next-line no-param-reassign
+  data[`${intmax.name}_${intmax.version}`] = {
+    deposit_eth: intmaxMetrics.depositEth,
+    withdraw_eth: intmaxMetrics.withdrawEth,
   };
 });
 
