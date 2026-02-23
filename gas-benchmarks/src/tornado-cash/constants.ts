@@ -1,18 +1,10 @@
-import { parseAbiItem, type Hex } from "viem";
-
-import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
-
-/**
- * Maximum number of logs with a Shield event to be searched.
- * Depends on the ratio of how many AA txs - EOA txs
- */
-export const MAX_OF_LOGS = NUMBER_OF_TRANSACTIONS * 5;
+import { parseAbiItem, type Address } from "viem";
 
 /**
  * Tornado Cash Router contract that directs deposits to different pools (ETH, ERC20 0.1, ERC20 1, ERC20 10, ERC20 100):
  * https://github.com/contractscan/etherscan.io-0xd90e2f925da726b50c4ed8d0fb90ad053324f31b/blob/main/TornadoRouter.sol
  */
-export const TORNADO_CASH_ROUTER: Hex = "0xd90e2f925DA726b50C4Ed8D0Fb90Ad053324F31b";
+export const TORNADO_CASH_ROUTER: Address = "0xd90e2f925DA726b50C4Ed8D0Fb90Ad053324F31b";
 
 /**
  * TornadoRouter.deposit function:
@@ -35,7 +27,7 @@ export const SHIELD_ETH_EVENTS = [
  * After it, a pool (ETH, ERC20 0.1, ERC20 1, ERC20 10, ERC20 100) emits a Withdrawal event.
  * https://github.com/contractscan/etherscan.io-0xd90e2f925da726b50c4ed8d0fb90ad053324f31b/blob/main/RelayerRegistry.sol
  */
-export const TORNADO_CASH_RELAYER_REGISTRY: Hex = "0x58E8dCC13BE9780fC42E8723D8EaD4CF46943dF2";
+export const TORNADO_CASH_RELAYER_REGISTRY: Address = "0x58E8dCC13BE9780fC42E8723D8EaD4CF46943dF2";
 
 /**
  * TornadoRegistry.registry function:

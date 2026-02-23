@@ -1,18 +1,10 @@
-import { parseAbiItem, type Hex } from "viem";
-
-import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
-
-/**
- * Maximum number of logs with a Deposited event to be searched.
- * Depends on the ratio of how many AA txs - EOA txs
- */
-export const MAX_OF_LOGS = NUMBER_OF_TRANSACTIONS * 5;
+import { parseAbiItem, type Address } from "viem";
 
 /**
  * Proxy contract address for the Privacy Pools Entrypoint:
  * https://github.com/0xbow-io/privacy-pools-core/blob/main/packages/contracts/src/contracts/Entrypoint.sol
  */
-export const PRIVACY_POOLS_ENTRYPOINT_PROXY: Hex = "0x6818809EefCe719E480a7526D76bD3e561526b46";
+export const PRIVACY_POOLS_ENTRYPOINT_PROXY: Address = "0x6818809EefCe719E480a7526D76bD3e561526b46";
 
 /**
  * Entrypoint.deposit function:

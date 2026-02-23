@@ -2,9 +2,11 @@ import { Low } from "lowdb";
 
 import { readFile, writeFile } from "node:fs/promises";
 
-import type { BenchmarkDb } from "./types.js";
+import type { GasMetrics } from "./types.js";
 
 import { BENCHMARKS_OUTPUT_PATH } from "./constants.js";
+
+type BenchmarkDb = Record<string, Record<string, GasMetrics | undefined>>;
 
 const serializeBigInt = (_key: string, value: unknown) => (typeof value === "bigint" ? `${value.toString()}n` : value);
 
