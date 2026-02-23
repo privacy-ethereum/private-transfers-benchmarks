@@ -23,8 +23,8 @@ import {
 
 /** Pre-configured RPC clients keyed by chain ID */
 const clients: Record<number, PublicClient> = {
-  [mainnet.id]: createPublicClient({ chain: mainnet, transport: http(ETH_RPC_URL) }),
-  [scroll.id]: createPublicClient({ chain: scroll, transport: http(SCROLL_RPC_URL) }),
+  [mainnet.id]: createPublicClient({ chain: mainnet, transport: http(ETH_RPC_URL, { batch: true }) }),
+  [scroll.id]: createPublicClient({ chain: scroll, transport: http(SCROLL_RPC_URL, { batch: true }) }),
 };
 
 /** Returns the RPC client for a given chain */
@@ -89,29 +89,21 @@ const getAllLogs = async (
   return uniqueLogs;
 };
 
-/** Fetches receipts sequentially and filters to those matching the expected event pattern */
+/** Fetches receipts and filters to those matching the expected event pattern */
 const getValidReceipts = async (
   client: PublicClient,
   logs: Log[],
   events: readonly AbiEvent[],
 ): Promise<TransactionReceipt[]> => {
   const eventTopics = events.map((event) => encodeEventTopics({ abi: [event] })[0]);
-  const validReceipts: TransactionReceipt[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const log of logs) {
-    // eslint-disable-next-line no-await-in-loop
-    const receipt = await client.getTransactionReceipt({ hash: log.transactionHash! });
+  const receipts = await Promise.all(logs.map((log) => client.getTransactionReceipt({ hash: log.transactionHash! })));
 
+  return receipts.filter((receipt) => {
     const hasExpectedLogCount = receipt.logs.length === events.length;
     const hasMatchingTopics = eventTopics.every((eventTopic, index) => receipt.logs[index]!.topics[0] === eventTopic);
-
-    if (hasExpectedLogCount && hasMatchingTopics) {
-      validReceipts.push(receipt);
-    }
-  }
-
-  return validReceipts;
+    return hasExpectedLogCount && hasMatchingTopics;
+  });
 };
 
 /** Scans a 7-day block window, fetches receipts, and returns valid transactions */
