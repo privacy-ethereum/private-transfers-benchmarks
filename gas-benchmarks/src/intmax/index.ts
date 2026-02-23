@@ -1,6 +1,9 @@
+import { mainnet, scroll } from "viem/chains";
+
 import type { GasMetrics } from "../utils/types.js";
 
-import { getEventLogs, getTransactionsWithEvents, getUniqueLogs, scrollPublicClient } from "../utils/rpc.js";
+import { MIN_SAMPLES } from "../utils/constants.js";
+import { getValidTransactions } from "../utils/rpc.js";
 import { getAverageMetrics } from "../utils/utils.js";
 
 import {
@@ -8,7 +11,6 @@ import {
   WITHDRAW_ETH_FROM_BLOCK,
   INTMAX_LIQUIDITY_PROXY,
   INTMAX_WITHDRAWAL_PROXY,
-  MAX_OF_LOGS,
   DEPOSIT_ETH_EVENTS,
   WITHDRAW_ETH_EVENTS,
 } from "./constants.js";
@@ -25,37 +27,32 @@ export class Intmax {
   }
 
   async benchmarkDepositETH(): Promise<GasMetrics> {
-    const logs = await getEventLogs({
+    const receipts = await getValidTransactions({
       contractAddress: INTMAX_LIQUIDITY_PROXY,
       events: DEPOSIT_ETH_EVENTS,
-      maxLogs: MAX_OF_LOGS,
-      fromBlock: DEPOSIT_ETH_FROM_BLOCK,
+      chain: mainnet,
+      latestBlock: DEPOSIT_ETH_FROM_BLOCK,
     });
-    const uniqueLogs = getUniqueLogs(logs);
-    const txs = await getTransactionsWithEvents(uniqueLogs, DEPOSIT_ETH_EVENTS);
 
-    if (txs.length === 0) {
-      throw new Error(`No deposit ETH transactions found for ${this.name}.`);
+    if (receipts.length < MIN_SAMPLES) {
+      throw new Error(`${this.name} deposit ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(txs);
+    return getAverageMetrics(receipts);
   }
 
   async benchmarkWithdrawETH(): Promise<GasMetrics> {
-    const logs = await getEventLogs({
+    const receipts = await getValidTransactions({
       contractAddress: INTMAX_WITHDRAWAL_PROXY,
       events: WITHDRAW_ETH_EVENTS,
-      maxLogs: MAX_OF_LOGS,
-      fromBlock: WITHDRAW_ETH_FROM_BLOCK,
-      client: scrollPublicClient,
+      chain: scroll,
+      latestBlock: WITHDRAW_ETH_FROM_BLOCK,
     });
-    const uniqueLogs = getUniqueLogs(logs);
-    const txs = await getTransactionsWithEvents(uniqueLogs, WITHDRAW_ETH_EVENTS, scrollPublicClient);
 
-    if (txs.length === 0) {
-      throw new Error(`No withdraw ETH transactions found for ${this.name}.`);
+    if (receipts.length < MIN_SAMPLES) {
+      throw new Error(`${this.name} withdraw ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(txs);
+    return getAverageMetrics(receipts);
   }
 }

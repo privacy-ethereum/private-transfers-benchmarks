@@ -1,10 +1,12 @@
+import { mainnet } from "viem/chains";
+
 import type { GasMetrics } from "../utils/types.js";
 
-import { getEventLogs, getTransactionsWithEvents, getUniqueLogs } from "../utils/rpc.js";
+import { MIN_SAMPLES } from "../utils/constants.js";
+import { getValidTransactions } from "../utils/rpc.js";
 import { getAverageMetrics } from "../utils/utils.js";
 
 import {
-  MAX_OF_LOGS,
   SHIELD_ETH_EVENTS,
   TORNADO_CASH_RELAYER_REGISTRY,
   TORNADO_CASH_ROUTER,
@@ -23,34 +25,30 @@ export class TornadoCash {
   }
 
   async benchmarkShieldETH(): Promise<GasMetrics> {
-    const logs = await getEventLogs({
+    const receipts = await getValidTransactions({
       contractAddress: TORNADO_CASH_ROUTER,
       events: SHIELD_ETH_EVENTS,
-      maxLogs: MAX_OF_LOGS,
+      chain: mainnet,
     });
-    const uniqueLogs = getUniqueLogs(logs);
-    const txs = await getTransactionsWithEvents(uniqueLogs, SHIELD_ETH_EVENTS);
 
-    if (txs.length === 0) {
-      throw new Error(`No shield ETH transactions found for ${this.name}.`);
+    if (receipts.length < MIN_SAMPLES) {
+      throw new Error(`${this.name} shield ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(txs);
+    return getAverageMetrics(receipts);
   }
 
   async benchmarkUnshieldETH(): Promise<GasMetrics> {
-    const logs = await getEventLogs({
+    const receipts = await getValidTransactions({
       contractAddress: TORNADO_CASH_RELAYER_REGISTRY,
       events: UNSHIELD_ETH_EVENTS,
-      maxLogs: MAX_OF_LOGS,
+      chain: mainnet,
     });
-    const uniqueLogs = getUniqueLogs(logs);
-    const txs = await getTransactionsWithEvents(uniqueLogs, UNSHIELD_ETH_EVENTS);
 
-    if (txs.length === 0) {
-      throw new Error(`No unshield ETH transactions found for ${this.name}.`);
+    if (receipts.length < MIN_SAMPLES) {
+      throw new Error(`${this.name} unshield ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(txs);
+    return getAverageMetrics(receipts);
   }
 }

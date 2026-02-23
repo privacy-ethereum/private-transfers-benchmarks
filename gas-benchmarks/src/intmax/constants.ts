@@ -1,23 +1,13 @@
-import { parseAbiItem, type Hex } from "viem";
+import { parseAbiItem, type Address } from "viem";
 
-import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
-
-/**
- * Maximum number of logs with a Deposited event to be searched.
- * Depends on the ratio of how many AA txs - EOA txs
- */
-export const MAX_OF_LOGS = NUMBER_OF_TRANSACTIONS * 10;
-
-/**
- * Intmax froze deposits so we will hit rate limit if we search logs from the latest block.
- */
-export const DEPOSIT_ETH_FROM_BLOCK = 24402900n;
+/** Last block before Intmax froze deposits on Ethereum mainnet */
+export const DEPOSIT_ETH_FROM_BLOCK = 24_402_900n;
 
 /**
  * INTMAX Liquidity contract on Ethereum mainnet that handles ETH native deposits and withdrawals:
  * https://github.com/InternetMaximalism/intmax2-contract/blob/main/contracts/liquidity/Liquidity.sol
  */
-export const INTMAX_LIQUIDITY_PROXY: Hex = "0xF65e73aAc9182e353600a916a6c7681F810f79C3";
+export const INTMAX_LIQUIDITY_PROXY: Address = "0xF65e73aAc9182e353600a916a6c7681F810f79C3";
 
 /**
  * Liquidity.depositNativeToken function:
@@ -43,16 +33,14 @@ export const DEPOSIT_ETH_EVENTS = [
   ),
 ] as const;
 
-/**
- * Intmax froze withdrawals so we will hit rate limit if we search logs from the latest block.
- */
-export const WITHDRAW_ETH_FROM_BLOCK = 29328200n;
+/** Last block before Intmax froze withdrawals on Scroll */
+export const WITHDRAW_ETH_FROM_BLOCK = 29_328_200n;
 
 /**
  * INTMAX Withdrawal contract on Scroll (L2) that handles withdrawal proof submission and processing:
  * https://github.com/InternetMaximalism/intmax2-contract/blob/main/contracts/withdrawal/Withdrawal.sol
  */
-export const INTMAX_WITHDRAWAL_PROXY: Hex = "0x86B06D2604D9A6f9760E8f691F86d5B2a7C9c449";
+export const INTMAX_WITHDRAWAL_PROXY: Address = "0x86B06D2604D9A6f9760E8f691F86d5B2a7C9c449";
 
 /**
  * Withdrawal.submitWithdrawalProof function on Scroll (L2) - Called by the end user to initiate withdrawal to Ethereum.

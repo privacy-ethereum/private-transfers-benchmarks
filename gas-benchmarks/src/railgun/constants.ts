@@ -1,14 +1,4 @@
-import { parseAbiItem, type Hex } from "viem";
-
-import { NUMBER_OF_TRANSACTIONS } from "../utils/constants.js";
-
-/**
- * Maximum number of logs with a Shield event to be searched.
- * Depends on the ratio of how many AA txs - EOA txs
- *
- * Railgun appears to have disperse single unshield txs
- */
-export const MAX_OF_LOGS = NUMBER_OF_TRANSACTIONS * 20;
+import { parseAbiItem, type Address } from "viem";
 
 /**
  * Proxy contract that points to the RailgunSmartWallet contract:
@@ -17,7 +7,7 @@ export const MAX_OF_LOGS = NUMBER_OF_TRANSACTIONS * 20;
  * NOTE: Railgun does not support native ETH, only ERC20 tokens.
  * Reference: https://docs.railgun.org/developer-guide/wallet/transactions/shielding/shield-base-token
  */
-export const RAILGUN_SMART_WALLET_PROXY: Hex = "0xfa7093cdd9ee6932b4eb2c9e1cde7ce00b1fa4b9";
+export const RAILGUN_SMART_WALLET_PROXY: Address = "0xfa7093cdd9ee6932b4eb2c9e1cde7ce00b1fa4b9";
 
 /**
  * RailgunSmartWallet.shield function:

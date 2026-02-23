@@ -30,7 +30,7 @@ describe("constants.ts files", () => {
     files.forEach(({ filePath, addresses }) => {
       expect(
         addresses.length,
-        `${filePath} must have at least one contract address (Hex-typed constant)`,
+        `${filePath} must have at least one contract address (Address-typed constant)`,
       ).toBeGreaterThanOrEqual(1);
     });
   });
