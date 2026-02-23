@@ -3,6 +3,8 @@ import {
   encodeEventTopics,
   http,
   type AbiEvent,
+  type Address,
+  type Chain,
   type Hash,
   type Log,
   type PublicClient,
@@ -10,29 +12,60 @@ import {
 } from "viem";
 import { mainnet, scroll } from "viem/chains";
 
-import type { GetEventLogs } from "./types.js";
+import {
+  ETH_RPC_URL,
+  SCROLL_RPC_URL,
+  BLOCK_RANGE,
+  MAX_SAMPLES,
+  BLOCK_WINDOW_ETHEREUM,
+  BLOCK_WINDOW_SCROLL,
+} from "./constants.js";
 
-import { ETH_RPC_URL, MAX_NUMBER_OF_RPC_TRIES, NUMBER_OF_TRANSACTIONS, SCROLL_RPC_URL } from "./constants.js";
-import { getBlockInRange, getFromAndToBlocks } from "./utils.js";
+/** Pre-configured RPC clients keyed by chain ID */
+const clients: Record<number, PublicClient> = {
+  [mainnet.id]: createPublicClient({ chain: mainnet, transport: http(ETH_RPC_URL, { batch: true }) }),
+  [scroll.id]: createPublicClient({ chain: scroll, transport: http(SCROLL_RPC_URL, { batch: true }) }),
+};
 
-export const publicClient = createPublicClient({ chain: mainnet, transport: http(ETH_RPC_URL) });
+/** Returns the RPC client for a given chain */
+const getClient = (chain: Chain): PublicClient => {
+  const client = clients[chain.id];
+  if (!client) {
+    throw new Error(`No client configured for chain: ${chain.name}`);
+  }
+  return client;
+};
 
-export const scrollPublicClient = createPublicClient({ chain: scroll, transport: http(SCROLL_RPC_URL) });
+/** Returns the 1-week block window size for a given chain */
+const getBlockWindow = (chainId: number): bigint => {
+  if (chainId === mainnet.id) {
+    return BLOCK_WINDOW_ETHEREUM;
+  }
+  if (chainId === scroll.id) {
+    return BLOCK_WINDOW_SCROLL;
+  }
+  throw new Error(`No block window configured for chain ID: ${chainId}`);
+};
 
-export const getEventLogs = async ({
-  contractAddress,
-  events,
-  maxLogs,
-  fromBlock: initialFromBlock,
-  client = publicClient,
-}: GetEventLogs): Promise<Log[]> => {
-  const latestBlock = await client.getBlockNumber();
-  let { fromBlock, toBlock } = getFromAndToBlocks(latestBlock, initialFromBlock);
+/** Scans blocks in chunks from scanStart down to scanEnd, deduplicating by tx hash */
+const getAllLogs = async (
+  client: PublicClient,
+  contractAddress: Address,
+  events: readonly AbiEvent[],
+  scanEnd: bigint,
+  scanStart: bigint,
+): Promise<Log[]> => {
+  let toBlock = scanStart;
+  const uniqueLogs: Log[] = [];
+  const seen = new Set<Hash>();
 
-  let tries = 0;
-  const logs: Log[] = [];
+  while (toBlock >= scanEnd) {
+    let fromBlock = toBlock - BLOCK_RANGE + 1n;
 
-  while (logs.length < maxLogs) {
+    if (fromBlock < scanEnd) {
+      fromBlock = scanEnd;
+    }
+
     // eslint-disable-next-line no-await-in-loop
     const batchLogs = await client.getLogs({
       address: contractAddress,
@@ -41,78 +74,61 @@ export const getEventLogs = async ({
       toBlock,
     });
 
-    logs.push(...batchLogs);
+    batchLogs.forEach((log) => {
+      if (!seen.has(log.transactionHash)) {
+        seen.add(log.transactionHash);
+        uniqueLogs.push(log);
+      }
+    });
 
-    if (fromBlock === 0n) {
+    if (fromBlock <= scanEnd || seen.size >= MAX_SAMPLES) {
       break;
     }
 
     toBlock = fromBlock - 1n;
-    fromBlock = getBlockInRange(toBlock);
-
-    if (tries >= MAX_NUMBER_OF_RPC_TRIES) {
-      break;
-    }
-
-    tries += 1;
   }
 
-  return logs;
+  return uniqueLogs;
 };
 
-export const getUniqueLogs = (logs: Log[]): Log[] => {
-  const savedTxs = new Set<Hash>();
-
-  const uniqueTxs = logs.filter((log) => {
-    const { transactionHash } = log;
-
-    if (!transactionHash) {
-      return false;
-    }
-
-    if (savedTxs.has(transactionHash)) {
-      return false;
-    }
-
-    savedTxs.add(transactionHash);
-    return true;
-  });
-
-  return uniqueTxs;
-};
-
-export const getTransactionsWithEvents = async (
+/** Fetches receipts and filters to those matching the expected event pattern */
+const getValidReceipts = async (
+  client: PublicClient,
   logs: Log[],
   events: readonly AbiEvent[],
-  client: PublicClient = publicClient,
 ): Promise<TransactionReceipt[]> => {
   const eventTopics = events.map((event) => encodeEventTopics({ abi: [event] })[0]);
 
-  return logs.reduce<Promise<TransactionReceipt[]>>(async (accumulatorPromise, log) => {
-    const accumulator = await accumulatorPromise;
+  const receipts = await Promise.all(logs.map((log) => client.getTransactionReceipt({ hash: log.transactionHash! })));
 
-    if (accumulator.length >= NUMBER_OF_TRANSACTIONS) {
-      return accumulator;
-    }
+  return receipts.filter((receipt) => {
+    const hasExpectedLogCount = receipt.logs.length === events.length;
+    const hasMatchingTopics = eventTopics.every((eventTopic, index) => receipt.logs[index]!.topics[0] === eventTopic);
+    return hasExpectedLogCount && hasMatchingTopics;
+  });
+};
 
-    const receipt = await client.getTransactionReceipt({ hash: log.transactionHash! });
+/** Scans a 7-day block window, fetches receipts, and returns valid transactions */
+export const getValidTransactions = async ({
+  contractAddress,
+  events,
+  chain,
+  latestBlock,
+}: {
+  contractAddress: Address;
+  events: readonly AbiEvent[];
+  chain: Chain;
+  latestBlock?: bigint;
+}): Promise<TransactionReceipt[]> => {
+  const client = getClient(chain);
+  const blockWindow = getBlockWindow(chain.id);
+  const scanStart = latestBlock ?? (await client.getBlockNumber());
 
-    if (receipt.logs.length !== events.length) {
-      return accumulator;
-    }
+  let scanEnd = scanStart - blockWindow;
+  if (scanEnd < 0n) {
+    scanEnd = 0n;
+  }
 
-    const hasAllEvents = eventTopics.every((eventTopic, index) => {
-      const logTopic = receipt.logs[index]!.topics[0];
-
-      return logTopic === eventTopic;
-    });
-
-    if (!hasAllEvents) {
-      return accumulator;
-    }
-
-    accumulator.push(receipt);
-
-    return accumulator;
-  }, Promise.resolve([]));
+  const uniqueLogs = await getAllLogs(client, contractAddress, events, scanEnd, scanStart);
+  return getValidReceipts(client, uniqueLogs, events);
 };

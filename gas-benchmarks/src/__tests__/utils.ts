@@ -39,7 +39,7 @@ export function parseConstantsFile(filePath: string): { addresses: AddressEntry[
   const events: EventsEntry[] = [];
 
   // Match JSDoc block followed by a Hex-typed export const
-  const hexRegEx = /\/\*\*([\s\S]*?)\*\/\s*export const (\w+)\s*:\s*Hex\s*=/g;
+  const hexRegEx = /\/\*\*([\s\S]*?)\*\/\s*export const (\w+)\s*:\s*Address\s*=/g;
   let match = hexRegEx.exec(source);
 
   while (match !== null) {

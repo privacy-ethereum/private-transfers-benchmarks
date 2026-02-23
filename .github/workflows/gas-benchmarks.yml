@@ -45,4 +45,4 @@ jobs:
         env:
           ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
           SCROLL_RPC_URL: ${{ secrets.SCROLL_RPC_URL }}
-          NUMBER_OF_TRANSACTIONS: ${{ vars.NUMBER_OF_TRANSACTIONS }}
+          MIN_SAMPLES: ${{ vars.MIN_SAMPLES }}

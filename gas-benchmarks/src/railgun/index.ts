@@ -1,10 +1,12 @@
+import { mainnet } from "viem/chains";
+
 import type { GasMetrics } from "../utils/types.js";
 
-import { getEventLogs, getTransactionsWithEvents, getUniqueLogs } from "../utils/rpc.js";
+import { MIN_SAMPLES } from "../utils/constants.js";
+import { getValidTransactions } from "../utils/rpc.js";
 import { getAverageMetrics } from "../utils/utils.js";
 
 import {
-  MAX_OF_LOGS,
   RAILGUN_SMART_WALLET_PROXY,
   SHIELD_ERC20_EVENTS,
   TRANSFER_ERC20_EVENTS,
@@ -27,50 +29,44 @@ export class Railgun {
   }
 
   async benchmarkShieldERC20(): Promise<GasMetrics> {
-    const logs = await getEventLogs({
+    const receipts = await getValidTransactions({
       contractAddress: RAILGUN_SMART_WALLET_PROXY,
       events: SHIELD_ERC20_EVENTS,
-      maxLogs: MAX_OF_LOGS,
+      chain: mainnet,
     });
-    const uniqueLogs = getUniqueLogs(logs);
-    const txs = await getTransactionsWithEvents(uniqueLogs, SHIELD_ERC20_EVENTS);
 
-    if (txs.length === 0) {
-      throw new Error(`No shield ERC20 transactions found for ${this.name}.`);
+    if (receipts.length < MIN_SAMPLES) {
+      throw new Error(`${this.name} shield ERC20: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(txs);
+    return getAverageMetrics(receipts);
   }
 
   async benchmarkUnshieldERC20(): Promise<GasMetrics> {
-    const logs = await getEventLogs({
+    const receipts = await getValidTransactions({
       contractAddress: RAILGUN_SMART_WALLET_PROXY,
       events: UNSHIELD_ERC20_EVENTS,
-      maxLogs: MAX_OF_LOGS,
+      chain: mainnet,
     });
-    const uniqueLogs = getUniqueLogs(logs);
-    const txs = await getTransactionsWithEvents(uniqueLogs, UNSHIELD_ERC20_EVENTS);
 
-    if (txs.length === 0) {
-      throw new Error(`No unshield ERC20 transactions found for ${this.name}.`);
+    if (receipts.length < MIN_SAMPLES) {
+      throw new Error(`${this.name} unshield ERC20: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(txs);
+    return getAverageMetrics(receipts);
   }
 
   async benchmarkTransferERC20(): Promise<GasMetrics> {
-    const logs = await getEventLogs({
+    const receipts = await getValidTransactions({
       contractAddress: RAILGUN_SMART_WALLET_PROXY,
       events: TRANSFER_ERC20_EVENTS,
-      maxLogs: MAX_OF_LOGS,
+      chain: mainnet,
     });
-    const uniqueLogs = getUniqueLogs(logs);
-    const txs = await getTransactionsWithEvents(uniqueLogs, TRANSFER_ERC20_EVENTS);
 
-    if (txs.length === 0) {
-      throw new Error(`No transfer ERC20 transactions found for ${this.name}.`);
+    if (receipts.length < MIN_SAMPLES) {
+      throw new Error(`${this.name} transfer ERC20: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(txs);
+    return getAverageMetrics(receipts);
   }
 }

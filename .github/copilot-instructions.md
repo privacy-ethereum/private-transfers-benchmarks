@@ -28,25 +28,18 @@
 - Exception: loops acceptable for complex control flow (see `src/utils/rpc.ts` pagination)
 - Examples: `src/utils/utils.ts`, `src/utils/rpc.ts`, `src/index.ts`
 
-## 4. Type Organization
-
-- **ALL** types/interfaces MUST be in dedicated `types.ts` files
-- **NEVER** define types inline in implementation files
-- Locations: `src/utils/types.ts` (shared), `src/__tests__/types.ts` (test-specific)
-- Use inline type imports: `import type { Type } from "./types.js";`
-
-## 5. Utility Function Organization
+## 4. Utility Function Organization
 
 - **ALL** reusable functions MUST be in dedicated utility files
 - **NEVER** define utilities inline with implementation code
 - Locations: `src/utils/utils.ts`, `src/utils/rpc.ts`, `src/utils/db.ts`, `src/__tests__/utils.ts`
 - Prefer pure functions that minimize side effects
 
-## 6. Clean Code Principles
+## 5. Clean Code Principles
 
 - Follow Clean Code guidelines, but rules 1-4 above take precedence if there's a conflict
 
-## 7. Testing Requirements
+## 6. Testing Requirements
 
 - **ALWAYS** run `pnpm run test` and `pnpm run benchmark` after changes
 - Do NOT complete work without running these verification steps
