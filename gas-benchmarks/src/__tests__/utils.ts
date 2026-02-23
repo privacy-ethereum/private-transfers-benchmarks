@@ -83,8 +83,8 @@ export function hasSolUrl(comment: string): boolean {
 
 /** Extracts etherscan transaction URLs from a JSDoc comment. */
 export function extractEtherscanUrls(comment: string): string[] {
-  const etherscanTxUrlRegEx = /https:\/\/etherscan\.io\/tx\/0x[\da-fA-F]+/;
-  const matches = comment.match(new RegExp(etherscanTxUrlRegEx.source, "g"));
+  const blockExplorerTxUrlRegEx = /https:\/\/[a-z]+scan\.[a-z]+\/tx\/0x[\da-fA-F]+/;
+  const matches = comment.match(new RegExp(blockExplorerTxUrlRegEx.source, "g"));
   return matches ?? [];
 }
 
