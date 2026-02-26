@@ -13,6 +13,7 @@ import defaultData from "./data/evaluations.json" assert { type: "json" };
 let data: EvaluationsData = structuredClone(defaultData) as EvaluationsData;
 let selectedId: string | null = data.evaluations[0]?.id ?? null;
 let showAddModal = false;
+let fileHandle: FileSystemFileHandle | null = null;
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -68,14 +69,39 @@ const totalCount = (): number => PROPERTY_DEFINITIONS.length;
 
 // ── Export / Import ───────────────────────────────────────────────────────
 
-const exportJSON = (): void => {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "evaluations.json";
-  a.click();
-  URL.revokeObjectURL(url);
+type SaveFilePicker = (options: {
+  suggestedName?: string;
+  types?: { description?: string; accept: Record<string, string[]> }[];
+}) => Promise<FileSystemFileHandle>;
+
+const saveJSON = async (): Promise<void> => {
+  const content = JSON.stringify(data, null, 2);
+  const nativePicker = (globalThis as unknown as { showSaveFilePicker?: SaveFilePicker }).showSaveFilePicker;
+
+  if (!nativePicker) {
+    // Fallback for browsers without File System Access API (e.g. Firefox)
+    const blob = new Blob([content], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "evaluations.json";
+    a.click();
+    URL.revokeObjectURL(url);
+    return;
+  }
+
+  if (!fileHandle) {
+    fileHandle = await nativePicker({
+      suggestedName: "evaluations.json",
+      types: [{ description: "JSON", accept: { "application/json": [".json"] } }],
+    });
+    // Re-render sidebar so the button label reflects the chosen filename
+    refreshSidebar();
+  }
+
+  const writable = await fileHandle!.createWritable();
+  await writable.write(content);
+  await writable.close();
 };
 
 const importJSON = (file: File): void => {
@@ -259,8 +285,8 @@ const renderSidebar = (): string => {
           + Add protocol
         </button>
         <div class="flex gap-2">
-          <button id="export-btn" class="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded px-2 py-1.5 transition-colors">
-            Export JSON
+          <button id="save-btn" class="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded px-2 py-1.5 transition-colors">
+            ${fileHandle ? `Save ${fileHandle.name}` : "Save JSON"}
           </button>
           <label class="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded px-2 py-1.5 transition-colors cursor-pointer text-center">
             Import JSON
@@ -433,7 +459,7 @@ const bindEvents = (): void => {
 };
 
 const bindSidebarButtons = (): void => {
-  document.getElementById("export-btn")?.addEventListener("click", exportJSON);
+  document.getElementById("save-btn")?.addEventListener("click", () => void saveJSON());
   document.getElementById("import-input")?.addEventListener("change", (e) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) importJSON(file);
