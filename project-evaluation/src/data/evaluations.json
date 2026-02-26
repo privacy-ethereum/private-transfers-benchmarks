@@ -1,0 +1,32 @@
+{
+  "evaluations": [
+    {
+      "id": "railgun",
+      "title": "RAILGUN",
+      "description": "A privacy system for Ethereum using zk-SNARKs to shield ERC-20 tokens and ETH inside a smart contract, enabling private transfers and shielded DeFi interactions.",
+      "category": "Shielded pool",
+      "properties": []
+    },
+    {
+      "id": "tornado-cash",
+      "title": "Tornado Cash",
+      "description": "A non-custodial, Ethereum-based mixer that uses zk-SNARKs to break the on-chain link between deposit and withdrawal addresses for fixed-denomination ETH and ERC-20 deposits.",
+      "category": "Mixer",
+      "properties": []
+    },
+    {
+      "id": "privacy-pools",
+      "title": "Privacy Pools",
+      "description": "A privacy protocol that extends Tornado Cash with association set providers (ASPs), allowing users to prove membership in compliant subsets without revealing their identity.",
+      "category": "Shielded pool",
+      "properties": []
+    },
+    {
+      "id": "intmax",
+      "title": "Intmax",
+      "description": "A stateless zkRollup optimised for private payments, pushing most data off-chain so that on-chain costs are minimal while preserving user-side privacy through client-side proving.",
+      "category": "Shielded pool",
+      "properties": []
+    }
+  ]
+}
