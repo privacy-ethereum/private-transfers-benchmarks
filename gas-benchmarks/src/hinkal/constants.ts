@@ -8,15 +8,17 @@ import { parseAbiItem, type Address } from "viem";
 export const HINKAL_POOL: Address = "0x25e5e82f5702A27C3466fE68f14abDbbAdFca826";
 
 /**
- * Hinkal.prooflessDeposit function - shield ERC20 tokens into the Hinkal pool without a ZK proof:
- * https://github.com/Hinkal-Protocol/Hinkal-Smart-Contracts/blob/main/contracts/Hinkal.sol
+ * Hinkal.transact function - shield ERC20 tokens into the Hinkal pool. It is a state function with no outputs (nullified):
+ * https://github.com/Hinkal-Protocol/Hinkal-Smart-Contracts/blob/8bd371883a0d8f6f56775228ee48a1bbf9fecbac/contracts/Hinkal.sol#L40
  *
  * Emits:
  * Transfer() - ERC20 token transfer from depositor to Hinkal pool (emitted by the ERC20 token contract)
- * NewCommitment() - New private commitment inserted into the Merkle tree (emitted by HinkalBase.insertCommitments)
+ * NewCommitment() - New private commitment inserted into the Merkle tree (emitted by HinkalBase.insertCommitments). A deposit has 1 commitment and 0 nullified events
  *
  * Example:
- * https://etherscan.io/tx/0x49c3aa537160afdb4392a498c14bd4f1e2b7de2554004dbdbd8c8669e81a94e0
+ * https://etherscan.io/tx/0x1fc2e25b28a1affe470f15d0ec1844746b507027c189bde7b6d9b428ea3da9b5
+ *
+ * Note: deposits can be done with .transact() and also with .prooflessDeposit() function execution
  */
 export const SHIELD_ERC20_EVENTS = [
   parseAbiItem("event Transfer(address indexed from, address indexed to, uint256 value)"),
@@ -25,7 +27,7 @@ export const SHIELD_ERC20_EVENTS = [
 
 /**
  * Hinkal.transact function (unshield) - withdraw ERC20 tokens from the Hinkal pool:
- * https://github.com/Hinkal-Protocol/Hinkal-Smart-Contracts/blob/main/contracts/Hinkal.sol
+ * https://github.com/Hinkal-Protocol/Hinkal-Smart-Contracts/blob/8bd371883a0d8f6f56775228ee48a1bbf9fecbac/contracts/Hinkal.sol#L40
  *
  * Emits:
  * Transfer() - ERC20 token transfer from Hinkal pool to recipient (emitted by the ERC20 token contract)
@@ -41,7 +43,7 @@ export const UNSHIELD_ERC20_EVENTS = [
 
 /**
  * Hinkal.transact function (private transfer) - move ERC20 tokens privately within the Hinkal pool:
- * https://github.com/Hinkal-Protocol/Hinkal-Smart-Contracts/blob/main/contracts/Hinkal.sol
+ * https://github.com/Hinkal-Protocol/Hinkal-Smart-Contracts/blob/8bd371883a0d8f6f56775228ee48a1bbf9fecbac/contracts/Hinkal.sol#L40
  *
  * Emits:
  * Nullified() - Input commitment nullifier marked as spent (emitted by HinkalBase.insertNullifiers)
