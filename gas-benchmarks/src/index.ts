@@ -1,3 +1,4 @@
+import { Hinkal } from "./hinkal/index.js";
 import { Intmax } from "./intmax/index.js";
 import { PrivacyPools } from "./privacy-pools/index.js";
 import { Railgun } from "./railgun/index.js";
@@ -8,16 +9,18 @@ const railgun = new Railgun();
 const tornadoCash = new TornadoCash();
 const privacyPools = new PrivacyPools();
 const intmax = new Intmax();
+const hinkal = new Hinkal();
 
 await db.read();
 
 const start = Date.now();
 
-const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics] = await Promise.all([
+const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, hinkalMetrics] = await Promise.all([
   railgun.benchmark(),
   tornadoCash.benchmark(),
   privacyPools.benchmark(),
   intmax.benchmark(),
+  hinkal.benchmark(),
 ]);
 
 await db.update((data) => {
@@ -44,6 +47,13 @@ await db.update((data) => {
   data[`${intmax.name}_${intmax.version}`] = {
     deposit_eth: intmaxMetrics.depositEth,
     withdraw_eth: intmaxMetrics.withdrawEth,
+  };
+
+  // eslint-disable-next-line no-param-reassign
+  data[`${hinkal.name}_${hinkal.version}`] = {
+    shield_erc20: hinkalMetrics.shieldErc20,
+    unshield_erc20: hinkalMetrics.unshieldErc20,
+    transfer_erc20: hinkalMetrics.transferErc20,
   };
 });
 
