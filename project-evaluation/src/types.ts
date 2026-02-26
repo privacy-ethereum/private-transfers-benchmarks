@@ -37,6 +37,8 @@ export interface PropertyDefinition {
 export interface Property {
   name: string;
   value: string;
+  notes?: string;
+  url?: string;
 }
 
 export interface Evaluation {

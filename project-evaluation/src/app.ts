@@ -22,12 +22,36 @@ const selected = (): Evaluation | undefined =>
 const propValue = (evaluation: Evaluation, name: string): string =>
   evaluation.properties.find((p) => p.name === name)?.value ?? "";
 
+const propNotes = (evaluation: Evaluation, name: string): string =>
+  evaluation.properties.find((p) => p.name === name)?.notes ?? "";
+
+const propUrl = (evaluation: Evaluation, name: string): string =>
+  evaluation.properties.find((p) => p.name === name)?.url ?? "";
+
 const setPropValue = (evaluation: Evaluation, name: string, value: string): void => {
   const existing = evaluation.properties.find((p) => p.name === name);
   if (existing) {
     existing.value = value;
   } else {
     evaluation.properties.push({ name, value });
+  }
+};
+
+const setPropNotes = (evaluation: Evaluation, name: string, notes: string): void => {
+  const existing = evaluation.properties.find((p) => p.name === name);
+  if (existing) {
+    existing.notes = notes || undefined;
+  } else {
+    evaluation.properties.push({ name, value: "", notes: notes || undefined });
+  }
+};
+
+const setPropUrl = (evaluation: Evaluation, name: string, url: string): void => {
+  const existing = evaluation.properties.find((p) => p.name === name);
+  if (existing) {
+    existing.url = url || undefined;
+  } else {
+    evaluation.properties.push({ name, value: "", url: url || undefined });
   }
 };
 
@@ -87,17 +111,15 @@ const progressBar = (evaluation: Evaluation): string => {
     </div>`;
 };
 
+const inputClass = "w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-gray-100 focus:outline-none focus:border-indigo-500";
+
 const renderSelectInput = (
   evalId: string,
   propName: string,
   value: string,
   options: readonly string[],
 ): string => `
-  <select
-    data-eval="${evalId}"
-    data-prop="${propName}"
-    class="prop-input w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-gray-100 focus:outline-none focus:border-indigo-500"
-  >
+  <select data-eval="${evalId}" data-prop="${propName}" class="prop-input ${inputClass}">
     <option value="">— select —</option>
     ${options.map((o) => `<option value="${o}"${value === o ? " selected" : ""}>${o}</option>`).join("")}
   </select>`;
@@ -109,15 +131,34 @@ const renderTextInput = (evalId: string, propName: string, value: string, type: 
     type="${type}"
     value="${value.replace(/"/g, "&quot;")}"
     placeholder="${type === "number" ? "0" : "—"}"
-    class="prop-input w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-gray-100 focus:outline-none focus:border-indigo-500"
+    class="prop-input ${inputClass}"
+  />`;
+
+const renderNotesAndUrl = (evalId: string, propName: string, notes: string, url: string): string => `
+  <textarea
+    data-eval="${evalId}"
+    data-prop="${propName}"
+    rows="2"
+    placeholder="Why was this value selected?"
+    class="prop-notes mt-1 ${inputClass} resize-none"
+  >${notes.replace(/</g, "&lt;")}</textarea>
+  <input
+    data-eval="${evalId}"
+    data-prop="${propName}"
+    type="url"
+    value="${url.replace(/"/g, "&quot;")}"
+    placeholder="https://docs.example.com/…"
+    class="prop-url mt-1 ${inputClass}"
   />`;
 
 const renderPropertyRow = (evaluation: Evaluation, propName: string): string => {
   const def = definitionByName(propName);
   if (!def) return "";
   const value = propValue(evaluation, propName);
+  const notes = propNotes(evaluation, propName);
+  const url = propUrl(evaluation, propName);
 
-  const input =
+  const valueInput =
     def.inputType === "select" && def.options
       ? renderSelectInput(evaluation.id, propName, value, def.options)
       : renderTextInput(evaluation.id, propName, value, def.inputType as "text" | "number");
@@ -129,7 +170,10 @@ const renderPropertyRow = (evaluation: Evaluation, propName: string): string => 
         <div class="text-xs text-gray-500 mt-0.5">${def.metric}</div>
       </td>
       <td class="py-2 pr-4 align-top text-xs text-gray-400 w-72 hidden lg:table-cell">${def.description}</td>
-      <td class="py-2 align-top">${input}</td>
+      <td class="py-2 align-top">
+        ${valueInput}
+        ${renderNotesAndUrl(evaluation.id, propName, notes, url)}
+      </td>
     </tr>`;
 };
 
@@ -284,6 +328,23 @@ const render = (): void => {
   bindEvents();
 };
 
+// ── Sidebar refresh (without losing focus in the detail panel) ────────────
+
+const refreshSidebar = (): void => {
+  const sidebar = document.querySelector("aside");
+  if (!sidebar) return;
+  const temp = document.createElement("div");
+  temp.innerHTML = renderSidebar();
+  sidebar.replaceWith(temp.firstElementChild!);
+  document.querySelectorAll<HTMLButtonElement>("[data-select]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      selectedId = btn.dataset.select!;
+      render();
+    });
+  });
+  bindSidebarButtons();
+};
+
 // ── Events ────────────────────────────────────────────────────────────────
 
 const bindEvents = (): void => {
@@ -295,35 +356,30 @@ const bindEvents = (): void => {
     });
   });
 
-  // Property inputs
+  // Value inputs
   document.querySelectorAll<HTMLInputElement | HTMLSelectElement>(".prop-input").forEach((input) => {
     input.addEventListener("change", () => {
-      const evalId = input.dataset.eval!;
-      const propName = input.dataset.prop!;
-      const evaluation = data.evaluations.find((e) => e.id === evalId);
+      const evaluation = data.evaluations.find((e) => e.id === input.dataset.eval!);
       if (evaluation) {
-        setPropValue(evaluation, propName, input.value);
-        // Re-render sidebar progress only (avoid losing focus in detail)
-        const sidebar = document.querySelector("aside");
-        if (sidebar) {
-          const temp = document.createElement("div");
-          temp.innerHTML = renderSidebar();
-          sidebar.replaceWith(temp.firstElementChild!);
-          // Re-bind sidebar events
-          document.querySelectorAll<HTMLButtonElement>("[data-select]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-              selectedId = btn.dataset.select!;
-              render();
-            });
-          });
-          bindSidebarButtons();
-        }
-        // Update progress bar in detail header
-        const pbEl = document.querySelector<HTMLElement>("#progress-bar");
-        if (pbEl) {
-          pbEl.outerHTML = progressBar(evaluation);
-        }
+        setPropValue(evaluation, input.dataset.prop!, input.value);
+        refreshSidebar();
       }
+    });
+  });
+
+  // Notes textareas
+  document.querySelectorAll<HTMLTextAreaElement>(".prop-notes").forEach((el) => {
+    el.addEventListener("input", () => {
+      const evaluation = data.evaluations.find((e) => e.id === el.dataset.eval!);
+      if (evaluation) setPropNotes(evaluation, el.dataset.prop!, el.value);
+    });
+  });
+
+  // URL inputs
+  document.querySelectorAll<HTMLInputElement>(".prop-url").forEach((el) => {
+    el.addEventListener("change", () => {
+      const evaluation = data.evaluations.find((e) => e.id === el.dataset.eval!);
+      if (evaluation) setPropUrl(evaluation, el.dataset.prop!, el.value);
     });
   });
 
