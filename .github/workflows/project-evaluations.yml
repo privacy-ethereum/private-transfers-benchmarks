@@ -1,4 +1,4 @@
-name: gas-benchmarks
+name: project-evaluations
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  gas-benchmarks:
+  project-evaluations:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,14 +26,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Test
-        run: pnpm run test
-        working-directory: gas-benchmarks
-
-      - name: Benchmark
-        run: pnpm run benchmark
-        working-directory: gas-benchmarks
-        env:
-          ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
-          SCROLL_RPC_URL: ${{ secrets.SCROLL_RPC_URL }}
-          MIN_SAMPLES: ${{ vars.MIN_SAMPLES }}
+      - name: Build
+        run: pnpm run build
+        working-directory: project-evaluations

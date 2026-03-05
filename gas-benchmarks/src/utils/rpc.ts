@@ -22,7 +22,7 @@ import {
 } from "./constants.js";
 
 /** Pre-configured RPC clients keyed by chain ID */
-const clients: Record<number, PublicClient> = {
+const clients: Record<number, PublicClient | undefined> = {
   [mainnet.id]: createPublicClient({ chain: mainnet, transport: http(ETH_RPC_URL, { batch: true }) }),
   [scroll.id]: createPublicClient({ chain: scroll, transport: http(SCROLL_RPC_URL, { batch: true }) }),
 };
@@ -103,7 +103,7 @@ const getValidReceipts = async (
 
   return receipts.filter((receipt) => {
     const hasExpectedLogCount = receipt.logs.length === events.length;
-    const hasMatchingTopics = eventTopics.every((eventTopic, index) => receipt.logs[index]!.topics[0] === eventTopic);
+    const hasMatchingTopics = eventTopics.every((eventTopic, index) => receipt.logs[index]?.topics[0] === eventTopic);
     return hasExpectedLogCount && hasMatchingTopics;
   });
 };
