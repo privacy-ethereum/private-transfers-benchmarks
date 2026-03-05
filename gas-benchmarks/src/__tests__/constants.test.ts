@@ -84,7 +84,7 @@ describe("constants.ts files", () => {
 
   it("should not repeat etherscan URL examples across events arrays", () => {
     const allUrls: string[] = [];
-    const urlToLocations: Record<string, string[]> = {};
+    const urlToLocations: Record<string, string[] | undefined> = {};
 
     files.forEach(({ filePath, events }) => {
       events.forEach(({ name, comment }) => {
@@ -100,8 +100,8 @@ describe("constants.ts files", () => {
     });
 
     const duplicates = Object.entries(urlToLocations)
-      .filter(([, locations]) => locations.length > 1)
-      .map(([url, locations]) => `${url} found in: ${locations.join(", ")}`);
+      .filter(([, locations]) => locations && locations.length > 1)
+      .map(([url, locations]) => `${url} found in: ${locations?.join(", ")}`);
 
     expect(
       duplicates,

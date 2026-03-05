@@ -2,11 +2,6 @@
 
 > **Note:** These guidelines primarily apply to the `gas-benchmarks/` package but can serve as general standards for TypeScript code across the repository.
 
-## Benchmarks definitions
-- **Shield**: Converting public assets into private ones by depositing them into a privacy pool or protocol. (e.g. shield, bridge, encrypt, etc)
-- **Unshield**: Converting private assets back into public ones by withdrawing them from a privacy pool or protocol. (e.g. unshield, bridge, decrypt, etc)
-- **Transfer**: Moving private assets from one address to another within the privacy pool or protocol. (e.g. transfer, send, etc)
-
 ## 1. Clean and Concise Code
 
 - Write clean, short code with minimal boilerplate
@@ -17,8 +12,10 @@
   - Validated by `src/__tests__/constants.test.ts`
 - Minimize inline comments - code should be self-explanatory
 - No `console.log` (prohibited by ESLint)
+- Give space around operators for readability, but avoid unnecessary blank lines
 
 ## 2. Use examples and references in comments
+
 - You can use the URLs in the comments to fetch information about the contract (events, functions, etc.). This is useful for understanding context and debugging.
 
 ## 3. Functional Programming Over Loops
@@ -41,9 +38,21 @@
 
 ## 6. Testing Requirements
 
-- **ALWAYS** run `pnpm run test` and `pnpm run benchmark` after changes
 - Do NOT complete work without running these verification steps
 - Fix all test failures and benchmark errors before finalizing
+
+# Specific Guidelines for the gas-benchmarks directory
+
+## Rules
+
+- Follow the general guidelines above, with a focus on clarity and maintainability in benchmark code
+- **ALWAYS** run `pnpm run test` and `pnpm run benchmark` after changes in the gas-benchmarks directory
+
+## Benchmarks definitions
+
+- **Shield**: Converting public assets into private ones by depositing them into a privacy pool or protocol. (e.g. shield, bridge, encrypt, etc)
+- **Unshield**: Converting private assets back into public ones by withdrawing them from a privacy pool or protocol. (e.g. unshield, bridge, decrypt, etc)
+- **Transfer**: Moving private assets from one address to another within the privacy pool or protocol. (e.g. transfer, send, etc)
 
 ## Examples
 
@@ -51,3 +60,10 @@
 - Protocol specific constants to interact with: `src/railgun/constants.ts`, `src/tornado-cash/constants.ts`, `src/privacy-pools/constants.ts`
 - Functional programming: `src/utils/utils.ts`, `src/utils/rpc.ts`, `src/index.ts`
 - Type organization: `src/utils/types.ts`, `src/__tests__/types.ts`
+
+# Specific Guidelines for the project-evaluations directory
+
+## Rules
+
+- Follow the general guidelines above, with a focus on clarity and maintainability in evaluation code
+- **ALWAYS** run `pnpm run build` after changes in the project-evaluations directory unless these are changes only to project-evaluations/data/evaluations.json

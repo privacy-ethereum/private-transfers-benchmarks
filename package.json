@@ -1,0 +1,43 @@
+{
+  "name": "private-transfers-benchmarks",
+  "version": "1.0.0",
+  "description": "Private transfers protocol benchmarks and evaluations",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint gas-benchmarks/src project-evaluations/src",
+    "lint:fix": "eslint --fix gas-benchmarks/src project-evaluations/src",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.0.2",
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^10.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.55.0",
+    "@typescript-eslint/parser": "^8.55.0",
+    "eslint": "^10.0.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-json": "^4.0.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "globals": "^17.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3"
+  },
+  "lint-staged": {
+    "*": [
+      "pnpm run lint:fix --",
+      "pnpm run format:fix --"
+    ]
+  }
+}

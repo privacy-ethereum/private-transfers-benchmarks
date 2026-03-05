@@ -44,8 +44,8 @@ export function parseConstantsFile(filePath: string): { addresses: AddressEntry[
 
   while (match !== null) {
     addresses.push({
-      comment: match[1] ?? "",
-      name: match[2] ?? "",
+      comment: match[1] ? match[1] : "",
+      name: match[2] ? match[2] : "",
       file: filePath,
     });
     match = hexRegEx.exec(source);
@@ -56,9 +56,9 @@ export function parseConstantsFile(filePath: string): { addresses: AddressEntry[
   match = eventsRegEx.exec(source);
 
   while (match !== null) {
-    const comment = match[1] ?? "";
-    const name = match[2] ?? "";
-    const arrayContent = match[3] ?? "";
+    const comment = match[1] ? match[1] : "";
+    const name = match[2] ? match[2] : "";
+    const arrayContent = match[3] ? match[3] : "";
 
     // Count `parseAbiItem` calls in the array → number of events declared
     const arrayEventCount = (arrayContent.match(/parseAbiItem\(/g) ?? []).length;
