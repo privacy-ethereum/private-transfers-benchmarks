@@ -189,15 +189,351 @@
       "description": "A non-custodial, Ethereum-based mixer that uses zk-SNARKs to break the on-chain link between deposit and withdrawal addresses for fixed-denomination ETH and ERC-20 deposits.",
       "documentation": "https://docs.tornadocash.eth.limo/",
       "categories": ["Mixer"],
-      "properties": []
+      "properties": [
+        {
+          "name": "Confidentiality",
+          "value": "Only balances",
+          "notes": "When a user transfers assets into a pool (deposit), a private note is generated. This private note works as a private key or secret to access the assets. A user can have multiple private notes that are not related between each other therefore achieving balance confidentiality",
+          "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
+        },
+        {
+          "name": "Anonymity",
+          "value": "Unlinkability",
+          "notes": "Tornado Cash achieves anonymity by breaking the on-chain link between source and destination addresses through \"anonymity pools\". These are immutable smart contracts that accepts fixed denominations of a currency, acting as what is known as a mix network.",
+          "url": "https://docs.tornadocash.eth.limo/"
+        },
+        {
+          "name": "Asset privacy",
+          "value": "No",
+          "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html",
+          "notes": "The user sends a deposit transaction that sends their public assets to the Tornado Cash contracts. When the user withdraws the funds, the public assets are sent to the receiver address."
+        },
+        {
+          "name": "Plausible deniability",
+          "value": "No",
+          "notes": "You can see that users are depositing and withdrawing through the Tornado Cash contract",
+          "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
+        },
+        {
+          "name": "Time-to-finality",
+          "value": ""
+        },
+        {
+          "name": "On-chain gas cost: transfer",
+          "value": "0",
+          "notes": "There are no internal transactions in classic Tornado Cash. The new Tornado Cash Nova allows shielded transfers.",
+          "url": "https://docs.tornadocash.eth.limo/tornado-cash-nova/shielded-transfers.html"
+        },
+        {
+          "name": "Number of secrets",
+          "value": "2",
+          "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html",
+          "notes": "You need an Ethereum wallet to send deposit and withdraw transactions. Also you need to store your private notes which give you access to withdraw funds in the future. You can configure a Note Account to store encrypted backups of privates notes on-chain."
+        },
+        {
+          "name": "Censorship resistance",
+          "value": "Yes",
+          "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/",
+          "notes": "Tornado cash smart contracts are immutable and unstoppable. If the web UIs are taken down, users can build and setup their own in their local machine using their open-source code."
+        },
+        {
+          "name": "External network dependence",
+          "value": "No",
+          "url": "https://docs.tornadocash.eth.limo/general/guides/relayer.html",
+          "notes": "There is a network of relayers which manage the withdrawal process. Users send their signed transactions to the relayer, the relayer pays for transaction fees and sends an on-chain transaction to be executed. The user receives the withdrawal amount minus the relayer fee."
+        },
+        {
+          "name": "Escape hatch",
+          "value": "Instantly",
+          "notes": "Users can withdraw their funds from Tornado Cash at any time directly through the smart contracts. It is recommended to wait a time period and follow some tips to remain anonymous using Tornado Cash.",
+          "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
+        },
+        {
+          "name": "Upgradeability",
+          "value": "Immutable",
+          "url": "https://docs.tornadocash.eth.limo/general/community/governance.html",
+          "notes": "There is a decentralized governance structure that uses the TORN token as its voting token. It does not control the Tornado Cash Classic anonymity pools but it can control other parts of the protocol and its community tools."
+        },
+        {
+          "name": "Client-side proving",
+          "value": "Yes",
+          "notes": "zkSNARKs proofs are generated on the clients' devices without the need of any external service.",
+          "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/connect-wallet.html"
+        },
+        {
+          "name": "Third-party inspectability",
+          "value": "No",
+          "notes": "No third-party can link deposit to withdraws or obtain total user balances. This is achieved by saving on-chain the user encrypted generated data.",
+          "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
+        },
+        {
+          "name": "Implementation maturity",
+          "value": "5 : Mainnet for more than 2 years",
+          "url": "https://etherscan.io/tx/0x51baa3dbb7e8756d52ba1b863f41e7af38373d0bb9943b9585d7f0db2d419e6e",
+          "notes": "The Tornado Cash Router contract was deployed on Feb 9th 2022."
+        },
+        {
+          "name": "Post-quantum secure",
+          "value": "No",
+          "notes": "It uses Pedersen hashing which is quantum vulnerable due to Shor's algorithm",
+          "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
+        },
+        {
+          "name": "Layer of enforcement",
+          "value": "None",
+          "notes": "There is no layer of enforce for compliance. Anyone can setup their own UI and relayer in order to interact with the deployed smart contracts",
+          "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/"
+        },
+        {
+          "name": "Enforcement entities",
+          "value": "None",
+          "notes": "External entities such as exchanges or dApps could potentially block access to addresses that have interacted with Tornado Cash",
+          "url": "https://www.chainalysis.com/blog/tornado-cash-sanctions-challenges/"
+        },
+        {
+          "name": "Type of compliance",
+          "value": "[\"Proof of innocence (POI) / ASP\",\"None\"]",
+          "notes": "There is no compliance by default but users can generate selective disclosure reports linking deposit and withdraw in order to show it to the enforcement entity or regulator",
+          "url": "https://docs.tornadocash.eth.limo/general/resources/compliance-tool.html"
+        },
+        {
+          "name": "Point of enforcement",
+          "value": "[\"None\"]",
+          "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/",
+          "notes": "There is no compliance enforcement in Tornado Cash."
+        },
+        {
+          "name": "Selective disclosure: viewing entity",
+          "value": "[\"User\"]",
+          "notes": "Users can generate their own reports linking deposit and withdraw in order to share it with other third parties.",
+          "url": "https://docs.tornadocash.eth.limo/general/resources/compliance-tool.html"
+        },
+        {
+          "name": "Selective disclosure: viewing control",
+          "value": "None",
+          "notes": "There is no view control, the compliance tool links the private note generated by the deposit action to the withdrawal transaction",
+          "url": "https://docs.tornadocash.eth.limo/general/resources/compliance-tool.html"
+        },
+        {
+          "name": "Cryptographic verifiability",
+          "value": "Yes",
+          "notes": "It uses zkSNARKs, Merkle trees and Pedersen hashes as encryption functions",
+          "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
+        },
+        {
+          "name": "Open source",
+          "value": "Yes",
+          "url": "https://github.com/tornadocash/",
+          "notes": "All code (smart contracts, UI interfaces, relayers code) is public and open-source in their Github's organization. It is worth pointing out that in some point in the past these repositories were removed / hidden by Github."
+        },
+        {
+          "name": "Scalable state",
+          "value": "Infinity grow",
+          "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html",
+          "notes": "Each deposit generates encrypted data that is stored on a Merkle tree. As more transactions happens, more encrypted data will be stored in the Merkle tree as leaves."
+        },
+        {
+          "name": "Client-side indexing",
+          "value": "No scanning",
+          "notes": "You need to manually input your private note in order to be able to withdraw funds. In case of using a Note Account, the encrypted backup is stored in a smart contract storage so it is easily accessible without scanning past transactions",
+          "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
+        },
+        {
+          "name": "Private state model",
+          "value": "UTXO-based state model",
+          "notes": "Each deposit acts as a private note. In order to find the total balance, the user needs to sums up all its private notes.",
+          "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
+        },
+        {
+          "name": "On-chain storage",
+          "value": "Smart contracts",
+          "notes": "The Tornado Cash smart contracts are deployed on-chain in Ethereum, BNB Chain, Polygon, Gnosis Chain, Avalanche, Optimism and Arbitrum One",
+          "url": "https://docs.tornadocash.eth.limo/general/"
+        },
+        {
+          "name": "Access to DeFi",
+          "value": "No access to DeFi",
+          "url": "https://docs.tornadocash.eth.limo/",
+          "notes": "In order to interact with any DeFi protocol, the user needs to withdraw the funds from the Tornado Cash contracts."
+        },
+        {
+          "name": "Programmability / Generality",
+          "value": "Only payments",
+          "notes": "Tornado Cash Classic is a set of tools to break the link between deposit and withdraws. Tornado Cash Nova allows for shielded private transfers between 2 users that have an account inside the Tornado Cash ecosystem. There has been no news to develop more programmable functionalities",
+          "url": "https://docs.tornadocash.eth.limo/"
+        }
+      ]
     },
     {
       "id": "privacy-pools",
       "title": "Privacy Pools",
-      "description": "A privacy protocol that extends Tornado Cash with association set providers (ASPs), allowing users to prove membership in compliant subsets without revealing their identity.",
+      "description": "A privacy protocol that extends Tornado Cash unlinkability concept with association set providers (ASPs), allowing users to prove membership in compliant subsets without revealing their identity.",
       "documentation": "https://docs.privacypools.com/",
       "categories": ["Mixer"],
-      "properties": []
+      "properties": [
+        {
+          "name": "Confidentiality",
+          "value": "Only balances",
+          "notes": "Privacy pools inherits the technical design from Tornado Cash which is a note-based architecture. Therefore it is not possible to know the total balance in anonymity pools of a single user.",
+          "url": "https://docs.privacypools.com/"
+        },
+        {
+          "name": "Anonymity",
+          "value": "Unlinkability",
+          "notes": "Users can deposit assets into Privacy Pools and later withdraw them, either partially or fully, without creating an on-chain link between their deposit and withdrawal addresses.",
+          "url": "https://docs.privacypools.com/"
+        },
+        {
+          "name": "Asset privacy",
+          "value": "No",
+          "url": "https://docs.privacypools.com/layers/contracts/entrypoint#1-deposit-flow",
+          "notes": "Users have to deposit their public tokens to the anonymity pool and also they have to receive their public tokens from the pool into the receiver address"
+        },
+        {
+          "name": "Plausible deniability",
+          "value": "No",
+          "notes": "Anyone can see that a user is interacting with Privacy Pools entrypoint contract",
+          "url": "https://docs.privacypools.com/layers/contracts/entrypoint#1-deposit-flow"
+        },
+        {
+          "name": "Number of secrets",
+          "value": "2",
+          "notes": "User needs an Ethereum wallet to interact with the smart contracts and also needs to store the nullifier and secret values which are locally generated in the user's device",
+          "url": "https://docs.privacypools.com/protocol/deposit#protocol-flow"
+        },
+        {
+          "name": "Censorship resistance",
+          "value": "Yes",
+          "url": "https://docs.privacypools.com/layers/asp",
+          "notes": "Users can choose in which anonymity pool deposit their funds depending on the Association Set Provider (ASP) configured on each pool. There could be cases where the pools does not have a strict ASP and anyone can use the protocol. But in practice users will use the anonymity pools with ASP in order to avoid linking their funds with illicit funds."
+        },
+        {
+          "name": "External network dependence",
+          "value": "Yes, permissioned",
+          "notes": "The Association Set Provider needs to be running in other to allow deposit and withdraw function executions in the smart contracts",
+          "url": "https://docs.privacypools.com/layers/asp"
+        },
+        {
+          "name": "Escape hatch",
+          "value": "Instantly",
+          "url": "https://docs.privacypools.com/protocol/ragequit",
+          "notes": "Ragequit is a safety mechanism that allows the original depositor to publicly withdraw their funds without needing ASP approval. This operation serves as a critical backup withdrawal method which ensures the ability to withdraw user funds when the label is not approved by the ASP or its approval was revoked"
+        },
+        {
+          "name": "Upgradeability",
+          "value": "Immutable",
+          "notes": "There is no Privacy Pools or 0xbow token to support decentralized governance. There is an owner reference in the Entrypoint smart contract",
+          "url": "https://github.com/0xbow-io/privacy-pools-core/blob/7bc392dad5fa483f53cf74e25d7ad19f0fc6d85f/packages/contracts/src/contracts/Entrypoint.sol#L69"
+        },
+        {
+          "name": "Client-side proving",
+          "value": "Yes",
+          "notes": "User constructs withdrawal parameters and later generates ZK proof of commitment ownership",
+          "url": "https://docs.privacypools.com/protocol/withdrawal#withdrawal-steps"
+        },
+        {
+          "name": "Third-party inspectability",
+          "value": "No",
+          "notes": "No third-party can view the private information of the users.",
+          "url": "https://docs.privacypools.com/overview/core-concepts"
+        },
+        {
+          "name": "Implementation maturity",
+          "value": "4 : Mainnet for more than 1 year",
+          "url": "https://etherscan.io/tx/0x4987385c58c49c9e3117244180094c5b7c5a0566c8547d13880df5e19076776c",
+          "notes": "The Privacy Pools deposit contract was deployed on March 29th 2025"
+        },
+        {
+          "name": "Post-quantum secure",
+          "value": "No",
+          "notes": "It uses zkSNARKs which are quantum vulnerable",
+          "url": "https://docs.privacypools.com/overview/core-concepts"
+        },
+        {
+          "name": "Layer of enforcement",
+          "value": "Protocol/chain",
+          "notes": "The Association Set Provider blocks any suspicious withdrawal directly on the smart contracts. The user can still rage quit and withdraw to their original deposit address",
+          "url": "https://docs.privacypools.com/layers/asp"
+        },
+        {
+          "name": "Enforcement entities",
+          "value": "Third party",
+          "notes": "The Association Set Provider administrators",
+          "url": "https://docs.privacypools.com/layers/asp"
+        },
+        {
+          "name": "Type of compliance",
+          "value": "[\"Proof of innocence (POI) / ASP\",\"KYT\"]",
+          "notes": "Depending on the ASP, there could be multiple compliance mechanism used in order to valid if a transaction is safe or not",
+          "url": "https://docs.privacypools.com/layers/asp"
+        },
+        {
+          "name": "Point of enforcement",
+          "value": "[\"Withdrawal\"]",
+          "url": "https://docs.privacypools.com/layers/asp#set-validation",
+          "notes": "Withdrawals require valid ASP root"
+        },
+        {
+          "name": "Selective disclosure: viewing entity",
+          "value": "[\"User\"]",
+          "notes": "Users could generate a report that links deposit and withdraw. There is no UI tool to do so but it is technically possible",
+          "url": "https://docs.privacypools.com/layers/asp"
+        },
+        {
+          "name": "Selective disclosure: viewing control",
+          "value": "None",
+          "notes": "There is no mention of viewing keys",
+          "url": "https://docs.privacypools.com/layers/asp"
+        },
+        {
+          "name": "Cryptographic verifiability",
+          "value": "Yes",
+          "url": "https://docs.privacypools.com/layers/zk",
+          "notes": "It uses zkSNARK circuits written in Circom"
+        },
+        {
+          "name": "Open source",
+          "value": "Yes",
+          "notes": "Smart contract and website code is open source. The ASP code cannot be found in the 0xbow (entity in charge of Privacy Pools) organization account",
+          "url": "https://github.com/orgs/0xbow-io/repositories"
+        },
+        {
+          "name": "Scalable state",
+          "value": "Infinity grow",
+          "url": "https://docs.privacypools.com/layers/zk",
+          "notes": "All commitments are inserted in a merkle tree"
+        },
+        {
+          "name": "Client-side indexing",
+          "value": "No scanning",
+          "url": "https://docs.privacypools.com/protocol/withdrawal#withdrawal-steps",
+          "notes": "The private notes allow the users to withdraw their funds directly without the need to scan the blockchain for events related to the users' deposits"
+        },
+        {
+          "name": "Private state model",
+          "value": "UTXO-based state model",
+          "url": "https://docs.privacypools.com/",
+          "notes": "The on-chain commitments can be seen as private notes. In order to find the user's total balance, the user needs to sum the balance of each of his commitments (private notes)"
+        },
+        {
+          "name": "On-chain storage",
+          "value": "Smart contracts",
+          "notes": "Each commitment is saved in an on-chain Lean Incremental Merkle Tree (LeanIMT)",
+          "url": "https://docs.privacypools.com/layers/contracts#state-management-basics"
+        },
+        {
+          "name": "Access to DeFi",
+          "value": "Access to external, but limited choice of DeFi protocols",
+          "url": "https://x.com/0xprivacypools/status/2010441283211530254",
+          "notes": "Some tokens can earn yield privately while been idle on the anonymity pool"
+        },
+        {
+          "name": "Programmability / Generality",
+          "value": "Only payments",
+          "notes": "Privacy Pools v1 is similar to Tornado Cash. The main goal is to break linkability between deposit and withdraw function executions",
+          "url": "https://docs.privacypools.com/#privacy-pools-offers-a-solution"
+        }
+      ]
     },
     {
       "id": "intmax",
