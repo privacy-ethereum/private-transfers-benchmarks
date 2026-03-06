@@ -9,6 +9,7 @@ import {
   findProtocolConstantsFiles,
   hasEtherscanExample,
   hasSolUrl,
+  hasSolUrlWithLineNumber,
   parseConstantsFile,
 } from "./utils.js";
 
@@ -52,10 +53,13 @@ describe("constants.ts files", () => {
     });
   });
 
-  it("should have a URL to a .sol source file for each events array indicating the function that emits the events", () => {
+  it("should have a URL to a .sol source file with line number for each events array indicating the function that emits the events", () => {
     files.forEach(({ filePath, events }) => {
       events.forEach(({ name, comment }) => {
-        expect(hasSolUrl(comment), `JSDoc for ${name} in ${filePath} must have a URL ending in .sol`).toBe(true);
+        expect(
+          hasSolUrlWithLineNumber(comment),
+          `JSDoc for ${name} in ${filePath} must have a URL to a .sol file with a line number anchor (e.g., #L123)`,
+        ).toBe(true);
       });
     });
   });

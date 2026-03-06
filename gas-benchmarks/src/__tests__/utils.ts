@@ -81,6 +81,11 @@ export function hasSolUrl(comment: string): boolean {
   return /https?:\/\/\S+\.sol(?:#\S*)?(?=\s|$)/i.test(comment);
 }
 
+/** Checks that a JSDoc comment contains a URL to a `.sol` file with a line number anchor (e.g., `#L123`). */
+export function hasSolUrlWithLineNumber(comment: string): boolean {
+  return /https?:\/\/\S+\.sol#L\d+(?=\s|$)/i.test(comment);
+}
+
 /** Extracts etherscan transaction URLs from a JSDoc comment. */
 export function extractEtherscanUrls(comment: string): string[] {
   const blockExplorerTxUrlRegEx = /https:\/\/[a-z]+scan\.[a-z]+\/tx\/0x[\da-fA-F]+/;
