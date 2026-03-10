@@ -5,7 +5,7 @@ import type { Category, Evaluation, EvaluationsData } from "../types.js";
 import defaultData from "./evaluations.json" with { type: "json" };
 
 const EVALUATIONS_DATA_URL =
-  "https://raw.githubusercontent.com/privacy-ethereum/private-transfers-benchmarks/main/project-evaluations/src/data/evaluations.json";
+  "https://raw.githubusercontent.com/privacy-ethereum/private-transfers-benchmarks/tree/chore/project-evaluations-content/project-evaluations/src/data/evaluations.json";
 
 export const useEvaluationsData = (
   url: string = EVALUATIONS_DATA_URL,
