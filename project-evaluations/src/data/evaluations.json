@@ -542,6 +542,175 @@
       "documentation": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture",
       "categories": ["Validium", "L2s"],
       "properties": []
+    },
+    {
+      "id": "monero",
+      "title": "Monero",
+      "description": "Monero is a alternative L1 blockchain focused exclusively on private transactions by default. It uses Ring signatures and stealth addresses under the hood to make the system secure, private and decentralized",
+      "documentation": "https://www.getmonero.org/",
+      "categories": ["Stealth addresses", "Alternative L1"],
+      "properties": [
+        {
+          "name": "Confidentiality",
+          "value": "Yes",
+          "notes": "Stealth addresses are used so there is no way to get a user's total balance because each transaction is send to a fresh stealth address. Ring Confidential Transactions (RingCT) hide transaction amounts using commitments and range proofs. More info about RingCT here: https://www.getmonero.org/resources/moneropedia/ringCT.html",
+          "url": "https://www.getmonero.org/resources/moneropedia/stealthaddress.html"
+        },
+        {
+          "name": "Anonymity",
+          "value": "Unlinkability",
+          "notes": "Ring signatures allows senders to hide themselves in a ring group of users. When a transaction is emitted, the sender signs the data using ring signatures (group signatures) so that the verification can guarantee the transaction is coming from a group member but does not know who",
+          "url": "https://www.getmonero.org/resources/moneropedia/ringsignatures.html"
+        },
+        {
+          "name": "Asset privacy",
+          "value": "No",
+          "notes": "You can only send XMR in Monero",
+          "url": "https://www.getmonero.org/resources/moneropedia/denominations.html"
+        },
+        {
+          "name": "Plausible deniability",
+          "value": "Yes",
+          "notes": "Every transaction output has plausible deniability because the transaction uses a ring signature. All members of the group could deny sending that transaction and there will be no way to link the real sender to a specific group member.",
+          "url": "https://www.getmonero.org/resources/moneropedia/ringsignatures.html"
+        },
+        {
+          "name": "Number of secrets",
+          "value": "1",
+          "notes": "There is a single spend key per account. There is also a viewing key that can be used to reveal the account's transactions.",
+          "url": "https://www.getmonero.org/resources/moneropedia/account.html"
+        },
+        {
+          "name": "Censorship resistance",
+          "value": "Yes",
+          "url": "https://www.getmonero.org/get-started/what-is-monero/",
+          "notes": "The privacy by-default feature hides senders and receivers interactions. This privacy property and the Proof of Work consensus mechanism make Monero censorship-resistant"
+        },
+        {
+          "name": "External network dependence",
+          "value": "Yes, permissionless",
+          "notes": "Monero uses Proof of Work which requires miners to join the network and validate transactions. The POoW algorithm is ASIC resistant, meaning that Monero miners must use consumer-grade hardware for an efficient mining process.",
+          "url": "https://www.getmonero.org/get-started/mining/"
+        },
+        {
+          "name": "Escape hatch",
+          "value": "Instantly",
+          "notes": "Users can withdraw funds from Monero to exchanges or other blockchains at any time. Exchanges could block Monero transactions depending on regulations and compliance.",
+          "url": "https://www.getmonero.org/community/merchants/"
+        },
+        {
+          "name": "Upgradeability",
+          "value": "DAO",
+          "url": "https://www.getmonero.org/community/workgroups/",
+          "notes": "The Monero community pushes changes and upgrades to the Monero Blockchain. These changes are implemented by different teams depending on the specifics (core team, wallet team, development team, etc)"
+        },
+        {
+          "name": "Client-side proving",
+          "value": "Yes",
+          "notes": "Monero wallets compute all the required data on the client devices. There are multiple wallet options to chose from: GUI, CLI, mobile and hardware wallets.",
+          "url": "https://www.getmonero.org/downloads/"
+        },
+        {
+          "name": "Third-party inspectability",
+          "value": "No",
+          "notes": "Only the user has access to his balances and received transactions. The user can willingly share his viewing keys with any third-parties",
+          "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
+        },
+        {
+          "name": "Implementation maturity",
+          "value": "5 : Mainnet for more than 2 years",
+          "url": "https://www.getmonero.org/resources/about/",
+          "notes": "Monero was launched in April 2014. It was a fair, pre-announced launch of the CryptoNote reference code."
+        },
+        {
+          "name": "Post-quantum secure",
+          "value": "No",
+          "notes": "Monero cryptography is based on Elliptic Curve Cryptography therefore it is vulnerable to the Shor's algorithm.",
+          "url": "https://docs.getmonero.org/cryptography/asymmetric/edwards25519/"
+        },
+        {
+          "name": "Layer of enforcement",
+          "value": "None",
+          "notes": "There is no compliance enforcement mechanism in Monero blockchain. Some centralized exchanges can block Monero transactions due to national regulations or policies.",
+          "url": "https://bitcointalk.org/index.php?topic=5468394.0"
+        },
+        {
+          "name": "Enforcement entities",
+          "value": "None",
+          "notes": "There is no compliance enforcement mechanism in Monero blockchain."
+        },
+        {
+          "name": "Type of compliance",
+          "value": "[\"Selective disclosure\",\"None\"]",
+          "notes": "The viewing keys were a selective disclosure mechanism for Monero users. According to their own documentation: outgoing transactions cannot be reliably viewed as of June 2017. Therefore, the balance of a Monero address as shown via a viewkey should not be relied upon.",
+          "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
+        },
+        {
+          "name": "Point of enforcement",
+          "value": "[\"Withdrawal\"]",
+          "notes": "Some centralized exchanges do not accept Monero transactions.",
+          "url": "https://bitcointalk.org/index.php?topic=5468394.0"
+        },
+        {
+          "name": "Selective disclosure: viewing entity",
+          "value": "[\"Voluntary third-party disclosure\"]",
+          "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html",
+          "notes": "A user could share his viewing key with a specific third-party for compliance or tax purposes"
+        },
+        {
+          "name": "Selective disclosure: viewing control",
+          "value": "Pre-defined",
+          "notes": "There is no programable viewing control.",
+          "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
+        },
+        {
+          "name": "Cryptographic verifiability",
+          "value": "Yes",
+          "url": "https://docs.getmonero.org/cryptography/",
+          "notes": "Monero uses a wide variety of cryptographic primitives for various use cases. Comparing to altcoins, Monero cryptography is considered conservative, sound and robust. Comparing to Bitcoin, Monero uses much more primitives, and some of them are more advanced, especially those related to privacy and Proof of Work."
+        },
+        {
+          "name": "Open source",
+          "value": "Yes",
+          "url": "https://github.com/monero-project"
+        },
+        {
+          "name": "Scalable state",
+          "value": "Infinity grow",
+          "notes": "Monero has private key images as nullifiers to prevent double spending attempts.",
+          "url": "https://docs.getmonero.org/cryptography/asymmetric/key-image/"
+        },
+        {
+          "name": "Client-side indexing",
+          "value": "Always scanning",
+          "url": "https://www.getmonero.org/resources/moneropedia/transaction.html",
+          "notes": "Stealth addresses make every transaction land on a fresh new address that is secretly controlled by a Monero account. In order for wallets to show the account balance, the application needs to be constantly scanning the network for transactions related to its corresponding stealth addresses"
+        },
+        {
+          "name": "Private state model",
+          "value": "UTXO-based state model",
+          "notes": "Every transaction on Monero has inputs (previously received transactions to a controlled stealth address) and outputs (transactions going to fresh new stealth addresses controlled by the receivers)",
+          "url": "https://www.getmonero.org/resources/user-guides/make-payment.html"
+        },
+        {
+          "name": "On-chain storage",
+          "value": "Smart contracts",
+          "notes": "All data is stored on Monero blockchain",
+          "url": "https://www.getmonero.org/resources/moneropedia/blockchain.html"
+        },
+        {
+          "name": "Access to DeFi",
+          "value": "No access to DeFi",
+          "notes": "There is no DeFi ecosystem in Monero due to its payment-only nature",
+          "url": "https://www.getmonero.org/resources/moneropedia/blockchain.html"
+        },
+        {
+          "name": "Programmability / Generality",
+          "value": "Only payments",
+          "notes": "Monero lives in a payments only blockchain with no programmability features",
+          "url": "Monero lives in a payments only blockchain with no programmability features"
+        }
+      ]
     }
   ]
 }
