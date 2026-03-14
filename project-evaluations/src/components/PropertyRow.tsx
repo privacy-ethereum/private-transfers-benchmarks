@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { Property, PropertyContent } from "../types.js";
 
@@ -11,11 +11,18 @@ interface PropertyRowProps {
 export default function PropertyRow({ def, prop, onUpdate }: PropertyRowProps) {
   const [localNotes, setLocalNotes] = useState(prop?.notes ?? "");
   const [localUrl, setLocalUrl] = useState(prop?.url ?? "");
+  const notesRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     setLocalNotes(prop?.notes ?? "");
     setLocalUrl(prop?.url ?? "");
   }, [prop]);
+
+  useEffect(() => {
+    if (!notesRef.current) return;
+    notesRef.current.style.height = "auto";
+    notesRef.current.style.height = `${notesRef.current.scrollHeight}px`;
+  }, [localNotes]);
 
   const inputClass =
     "w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-gray-100 focus:outline-none focus:border-indigo-500";
@@ -108,10 +115,11 @@ export default function PropertyRow({ def, prop, onUpdate }: PropertyRowProps) {
       </div>
       {renderValueInput()}
       <textarea
+        ref={notesRef}
         rows={2}
         value={localNotes}
         placeholder="Notes (why this value was selected)"
-        className={`${inputClass} resize-none`}
+        className={`${inputClass} resize-y overflow-hidden`}
         onChange={(e) => {
           setLocalNotes(e.target.value);
         }}
