@@ -1049,6 +1049,177 @@
           "url": "Monero lives in a payments only blockchain with no programmability features"
         }
       ]
+    },
+    {
+      "id": "aztec",
+      "title": "Aztec",
+      "description": "A privacy-first zkRollup on Ethereum that enables fully programmable private and public smart contracts. It uses client-side zero-knowledge proofs and an encrypted UTXO-based note model to keep transaction amounts and balances hidden, while supporting composable DeFi within its own internal ecosystem.",
+      "documentation": "https://docs.aztec.network/",
+      "categories": ["Edge blockchain", "L2s"],
+      "properties": [
+        {
+          "name": "Confidentiality",
+          "value": "Yes",
+          "notes": "Private state in Aztec uses encrypted UTXOs called 'notes'. Each note stores an amount and the owner's key, encrypted so only the owner can read it. Observers on-chain see only a commitment hash, not the token amount. A user's total balance is the sum of all their unspent notes, which only they can decrypt.",
+          "url": "https://aztec.network/blog/how-to-code-your-own-confidential-token-on-ethereum"
+        },
+        {
+          "name": "Anonymity",
+          "value": "No",
+          "notes": "Aztec accounts are persistent identities similar to Ethereum addresses. While encrypted notes (UTXOs) prevent outsiders from reading amounts or linking inputs to outputs, both sender and receiver are identified by their Aztec account addresses. There is no built-in unlinkability mechanism between accounts the way mixers provide.",
+          "url": "https://aztec.network/blog/how-to-code-your-own-confidential-token-on-ethereum"
+        },
+        {
+          "name": "Asset privacy",
+          "value": "No",
+          "notes": "When users deposit tokens from Ethereum L1 to the Aztec L2, the token contract address is visible in the L1 bridge transaction. The asset type is therefore publicly observable at the entry point. Inside the L2, a note's token type is encoded in the contract address that created it, which is still visible as part of the note commitment tree.",
+          "url": "https://aztec.network/blog/how-to-code-your-own-confidential-token-on-ethereum"
+        },
+        {
+          "name": "Plausible deniability",
+          "value": "No",
+          "notes": "Deposits from Ethereum L1 to the Aztec L2 are submitted as standard on-chain transactions to the Aztec rollup contract, making it publicly observable that a user is entering the Aztec network.",
+          "url": "https://aztec.network/blog/how-to-code-your-own-confidential-token-on-ethereum"
+        },
+        {
+          "name": "Number of secrets",
+          "value": "1",
+          "notes": "Aztec uses native account abstraction where each account is a smart contract. Wallets derive Aztec account keys from a single Ethereum-compatible signing key, meaning no additional separate secret needs to be managed beyond the main wallet key.",
+          "url": "https://docs.aztec.network/participate/basics/wallets"
+        },
+        {
+          "name": "Censorship resistance",
+          "value": "Yes",
+          "notes": "Aztec uses a permissionless, decentralized sequencer set where anyone can stake AZTEC tokens and participate in block production. No single entity controls transaction inclusion. Since proofs are generated client-side, users can also force-include transactions through L1 in adversarial conditions.",
+          "url": "https://docs.aztec.network/operate/operators"
+        },
+        {
+          "name": "External network dependence",
+          "value": "Yes, permissionless",
+          "notes": "Aztec relies on a network of external operators — sequencers and provers — to process and settle transactions. Both roles are permissionless: anyone can run the required services and participate without approval from the core team. The adversarial testnet demonstrated over 3,500 sequencers and 50+ provers running across five continents.",
+          "url": "https://docs.aztec.network/operate/operators"
+        },
+        {
+          "name": "Escape hatch",
+          "value": "Can exit in a time period",
+          "notes": "Since all transactions in Aztec are proven client-side, users can produce their own proofs without relying on a sequencer. In the event of sequencer failure or censorship, users can submit proofs directly to the L1 rollup contract during a designated escape hatch window. This is possible precisely because proof generation happens on the client.",
+          "url": "https://aztec.network/blog/client-side-proof-generation"
+        },
+        {
+          "name": "Upgradeability",
+          "value": "DAO",
+          "notes": "Aztec protocol upgrades go through a two-stage on-chain governance process. Sequencers (who must stake AZTEC tokens) initiate and vote on upgrade proposals; then all AZTEC token holders ratify or reject them. An 'Unbrick DAO' emergency mechanism allows anyone to lock 1% of total supply to propose a new rollup if the current one is unable to produce blocks.",
+          "url": "https://docs.aztec.network/participate/governance"
+        },
+        {
+          "name": "Client-side proving",
+          "value": "Yes",
+          "notes": "All private function execution and zero-knowledge proof generation happen in the Private Execution Environment (PXE) running on the user's device. Private data never leaves the device — only the ZK proof and public inputs are sent to the network. The CHONK proving system dramatically reduces memory and time requirements, making proof generation feasible on mobile devices.",
+          "url": "https://aztec.network/blog/client-side-proof-generation"
+        },
+        {
+          "name": "Third-party inspectability",
+          "value": "No",
+          "notes": "There is no global auditor or mandatory third-party inspection mechanism in the Aztec base protocol. Private notes and amounts are encrypted and can only be decrypted by the note owner. No external party can read private transaction data without the user's explicit disclosure.",
+          "url": "https://aztec.network/blog/client-side-proof-generation"
+        },
+        {
+          "name": "Implementation maturity",
+          "value": "2 : Public testnet",
+          "notes": "Aztec is currently in a public testnet phase on Ethereum Sepolia. The adversarial testnet is actively testing decentralized sequencer selection, proof generation, and governance before mainnet launch.",
+          "url": "https://aztec.network/blog/a-new-era-for-web3-introducing-aztec-public-testnet"
+        },
+        {
+          "name": "Post-quantum secure",
+          "value": "No",
+          "notes": "Aztec uses UltraPlonk and related SNARK-based proving systems that rely on elliptic curve cryptography (Barretenberg backend), which is vulnerable to Shor's algorithm on a sufficiently powerful quantum computer.",
+          "url": "https://docs.aztec.network/developers/overview"
+        },
+        {
+          "name": "Layer of enforcement",
+          "value": "None",
+          "notes": "Aztec does not enforce any compliance or censorship mechanism at the protocol level. There is no AML screening, KYT, or proof-of-innocence system built into the base protocol.",
+          "url": "https://docs.aztec.network/operate/operators"
+        },
+        {
+          "name": "Enforcement entities",
+          "value": "None",
+          "notes": "There are no enforcement entities in the Aztec protocol. The decentralized sequencer set processes transactions without identity checks or AML screening.",
+          "url": "https://docs.aztec.network/operate/operators"
+        },
+        {
+          "name": "Type of compliance",
+          "value": "[\"None\"]",
+          "notes": "Aztec does not include any compliance mechanism at the protocol level. Developers can optionally build compliance features such as viewing keys or selective disclosure into their own application contracts, but these are not mandated by the protocol.",
+          "url": "https://docs.aztec.network/operate/operators"
+        },
+        {
+          "name": "Point of enforcement",
+          "value": "[\"None\"]",
+          "notes": "There is no compliance enforcement at any point in the Aztec transaction lifecycle.",
+          "url": "https://docs.aztec.network/operate/operators"
+        },
+        {
+          "name": "Selective disclosure: viewing entity",
+          "value": "[\"User\"]",
+          "notes": "Aztec's programmable privacy allows users to expose specific private state to any third party of their choosing. Developers can build selective disclosure into application contracts — for example, allowing a user to prove their balance exceeds a threshold without revealing the exact amount, or to share transaction history for tax or audit purposes.",
+          "url": "https://docs.aztec.network/developers/overview#private-and-public-execution"
+        },
+        {
+          "name": "Selective disclosure: viewing control",
+          "value": "Programmable",
+          "notes": "Since Aztec is a fully programmable L2, developers can implement arbitrary selective disclosure logic in their contracts. Disclosure rules, conditions, and scopes are entirely determined by the contract design, not by a fixed protocol-level mechanism.",
+          "url": "https://docs.aztec.network/developers/overview#private-and-public-execution"
+        },
+        {
+          "name": "Cryptographic verifiability",
+          "value": "Yes",
+          "notes": "Aztec uses recursive zero-knowledge proofs (UltraPlonk / Client-IVC) to verify all private and public state transitions. The PXE generates proofs for private function execution locally, which are then aggregated by kernel circuits before being settled on Ethereum L1.",
+          "url": "https://docs.aztec.network/developers/overview#private-execution-environment-pxe"
+        },
+        {
+          "name": "Open source",
+          "value": "Yes",
+          "notes": "The Aztec monorepo — including the Noir smart contract language, Barretenberg proving backend, sequencer, and PXE — is fully open source on GitHub.",
+          "url": "https://github.com/AztecProtocol/aztec-packages"
+        },
+        {
+          "name": "Scalable state",
+          "value": "L2",
+          "notes": "Aztec stores all private state in encrypted note commitment trees within the Aztec L2. As an L2, the state grows within the Aztec network without imposing proportional costs on Ethereum L1 storage. Only state roots and validity proofs are settled on L1.",
+          "url": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/storage/indexed_merkle_tree"
+        },
+        {
+          "name": "Client-side indexing",
+          "value": "Partial scanning",
+          "notes": "Aztec uses a tagging mechanism that allows wallets to query for notes intended for them without scanning every note on the network. However, wallets must still sync and process their tagged notes from the Aztec node to build the current private balance — a partial scan rather than full network scanning or no scanning at all.",
+          "url": "https://docs.aztec.network/developers/docs/foundational-topics/accounts#the-entrypoint-pattern"
+        },
+        {
+          "name": "Private state model",
+          "value": "UTXO-based state model",
+          "notes": "Private state in Aztec is represented as encrypted notes (UTXOs). Each note is an immutable, discrete unit of private value. Spending a note destroys it via a nullifier and creates new notes. Public state uses an account-based model similar to Ethereum. Developers interact with both models through high-level APIs without needing to handle UTXOs directly.",
+          "url": "https://docs.aztec.network/developers/docs/foundational-topics#private-and-public-state"
+        },
+        {
+          "name": "On-chain storage",
+          "value": "Off-chain storage with on-chain commitment",
+          "notes": "Note commitments and nullifiers are stored in append-only Merkle trees within the Aztec L2 network. Only the state roots and validity proofs are settled on Ethereum L1. The actual encrypted note content lives off-chain in the Aztec network.",
+          "url": "https://aztec.network/basics"
+        },
+        {
+          "name": "Access to DeFi",
+          "value": "Access to internal DeFi ecosystem",
+          "notes": "Aztec has a growing internal DeFi ecosystem built natively on the L2, allowing users to interact with protocols using both private and public state. Accessing Ethereum L1 DeFi requires bridging funds back through the rollup contract.",
+          "url": "https://aztec.network/projects#Projects"
+        },
+        {
+          "name": "Programmability / Generality",
+          "value": "Full programmability with public and private state",
+          "notes": "Aztec is a fully programmable L2 where developers can write smart contracts in Noir that operate on both private (encrypted UTXO) and public (account-based) state. Contracts can mix private and public logic within the same transaction, enabling complex privacy-preserving applications well beyond simple transfers.",
+          "url": "https://aztec.network/developers"
+        }
+      ]
     }
   ]
 }
