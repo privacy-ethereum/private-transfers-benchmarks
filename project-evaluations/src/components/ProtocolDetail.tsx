@@ -1,4 +1,4 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 
 import type { Evaluation } from "../types.js";
 import { PROPERTY_GROUPS, definitionsByGroup } from "../schema.js";
@@ -24,6 +24,13 @@ export default function ProtocolDetail({
     description: "",
     documentation: "",
   });
+  const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    if (editingField !== "description" || !descriptionRef.current) return;
+    descriptionRef.current.style.height = "auto";
+    descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`;
+  }, [editingField, editValues.description]);
 
   const evaluation = evaluations.find((entry) => entry.id === selectedId) ?? null;
 
@@ -156,6 +163,7 @@ export default function ProtocolDetail({
             {editingField === "description" ? (
               <div className="flex gap-2">
                 <textarea
+                  ref={descriptionRef}
                   value={editValues.description}
                   onChange={(e) => {
                     setEditValues({ ...editValues, description: e.target.value });
@@ -164,7 +172,7 @@ export default function ProtocolDetail({
                     if (e.key === "Escape") cancelEdit();
                   }}
                   autoFocus
-                  className="text-sm text-gray-300 bg-gray-800 border border-indigo-500 rounded px-2 py-1 flex-1 resize-none"
+                  className="text-sm text-gray-300 bg-gray-800 border border-indigo-500 rounded px-2 py-1 flex-1 resize-y overflow-hidden"
                   rows={2}
                 />
                 <div className="flex flex-col gap-2">
