@@ -602,7 +602,7 @@
         },
         {
           "name": "Client-side proving",
-          "value": "Not applicable",
+          "value": "Yes",
           "notes": "Tongo uses homomorphic encryption (ElGamal) and zero knowledge proofs to update the on-chain encrypted balances. The SDK contains prover functions that can be used on the user end devices",
           "url": "https://github.com/fatlabsxyz/she/blob/7cdd1f1acd69f1ac7c6a7150454f13836d0b57aa/packages/typescript/src/protocols/sameEncryption.ts#L169"
         },
@@ -921,19 +921,19 @@
         {
           "name": "Censorship resistance",
           "value": "Yes",
-          "notes": "Stealth accounts are standard Safe smart accounts on public Ethereum networks. Any sender can transfer assets to a counterfactually predicted stealth address without interacting with Fluidkey's infrastructure. The open-source Fluidkey Stealth Account Kit allows anyone to independently derive stealth addresses and recover funds using only their signing key, without relying on Fluidkey servers.",
+          "notes": "Stealth accounts are standard Safe smart accounts on public Ethereum networks. Any sender can transfer assets to a stealth address without interacting with Fluidkey's infrastructure. The open-source Fluidkey Stealth Account Kit allows anyone to independently derive stealth addresses and recover funds using only their signing key, without relying on Fluidkey servers.",
           "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough"
         },
         {
           "name": "External network dependence",
-          "value": "Yes, permissioned",
-          "notes": "Fluidkey uses a proprietary ENS off-chain resolver to resolve user ENS names (username.fkey.id / username.fkey.eth) to fresh stealth addresses. This resolver is operated by Fluidkey and is not permissionless. If the off-chain resolver becomes unavailable, new stealth address lookups via ENS would fail, although existing stealth accounts and their funds remain fully accessible and recoverable independently.",
+          "value": "No",
+          "notes": "Fluidkey uses a proprietary ENS off-chain resolver to resolve user ENS names (username.fkey.id / username.fkey.eth) to fresh stealth addresses. This resolver is operated by Fluidkey and is not permissionless. If the off-chain resolver becomes unavailable, new stealth address lookups via ENS would fail, although existing stealth accounts and their funds remain fully accessible and recoverable independently. Anyone can generate and use stealth addresses without the need of an external dependency.",
           "url": "https://docs.fluidkey.com/technical-documentation/ens-offchain-resolver"
         },
         {
           "name": "Escape hatch",
           "value": "Instantly",
-          "notes": "All stealth EOA private keys can be deterministically re-derived from the user's signing key using the open-source Fluidkey Stealth Account Kit, following the path m/5564'/0'/c0'/c1'/0'/p'/n'. This means users can instantly sweep funds from any stealth account at any time without relying on Fluidkey's interface or servers. Smart contracts are only deployed on first use (counterfactual instantiation), so recovery remains possible even for undeployed accounts.",
+          "notes": "All stealth EOA private keys can be deterministically re-derived from the user's signing key using the open-source Fluidkey Stealth Account Kit. This means users can instantly sweep funds from any stealth account at any time without relying on Fluidkey's interface or servers. Smart contracts are only deployed on first use (counterfactual instantiation), so recovery remains possible even for undeployed accounts.",
           "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
         },
         {
@@ -1015,7 +1015,7 @@
         {
           "name": "Scalable state",
           "value": "Stateless",
-          "notes": "Fluidkey stealth accounts are counterfactually instantiated and each payment creates an independent smart account. There is no global shared state accumulation (no Merkle tree or registry that grows with usage). The system is effectively stateless at the protocol level — each stealth account is self-contained.",
+          "notes": "Fluidkey stealth accounts are counterfactually instantiated and each payment creates an independent smart account. There is no global shared state accumulation (no Merkle tree or registry that grows with usage). The system is effectively stateless at the protocol level — each stealth account is self-contained. There could be a potential issue on deploying independent smart accounts every time a transaction is performed.",
           "url": "https://docs.fluidkey.com/readme/receiving-funds#fluidkey"
         },
         {
@@ -1038,7 +1038,7 @@
         },
         {
           "name": "Access to DeFi",
-          "value": "Access to external but limited choice of DeFi protocols",
+          "value": "Unlimited access to DeFi applications",
           "notes": "Fluidkey provides a native Earn feature that integrates with a curated selection of yield-generating protocols. Beyond this built-in integration, users can interact with Ethereum DeFi using their stealth accounts as standard Safe smart accounts, though the Fluidkey interface does not natively surface the full Ethereum DeFi ecosystem.",
           "url": "https://docs.fluidkey.com/readme/earn"
         },
@@ -1047,6 +1047,10 @@
           "value": "Only payments",
           "notes": "Fluidkey is designed primarily for private payments — receiving and sending funds to stealth addresses. The Fluidkey interface and protocol are focused exclusively on payment use cases, even though the underlying Safe smart accounts are theoretically programmable.",
           "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#what-can-fluidkey-be-used-for"
+        },
+        {
+          "name": "Time-to-finality",
+          "value": ""
         }
       ]
     },
