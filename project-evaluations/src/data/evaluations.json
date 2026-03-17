@@ -324,7 +324,7 @@
           "name": "Open source",
           "value": "Yes",
           "url": "https://github.com/tornadocash/",
-          "notes": "All code (smart contracts, UI interfaces, relayers code) is public and open-source in their Github's organization. It is worth pointing out that in some point in the past these repositories were removed / hidden by Github."
+          "notes": "All code (smart contracts, UI interfaces, relayers code) is public and open-source in their Github organization. It is worth pointing out that in some point in the past these repositories were removed / hidden by Github."
         },
         {
           "name": "Scalable state",
@@ -897,7 +897,7 @@
         {
           "name": "Anonymity",
           "value": "Unlinkability",
-          "notes": "Stealth addresses provide unlinkabilitfor the receiver: an outside observer sees funds sent to a fresh new address and cannot determine who controls it. However, the transactions shows the sender address and therefore his balance and transaction history.",
+          "notes": "Stealth addresses provide unlinkability for the receiver: an outside observer sees funds sent to a fresh new address and cannot determine who controls it. However, the transactions shows the sender address and therefore his balance and transaction history.",
           "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#how-private-is-fluidkey"
         },
         {
@@ -915,7 +915,7 @@
         {
           "name": "Number of secrets",
           "value": "2",
-          "notes": "The user needs to connect his Ethereum wallet and sign a message that will be used to derive the users's Fluidkey private key pair",
+          "notes": "The user needs to connect his Ethereum wallet and sign a message that will be used to derive the user's Fluidkey private key pair",
           "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
         },
         {
@@ -1364,7 +1364,7 @@
         {
           "name": "Open source",
           "value": "Yes",
-          "notes": "The Fhenix CoFHE libraries, Redact repositroy and related tooling are available on GitHub.",
+          "notes": "The Fhenix CoFHE libraries, Redact repository and related tooling are available on GitHub.",
           "url": "https://github.com/FhenixProtocol"
         },
         {
