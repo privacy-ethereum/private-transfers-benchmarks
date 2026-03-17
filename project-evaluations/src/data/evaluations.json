@@ -602,7 +602,7 @@
         },
         {
           "name": "Client-side proving",
-          "value": "Not applicable",
+          "value": "Yes",
           "notes": "Tongo uses homomorphic encryption (ElGamal) and zero knowledge proofs to update the on-chain encrypted balances. The SDK contains prover functions that can be used on the user end devices",
           "url": "https://github.com/fatlabsxyz/she/blob/7cdd1f1acd69f1ac7c6a7150454f13836d0b57aa/packages/typescript/src/protocols/sameEncryption.ts#L169"
         },
@@ -882,6 +882,181 @@
       ]
     },
     {
+      "id": "fluidkey",
+      "title": "Fluidkey",
+      "description": "Fluidkey is a stealth address system on Ethereum that automatically generates a new Safe smart account for every incoming payment. It derives stealth addresses from the user's viewing key following ERC-5564, surfacing them through a static ENS name (username.fkey.id) that resolves to a fresh stealth address on every query, ensuring funds arrive at an address that no observer can link back to the recipient.",
+      "documentation": "https://docs.fluidkey.com/",
+      "categories": ["Stealth addresses"],
+      "properties": [
+        {
+          "name": "Confidentiality",
+          "value": "Only balances",
+          "notes": "Individual transaction amounts are publicly visible on-chain as standard ETH or ERC-20 transfers. However, no external observer can aggregate a user's total balance because funds are spread across an unlimited number of unlinkable stealth addresses.",
+          "url": "https://docs.fluidkey.com/readme/receiving-funds#fluidkey"
+        },
+        {
+          "name": "Anonymity",
+          "value": "Unlinkability",
+          "notes": "Stealth addresses provide unlinkabilitfor the receiver: an outside observer sees funds sent to a fresh new address and cannot determine who controls it. However, the transactions shows the sender address and therefore his balance and transaction history.",
+          "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#how-private-is-fluidkey"
+        },
+        {
+          "name": "Asset privacy",
+          "value": "No",
+          "notes": "The token type (ETH, USDC, etc.) is always visible on-chain in a Fluidkey transaction (normal on-chain transaction). Stealth addresses only obscure the link to the recipient's identity, not the asset being transferred.",
+          "url": "https://docs.fluidkey.com/readme/receiving-funds"
+        },
+        {
+          "name": "Plausible deniability",
+          "value": "Yes",
+          "notes": "Because every incoming payment lands on a fresh stealth address, an external observer cannot prove that a specific stealth address belongs to a particular user without access to the viewing key.",
+          "url": "https://docs.fluidkey.com/readme/receiving-funds#fluidkey"
+        },
+        {
+          "name": "Number of secrets",
+          "value": "2",
+          "notes": "The user needs to connect his Ethereum wallet and sign a message that will be used to derive the users's Fluidkey private key pair",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
+        },
+        {
+          "name": "Censorship resistance",
+          "value": "Yes",
+          "notes": "Stealth accounts are standard Safe smart accounts on public Ethereum networks. Any sender can transfer assets to a stealth address without interacting with Fluidkey's infrastructure. The open-source Fluidkey Stealth Account Kit allows anyone to independently derive stealth addresses and recover funds using only their signing key, without relying on Fluidkey servers.",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.-stealth-accounts"
+        },
+        {
+          "name": "External network dependence",
+          "value": "No",
+          "notes": "Fluidkey is fully self-custodial, which means that only you can access your funds with your private keys and you can do so even without Fluidkey. There are multiple open-source recovery interfaces and tools",
+          "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#can-i-access-my-funds-without-fluidkey"
+        },
+        {
+          "name": "Escape hatch",
+          "value": "Instantly",
+          "notes": "Each stealth account is controlled by a stealth EOA. The stealth EOA is derived pseudo-randomly using the viewing key node shared by the user. This ensures that the user can independently replay all stealth addresses generated and recover funds without relying on Fluidkey.",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.a.-stealth-signer-derivation"
+        },
+        {
+          "name": "Upgradeability",
+          "value": "Immutable",
+          "notes": "Fluidkey stealth accounts are Safe smart accounts, a battle-tested and immutable smart account implementation. There is no admin key or upgrade mechanism that could alter the behaviour of deployed stealth accounts.",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.-stealth-accounts"
+        },
+        {
+          "name": "Client-side proving",
+          "value": "Not applicable",
+          "notes": "Fluidkey does not use zero-knowledge proofs. The stealth address derivation relies entirely on elliptic curve Diffie-Hellman (ECDH) and BIP-32 key derivation, both of which are lightweight cryptographic operations feasible on any device including mobile.",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-1.-background-reading"
+        },
+        {
+          "name": "Third-party inspectability",
+          "value": "No",
+          "notes": "No third party can inspect a user's stealth account portfolio without the user's explicit consent. Fluidkey itself could have read access to incoming balances and address generation through the shared viewing key node, but does not hold the user's spending key to move funds.",
+          "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#who-can-view-my-transactions"
+        },
+        {
+          "name": "Implementation maturity",
+          "value": "5 : Mainnet for more than 2 years",
+          "notes": "Fluidkey has been deployed on Ethereum mainnet and several L2 networks for more than two years. The core Stealth Account Kit was audited by Dedaub in May 2024.",
+          "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#is-fluidkey-audited"
+        },
+        {
+          "name": "Post-quantum secure",
+          "value": "No",
+          "notes": "Fluidkey's stealth address derivation is based on elliptic curve Diffie-Hellman (ECDH) cryptography, which is vulnerable to Shor's algorithm and therefore not post-quantum secure.",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-1.-background-reading"
+        },
+        {
+          "name": "Layer of enforcement",
+          "value": "None",
+          "notes": "Fluidkey does not enforce any AML/KYC or compliance rules at the protocol level. The stealth address system is permissionless: anyone can send to a stealth address without going through compliance checks.",
+          "url": "https://docs.fluidkey.com/readme/receiving-funds"
+        },
+        {
+          "name": "Enforcement entities",
+          "value": "None",
+          "notes": "There are no on-chain or protocol-level compliance entities in Fluidkey.",
+          "url": "https://docs.fluidkey.com/readme/receiving-funds"
+        },
+        {
+          "name": "Type of compliance",
+          "value": "[\"Selective disclosure\"]",
+          "notes": "Fluidkey supports selective disclosure through its transaction export feature, which allows users to voluntarily reveal their full transaction history to third parties such as tax authorities or auditors.",
+          "url": "https://docs.fluidkey.com/readme/exporting-transactions"
+        },
+        {
+          "name": "Point of enforcement",
+          "value": "[\"None\"]",
+          "notes": "There are no mandatory compliance enforcement points in Fluidkey.",
+          "url": "https://docs.fluidkey.com/readme/receiving-funds"
+        },
+        {
+          "name": "Selective disclosure: viewing entity",
+          "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+          "notes": "Only the user can disclose his transaction history by sharing his viewing key. Although Fluidkey has read access to incoming balances via the shared viewing key node, all voluntary disclosures to third parties (excluding Fluidkey) are initiated and controlled by the user.",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
+        },
+        {
+          "name": "Selective disclosure: viewing control",
+          "value": "Pre-defined",
+          "notes": "The disclosure mechanism is pre-defined through the user's viewing key structure. The key sharing model is fixed at account setup time.",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
+        },
+        {
+          "name": "Cryptographic verifiability",
+          "value": "Yes",
+          "notes": "Fluidkey's stealth address scheme follows ERC-5564, which is based on ECDH. The derivation of each stealth address from the sender's ephemeral key and the recipient's viewing key is deterministic and cryptographically verifiable by anyone who holds the viewing key.",
+          "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#is-fluidkey-audited"
+        },
+        {
+          "name": "Open source",
+          "value": "Yes",
+          "notes": "The Fluidkey Stealth Account Kit — containing all core cryptographic functions for deriving and recovering stealth accounts — is open source and publicly available on GitHub.",
+          "url": "https://github.com/fluidkey"
+        },
+        {
+          "name": "Scalable state",
+          "value": "Stateless",
+          "notes": "Fluidkey stealth accounts are counterfactually instantiated and each payment creates an independent smart account. There is no global shared state accumulation (no Merkle tree or registry that grows with usage). There could be a potential issue on deploying independent smart accounts every time a transaction is performed.",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
+        },
+        {
+          "name": "Client-side indexing",
+          "value": "Always scanning",
+          "notes": "Because funds arrive at unlinkable stealth addresses, the user's wallet must continuously scan the blockchain for incoming transactions. Fluidkey performs this scanning server-side using the shared viewing key node and notifies users when funds arrive.",
+          "url": "https://docs.fluidkey.com/technical-documentation/ens-offchain-resolver#detailed-privacy-implications"
+        },
+        {
+          "name": "Private state model",
+          "value": "UTXO-based state model",
+          "notes": "Each incoming payment creates a new stealth smart account at a fresh address. Each stealth account is an independent unit of funds (similar to a UTXO ) owned by its controlling stealth EOA. Funds are distributed across multiple isolated stealth accounts that must be individually managed.",
+          "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#who-can-view-my-transactions"
+        },
+        {
+          "name": "On-chain storage",
+          "value": "Smart contracts",
+          "notes": "Each stealth account is a Safe smart account deployed on-chain that holds user's funds. Contracts are deployed lazily (counterfactual instantiation), it is only deployed on-chain when the user wishes to move funds out.",
+          "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
+        },
+        {
+          "name": "Access to DeFi",
+          "value": "Unlimited access to DeFi applications",
+          "notes": "Fluidkey provides a native Earn feature that integrates with a curated selection of yield-generating protocols. Beyond this built-in integration, users can interact with Ethereum DeFi using their stealth accounts as standard Safe smart accounts, though the Fluidkey interface does not natively surface the full Ethereum DeFi ecosystem.",
+          "url": "https://docs.fluidkey.com/readme/earn"
+        },
+        {
+          "name": "Programmability / Generality",
+          "value": "Only payments",
+          "notes": "Fluidkey is designed primarily for private payments. The Fluidkey interface and protocol are focused exclusively on payment use cases, even though the underlying Safe smart accounts are theoretically programmable.",
+          "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#what-can-fluidkey-be-used-for"
+        },
+        {
+          "name": "Time-to-finality",
+          "value": ""
+        }
+      ]
+    },
+    {
       "id": "monero",
       "title": "Monero",
       "description": "Monero is a alternative L1 blockchain focused exclusively on private transactions by default. It uses Ring signatures and stealth addresses under the hood to make the system secure, private and decentralized",
@@ -1047,6 +1222,186 @@
           "value": "Only payments",
           "notes": "Monero lives in a payments only blockchain with no programmability features",
           "url": "Monero lives in a payments only blockchain with no programmability features"
+        }
+      ]
+    },
+    {
+      "id": "redact",
+      "title": "Redact",
+      "description": "A confidential transfer protocol on Ethereum using Fhenix's CoFHE (Coprocessor for Fully Homomorphic Encryption) to encrypt ERC20 token balances on-chain. All FHE computations are handled off-chain by the coprocessor network. Balances are hidden while addresses are fully visible.",
+      "documentation": "https://docs.redact.money/",
+      "categories": ["Homomorphic encryption (FHE - HE)"],
+      "properties": [
+        {
+          "name": "Anonymity set size",
+          "value": ""
+        },
+        {
+          "name": "Confidentiality",
+          "value": "Yes",
+          "notes": "Redact uses Fhenix's coprocessor to encrypt ERC20 token balances on-chain. Balances are stored as ciphertexts and transactions modify them using FHE.",
+          "url": "https://docs.redact.money/technical-walkthrough#encrypting-your-erc20-balance"
+        },
+        {
+          "name": "Anonymity",
+          "value": "No",
+          "notes": "Redact operates on Ethereum where all transaction senders and recipients are publicly visible on-chain. The protocol encrypts only token amounts.",
+          "url": "https://docs.redact.money/technical-walkthrough"
+        },
+        {
+          "name": "Asset privacy",
+          "value": "No",
+          "notes": "During the encryption step, users must first approve the specific token contract, which is a public on-chain operation. Therefore the contract address is visible to any observer, revealing which asset type is being encrypted.",
+          "url": "https://docs.redact.money/using-redact/encrypting#id-2.-approval"
+        },
+        {
+          "name": "Plausible deniability",
+          "value": "No",
+          "notes": "The encryption operation is a direct call to the Redact smart contract, making it publicly visible on-chain that the user is interacting with the confidential transfer protocol.",
+          "url": "https://docs.redact.money/using-redact/encrypting#id-3.-encryption"
+        },
+        {
+          "name": "Number of secrets",
+          "value": "1",
+          "notes": "Users only need their existing Ethereum wallet to interact with Redact. Permits are temporary EIP-712 signatures derived from the user's wallet key and are not independent secrets requiring separate storage.",
+          "url": "https://docs.redact.money/faq#q-what-are-permits"
+        },
+        {
+          "name": "Deposit time",
+          "value": ""
+        },
+        {
+          "name": "Withdraw time",
+          "value": ""
+        },
+        {
+          "name": "Censorship resistance",
+          "value": "No",
+          "notes": "Redact depends on Fhenix's coprocessor network for all FHE operations. There is no clear documentation to join the coprocessor MPC network so it could be considered a permissioned network. Therefore the network could be force to refuse to process operations for specific users or transactions.",
+          "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network"
+        },
+        {
+          "name": "External network dependence",
+          "value": "Yes, permissioned",
+          "notes": "Redact relies on Fhenix's CoFHE coprocessor network for all FHE computations. The result processor is a permissioned component that validates computation outputs and publishes encrypted results back on-chain.",
+          "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/result-processor"
+        },
+        {
+          "name": "Escape hatch",
+          "value": "No",
+          "notes": "There is no escape hatch mechanism in Redact. Encrypted balances can only be decrypted with coprocessor's threshold network. If the CoFHE infrastructure becomes unavailable or censors a user, there is no alternative cryptographic path to recover encrypted funds",
+          "url": "https://docs.redact.money/architecture/cofhe-overview#cofhe-architecture"
+        },
+        {
+          "name": "Upgradeability",
+          "value": "Immutable",
+          "url": "https://docs.redact.money/architecture/fherc20-token-standard",
+          "notes": "The fhERC20 token standard does not have a governance or upgradeability feature in its code"
+        },
+        {
+          "name": "Client-side proving",
+          "value": "Not applicable",
+          "notes": "Redact uses FHE computation via the coprocessor rather than client-side ZK proving. All cryptographic operations are processed by the external coprocessor and does not involve proof generation on the user's device.",
+          "url": "https://docs.redact.money/technical-walkthrough#encrypted-transfer"
+        },
+        {
+          "name": "Third-party inspectability",
+          "value": "Yes",
+          "notes": "The threshold decryption coprocessor network, operated by Fhenix, can in theory collude and decrypt values (even though in practice this is unlikely).",
+          "url": "https://docs.redact.money/technical-walkthrough#decrypting-confidentialerc20-and-claiming-erc20"
+        },
+        {
+          "name": "Implementation maturity",
+          "value": "2 : Public testnet",
+          "notes": "Redact is currently available on public testnet",
+          "url": "https://test.redact.money/"
+        },
+        {
+          "name": "Post-quantum secure",
+          "value": "Yes",
+          "notes": "Fhenix's coprocessor documentation does not explicitly indicate the FHE scheme used but in the decryption process there is a mention to Learning With Errors (LWE). Therefore we assume that Fhenix is using a post quantum FHE scheme based on LWE",
+          "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network#decryption-process"
+        },
+        {
+          "name": "Layer of enforcement",
+          "value": "None",
+          "notes": "Redact currently has no built-in compliance enforcement mechanism. The protocol focuses solely on confidential transfers without restricting who can participate.",
+          "url": "https://docs.redact.money/#core-functionalities"
+        },
+        {
+          "name": "Enforcement entities",
+          "value": "None",
+          "notes": "There is no compliance enforcement entity in Redact. The coprocessor network could collude with an enforcement entity to decrypt specific balances or censor specific addresses.",
+          "url": "https://docs.redact.money/#overview"
+        },
+        {
+          "name": "Type of compliance",
+          "value": "[\"None\",\"Selective disclosure\"]",
+          "url": "https://docs.redact.money/faq#q-what-are-permits"
+        },
+        {
+          "name": "Point of enforcement",
+          "value": "[\"None\"]"
+        },
+        {
+          "name": "Selective disclosure: viewing entity",
+          "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+          "notes": "Users can issue EIP-712 permits that grant temporary, scoped read access to their encrypted balances. These permits allow the user to voluntarily disclose their confidential balance to any authorized smart contract or third party.",
+          "url": "https://docs.redact.money/faq#q-what-are-permits"
+        },
+        {
+          "name": "Selective disclosure: viewing control",
+          "value": "Pre-defined",
+          "notes": "The permit mechanism is a pre-defined EIP-712 structure. Users can grant viewing access but within the fixed permit schema; there is no programmable or custom viewing policy.",
+          "url": "https://docs.redact.money/faq#q-what-are-permits"
+        },
+        {
+          "name": "Cryptographic verifiability",
+          "value": "Yes",
+          "notes": "Fhenix's coprocessor network uses zero knowledge proofs alongside FHE to ensure that all coprocessor computations are correct and verifiable on-chain without revealing plaintext data.",
+          "url": "https://docs.redact.money/architecture/cofhe-overview#security-and-privacy-measures"
+        },
+        {
+          "name": "Open source",
+          "value": "Yes",
+          "notes": "The Fhenix CoFHE libraries, Redact repositroy and related tooling are available on GitHub.",
+          "url": "https://github.com/FhenixProtocol"
+        },
+        {
+          "name": "Scalable state",
+          "value": "Within contract",
+          "notes": "Redact uses an account-based model where each user's encrypted balance is stored as a mapping within the smart contract storage. State grows proportionally to the number of accounts rather than to the number of transactions.",
+          "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances"
+        },
+        {
+          "name": "Client-side indexing",
+          "value": "No scanning",
+          "notes": "Since Redact uses an account-based model with encrypted balances stored directly as contract state, users can retrieve their encrypted balance directly from the contract without scanning past blockchain events.",
+          "url": "https://docs.redact.money/using-redact/confidential-balances-wallet"
+        },
+        {
+          "name": "Private state model",
+          "value": "Account-based state model",
+          "notes": "Each Redact account holds an encrypted balance stored directly in the smart contract. The balance ciphertext is updated in-place on each transfer",
+          "url": "https://docs.redact.money/architecture/fherc20.sol#state-changing-functions"
+        },
+        {
+          "name": "On-chain storage",
+          "value": "Smart contracts",
+          "notes": "All encrypted balances (FHE ciphertexts) are stored on-chain within the Redact smart contract state.",
+          "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances"
+        },
+        {
+          "name": "Access to DeFi",
+          "value": "No access to DeFi",
+          "notes": "fhERC20 tokens are encrypted and cannot be used directly with standard DeFi protocols. Users must decrypt (unshield) their tokens back to standard ERC20 form before accessing any external DeFi ecosystem.",
+          "url": "https://docs.redact.money/technical-walkthrough#caveat-invalid-transfer-amount"
+        },
+        {
+          "name": "Programmability / Generality",
+          "value": "Only payments",
+          "notes": "Redact is designed as a confidential payment protocol for ERC20 token transfers. The core operations are encrypting tokens, transferring confidential balances, and decrypting tokens. There is no support for arbitrary private smart contract logic.",
+          "url": "https://docs.redact.money/motivation#why-redact"
         }
       ]
     }
