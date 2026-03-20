@@ -7,8 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
-    "test": "vitest run"
+    "preview": "vite preview"
   },
   "dependencies": {
     "jszip": "^3.10.1",
@@ -18,16 +17,12 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.8",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
     "@types/jszip": "^3.4.1",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",
     "@vitejs/plugin-react": "^4.5.1",
-    "jsdom": "^29.0.1",
     "tailwindcss": "^4.1.8",
     "typescript": "^5.9.3",
-    "vite": "^6.3.5",
-    "vitest": "^4.0.18"
+    "vite": "^6.3.5"
   }
 }
