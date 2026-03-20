@@ -1,0 +1,171 @@
+{
+  "id": "privacy-pools",
+  "title": "Privacy Pools",
+  "description": "A privacy protocol that extends Tornado Cash unlinkability concept with association set providers (ASPs), allowing users to prove membership in compliant subsets without revealing their identity.",
+  "documentation": "https://docs.privacypools.com/",
+  "categories": ["Mixer"],
+  "properties": [
+    {
+      "name": "Confidentiality",
+      "value": "Only balances",
+      "notes": "Privacy pools inherits the technical design from Tornado Cash which is a note-based architecture. Therefore it is not possible to know the total balance in anonymity pools of a single user.",
+      "url": "https://docs.privacypools.com/"
+    },
+    {
+      "name": "Anonymity",
+      "value": "Unlinkability",
+      "notes": "Users can deposit assets into Privacy Pools and later withdraw them, either partially or fully, without creating an on-chain link between their deposit and withdrawal addresses.",
+      "url": "https://docs.privacypools.com/"
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "url": "https://docs.privacypools.com/layers/contracts/entrypoint#1-deposit-flow",
+      "notes": "Users have to deposit their public tokens to the anonymity pool and also they have to receive their public tokens from the pool into the receiver address"
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Anyone can see that a user is interacting with Privacy Pools entrypoint contract",
+      "url": "https://docs.privacypools.com/layers/contracts/entrypoint#1-deposit-flow"
+    },
+    {
+      "name": "Number of secrets",
+      "value": "2",
+      "notes": "User needs an Ethereum wallet to interact with the smart contracts and also needs to store the nullifier and secret values which are locally generated in the user's device",
+      "url": "https://docs.privacypools.com/protocol/deposit#protocol-flow"
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "Yes",
+      "url": "https://docs.privacypools.com/layers/asp",
+      "notes": "Users can choose in which anonymity pool deposit their funds depending on the Association Set Provider (ASP) configured on each pool. There could be cases where the pools does not have a strict ASP and anyone can use the protocol. But in practice users will use the anonymity pools with ASP in order to avoid linking their funds with illicit funds."
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "The Association Set Provider needs to be running in other to allow deposit and withdraw function executions in the smart contracts",
+      "url": "https://docs.privacypools.com/layers/asp"
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "url": "https://docs.privacypools.com/protocol/ragequit",
+      "notes": "Ragequit is a safety mechanism that allows the original depositor to publicly withdraw their funds without needing ASP approval. This operation serves as a critical backup withdrawal method which ensures the ability to withdraw user funds when the label is not approved by the ASP or its approval was revoked"
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Immutable",
+      "notes": "There is no Privacy Pools or 0xbow token to support decentralized governance. There is an owner reference in the Entrypoint smart contract",
+      "url": "https://github.com/0xbow-io/privacy-pools-core/blob/7bc392dad5fa483f53cf74e25d7ad19f0fc6d85f/packages/contracts/src/contracts/Entrypoint.sol#L69"
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "User constructs withdrawal parameters and later generates ZK proof of commitment ownership",
+      "url": "https://docs.privacypools.com/protocol/withdrawal#withdrawal-steps"
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "No third-party can view the private information of the users.",
+      "url": "https://docs.privacypools.com/overview/core-concepts"
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "4 : Mainnet for more than 1 year",
+      "url": "https://etherscan.io/tx/0x4987385c58c49c9e3117244180094c5b7c5a0566c8547d13880df5e19076776c",
+      "notes": "The Privacy Pools deposit contract was deployed on March 29th 2025"
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "It uses zkSNARKs which are quantum vulnerable",
+      "url": "https://docs.privacypools.com/overview/core-concepts"
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "Protocol/chain",
+      "notes": "The Association Set Provider blocks any suspicious withdrawal directly on the smart contracts. The user can still rage quit and withdraw to their original deposit address",
+      "url": "https://docs.privacypools.com/layers/asp"
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Third party",
+      "notes": "The Association Set Provider administrators",
+      "url": "https://docs.privacypools.com/layers/asp"
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"Proof of innocence (POI) / ASP\",\"KYT\"]",
+      "notes": "Depending on the ASP, there could be multiple compliance mechanism used in order to valid if a transaction is safe or not",
+      "url": "https://docs.privacypools.com/layers/asp"
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"Withdrawal\"]",
+      "url": "https://docs.privacypools.com/layers/asp#set-validation",
+      "notes": "Withdrawals require valid ASP root"
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"User\"]",
+      "notes": "Users could generate a report that links deposit and withdraw. There is no UI tool to do so but it is technically possible",
+      "url": "https://docs.privacypools.com/layers/asp"
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "None",
+      "notes": "There is no mention of viewing keys",
+      "url": "https://docs.privacypools.com/layers/asp"
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "url": "https://docs.privacypools.com/layers/zk",
+      "notes": "It uses zkSNARK circuits written in Circom"
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "Smart contract and website code is open source. The ASP code cannot be found in the 0xbow (entity in charge of Privacy Pools) organization account",
+      "url": "https://github.com/orgs/0xbow-io/repositories"
+    },
+    {
+      "name": "Scalable state",
+      "value": "Infinity grow",
+      "url": "https://docs.privacypools.com/layers/zk",
+      "notes": "All commitments are inserted in a merkle tree"
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No scanning",
+      "url": "https://docs.privacypools.com/protocol/withdrawal#withdrawal-steps",
+      "notes": "The private notes allow the users to withdraw their funds directly without the need to scan the blockchain for events related to the users' deposits"
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "url": "https://docs.privacypools.com/",
+      "notes": "The on-chain commitments can be seen as private notes. In order to find the user's total balance, the user needs to sum the balance of each of his commitments (private notes)"
+    },
+    {
+      "name": "On-chain storage",
+      "value": "Smart contracts",
+      "notes": "Each commitment is saved in an on-chain Lean Incremental Merkle Tree (LeanIMT)",
+      "url": "https://docs.privacypools.com/layers/contracts#state-management-basics"
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Access to external, but limited choice of DeFi protocols",
+      "url": "https://x.com/0xprivacypools/status/2010441283211530254",
+      "notes": "Some tokens can earn yield privately while been idle on the anonymity pool"
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "Privacy Pools v1 is similar to Tornado Cash. The main goal is to break linkability between deposit and withdraw function executions",
+      "url": "https://docs.privacypools.com/#privacy-pools-offers-a-solution"
+    }
+  ]
+}

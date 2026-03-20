@@ -1,0 +1,171 @@
+{
+  "id": "intmax",
+  "title": "Intmax",
+  "description": "A stateless zkRollup optimised for private payments, pushing most data off-chain so that on-chain costs are minimal while preserving user-side privacy through client-side proving.",
+  "documentation": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture",
+  "categories": ["L2s", "Validium", "zkWormholes"],
+  "properties": [
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Users construct their own transaction batches locally. These batches consist of arbitrary mappings from recipients to token amounts and are not revealed to aggregators. Each transaction batch is salted and hashed. Only these hashes are submitted to the aggregator, preserving privacy",
+      "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#transaction-construction-off-chain"
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Sender and receiver are hidden when a transaction is submitted in the L2. The sender needs to share the ZK proof and required data to the receiver so he can update his balance in his local state (end-user device)",
+      "url": "https://docs.network.intmax.io/developers-hub/core-concepts/roles"
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "When users deposit assets into or withdraw assets from the Intmax network the token type is recorded on Ethereum L1. Inside the L2 the private transfers do not reveal the asset being transmitted",
+      "url": "https://docs.network.intmax.io/user-guides/transfer-on-intmax-network"
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Deposits from Ethereum to Intmax are submitted as standard L1 transactions to the Intmax Rollup contract, making it publicly visible on-chain that a user is entering the Intmax L2 network.",
+      "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#l1--l2-deposit"
+    },
+    {
+      "name": "Number of secrets",
+      "value": "2",
+      "notes": "Users need their Ethereum wallet key to interact with the L1 contracts and a separate Intmax private key to authorise transfers within the network.",
+      "url": "https://docs.network.intmax.io/user-guides/backup-intmax-account/export-intmax-private-key"
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "The Intmax Liquidity contract is managed by a designated operator, which means access to deposits and withdrawals is gated by a centralised entity. This design introduces a single point of censorship at the L1 gateway that could block or delay user transactions. For example Intmax deposits and withdrawals were paused due to a ZK bug.",
+      "url": "https://docs.network.intmax.io/developers-hub/intmax-nodes/smart-contracts#liquidity"
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissionless",
+      "notes": "Intmax relies on a network of external nodes (block builders, aggregators, and validity provers) to process and settle transactions. These roles are permissionless, meaning anyone can run the required services and participate in the network without needing approval from the core team.",
+      "url": "https://docs.network.intmax.io/developers-hub/intmax-nodes"
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Withdrawals from Intmax require the block builder to include the withdrawal in a batch and the validity proof to be submitted on-chain. Withdrawals from L2 to L1 require the user to submit a ZK proof of balance at a known commitment root. This root must exist in the contract’s on-chain history.",
+      "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#withdrawals"
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "notes": "Intmax smart contracts are currently controlled by a single admin account with no on-chain governance or token-based voting mechanism. Until a decentralised governance model is introduced, all protocol upgrades depend on unilateral decisions by the core team.",
+      "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#token-distribution"
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "ZK proofs for Intmax transactions are generated entirely on the user's device inside the supported wallet applications. This means no external prover service has access to private transaction data",
+      "url": "https://docs.network.intmax.io/user-guides/supported-wallets"
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Transaction contents are end-to-end encrypted and proven with ZK proofs, so neither the network operators nor any external observer can read private transfer data.",
+      "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture"
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "Intmax launched on Ethereum mainnet in June 2025",
+      "url": "https://etherscan.io/tx/0xbb35cae7bb4711e7e2db56c10d3f09f1c2d482bb00912b6593577d4dd744a86e"
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "Yes",
+      "notes": "Intmax uses Plonky2 for its ZK proofs. Plonky2 is considered post quantum secure because it is hash-based",
+      "url": "https://docs.network.intmax.io/developers-hub/code-repository#zero-knowledge-proof-zkp-libraries"
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "Protocol/chain",
+      "notes": "AML compliance is enforced on the privacy mining feature designed to increase the anonymity set (deposit tokens into Intmax, wait a time period, withdraw to a different address). The L2 will block deposits coming from high-risk addresses and it will require a proof of innocence to allow deposits",
+      "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#aml-rules"
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Third party",
+      "notes": "Compliance screening is performed by third-party AML service providers that supply the block-lists and risk-scoring data consumed by the Intmax protocol at deposit time.",
+      "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#aml-rules"
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"KYT\",\"Proof of innocence (POI) / ASP\"]",
+      "notes": "Intmax applies Know Your Transaction (KYT) screening to incoming deposits and uses a Proof of Innocence (POI) model whereby users must demonstrate that their funds are not associated with sanctioned or illicit activity before being accepted into the network.",
+      "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#aml-rules"
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"Deposit\"]",
+      "notes": "AML and compliance checks are applied exclusively at the deposit stage when users bridge assets from Ethereum L1 into the Intmax network. Once funds are inside the network, subsequent transfers are not subject to additional compliance screening. Withdrawals are assumed to be clean if no bad actor has deposited into the L2.",
+      "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#aml-rules"
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"None\"]",
+      "notes": "Intmax does not provide any viewing-key or selective-disclosure mechanism. Transaction history is accessible only through the user's own account.",
+      "url": "https://docs.network.intmax.io/user-guides/check-transaction-history"
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "None",
+      "notes": "There is no viewing-key system or programmable disclosure control in Intmax. Users cannot scope or share access to their transaction history with any external party.",
+      "url": "https://docs.network.intmax.io/user-guides/check-transaction-history"
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Intmax uses ZK proofs to cryptographically guarantee the validity of every state transition (aka transfers). The architecture principles include formal verification of the circuits, ensuring that correctness is enforced by mathematics rather than by trusted intermediaries.",
+      "url": "https://docs.network.intmax.io/developers-hub/security-and-privacy/architecture-principles"
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The Intmax smart contracts, node software, and related tooling are publicly available in their open-source code repository, allowing anyone to inspect, audit, or contribute to the codebase.",
+      "url": "https://docs.network.intmax.io/developers-hub/code-repository"
+    },
+    {
+      "name": "Scalable state",
+      "value": "L2",
+      "notes": "Intmax has a special L2 design similar to edge blockchains. Users are first-class agents who fully own and maintain their own state. Aggregators submit commitments on the L1 for global state coordination.",
+      "url": "https://docs.network.intmax.io/developers-hub/core-concepts/roles"
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No scanning",
+      "notes": "Transactions are shared peer-to-peer from the sender to the recipient. The recipient needs to verify a ZK proof in order to update its own client-side state",
+      "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#zk-proof-propagation-p2p"
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Intmax represents private balances as a set of UTXOs. Each received transfer creates a new unspent output controlled by the recipient, and spending requires consuming existing UTXOs and creating new ones.",
+      "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#implications"
+    },
+    {
+      "name": "On-chain storage",
+      "value": "Off-chain storage with on-chain commitment",
+      "notes": "Intmax minimises on-chain footprint by storing only block roots and validity proofs on Ethereum L1. All transaction data is kept off-chain and propagated through the P2P network, with on-chain commitments serving as the source of truth for finality.",
+      "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#minimal-on-chain-data"
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "No access to DeFi",
+      "notes": "Currently Intmax is designed as a private payment L2 network. At the moment the native DeFi ecosystem is small and Intmax does not give full access to Ethereum L1 DeFi ecosystem directly. Users must withdraw to Ethereum L1 to access any DeFi applications.",
+      "url": "https://docs.network.intmax.io/developers-hub#use-cases--applications"
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Partial programmability",
+      "notes": "Intmax allows for integration into different applications and protocols. The ecosystem is still growing but it looks like Intmax can give programmability features to developers in order to build apps more complex than private transfers",
+      "url": "https://intmax.io/ecosystem"
+    }
+  ]
+}
