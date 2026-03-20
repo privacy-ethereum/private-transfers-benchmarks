@@ -5,19 +5,20 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { Evaluation } from "../types.js";
 import { PROPERTY_DEFINITIONS } from "../schema.js";
 import ProtocolDetail from "../components/ProtocolDetail.js";
-import evaluationsData from "../data/evaluations.json" with { type: "json" };
+import { evaluations as uiEvaluations } from "../data/evaluations/index.js";
+import sourceOfTruth from "../data/evaluations.json" with { type: "json" };
 
-const evaluations = evaluationsData.evaluations as Evaluation[];
+const sourceEvaluations = sourceOfTruth.evaluations as Evaluation[];
 const noop = (): void => undefined;
 
 afterEach(cleanup);
 
 function renderProtocol(id: string): void {
-  render(<ProtocolDetail evaluations={evaluations} selectedId={id} setEvaluations={noop} setSelectedId={noop} />);
+  render(<ProtocolDetail evaluations={uiEvaluations} selectedId={id} setEvaluations={noop} setSelectedId={noop} />);
 }
 
 describe("UI renders evaluation data from JSON", () => {
-  evaluations.forEach((expected) => {
+  sourceEvaluations.forEach((expected) => {
     it(`${expected.id}: renders title, description, documentation, and categories`, () => {
       renderProtocol(expected.id);
 

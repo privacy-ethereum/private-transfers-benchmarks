@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
 import type { Category, Evaluation, EvaluationsData } from "../types.js";
-import defaultData from "./evaluations.json" with { type: "json" };
+import { evaluations as defaultData } from "./evaluations/index.js";
 
 const EVALUATIONS_DATA_URL =
   "https://raw.githubusercontent.com/privacy-ethereum/private-transfers-benchmarks/tree/chore/project-evaluations-content/project-evaluations/src/data/evaluations.json";
@@ -16,10 +16,10 @@ export const useEvaluationsData = (
   setSelectedId: Dispatch<SetStateAction<string | null>>;
   addEvaluation: (title: string, description: string, documentation: string, categories: Category[]) => void;
 } => {
-  const fallbackData = structuredClone(defaultData as EvaluationsData);
+  const fallbackData = structuredClone(defaultData);
 
-  const [evaluations, setEvaluations] = useState<Evaluation[]>(fallbackData.evaluations);
-  const [selectedId, setSelectedId] = useState<string | null>(fallbackData.evaluations[0]?.id ?? null);
+  const [evaluations, setEvaluations] = useState<Evaluation[]>(fallbackData);
+  const [selectedId, setSelectedId] = useState<string | null>(fallbackData[0]?.id ?? null);
 
   useEffect(() => {
     fetch(url)
