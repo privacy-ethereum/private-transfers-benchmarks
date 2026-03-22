@@ -5,10 +5,7 @@
   "documentation": "https://hinkal-team.gitbook.io/hinkal",
   "categories": ["Shielded pool", "Stealth addresses"],
   "properties": [
-    {
-      "name": "Anonymity set size",
-      "value": ""
-    },
+    { "name": "Anonymity set size", "value": "" },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -45,10 +42,7 @@
       "notes": "Users that deposit into Hinkal will instantly be able to interact: private transfer, privately interact with other smart contracts, withdraw. But it is recommended to define a time window during which the transaction executes to reduce linkage between intent and settlement",
       "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-send/features#privacy-properties"
     },
-    {
-      "name": "Withdraw time",
-      "value": ""
-    },
+    { "name": "Withdraw time", "value": "" },
     {
       "name": "Censorship resistance",
       "value": "No",

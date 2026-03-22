@@ -20,8 +20,8 @@
     {
       "name": "Asset privacy",
       "value": "No",
-      "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html",
-      "notes": "The user sends a deposit transaction that sends their public assets to the Tornado Cash contracts. When the user withdraws the funds, the public assets are sent to the receiver address."
+      "notes": "The user sends a deposit transaction that sends their public assets to the Tornado Cash contracts. When the user withdraws the funds, the public assets are sent to the receiver address.",
+      "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
     {
       "name": "Plausible deniability",
@@ -29,10 +29,7 @@
       "notes": "You can see that users are depositing and withdrawing through the Tornado Cash contract",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
-    {
-      "name": "Time-to-finality",
-      "value": ""
-    },
+    { "name": "Time-to-finality", "value": "" },
     {
       "name": "On-chain gas cost: transfer",
       "value": "0",
@@ -42,20 +39,20 @@
     {
       "name": "Number of secrets",
       "value": "2",
-      "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html",
-      "notes": "You need an Ethereum wallet to send deposit and withdraw transactions. Also you need to store your private notes which give you access to withdraw funds in the future. You can configure a Note Account to store encrypted backups of privates notes on-chain."
+      "notes": "You need an Ethereum wallet to send deposit and withdraw transactions. Also you need to store your private notes which give you access to withdraw funds in the future. You can configure a Note Account to store encrypted backups of privates notes on-chain.",
+      "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/",
-      "notes": "Tornado cash smart contracts are immutable and unstoppable. If the web UIs are taken down, users can build and setup their own in their local machine using their open-source code."
+      "notes": "Tornado cash smart contracts are immutable and unstoppable. If the web UIs are taken down, users can build and setup their own in their local machine using their open-source code.",
+      "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/"
     },
     {
       "name": "External network dependence",
       "value": "No",
-      "url": "https://docs.tornadocash.eth.limo/general/guides/relayer.html",
-      "notes": "There is a network of relayers which manage the withdrawal process. Users send their signed transactions to the relayer, the relayer pays for transaction fees and sends an on-chain transaction to be executed. The user receives the withdrawal amount minus the relayer fee."
+      "notes": "There is a network of relayers which manage the withdrawal process. Users send their signed transactions to the relayer, the relayer pays for transaction fees and sends an on-chain transaction to be executed. The user receives the withdrawal amount minus the relayer fee.",
+      "url": "https://docs.tornadocash.eth.limo/general/guides/relayer.html"
     },
     {
       "name": "Escape hatch",
@@ -66,8 +63,8 @@
     {
       "name": "Upgradeability",
       "value": "Immutable",
-      "url": "https://docs.tornadocash.eth.limo/general/community/governance.html",
-      "notes": "There is a decentralized governance structure that uses the TORN token as its voting token. It does not control the Tornado Cash Classic anonymity pools but it can control other parts of the protocol and its community tools."
+      "notes": "There is a decentralized governance structure that uses the TORN token as its voting token. It does not control the Tornado Cash Classic anonymity pools but it can control other parts of the protocol and its community tools.",
+      "url": "https://docs.tornadocash.eth.limo/general/community/governance.html"
     },
     {
       "name": "Client-side proving",
@@ -84,8 +81,8 @@
     {
       "name": "Implementation maturity",
       "value": "5 : Mainnet for more than 2 years",
-      "url": "https://etherscan.io/tx/0x51baa3dbb7e8756d52ba1b863f41e7af38373d0bb9943b9585d7f0db2d419e6e",
-      "notes": "The Tornado Cash Router contract was deployed on Feb 9th 2022."
+      "notes": "The Tornado Cash Router contract was deployed on Feb 9th 2022.",
+      "url": "https://etherscan.io/tx/0x51baa3dbb7e8756d52ba1b863f41e7af38373d0bb9943b9585d7f0db2d419e6e"
     },
     {
       "name": "Post-quantum secure",
@@ -114,8 +111,8 @@
     {
       "name": "Point of enforcement",
       "value": "[\"None\"]",
-      "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/",
-      "notes": "There is no compliance enforcement in Tornado Cash."
+      "notes": "There is no compliance enforcement in Tornado Cash.",
+      "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/"
     },
     {
       "name": "Selective disclosure: viewing entity",
@@ -138,14 +135,14 @@
     {
       "name": "Open source",
       "value": "Yes",
-      "url": "https://github.com/tornadocash/",
-      "notes": "All code (smart contracts, UI interfaces, relayers code) is public and open-source in their Github organization. It is worth pointing out that in some point in the past these repositories were removed / hidden by Github."
+      "notes": "All code (smart contracts, UI interfaces, relayers code) is public and open-source in their Github organization. It is worth pointing out that in some point in the past these repositories were removed / hidden by Github.",
+      "url": "https://github.com/tornadocash/"
     },
     {
       "name": "Scalable state",
       "value": "Infinity grow",
-      "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html",
-      "notes": "Each deposit generates encrypted data that is stored on a Merkle tree. As more transactions happens, more encrypted data will be stored in the Merkle tree as leaves."
+      "notes": "Each deposit generates encrypted data that is stored on a Merkle tree. As more transactions happens, more encrypted data will be stored in the Merkle tree as leaves.",
+      "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
       "name": "Client-side indexing",
@@ -168,8 +165,8 @@
     {
       "name": "Access to DeFi",
       "value": "No access to DeFi",
-      "url": "https://docs.tornadocash.eth.limo/",
-      "notes": "In order to interact with any DeFi protocol, the user needs to withdraw the funds from the Tornado Cash contracts."
+      "notes": "In order to interact with any DeFi protocol, the user needs to withdraw the funds from the Tornado Cash contracts.",
+      "url": "https://docs.tornadocash.eth.limo/"
     },
     {
       "name": "Programmability / Generality",

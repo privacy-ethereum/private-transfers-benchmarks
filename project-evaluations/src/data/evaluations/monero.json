@@ -38,8 +38,8 @@
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "url": "https://www.getmonero.org/get-started/what-is-monero/",
-      "notes": "The privacy by-default feature hides senders and receivers interactions. This privacy property and the Proof of Work consensus mechanism make Monero censorship-resistant"
+      "notes": "The privacy by-default feature hides senders and receivers interactions. This privacy property and the Proof of Work consensus mechanism make Monero censorship-resistant",
+      "url": "https://www.getmonero.org/get-started/what-is-monero/"
     },
     {
       "name": "External network dependence",
@@ -56,8 +56,8 @@
     {
       "name": "Upgradeability",
       "value": "DAO",
-      "url": "https://www.getmonero.org/community/workgroups/",
-      "notes": "The Monero community pushes changes and upgrades to the Monero Blockchain. These changes are implemented by different teams depending on the specifics (core team, wallet team, development team, etc)"
+      "notes": "The Monero community pushes changes and upgrades to the Monero Blockchain. These changes are implemented by different teams depending on the specifics (core team, wallet team, development team, etc)",
+      "url": "https://www.getmonero.org/community/workgroups/"
     },
     {
       "name": "Client-side proving",
@@ -74,8 +74,8 @@
     {
       "name": "Implementation maturity",
       "value": "5 : Mainnet for more than 2 years",
-      "url": "https://www.getmonero.org/resources/about/",
-      "notes": "Monero was launched in April 2014. It was a fair, pre-announced launch of the CryptoNote reference code."
+      "notes": "Monero was launched in April 2014. It was a fair, pre-announced launch of the CryptoNote reference code.",
+      "url": "https://www.getmonero.org/resources/about/"
     },
     {
       "name": "Post-quantum secure",
@@ -109,8 +109,8 @@
     {
       "name": "Selective disclosure: viewing entity",
       "value": "[\"Voluntary third-party disclosure\"]",
-      "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html",
-      "notes": "A user could share his viewing key with a specific third-party for compliance or tax purposes"
+      "notes": "A user could share his viewing key with a specific third-party for compliance or tax purposes",
+      "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
     },
     {
       "name": "Selective disclosure: viewing control",
@@ -121,14 +121,10 @@
     {
       "name": "Cryptographic verifiability",
       "value": "Yes",
-      "url": "https://docs.getmonero.org/cryptography/",
-      "notes": "Monero uses a wide variety of cryptographic primitives for various use cases. Comparing to altcoins, Monero cryptography is considered conservative, sound and robust. Comparing to Bitcoin, Monero uses much more primitives, and some of them are more advanced, especially those related to privacy and Proof of Work."
+      "notes": "Monero uses a wide variety of cryptographic primitives for various use cases. Comparing to altcoins, Monero cryptography is considered conservative, sound and robust. Comparing to Bitcoin, Monero uses much more primitives, and some of them are more advanced, especially those related to privacy and Proof of Work.",
+      "url": "https://docs.getmonero.org/cryptography/"
     },
-    {
-      "name": "Open source",
-      "value": "Yes",
-      "url": "https://github.com/monero-project"
-    },
+    { "name": "Open source", "value": "Yes", "url": "https://github.com/monero-project" },
     {
       "name": "Scalable state",
       "value": "Infinity grow",
@@ -138,8 +134,8 @@
     {
       "name": "Client-side indexing",
       "value": "Always scanning",
-      "url": "https://www.getmonero.org/resources/moneropedia/transaction.html",
-      "notes": "Stealth addresses make every transaction land on a fresh new address that is secretly controlled by a Monero account. In order for wallets to show the account balance, the application needs to be constantly scanning the network for transactions related to its corresponding stealth addresses"
+      "notes": "Stealth addresses make every transaction land on a fresh new address that is secretly controlled by a Monero account. In order for wallets to show the account balance, the application needs to be constantly scanning the network for transactions related to its corresponding stealth addresses",
+      "url": "https://www.getmonero.org/resources/moneropedia/transaction.html"
     },
     {
       "name": "Private state model",

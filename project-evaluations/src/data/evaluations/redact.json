@@ -5,10 +5,7 @@
   "documentation": "https://docs.redact.money/",
   "categories": ["Homomorphic encryption (FHE - HE)"],
   "properties": [
-    {
-      "name": "Anonymity set size",
-      "value": ""
-    },
+    { "name": "Anonymity set size", "value": "" },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -39,14 +36,8 @@
       "notes": "Users only need their existing Ethereum wallet to interact with Redact. Permits are temporary EIP-712 signatures derived from the user's wallet key and are not independent secrets requiring separate storage.",
       "url": "https://docs.redact.money/faq#q-what-are-permits"
     },
-    {
-      "name": "Deposit time",
-      "value": ""
-    },
-    {
-      "name": "Withdraw time",
-      "value": ""
-    },
+    { "name": "Deposit time", "value": "" },
+    { "name": "Withdraw time", "value": "" },
     {
       "name": "Censorship resistance",
       "value": "No",
@@ -68,8 +59,8 @@
     {
       "name": "Upgradeability",
       "value": "Immutable",
-      "url": "https://docs.redact.money/architecture/fherc20-token-standard",
-      "notes": "The fhERC20 token standard does not have a governance or upgradeability feature in its code"
+      "notes": "The fhERC20 token standard does not have a governance or upgradeability feature in its code",
+      "url": "https://docs.redact.money/architecture/fherc20-token-standard"
     },
     {
       "name": "Client-side proving",
@@ -112,10 +103,7 @@
       "value": "[\"None\",\"Selective disclosure\"]",
       "url": "https://docs.redact.money/faq#q-what-are-permits"
     },
-    {
-      "name": "Point of enforcement",
-      "value": "[\"None\"]"
-    },
+    { "name": "Point of enforcement", "value": "[\"None\"]" },
     {
       "name": "Selective disclosure: viewing entity",
       "value": "[\"User\",\"Voluntary third-party disclosure\"]",

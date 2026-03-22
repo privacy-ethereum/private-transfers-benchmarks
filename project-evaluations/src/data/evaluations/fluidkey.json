@@ -167,9 +167,6 @@
       "notes": "Fluidkey is designed primarily for private payments. The Fluidkey interface and protocol are focused exclusively on payment use cases, even though the underlying Safe smart accounts are theoretically programmable.",
       "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#what-can-fluidkey-be-used-for"
     },
-    {
-      "name": "Time-to-finality",
-      "value": ""
-    }
+    { "name": "Time-to-finality", "value": "" }
   ]
 }

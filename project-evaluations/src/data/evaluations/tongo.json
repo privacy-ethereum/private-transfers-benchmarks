@@ -5,10 +5,7 @@
   "documentation": "https://docs.tongo.cash/",
   "categories": ["Homomorphic encryption (FHE - HE)"],
   "properties": [
-    {
-      "name": "Anonymity set size",
-      "value": ""
-    },
+    { "name": "Anonymity set size", "value": "" },
     {
       "name": "Confidentiality",
       "value": "Yes",
