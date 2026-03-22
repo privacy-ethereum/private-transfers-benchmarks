@@ -1,14 +1,46 @@
 import JSZip from "jszip";
+import { format } from "prettier/standalone";
+import estreePlugin from "prettier/plugins/estree";
+import babelPlugin from "prettier/plugins/babel";
 
 import type { Evaluation } from "../types.js";
+import type { Options } from "prettier";
+
+import rawConfig from "../../../.prettierrc.json";
+
+const prettierConfig: Partial<Options> = {
+  arrowParens: rawConfig.arrowParens as "always" | "avoid",
+  bracketSpacing: rawConfig.bracketSpacing,
+  endOfLine: rawConfig.endOfLine as "lf" | "crlf" | "cr" | "auto",
+  printWidth: rawConfig.printWidth,
+  singleQuote: rawConfig.singleQuote,
+  semi: rawConfig.semi,
+  tabWidth: rawConfig.tabWidth,
+  useTabs: rawConfig.useTabs,
+  trailingComma: rawConfig.trailingComma as "all" | "none" | "es5",
+};
 
 interface SaveModalProps {
   evaluations: Evaluation[];
   onClose: () => void;
 }
 
-const downloadFile = (evaluation: Evaluation): void => {
-  const content = JSON.stringify(evaluation, null, 2) + "\n";
+const formatEvaluationJson = async (evaluation: Evaluation): Promise<string> => {
+  const content = JSON.stringify(evaluation);
+
+  try {
+    return await format(content, {
+      parser: "json",
+      plugins: [babelPlugin, estreePlugin],
+      ...prettierConfig,
+    });
+  } catch {
+    return `${JSON.stringify(evaluation, null, 2)}\n`;
+  }
+};
+
+const downloadFile = async (evaluation: Evaluation): Promise<void> => {
+  const content = await formatEvaluationJson(evaluation);
   const blob = new Blob([content], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -20,9 +52,12 @@ const downloadFile = (evaluation: Evaluation): void => {
 
 const downloadAllAsZip = async (evaluations: Evaluation[]): Promise<void> => {
   const zip = new JSZip();
-  evaluations.forEach((ev) => {
-    zip.file(`${ev.id}.json`, JSON.stringify(ev, null, 2) + "\n");
-  });
+  await Promise.all(
+    evaluations.map(async (ev) => {
+      const content = await formatEvaluationJson(ev);
+      zip.file(`${ev.id}.json`, content);
+    }),
+  );
   const blob = await zip.generateAsync({ type: "blob" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -46,7 +81,9 @@ export default function SaveModal({ evaluations, onClose }: SaveModalProps) {
             <button
               key={ev.id}
               onClick={() => {
-                downloadFile(ev);
+                downloadFile(ev).catch(() => {
+                  alert("Failed to save file.");
+                });
                 onClose();
               }}
               className="w-full text-left text-sm text-gray-300 hover:bg-gray-800 rounded px-3 py-2 transition-colors"
