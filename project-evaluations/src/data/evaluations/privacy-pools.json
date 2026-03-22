@@ -20,8 +20,8 @@
     {
       "name": "Asset privacy",
       "value": "No",
-      "url": "https://docs.privacypools.com/layers/contracts/entrypoint#1-deposit-flow",
-      "notes": "Users have to deposit their public tokens to the anonymity pool and also they have to receive their public tokens from the pool into the receiver address"
+      "notes": "Users have to deposit their public tokens to the anonymity pool and also they have to receive their public tokens from the pool into the receiver address",
+      "url": "https://docs.privacypools.com/layers/contracts/entrypoint#1-deposit-flow"
     },
     {
       "name": "Plausible deniability",
@@ -38,8 +38,8 @@
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "url": "https://docs.privacypools.com/layers/asp",
-      "notes": "Users can choose in which anonymity pool deposit their funds depending on the Association Set Provider (ASP) configured on each pool. There could be cases where the pools does not have a strict ASP and anyone can use the protocol. But in practice users will use the anonymity pools with ASP in order to avoid linking their funds with illicit funds."
+      "notes": "Users can choose in which anonymity pool deposit their funds depending on the Association Set Provider (ASP) configured on each pool. There could be cases where the pools does not have a strict ASP and anyone can use the protocol. But in practice users will use the anonymity pools with ASP in order to avoid linking their funds with illicit funds.",
+      "url": "https://docs.privacypools.com/layers/asp"
     },
     {
       "name": "External network dependence",
@@ -50,8 +50,8 @@
     {
       "name": "Escape hatch",
       "value": "Instantly",
-      "url": "https://docs.privacypools.com/protocol/ragequit",
-      "notes": "Ragequit is a safety mechanism that allows the original depositor to publicly withdraw their funds without needing ASP approval. This operation serves as a critical backup withdrawal method which ensures the ability to withdraw user funds when the label is not approved by the ASP or its approval was revoked"
+      "notes": "Ragequit is a safety mechanism that allows the original depositor to publicly withdraw their funds without needing ASP approval. This operation serves as a critical backup withdrawal method which ensures the ability to withdraw user funds when the label is not approved by the ASP or its approval was revoked",
+      "url": "https://docs.privacypools.com/protocol/ragequit"
     },
     {
       "name": "Upgradeability",
@@ -74,8 +74,8 @@
     {
       "name": "Implementation maturity",
       "value": "4 : Mainnet for more than 1 year",
-      "url": "https://etherscan.io/tx/0x4987385c58c49c9e3117244180094c5b7c5a0566c8547d13880df5e19076776c",
-      "notes": "The Privacy Pools deposit contract was deployed on March 29th 2025"
+      "notes": "The Privacy Pools deposit contract was deployed on March 29th 2025",
+      "url": "https://etherscan.io/tx/0x4987385c58c49c9e3117244180094c5b7c5a0566c8547d13880df5e19076776c"
     },
     {
       "name": "Post-quantum secure",
@@ -104,8 +104,8 @@
     {
       "name": "Point of enforcement",
       "value": "[\"Withdrawal\"]",
-      "url": "https://docs.privacypools.com/layers/asp#set-validation",
-      "notes": "Withdrawals require valid ASP root"
+      "notes": "Withdrawals require valid ASP root",
+      "url": "https://docs.privacypools.com/layers/asp#set-validation"
     },
     {
       "name": "Selective disclosure: viewing entity",
@@ -122,8 +122,8 @@
     {
       "name": "Cryptographic verifiability",
       "value": "Yes",
-      "url": "https://docs.privacypools.com/layers/zk",
-      "notes": "It uses zkSNARK circuits written in Circom"
+      "notes": "It uses zkSNARK circuits written in Circom",
+      "url": "https://docs.privacypools.com/layers/zk"
     },
     {
       "name": "Open source",
@@ -134,20 +134,20 @@
     {
       "name": "Scalable state",
       "value": "Infinity grow",
-      "url": "https://docs.privacypools.com/layers/zk",
-      "notes": "All commitments are inserted in a merkle tree"
+      "notes": "All commitments are inserted in a merkle tree",
+      "url": "https://docs.privacypools.com/layers/zk"
     },
     {
       "name": "Client-side indexing",
       "value": "No scanning",
-      "url": "https://docs.privacypools.com/protocol/withdrawal#withdrawal-steps",
-      "notes": "The private notes allow the users to withdraw their funds directly without the need to scan the blockchain for events related to the users' deposits"
+      "notes": "The private notes allow the users to withdraw their funds directly without the need to scan the blockchain for events related to the users' deposits",
+      "url": "https://docs.privacypools.com/protocol/withdrawal#withdrawal-steps"
     },
     {
       "name": "Private state model",
       "value": "UTXO-based state model",
-      "url": "https://docs.privacypools.com/",
-      "notes": "The on-chain commitments can be seen as private notes. In order to find the user's total balance, the user needs to sum the balance of each of his commitments (private notes)"
+      "notes": "The on-chain commitments can be seen as private notes. In order to find the user's total balance, the user needs to sum the balance of each of his commitments (private notes)",
+      "url": "https://docs.privacypools.com/"
     },
     {
       "name": "On-chain storage",
@@ -158,8 +158,8 @@
     {
       "name": "Access to DeFi",
       "value": "Access to external, but limited choice of DeFi protocols",
-      "url": "https://x.com/0xprivacypools/status/2010441283211530254",
-      "notes": "Some tokens can earn yield privately while been idle on the anonymity pool"
+      "notes": "Some tokens can earn yield privately while been idle on the anonymity pool",
+      "url": "https://x.com/0xprivacypools/status/2010441283211530254"
     },
     {
       "name": "Programmability / Generality",
