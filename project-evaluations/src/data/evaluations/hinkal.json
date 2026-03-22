@@ -1,0 +1,179 @@
+{
+  "id": "hinkal",
+  "title": "Hinkal",
+  "description": "A privacy protocol using stealth addresses and zk-SNARKs to enable confidential token transfers and shielded DeFi interactions on EVM chains, with built-in KYT compliance enforced at deposit and withdrawal.",
+  "documentation": "https://hinkal-team.gitbook.io/hinkal",
+  "categories": ["Shielded pool", "Stealth addresses"],
+  "properties": [
+    { "name": "Anonymity set size", "value": "" },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Hinkal hides both balances and transfer amounts. Assets are deposited into a shared shielded pool and tracked as encrypted UTXOs, so external observers cannot determine how much a user holds or transfers. Each transaction consumes a note by adding its nullifier to the state and creates new notes by adding new values to the commitment tree. To ensure a recipient receives the secret information required to spend their commitments, the sender encrypts the secrets of the commitment sent to the recipient.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/transactions/deposits-and-withdrawals"
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Hinkal uses stealth addresses derived per user using his cannonical public key so that on-chain interactions cannot be linked to a user's identity. The shielded pool hides the sender and receiver of every internal transfer due to its note-based UTXOs model. Every transaction uses input notes (adds its nullifiers to the tree) and creates new notes (add commitments to the commitment tree) pointing to new fresh stealth addresses. A commitment is defined as the Poseidon hash of the token address, amount, stealth address (recipient) and timestamp.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/key-derivation-and-stealth-addresses#stealth-addresses"
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "There are three transactions types in Hinkal: shield (deposit), unshield (withdraw) and private transfer. As expected when a user shields and/or unshields tokens, the asset type (e.g. native token, ERC20, etc) is revealed because the Hinkal contract or the recipient end up with the tokens in the public on-chain registry. In a private transfer, the sender nullifies some commitments and creates new commitments. There is no information about the asset type published on-chain. Therefore we can consider that Hinkal has asset privacy.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/utxos-commitments-and-nullifiers#off-chain-utxo-creation"
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Deposits and withdrawals are direct interactions with the Hinkal smart contracts, which are publicly visible on-chain. It is therefore apparent that a user is engaging with the Hinkal privacy protocol. On private transfers, senders can use relayers to hide their public addresses but in order to do so they would initially have deposited tokens into the Hinkal contract.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-send/features#on-chain-behavior"
+    },
+    {
+      "name": "Number of secrets",
+      "value": "3",
+      "notes": "Users require an EVM wallet for on-chain transactions (secret #1) and a Hinkal-specific key (secret #2) produced deterministically by signing a message using an EVM wallet (Ethereum's Elliptic Curve Digital Signature Algorithm ECDSA). This key will be considered the spending key to prove ownership and authorize notes transactions. The spending key is used as a seed to create a Curve25519-based encryption key pair (public and private keys). The public key will be used by senders to encrypt transaction data for the user. The private key (secret #3) will be considered the viewing key that the user (or any authorized third party) will use to decrypt and view transactions.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/key-derivation-and-stealth-addresses"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Users that deposit into Hinkal will instantly be able to interact: private transfer, privately interact with other smart contracts, withdraw. But it is recommended to define a time window during which the transaction executes to reduce linkage between intent and settlement",
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-send/features#privacy-properties"
+    },
+    { "name": "Withdraw time", "value": "" },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Hinkal enforces KYT compliance at the smart contract layer through Chainalysis compliance components. Deposits are screen in real-time and blocked if transactions are involved in sanctioned or blacklisted addresses. This means that participation into Hinkal protocol and features is restricted to only users that have not been sanctioned or are not blacklisted according to the compliance enforcement organizaiton (Chainalysis).",
+      "url": "https://hinkal-team.gitbook.io/hinkal/introduction/compliance"
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Every transaction you make with Hinkal (Send, Swap, Fund, Shield, or a dApp interaction) is settled by a relayer that fronts the on-chain gas fee. Instead of forcing you to keep spare ETH, the relayer lets you reimburse that cost in ETH, USDC, USDT or DAI. There is no documentation indicating how to permissionlessly join the relayer network so we assumed that the network is permissioned.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/getting-started/gas-tokens"
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Hinkal uses the Chainalysis compliance component in every interaction with the smart contracts due to its goal to maintain a \"clean\" environment for institutional flows. This means that in case the address requesting the withdrawal is sanctioned or blacklisted then the funds will be stuck until further work with regulators, Hinkal and Chainalysis.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/ecosystem/compliance#id-1.-protocol-level-integrity-kyt"
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Multi-sig",
+      "notes": "Hinkal does not have a governance token at the moment but there are plans to launch a token in the near future. At the moment any upgrades to the protocol would be done by Hinkal internal team which we could assume use a multi-signature wallet to introduce new changes on-chain.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/faq#q-does-hinkal-have-a-token"
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "ZK proofs for deposits and withdrawals are generated on the user's device. Simple private transfer transaction ZK proofs can also be generated locally but more complex ones (involving smart contract interactions, multiple tokens, etc) could take longer. Therefore Hinkal implements an external proof generation mechanism using AWS Nitro enclave. There is an option to turn on \"Extra Security\" and generate the ZK proofs inside the user's browser at a slower speed.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle"
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "If the \"Extra Security\" option is turned off, all private inputs for the ZK proofs (token address, amount, stealth address, etc.) are send in plaintext to the AWS Nitro enclave. We can assume that the enclave (TEE) will not leak data to any third party but it is important to mention that there are known vulnerabilities around TEE that might allow an attacker to see the inside data. An alternative way to solve this issue is to turn on \"Extra Security\" and generate the proof locally.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle"
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "The Hinkal shielded-pool contract was first deployed on Ethereum mainnet in June 27th 2025. The protocol has been live on mainnet for less than one year at time of evaluation.",
+      "url": "https://etherscan.io/tx/0xefd3d917087ff47c76fa503e61504699bdfef943c46dd3be110d7e9318e84bec"
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Hinkal's privacy guarantees rely on Elliptic-Curve Cryptography (ECC) and zk-SNARKs (Groth16 / similar pairing-based schemes), which are not secure against a sufficiently powerful quantum computer due to Shor's algorithm. It is worth pointing out that the harvest-now-decrypt-later problem is present in Hinkal due to the transaction data encryption using a Curve25519-based keypair.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup"
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "Protocol/chain",
+      "notes": "Compliance is enforced at the protocol layer by the use of Chainalysis compliance components. In addition, the Hinkal front-end and relayer infrastructure check addresses against KYT providers before allowing deposits or withdrawals to proceed. There are multiple compliance options for SDK integrations that relay on: integrator-verified compliance, traceability configuration and zkTLS / KYC via external partners.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Third party",
+      "notes": "KYT checks are delegated to a third-party compliance provider (Chainalysis) integrated into the Hinkal smart contracts directly. Chainalysis compliance components are on-chain smart contracts that authorize or not a specific address or transaction depending on external automated analysis.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"KYT\",\"Proof of innocence (POI) / ASP\",\"Selective disclosure\"]",
+      "notes": "Hinkal enforces Know-Your-Transaction (KYT) screening at deposit and withdrawal via Chainalysis. Additionally it performs real-time screening to any address interacting with the Hinkal smart contracts. There is also the option for voluntary selective disclosure from the user to any third party by sharing his viewing key.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"Deposit\",\"Withdrawal\"]",
+      "notes": "Compliance checks are applied both when assets enter the shielded pool (deposit) and when they leave (withdrawal), blocking flagged addresses at either boundary. We do not consider private transfers because these ones are send through relayers and the addresses do not interact directly with Hinkal smart contracts.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"User\"]",
+      "notes": "Only the user can selectively disclose their transaction history. Hinkal derives an encryption key pair that senders use to encrypt transaction data. The private key of the pair is the viewing key which the user can share with any third party to check his transaction history. The third party could be a regulator, auditor or even a wallet manager that scans the blockchain in search of received transactions.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/key-derivation-and-stealth-addresses"
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "Viewing access follows a pre-defined key-derivation scheme. There is no programmable, scope-limited viewing key; disclosure covers the full history accessible by the derived key. There is no update function to change the viewing key because it is derived from the spending key which is scoped to one per user.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/key-derivation-and-stealth-addresses"
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Correctness of all shielded operations is guaranteed by zk-SNARK proofs verified on-chain and Elliptic Curve Cryptography (ECC), so protocol behavior is cryptographically verifiable rather than relying on social or majority-based trust.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup"
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The Hinkal smart contracts are publicly available and open source on GitHub under the Hinkal-Protocol organisation.",
+      "url": "https://github.com/Hinkal-Protocol/Hinkal-Smart-Contracts/tree/main"
+    },
+    {
+      "name": "Scalable state",
+      "value": "Infinity grow",
+      "notes": "Hinkal uses an append-only Merkle tree to store UTXO commitments and in the future its corresponding nullifiers. Every shielded operation adds new leaves to both trees, so state grows unboundedly over time, similar to other UTXO-based shielded pools. There is a removal-supporting Merkle tree variant that allows to delete leave values in some protocol scenarios where commitments can be revoked or expired.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/merkle-trees#summary-of-trade-offs"
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Partial scanning",
+      "notes": "Users must scan chain events in real-time to discover incoming stealth transfers and reconstruct their shielded balance. Hinkal Receive provides tooling to facilitate building this component to SDK integrators. The Hinkal wallet would perform this action internally and therefore the wallet provider could map the user shielded balance by looking at which stealth addresses the wallet is scanning.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-receive/features"
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Hinkal tracks private balances as encrypted Unspent Transaction Output) (UTXOs) (commitments and nullifiers) stored in Merkle trees. UTXOs-based systems is also called note-based systems",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/utxos-commitments-and-nullifiers#utxos-commitments-and-nullifiers"
+    },
+    {
+      "name": "On-chain storage",
+      "value": "Smart contracts",
+      "notes": "All UTXO commitments, nullifiers, and Merkle tree roots are stored directly in the Hinkal smart contracts deployed on supported EVM chains. The commitment creation or nullifier addition (nullified) actions are notified using events. This requires the wallet provider or integrator to have a RPC event scanning mechanism to keep the user shielded balance up to date in real-time.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/smart-contracts/hinkalbase"
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Access to external, but limited choice of DeFi protocols",
+      "notes": "Hinkal supports shielded swaps and interactions with a curated set of DeFi protocols directly from the shielded pool, but the choice is limited to integrations explicitly added by the Hinkal team. It is one of the most advanced integrations between a note-based private transfer system and the existing DeFi protocols in Ethereum.",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/transactions/swaps"
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "Hinkal is designed for confidential token transfers and specific DeFi interactions. There is no support for arbitrary private smart contract logic; the protocol is focused exclusively on payment and transfer use cases. The DeFi integrations are a nice-to-have for users to interact privately with their desired DeFi protocol.",
+      "url": "https://hinkal-team.gitbook.io/hinkal#what-is-hinkal"
+    }
+  ]
+}

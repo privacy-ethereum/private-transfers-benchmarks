@@ -1,8 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 
 import type { Evaluation } from "../types.js";
-import { PROPERTY_DEFINITIONS } from "../schema.js";
 import JSONButton from "./JSONButton.js";
+import { PROPERTY_DEFINITIONS } from "../data/schema.js";
 
 const TOTAL = PROPERTY_DEFINITIONS.length;
 

@@ -1,0 +1,172 @@
+{
+  "id": "fluidkey",
+  "title": "Fluidkey",
+  "description": "Fluidkey is a stealth address system on Ethereum that automatically generates a new Safe smart account for every incoming payment. It derives stealth addresses from the user's viewing key following ERC-5564, surfacing them through a static ENS name (username.fkey.id) that resolves to a fresh stealth address on every query, ensuring funds arrive at an address that no observer can link back to the recipient.",
+  "documentation": "https://docs.fluidkey.com/",
+  "categories": ["Stealth addresses"],
+  "properties": [
+    {
+      "name": "Confidentiality",
+      "value": "Only balances",
+      "notes": "Individual transaction amounts are publicly visible on-chain as standard ETH or ERC-20 transfers. However, no external observer can aggregate a user's total balance because funds are spread across an unlimited number of unlinkable stealth addresses.",
+      "url": "https://docs.fluidkey.com/readme/receiving-funds#fluidkey"
+    },
+    {
+      "name": "Anonymity",
+      "value": "Unlinkability",
+      "notes": "Stealth addresses provide unlinkability for the receiver: an outside observer sees funds sent to a fresh new address and cannot determine who controls it. However, the transactions shows the sender address and therefore his balance and transaction history.",
+      "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#how-private-is-fluidkey"
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "The token type (ETH, USDC, etc.) is always visible on-chain in a Fluidkey transaction (normal on-chain transaction). Stealth addresses only obscure the link to the recipient's identity, not the asset being transferred.",
+      "url": "https://docs.fluidkey.com/readme/receiving-funds"
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "Yes",
+      "notes": "Because every incoming payment lands on a fresh stealth address, an external observer cannot prove that a specific stealth address belongs to a particular user without access to the viewing key.",
+      "url": "https://docs.fluidkey.com/readme/receiving-funds#fluidkey"
+    },
+    {
+      "name": "Number of secrets",
+      "value": "2",
+      "notes": "The user needs to connect his Ethereum wallet and sign a message that will be used to derive the user's Fluidkey private key pair",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "Yes",
+      "notes": "Stealth accounts are standard Safe smart accounts on public Ethereum networks. Any sender can transfer assets to a stealth address without interacting with Fluidkey's infrastructure. The open-source Fluidkey Stealth Account Kit allows anyone to independently derive stealth addresses and recover funds using only their signing key, without relying on Fluidkey servers.",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.-stealth-accounts"
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "Fluidkey is fully self-custodial, which means that only you can access your funds with your private keys and you can do so even without Fluidkey. There are multiple open-source recovery interfaces and tools",
+      "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#can-i-access-my-funds-without-fluidkey"
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "notes": "Each stealth account is controlled by a stealth EOA. The stealth EOA is derived pseudo-randomly using the viewing key node shared by the user. This ensures that the user can independently replay all stealth addresses generated and recover funds without relying on Fluidkey.",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.a.-stealth-signer-derivation"
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Immutable",
+      "notes": "Fluidkey stealth accounts are Safe smart accounts, a battle-tested and immutable smart account implementation. There is no admin key or upgrade mechanism that could alter the behaviour of deployed stealth accounts.",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.-stealth-accounts"
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Not applicable",
+      "notes": "Fluidkey does not use zero-knowledge proofs. The stealth address derivation relies entirely on elliptic curve Diffie-Hellman (ECDH) and BIP-32 key derivation, both of which are lightweight cryptographic operations feasible on any device including mobile.",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-1.-background-reading"
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "No third party can inspect a user's stealth account portfolio without the user's explicit consent. Fluidkey itself could have read access to incoming balances and address generation through the shared viewing key node, but does not hold the user's spending key to move funds.",
+      "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#who-can-view-my-transactions"
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "5 : Mainnet for more than 2 years",
+      "notes": "Fluidkey has been deployed on Ethereum mainnet and several L2 networks for more than two years. The core Stealth Account Kit was audited by Dedaub in May 2024.",
+      "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#is-fluidkey-audited"
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Fluidkey's stealth address derivation is based on elliptic curve Diffie-Hellman (ECDH) cryptography, which is vulnerable to Shor's algorithm and therefore not post-quantum secure.",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-1.-background-reading"
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "Fluidkey does not enforce any AML/KYC or compliance rules at the protocol level. The stealth address system is permissionless: anyone can send to a stealth address without going through compliance checks.",
+      "url": "https://docs.fluidkey.com/readme/receiving-funds"
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "There are no on-chain or protocol-level compliance entities in Fluidkey.",
+      "url": "https://docs.fluidkey.com/readme/receiving-funds"
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"Selective disclosure\"]",
+      "notes": "Fluidkey supports selective disclosure through its transaction export feature, which allows users to voluntarily reveal their full transaction history to third parties such as tax authorities or auditors.",
+      "url": "https://docs.fluidkey.com/readme/exporting-transactions"
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"None\"]",
+      "notes": "There are no mandatory compliance enforcement points in Fluidkey.",
+      "url": "https://docs.fluidkey.com/readme/receiving-funds"
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "notes": "Only the user can disclose his transaction history by sharing his viewing key. Although Fluidkey has read access to incoming balances via the shared viewing key node, all voluntary disclosures to third parties (excluding Fluidkey) are initiated and controlled by the user.",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "The disclosure mechanism is pre-defined through the user's viewing key structure. The key sharing model is fixed at account setup time.",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Fluidkey's stealth address scheme follows ERC-5564, which is based on ECDH. The derivation of each stealth address from the sender's ephemeral key and the recipient's viewing key is deterministic and cryptographically verifiable by anyone who holds the viewing key.",
+      "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#is-fluidkey-audited"
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The Fluidkey Stealth Account Kit — containing all core cryptographic functions for deriving and recovering stealth accounts — is open source and publicly available on GitHub.",
+      "url": "https://github.com/fluidkey"
+    },
+    {
+      "name": "Scalable state",
+      "value": "Stateless",
+      "notes": "Fluidkey stealth accounts are counterfactually instantiated and each payment creates an independent smart account. There is no global shared state accumulation (no Merkle tree or registry that grows with usage). There could be a potential issue on deploying independent smart accounts every time a transaction is performed.",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Always scanning",
+      "notes": "Because funds arrive at unlinkable stealth addresses, the user's wallet must continuously scan the blockchain for incoming transactions. Fluidkey performs this scanning server-side using the shared viewing key node and notifies users when funds arrive.",
+      "url": "https://docs.fluidkey.com/technical-documentation/ens-offchain-resolver#detailed-privacy-implications"
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Each incoming payment creates a new stealth smart account at a fresh address. Each stealth account is an independent unit of funds (similar to a UTXO ) owned by its controlling stealth EOA. Funds are distributed across multiple isolated stealth accounts that must be individually managed.",
+      "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#who-can-view-my-transactions"
+    },
+    {
+      "name": "On-chain storage",
+      "value": "Smart contracts",
+      "notes": "Each stealth account is a Safe smart account deployed on-chain that holds user's funds. Contracts are deployed lazily (counterfactual instantiation), it is only deployed on-chain when the user wishes to move funds out.",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Unlimited access to DeFi applications",
+      "notes": "Fluidkey provides a native Earn feature that integrates with a curated selection of yield-generating protocols. Beyond this built-in integration, users can interact with Ethereum DeFi using their stealth accounts as standard Safe smart accounts, though the Fluidkey interface does not natively surface the full Ethereum DeFi ecosystem.",
+      "url": "https://docs.fluidkey.com/readme/earn"
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "Fluidkey is designed primarily for private payments. The Fluidkey interface and protocol are focused exclusively on payment use cases, even though the underlying Safe smart accounts are theoretically programmable.",
+      "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#what-can-fluidkey-be-used-for"
+    },
+    { "name": "Time-to-finality", "value": "" }
+  ]
+}

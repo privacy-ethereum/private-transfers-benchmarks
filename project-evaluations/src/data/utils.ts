@@ -1,41 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
-import type { Category, Evaluation, EvaluationsData } from "../types.js";
-import defaultData from "./evaluations.json" with { type: "json" };
+import type { Category, Evaluation } from "../types.js";
+import { evaluations as defaultData } from "./evaluations/index.js";
 
-const EVALUATIONS_DATA_URL =
-  "https://raw.githubusercontent.com/privacy-ethereum/private-transfers-benchmarks/tree/chore/project-evaluations-content/project-evaluations/src/data/evaluations.json";
-
-export const useEvaluationsData = (
-  url: string = EVALUATIONS_DATA_URL,
-): {
+export const useEvaluationsData = (): {
   evaluations: Evaluation[];
   setEvaluations: Dispatch<SetStateAction<Evaluation[]>>;
   selectedId: string | null;
   setSelectedId: Dispatch<SetStateAction<string | null>>;
   addEvaluation: (title: string, description: string, documentation: string, categories: Category[]) => void;
 } => {
-  const fallbackData = structuredClone(defaultData as EvaluationsData);
+  const evaluationData = structuredClone(defaultData);
 
-  const [evaluations, setEvaluations] = useState<Evaluation[]>(fallbackData.evaluations);
-  const [selectedId, setSelectedId] = useState<string | null>(fallbackData.evaluations[0]?.id ?? null);
-
-  useEffect(() => {
-    fetch(url)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch evaluations data");
-        }
-
-        return res.json() as Promise<EvaluationsData>;
-      })
-      .then((remote) => {
-        setEvaluations(remote.evaluations);
-        setSelectedId(remote.evaluations[0]?.id ?? null);
-      })
-      .catch(() => undefined);
-  }, [url]);
+  const [evaluations, setEvaluations] = useState<Evaluation[]>(evaluationData);
+  const [selectedId, setSelectedId] = useState<string | null>(evaluationData[0]?.id ?? null);
 
   const addEvaluation = (title: string, description: string, documentation: string, categories: Category[]): void => {
     const newEvaluation: Evaluation = {
