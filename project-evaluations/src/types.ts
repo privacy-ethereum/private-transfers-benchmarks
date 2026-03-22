@@ -1,4 +1,4 @@
-import { type CATEGORIES, type PROPERTY_GROUPS } from "./schema";
+import { type CATEGORIES, type PROPERTY_GROUPS } from "./data/schema";
 
 export type Category = (typeof CATEGORIES)[number];
 

@@ -1,11 +1,9 @@
 import { z } from "zod/v4";
-
-import { CATEGORIES, PROPERTY_DEFINITIONS } from "../schema.js";
-
-const categoryEnum = z.enum(CATEGORIES);
+import { CATEGORIES, PROPERTY_DEFINITIONS } from "./schema";
 
 const propertyNames = PROPERTY_DEFINITIONS.map((d) => d.name) as [string, ...string[]];
 const propertyNameEnum = z.enum(propertyNames);
+const categoryEnum = z.enum(CATEGORIES);
 
 const propertySchema = z.object({
   name: propertyNameEnum,

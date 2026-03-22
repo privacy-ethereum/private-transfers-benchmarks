@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 
 import type { Evaluation } from "../types.js";
-import { PROPERTY_GROUPS, definitionsByGroup } from "../schema.js";
 import PropertyRow from "./PropertyRow.js";
 import ProtocolCategories from "./ProtocolCategories.js";
+import { definitionsByGroup, PROPERTY_GROUPS } from "../data/schema.js";
 
 interface ProtocolDetailProps {
   evaluations: Evaluation[];
