@@ -1,4 +1,4 @@
-import type { PropertyContent } from "./types.js";
+import { type PropertyContent } from "../types";
 
 export const CATEGORIES = [
   "Stealth addresses",
