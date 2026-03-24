@@ -37,8 +37,8 @@
     },
     {
       "name": "Censorship resistance",
-      "value": "Yes",
-      "notes": "Users can choose in which anonymity pool they would deposit their funds depending on the Association Set Provider (ASP) configured on each pool. There could be cases where the pools does not have a strict ASP and anyone can use the protocol. But in practice users will use the anonymity pools with ASP in order to avoid linking their funds with illicit funds. The ASP is the core feature of the protocol because it allows users to maintain anonymity without mixing funds with malicious or sanctioned actors.",
+      "value": "No",
+      "notes": "The Association Set Provider (ASP) is a closed framework at the moment and external ASPs cannot be configured in the current Privacy Pools contracts. In theory anyone could deploy new contracts with loose ASP controls but that would not be related to the official Privacy Pools protocol. The ASP is the core feature of the protocol because it allows users to maintain anonymity without mixing funds with malicious or sanctioned actors.",
       "url": "https://docs.privacypools.com/layers/asp"
     },
     {
