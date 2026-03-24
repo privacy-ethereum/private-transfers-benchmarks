@@ -26,13 +26,13 @@
     {
       "name": "Plausible deniability",
       "value": "Yes",
-      "notes": "Because every incoming payment lands on a fresh stealth address, an external observer cannot prove that a specific stealth address belongs to a particular user without access to the viewing key.",
+      "notes": "Because every incoming payment lands on a fresh stealth address, an external observer cannot prove that a specific stealth address belongs to a particular receiver user without access to the viewing key. From an outside perspective, Fluidkey transactions look like normal transactions going to addresses that have not being used before",
       "url": "https://docs.fluidkey.com/readme/receiving-funds#fluidkey"
     },
     {
       "name": "Number of secrets",
       "value": "2",
-      "notes": "The user needs to connect his Ethereum wallet and sign a message that will be used to derive the user's Fluidkey private key pair",
+      "notes": "The user needs to connect his Ethereum wallet (secret #1) and sign a message that will be used to derive the user's Fluidkey private key pair (secret #2). The signed message is sliced into 2 parts in order to produce the spending private key and the viewing private key. Therefore we consider only 2 number of secrets in total for the Fluidkey protocol",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
     },
     {
@@ -44,7 +44,7 @@
     {
       "name": "External network dependence",
       "value": "No",
-      "notes": "Fluidkey is fully self-custodial, which means that only you can access your funds with your private keys and you can do so even without Fluidkey. There are multiple open-source recovery interfaces and tools",
+      "notes": "Fluidkey is fully self-custodial, which means that only you can access your funds with your private keys and you can do so even without Fluidkey interface. There are multiple open-source recovery interfaces and tools available to spin up your own web applications to interact with funds in stealth addresses.",
       "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#can-i-access-my-funds-without-fluidkey"
     },
     {
@@ -80,7 +80,7 @@
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "Fluidkey's stealth address derivation is based on elliptic curve Diffie-Hellman (ECDH) cryptography, which is vulnerable to Shor's algorithm and therefore not post-quantum secure.",
+      "notes": "Fluidkey's stealth address derivation is based on Elliptic Curve Diffie-Hellman (ECDH) cryptography, which is vulnerable to Shor's algorithm and therefore not post-quantum secure.",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-1.-background-reading"
     },
     {
@@ -92,8 +92,8 @@
     {
       "name": "Enforcement entities",
       "value": "None",
-      "notes": "There are no on-chain or protocol-level compliance entities in Fluidkey.",
-      "url": "https://docs.fluidkey.com/readme/receiving-funds"
+      "notes": "There are no on-chain or protocol-level compliance entities in Fluidkey. Users can explicitly export their transactions for tax and accounting purposes.",
+      "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#how-easy-is-it-to-do-my-taxes-and-accounting-with-fluidkey"
     },
     {
       "name": "Type of compliance",
@@ -104,7 +104,7 @@
     {
       "name": "Point of enforcement",
       "value": "[\"None\"]",
-      "notes": "There are no mandatory compliance enforcement points in Fluidkey.",
+      "notes": "There are no mandatory compliance enforcement points in Fluidkey. Any sender user can send funds freely to a Fluidkey stealth account address and any receiver user can use those funds with the Fluidkey interface or running his own setup using community tools.",
       "url": "https://docs.fluidkey.com/readme/receiving-funds"
     },
     {
@@ -116,7 +116,7 @@
     {
       "name": "Selective disclosure: viewing control",
       "value": "Pre-defined",
-      "notes": "The disclosure mechanism is pre-defined through the user's viewing key structure. The key sharing model is fixed at account setup time.",
+      "notes": "The disclosure mechanism is pre-defined through the user's viewing key structure. The key sharing model is fixed at account setup time. A private viewing key can be used to retrieve user funds and view transactions. Users can share this viewing key with external providers to fetch their transaction history.",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
     },
     {
@@ -167,6 +167,7 @@
       "notes": "Fluidkey is designed primarily for private payments. The Fluidkey interface and protocol are focused exclusively on payment use cases, even though the underlying Safe smart accounts are theoretically programmable.",
       "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#what-can-fluidkey-be-used-for"
     },
-    { "name": "Time-to-finality", "value": "" }
+    { "name": "Time-to-finality", "value": "" },
+    { "name": "On-chain gas cost: transfer", "value": "" }
   ]
 }
