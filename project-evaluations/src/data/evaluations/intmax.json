@@ -8,31 +8,31 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "Users construct their own transaction batches locally. These batches consist of arbitrary mappings from recipients to token amounts and are not revealed to aggregators. Each transaction batch is salted and hashed. Only these hashes are submitted to the aggregator, preserving privacy",
+      "notes": "Users construct their own transaction batches locally. These batches consist of arbitrary mappings from recipients to token amounts and are not revealed to aggregators. Each transaction batch is salted and hashed. Only these hashes are submitted to the aggregator, preserving privacy. The transaction data stays in the user device while the transaction hash is sent to the aggregator and later published on-chain.",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#transaction-construction-off-chain"
     },
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "Sender and receiver are hidden when a transaction is submitted in the L2. The sender needs to share the ZK proof and required data to the receiver so he can update his balance in his local state (end-user device)",
+      "notes": "Sender and receiver are hidden when a transaction is submitted in the L2. When a sender wants to send a transaction he needs to compute a ZK proof showing he has enough balance. The ZK proof and the transaction details are send to the receiver so he can update his balance in his local state (end-user device). The transaction hashes are sent to the aggregator to publish the newest state on-chain.",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/roles"
     },
     {
       "name": "Asset privacy",
-      "value": "No",
-      "notes": "When users deposit assets into or withdraw assets from the Intmax network the token type is recorded on Ethereum L1. Inside the L2 the private transfers do not reveal the asset being transmitted",
+      "value": "Yes",
+      "notes": "When users deposit assets into or withdraw assets from the Intmax network the token type is recorded on Ethereum L1. There is no asset privacy when entering or leaving the protocol. Inside the L2 the private transfers do not reveal the asset being transmitted, only salted hashes of the transactions are published on-chain.",
       "url": "https://docs.network.intmax.io/user-guides/transfer-on-intmax-network"
     },
     {
       "name": "Plausible deniability",
       "value": "No",
-      "notes": "Deposits from Ethereum to Intmax are submitted as standard L1 transactions to the Intmax Rollup contract, making it publicly visible on-chain that a user is entering the Intmax L2 network.",
+      "notes": "Deposits from Ethereum to Intmax are submitted as standard L1 transactions to the Intmax Rollup contract, making it publicly visible on-chain that a user is entering the Intmax L2 network. Internal private transfers could be plausible denied because only salted hashes of the transactions are submitted. No transaction details like sender, recipient, amount and transfer metadata get published on the L2.",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#l1--l2-deposit"
     },
     {
       "name": "Number of secrets",
       "value": "2",
-      "notes": "Users need their Ethereum wallet key to interact with the L1 contracts and a separate Intmax private key to authorise transfers within the network.",
+      "notes": "Users need their Ethereum wallet key (secret #1) to interact with the L1 contracts and a separate Intmax private key (secret #2) to authorize transfers within the network.",
       "url": "https://docs.network.intmax.io/user-guides/backup-intmax-account/export-intmax-private-key"
     },
     {
@@ -62,13 +62,13 @@
     {
       "name": "Client-side proving",
       "value": "Yes",
-      "notes": "ZK proofs for Intmax transactions are generated entirely on the user's device inside the supported wallet applications. This means no external prover service has access to private transaction data",
+      "notes": "ZK proofs for Intmax transactions are generated entirely on the user's device inside the supported wallet applications or web interfaces. This means no external prover service has access to private transaction data. The aggregators only receive salted hashes of the transactions, all transaction details are kept at the users' devices.",
       "url": "https://docs.network.intmax.io/user-guides/supported-wallets"
     },
     {
       "name": "Third-party inspectability",
       "value": "No",
-      "notes": "Transaction contents are end-to-end encrypted and proven with ZK proofs, so neither the network operators nor any external observer can read private transfer data.",
+      "notes": "Transaction contents are end-to-end encrypted and proven with ZK proofs, so neither the network operators (including aggregators) nor any external observer can read private transfer data. All transaction data stays on users' end devices, regular monthly backups should be executed (automatically or manually) to prevent data loss.",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture"
     },
     {
@@ -80,7 +80,7 @@
     {
       "name": "Post-quantum secure",
       "value": "Yes",
-      "notes": "Intmax uses Plonky2 for its ZK proofs. Plonky2 is considered post quantum secure because it is hash-based",
+      "notes": "Intmax uses Plonky2 for its ZK proofs. Plonky2 is considered post quantum secure because it is hash-based unlike other proving systems like Groth16 or Plonk that are based on Elliptic Curve Cryptography (ECC).",
       "url": "https://docs.network.intmax.io/developers-hub/code-repository#zero-knowledge-proof-zkp-libraries"
     },
     {
@@ -110,13 +110,13 @@
     {
       "name": "Selective disclosure: viewing entity",
       "value": "[\"None\"]",
-      "notes": "Intmax does not provide any viewing-key or selective-disclosure mechanism. Transaction history is accessible only through the user's own account.",
+      "notes": "Intmax does not provide any viewing-key or selective-disclosure mechanism. Transaction history is accessible only through the user's own account. Users have the responsibility to regularly backup their data every month to prevent data loss and missing funds.",
       "url": "https://docs.network.intmax.io/user-guides/check-transaction-history"
     },
     {
       "name": "Selective disclosure: viewing control",
       "value": "None",
-      "notes": "There is no viewing-key system or programmable disclosure control in Intmax. Users cannot scope or share access to their transaction history with any external party.",
+      "notes": "There is no viewing-key system or programmable disclosure control in Intmax. Users cannot scope or share access to their transaction history with any external party. A  user could explicitly share a specific transaction to an external party by sharing the transaction details, ZK proof and the on-chain reference storage.",
       "url": "https://docs.network.intmax.io/user-guides/check-transaction-history"
     },
     {
@@ -140,7 +140,7 @@
     {
       "name": "Client-side indexing",
       "value": "No scanning",
-      "notes": "Transactions are shared peer-to-peer from the sender to the recipient. The recipient needs to verify a ZK proof in order to update its own client-side state",
+      "notes": "Transactions are shared peer-to-peer from the sender to the recipient. The recipient needs to verify a ZK proof in order to update its own client-side state. Only salted hashes of the transactions are published on-chain in order to help receivers get track of the global state and the unused notes (UTXOS).",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#zk-proof-propagation-p2p"
     },
     {
