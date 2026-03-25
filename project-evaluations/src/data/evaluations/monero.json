@@ -20,7 +20,7 @@
     {
       "name": "Asset privacy",
       "value": "No",
-      "notes": "You can only send XMR in Monero",
+      "notes": "You can only send XMR (native token) in Monero. There is no support for custom tokens like ERC20s or similar. Therefore there is no asset privacy because every transaction in Monero shows that XMR is being moved.",
       "url": "https://www.getmonero.org/resources/moneropedia/denominations.html"
     },
     {
@@ -31,14 +31,14 @@
     },
     {
       "name": "Number of secrets",
-      "value": "1",
-      "notes": "There is a single spend key per account. There is also a viewing key that can be used to reveal the account's transactions.",
+      "value": "2",
+      "notes": "A Monero account requires 2 secrets in order to work properly. A private spending key (secret #1) that will be used to authorize transactions from that account. A private viewing key that can be used to reveal the account's transactions. Both keys are computing using asymmetric cryptography (public and private keys).",
       "url": "https://www.getmonero.org/resources/moneropedia/account.html"
     },
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "notes": "The privacy by-default feature hides senders and receivers interactions. This privacy property and the Proof of Work consensus mechanism make Monero censorship-resistant",
+      "notes": "The privacy by-default feature hides senders and receivers interactions in every transaction. This privacy-by-default property and the Proof of Work consensus mechanism make Monero censorship-resistant. Anyone can setup a Monero node with modest hardware (GPU optimized hardware does not work with Monero consensus algorithm) and start validating private-by-default transactions.",
       "url": "https://www.getmonero.org/get-started/what-is-monero/"
     },
     {
@@ -50,7 +50,7 @@
     {
       "name": "Escape hatch",
       "value": "Instantly",
-      "notes": "Users can withdraw funds from Monero to exchanges or other blockchains at any time. Exchanges could block Monero transactions depending on regulations and compliance.",
+      "notes": "Users can withdraw funds from Monero to exchanges or other blockchains at any time. Exchanges could block Monero transactions depending on regulations and compliance. The challenge for users is to find a trustworthy withdrawal method (e.g. bridge or centralized exchange) that would not flag their account just because of the interaction with Monero.",
       "url": "https://www.getmonero.org/community/merchants/"
     },
     {
@@ -62,25 +62,25 @@
     {
       "name": "Client-side proving",
       "value": "Yes",
-      "notes": "Monero wallets compute all the required data on the client devices. There are multiple wallet options to chose from: GUI, CLI, mobile and hardware wallets.",
+      "notes": "Monero wallets compute all the required data and proofs on the client devices. There is no external proving service available. There are multiple wallet options to chose from: GUI, CLI, mobile and hardware wallets.",
       "url": "https://www.getmonero.org/downloads/"
     },
     {
       "name": "Third-party inspectability",
       "value": "No",
-      "notes": "Only the user has access to his balances and received transactions. The user can willingly share his viewing keys with any third-parties",
+      "notes": "Only the user has access to his balances and received transactions. The user can willingly share his viewing keys with any third-parties for compliance or audit purposes.",
       "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
     },
     {
       "name": "Implementation maturity",
       "value": "5 : Mainnet for more than 2 years",
-      "notes": "Monero was launched in April 2014. It was a fair, pre-announced launch of the CryptoNote reference code.",
+      "notes": "Monero was launched in April 2014. It was a fair, pre-announced launch of the CryptoNote reference code. It was being upgrade since then by community proposals.",
       "url": "https://www.getmonero.org/resources/about/"
     },
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "Monero cryptography is based on Elliptic Curve Cryptography therefore it is vulnerable to the Shor's algorithm.",
+      "notes": "Monero cryptography is based on Elliptic Curve Cryptography therefore it is vulnerable to the Shor's algorithm in future feasible quantum computers.",
       "url": "https://docs.getmonero.org/cryptography/asymmetric/edwards25519/"
     },
     {
@@ -92,7 +92,7 @@
     {
       "name": "Enforcement entities",
       "value": "None",
-      "notes": "There is no compliance enforcement mechanism in Monero blockchain."
+      "notes": "There is no compliance enforcement mechanism in the Monero blockchain. This is one of the main selling points of the blockchain itself. Even though there is no control at the protocol layer, centralized exchanges can flag or block users using Monero."
     },
     {
       "name": "Type of compliance",
@@ -103,19 +103,19 @@
     {
       "name": "Point of enforcement",
       "value": "[\"Withdrawal\"]",
-      "notes": "Some centralized exchanges do not accept Monero transactions.",
+      "notes": "Some centralized exchanges or bridges to other L1s do not accept Monero transactions. This is not enforced in the Monero blockchain itself but in external third-parties due to government regulations or internal terms of services.",
       "url": "https://bitcointalk.org/index.php?topic=5468394.0"
     },
     {
       "name": "Selective disclosure: viewing entity",
       "value": "[\"Voluntary third-party disclosure\"]",
-      "notes": "A user could share his viewing key with a specific third-party for compliance or tax purposes",
+      "notes": "A user could share his viewing key with a specific third-party for compliance or tax purposes. The third-party would only be able to read the user transaction's detail and transaction history. The third-party would not be able to authorize and send transaction in the Monero blockchain by using the viewing key.",
       "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
     },
     {
       "name": "Selective disclosure: viewing control",
       "value": "Pre-defined",
-      "notes": "There is no programable viewing control.",
+      "notes": "There is no programable viewing control. The viewing keys setup is pre-defined by the protocol itself and the user is the only one who can share his viewing key to an authorized party.",
       "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
     },
     {
@@ -124,11 +124,16 @@
       "notes": "Monero uses a wide variety of cryptographic primitives for various use cases. Comparing to altcoins, Monero cryptography is considered conservative, sound and robust. Comparing to Bitcoin, Monero uses much more primitives, and some of them are more advanced, especially those related to privacy and Proof of Work.",
       "url": "https://docs.getmonero.org/cryptography/"
     },
-    { "name": "Open source", "value": "Yes", "url": "https://github.com/monero-project" },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "url": "https://github.com/monero-project",
+      "notes": "Blockchain nodes code, protocol documentation, wallet interface and more repositories can be found at the Moreno project Github organization."
+    },
     {
       "name": "Scalable state",
       "value": "Infinity grow",
-      "notes": "Monero has private key images as nullifiers to prevent double spending attempts.",
+      "notes": "Monero has private key images as nullifiers to prevent double spending attempts. So in every Monero transaction, a new set of private key images is added to the protocol state. The state can grow indefinitely depending on the usage.",
       "url": "https://docs.getmonero.org/cryptography/asymmetric/key-image/"
     },
     {
@@ -146,20 +151,19 @@
     {
       "name": "On-chain storage",
       "value": "Smart contracts",
-      "notes": "All data is stored on Monero blockchain",
+      "notes": "All data is stored on Monero blockchain itself. There is no concept of smart contracts but this option is the most appropriated because it represents saving state directly on-chain without depending on external networks or more complicated scanning mechanisms for emitted events.",
       "url": "https://www.getmonero.org/resources/moneropedia/blockchain.html"
     },
     {
       "name": "Access to DeFi",
       "value": "No access to DeFi",
-      "notes": "There is no DeFi ecosystem in Monero due to its payment-only nature",
+      "notes": "There is no DeFi ecosystem in Monero due to its payment-only nature. Multiple L1s have launched XMR bridges that generate a XMR token representation (wrapped XMR) in their respective L1s for their users to hold and use XMR (in some cases it could be used as collateral in lending platforms).",
       "url": "https://www.getmonero.org/resources/moneropedia/blockchain.html"
     },
     {
       "name": "Programmability / Generality",
       "value": "Only payments",
-      "notes": "Monero lives in a payments only blockchain with no programmability features",
-      "url": "Monero lives in a payments only blockchain with no programmability features"
+      "notes": "Monero lives in a payments only blockchain with no programmability features. There are no future plans to implement smart contract logic in Monero."
     }
   ]
 }
