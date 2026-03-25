@@ -36,6 +36,22 @@
       "url": "https://www.getmonero.org/resources/moneropedia/account.html"
     },
     {
+      "name": "Time-to-finality",
+      "value": "20",
+      "notes": "Monero is an alternative L1 blockchain with a 2-minute target block time. Funds are considered spendable (effectively final) after 10 confirmations, giving a time to finality of approximately 20 minutes (10 × 2 min).",
+      "url": "https://www.monero.how/monero-transaction-confirmation-time"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "No mandatory deposit waiting period. Incoming funds are visible in the wallet after the first confirmation (~2 minutes) and fully spendable after 10 confirmations, which is captured in Time-to-finality."
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol beyond the standard confirmation time captured in Time-to-finality."
+    },
+    {
       "name": "Censorship resistance",
       "value": "Yes",
       "notes": "The privacy by-default feature hides senders and receivers interactions in every transaction. This privacy-by-default property and the Proof of Work consensus mechanism make Monero censorship-resistant. Anyone can setup a Monero node with modest hardware (GPU optimized hardware does not work with Monero consensus algorithm) and start validating private-by-default transactions.",

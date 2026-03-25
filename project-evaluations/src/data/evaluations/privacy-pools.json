@@ -36,6 +36,23 @@
       "url": "https://docs.privacypools.com/protocol/deposit#protocol-flow"
     },
     {
+      "name": "Time-to-finality",
+      "value": "0.2",
+      "notes": "Privacy Pools is deployed on Ethereum mainnet. Time to finality defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Deposits can be made immediately with no pre-deposit waiting period enforced by the protocol."
+    },
+    {
+      "name": "Withdraw time",
+      "value": "604800",
+      "notes": "After depositing, the Association Set Provider (ASP) must vet the deposit before a private withdrawal is possible. This vetting process can take up to 7 days (604,800 seconds). If the ASP rejects the deposit or does not process it in time, users can recover funds publicly via the ragequit mechanism.",
+      "url": "https://0xbow.io/blog/unlocking-privacy-preserving-compliance-with-association-sets"
+    },
+    {
       "name": "Censorship resistance",
       "value": "No",
       "notes": "The Association Set Provider (ASP) is a closed framework at the moment and external ASPs cannot be configured in the current Privacy Pools contracts. In theory anyone could deploy new contracts with loose ASP controls but that would not be related to the official Privacy Pools protocol. The ASP is the core feature of the protocol because it allows users to maintain anonymity without mixing funds with malicious or sanctioned actors.",

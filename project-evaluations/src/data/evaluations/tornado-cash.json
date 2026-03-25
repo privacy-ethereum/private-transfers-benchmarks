@@ -29,7 +29,12 @@
       "notes": "Everyone with access to on-chain data can see which addresses have interacted with the Tornado Cash pools and smart contracts. Therefore anyone can identify depositor users and withdraw users. There is no way to deny that a specific address have used Tornado Cash to break unlinkability. This is why the US government was able to sanction all addresses interacting with Tornado Cash.",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
-    { "name": "Time-to-finality", "value": "" },
+    {
+      "name": "Time-to-finality",
+      "value": "0.2",
+      "notes": "Tornado Cash is deployed on Ethereum mainnet. Time to finality defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+    },
     {
       "name": "On-chain gas cost: transfer",
       "value": "0",
@@ -41,6 +46,16 @@
       "value": "2",
       "notes": "You need an Ethereum wallet (secret #1) to send deposit and withdraw transactions as any other on-chain transaction. In every deposit to Tornado Cash, a private note (secret #2) is generated and it would be used as a key to access (withdraw) funds at any time in the future. There is a Note Account feature inside Tornado Cash protocol to stored an encrypted backup of private notes on-chain that only the owner would be able to access using his private key. That being the case, we consider that any Tornado Cash user would need at least two secrets to use the protocol.",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "No mandatory deposit waiting period enforced by the protocol. Deposits are immediate on-chain transactions."
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Although waiting longer between deposit and withdrawal improves privacy by growing the anonymity set, this is a user recommendation, not a protocol constraint."
     },
     {
       "name": "Censorship resistance",

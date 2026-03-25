@@ -5,7 +5,10 @@
   "documentation": "https://docs.tongo.cash/",
   "categories": ["Homomorphic encryption (FHE - HE)"],
   "properties": [
-    { "name": "Anonymity set size", "value": "" },
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -35,6 +38,22 @@
       "value": "2",
       "notes": "Users require a Starknet wallet (secret #1) to submit on-chain transactions and a separate Tongo account key pair used for ElGamal encryption and decryption of their private balances (secret #2). The Tongo account can be created independently from the Starknet wallet depending on the UI implementation.",
       "url": "https://docs.tongo.cash/sdk/accounts.html#creating-an-account"
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "120",
+      "notes": "Tongo is deployed on Starknet, a ZK-rollup L2 on Ethereum. Starknet's time to L1 finality is approximately 2 hours (120 minutes), as STARK proofs must be aggregated and verified on Ethereum L1. Adding the Ethereum blocktime (0.2 minutes) gives approximately 120 minutes total.",
+      "url": "https://chainspect.app/chain/starknet"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "No mandatory deposit waiting period. Funding a Tongo account is an immediate Starknet transaction."
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "No mandatory withdrawal waiting period. Users can withdraw their full balance at any time, including via the instant ragequit mechanism."
     },
     {
       "name": "Censorship resistance",

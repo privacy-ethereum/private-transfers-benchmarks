@@ -36,6 +36,22 @@
       "url": "https://docs.network.intmax.io/user-guides/backup-intmax-account/export-intmax-private-key"
     },
     {
+      "name": "Time-to-finality",
+      "value": "120",
+      "notes": "INTMAX is a stateless zkRollup on Ethereum. Block builders submit approximately 12 blocks per day to Ethereum L1 at baseline, resulting in a time to L1 finality of approximately 2 hours (120 minutes). Adding the Ethereum blocktime (0.2 minutes) gives approximately 120 minutes total.",
+      "url": "https://docs.network.intmax.io/developers-hub/intmax-block-builder/business-guide"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "No mandatory deposit waiting period. AML compliance checks at deposit are near-instant screening by third-party services and do not impose a protocol-level time constraint."
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Withdrawals require a validity proof to be submitted on-chain but do not have a fixed time lock."
+    },
+    {
       "name": "Censorship resistance",
       "value": "No",
       "notes": "The Intmax Liquidity contract is managed by a designated operator, which means access to deposits and withdrawals is gated by a centralised entity. This design introduces a single point of censorship at the L1 gateway that could block or delay user transactions. For example Intmax deposits and withdrawals were paused due to a ZK bug.",
