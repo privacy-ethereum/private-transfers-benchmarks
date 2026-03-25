@@ -5,7 +5,10 @@
   "documentation": "https://hinkal-team.gitbook.io/hinkal",
   "categories": ["Shielded pool", "Stealth addresses"],
   "properties": [
-    { "name": "Anonymity set size", "value": "" },
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -37,12 +40,22 @@
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/key-derivation-and-stealth-addresses"
     },
     {
+      "name": "Time-to-finality",
+      "value": "0.2",
+      "notes": "Hinkal is deployed on EVM-compatible chains, primarily Ethereum mainnet. Time to finality defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+    },
+    {
       "name": "Deposit time",
       "value": "0",
       "notes": "Users that deposit into Hinkal will instantly be able to interact: private transfer, privately interact with other smart contracts, withdraw. But it is recommended to define a time window during which the transaction executes to reduce linkage between intent and settlement",
       "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-send/features#privacy-properties"
     },
-    { "name": "Withdraw time", "value": "" },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Hinkal does not impose a mandatory withdrawal waiting period. Users can withdraw shielded assets to a public address instantly, either self-initiated or via a relayer."
+    },
     {
       "name": "Censorship resistance",
       "value": "No",

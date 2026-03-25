@@ -5,7 +5,10 @@
   "documentation": "https://docs.redact.money/",
   "categories": ["Homomorphic encryption (FHE - HE)"],
   "properties": [
-    { "name": "Anonymity set size", "value": "" },
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -36,8 +39,22 @@
       "notes": "Users only need their existing Ethereum wallet (secret #1) to interact with Redact. Permits are temporary EIP-712 signatures derived from the user's wallet key and are not independent secrets requiring separate storage. The balances are encrypted using Fhenix's FHE coprocessor network which manages a public private keypair. The public key is published on anyone can encrypt values. The coprocessor network private key is managed by the network nodes. It can be distributed with threshold encryption mechanisms.",
       "url": "https://docs.redact.money/faq#q-what-are-permits"
     },
-    { "name": "Deposit time", "value": "" },
-    { "name": "Withdraw time", "value": "" },
+    {
+      "name": "Time-to-finality",
+      "value": "0.2",
+      "notes": "Redact is deployed on Ethereum using Fhenix's CoFHE coprocessor. The final settlement of transactions occurs on Ethereum, so time to finality defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "No mandatory deposit waiting period. Encrypting ERC20 tokens (depositing into Redact) is an immediate on-chain transaction."
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "No mandatory withdrawal waiting period. Decrypting tokens (withdrawing from Redact) is available as soon as the user provides the required permit signature."
+    },
     {
       "name": "Censorship resistance",
       "value": "No",
@@ -103,7 +120,10 @@
       "value": "[\"None\",\"Selective disclosure\"]",
       "url": "https://docs.redact.money/faq#q-what-are-permits"
     },
-    { "name": "Point of enforcement", "value": "[\"None\"]" },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"None\"]"
+    },
     {
       "name": "Selective disclosure: viewing entity",
       "value": "[\"User\",\"Voluntary third-party disclosure\"]",

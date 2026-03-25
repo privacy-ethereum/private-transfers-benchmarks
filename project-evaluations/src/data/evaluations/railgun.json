@@ -149,11 +149,19 @@
     },
     {
       "name": "Withdraw time",
-      "value": ""
+      "value": "0",
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Unshielding (withdrawing) is available as soon as the user constructs the required ZK proof."
     },
     {
       "name": "Deposit time",
-      "value": ""
+      "value": "0",
+      "notes": "No mandatory deposit waiting period enforced by the protocol. Shielding (depositing) is an immediate on-chain transaction."
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "0.2",
+      "notes": "RAILGUN is deployed on Ethereum mainnet (as well as BSC, Polygon, and Arbitrum). Time to finality for the primary Ethereum deployment defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },
     {
       "name": "Number of secrets",
