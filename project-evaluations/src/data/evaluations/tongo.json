@@ -5,10 +5,7 @@
   "documentation": "https://docs.tongo.cash/",
   "categories": ["Homomorphic encryption (FHE - HE)"],
   "properties": [
-    {
-      "name": "Anonymity set size",
-      "value": ""
-    },
+    { "name": "Anonymity set size", "value": "" },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -41,19 +38,21 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "120",
-      "notes": "Tongo is deployed on Starknet, a ZK-rollup L2 on Ethereum. Starknet's time to L1 finality is approximately 2 hours (120 minutes), as STARK proofs must be aggregated and verified on Ethereum L1. Adding the Ethereum blocktime (0.2 minutes) gives approximately 120 minutes total.",
-      "url": "https://chainspect.app/chain/starknet"
+      "value": "4320",
+      "notes": "Tongo is deployed on Starknet, a ZK-rollup L2 on Ethereum. Starknet's time to L1 finality is approximately 1 hour (60 minutes) or more, as STARK proofs must be aggregated and verified on Ethereum L1. Adding the Ethereum economic block time finality (12 minutes) gives approximately 72 minutes total.",
+      "url": "https://ethresear.ch/t/checkpoints-for-faster-finality-in-starknet/9633"
     },
     {
       "name": "Deposit time",
       "value": "0",
-      "notes": "No mandatory deposit waiting period. Funding a Tongo account is an immediate Starknet transaction."
+      "notes": "No mandatory deposit waiting period. Funding a Tongo account is an immediate Starknet transaction. Auditing and compliance (if configured at deployment time) are achieved through a Global Auditor viewing key",
+      "url": "https://docs.tongo.cash/sdk/operations/fund.html"
     },
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "No mandatory withdrawal waiting period. Users can withdraw their full balance at any time, including via the instant ragequit mechanism."
+      "notes": "No mandatory withdrawal waiting period. Users can withdraw their partial or full balance at any time, including via the instant ragequit mechanism (withdraw all current balance to a public Starknet account address).",
+      "url": "https://docs.tongo.cash/sdk/operations/withdraw.html"
     },
     {
       "name": "Censorship resistance",

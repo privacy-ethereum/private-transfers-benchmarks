@@ -31,8 +31,8 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "0.2",
-      "notes": "Tornado Cash is deployed on Ethereum mainnet. Time to finality defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "value": "720",
+      "notes": "Tornado Cash is deployed on Ethereum mainnet. Time to finality defaults to the mainnet economic finality of 12 minutes. Mainnet single-slot finality of 12 seconds has a probabilistic guarantee that there would not be any block reorganization. It is used by wallets and apps to indicate a successful transaction even though in theory the containing block could be reverted. Mainnet economic finality of 12 minutes (2 epochs) is guaranteed by the block checkpointed by Casper the Friendly Finality Gadget (Casper-FFG). At that point reverting the block (and the transaction) would require more than one third of staked ETH to get slashed.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },
     {
@@ -50,12 +50,14 @@
     {
       "name": "Deposit time",
       "value": "0",
-      "notes": "No mandatory deposit waiting period enforced by the protocol. Deposits are immediate on-chain transactions."
+      "notes": "No mandatory deposit waiting period enforced by the protocol. Deposits are immediate on-chain transactions.",
+      "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Although waiting longer between deposit and withdrawal improves privacy by growing the anonymity set, this is a user recommendation, not a protocol constraint."
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Although waiting longer between deposit and withdrawal improves privacy by growing the anonymity set, this is a user recommendation, not a protocol constraint.",
+      "url": "https://docs.tornadocash.eth.limo/general/guides/opsec.html"
     },
     {
       "name": "Censorship resistance",

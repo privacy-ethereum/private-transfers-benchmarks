@@ -5,10 +5,7 @@
   "documentation": "https://docs.railgun.org/wiki/learn/privacy-system",
   "categories": ["Shielded pool"],
   "properties": [
-    {
-      "name": "Anonymity set size",
-      "value": ""
-    },
+    { "name": "Anonymity set size", "value": "" },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -144,23 +141,25 @@
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "notes": "Users and wallets are free to use whatever combination of List Providers they please, although some wallet providers will require a default List Provider. The ZK-cryptography generates an independent proof per Private Proofs of Innocence List Provider, which is verified and made available for further usage.\n\nUsers can use pools that do not require Private Proof of Innocence even though it is not the standard (default).",
+      "notes": "Users and wallets are free to use whatever combination of List Providers they please, although some wallet providers will require a default List Provider. This means that Railgun is censorship resistant at the protocol/smart contract level but compliance is enforced in external components like wallets. Similarly, community broadcasters will not accept any transaction that does not contain a valid Private Proof of Innocence (PPOI) proof. These proofs can be independently generated using different list providers. Overall, all these constraints leave users fewer options to use the Railgun protocol in a total private way even though the underlying protocol is theoretically censorship resistant.",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#list-providers"
     },
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Unshielding (withdrawing) is available as soon as the user constructs the required ZK proof."
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Unshielding (withdrawing) is available as soon as the user constructs the required ZK proof to withdraw. There is no standby wait period because the withdraw transaction only checks that the Private Proof of Innocence (PPOI) proofs of that transaction are valid.",
+      "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#transaction-level-checks"
     },
     {
       "name": "Deposit time",
-      "value": "0",
-      "notes": "No mandatory deposit waiting period enforced by the protocol. Shielding (depositing) is an immediate on-chain transaction."
+      "value": "3600",
+      "notes": "Users depositing funds (shielding funds) into the Railgun smart contracts have to wait a time period for List Providers to check that the transaction origin is clean. According to the Railgun documentation, the time period could take around an hour for most users. In this standby period the user could withdraw his funds to the depositing address at any time.",
+      "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#unshield-only-standby-period"
     },
     {
       "name": "Time-to-finality",
-      "value": "0.2",
-      "notes": "RAILGUN is deployed on Ethereum mainnet (as well as BSC, Polygon, and Arbitrum). Time to finality for the primary Ethereum deployment defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "value": "720",
+      "notes": "RAILGUN is deployed on Ethereum mainnet (as well as BSC, Polygon, and Arbitrum). Time to finality for the primary Ethereum deployment defaults to the mainnet economic finality of 12 minutes (already covered on the deposit time window). Mainnet single-slot finality of 12 seconds has a probabilistic guarantee that there would not be any block reorganization. It is used by wallets and apps to indicate a successful transaction even though in theory the containing block could be reverted. Mainnet economic finality of 12 minutes (2 epochs) is guaranteed by the block checkpointed by Casper the Friendly Finality Gadget (Casper-FFG). At that point reverting the block (and the transaction) would require more than one third of staked ETH to get slashed.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },
     {
