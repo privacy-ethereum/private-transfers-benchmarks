@@ -101,8 +101,8 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Time-to-finality",
     group: "Cost and Performance",
     description:
-      "The time it takes for a transaction is considered irreversible and permanently part of the blockchain",
-    metric: "Minutes",
+      "The time it takes for a transaction is considered irreversible and permanently part of the blockchain (in seconds)",
+    metric: "Seconds",
     inputType: "number",
   },
 
@@ -118,14 +118,14 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Deposit time",
     group: "UX",
-    description: "Duration required before you can deposit into the protocol",
+    description: "Duration required before you can deposit into the protocol (in seconds)",
     metric: "Seconds",
     inputType: "number",
   },
   {
     name: "Withdraw time",
     group: "UX",
-    description: "Duration required before you can withdraw funds from the protocol",
+    description: "Duration required before you can withdraw funds from the protocol (in seconds)",
     metric: "Seconds",
     inputType: "number",
   },
