@@ -1,6 +1,6 @@
 import { mainnet } from "viem/chains";
 
-import type { GasMetrics } from "../utils/types.js";
+import type { FeeMetrics } from "../utils/types.js";
 
 import { MIN_SAMPLES } from "../utils/constants.js";
 import { getValidTransactions } from "../utils/rpc.js";
@@ -18,13 +18,13 @@ export class TornadoCash {
 
   readonly version = "unstoppable-release";
 
-  async benchmark(): Promise<Record<string, GasMetrics>> {
+  async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [shieldEth, unshieldEth] = await Promise.all([this.benchmarkShieldETH(), this.benchmarkUnshieldETH()]);
 
     return { shieldEth, unshieldEth };
   }
 
-  async benchmarkShieldETH(): Promise<GasMetrics> {
+  async benchmarkShieldETH(): Promise<FeeMetrics> {
     const receipts = await getValidTransactions({
       contractAddress: TORNADO_CASH_ROUTER,
       events: SHIELD_ETH_EVENTS,
@@ -38,7 +38,7 @@ export class TornadoCash {
     return getAverageMetrics(receipts);
   }
 
-  async benchmarkUnshieldETH(): Promise<GasMetrics> {
+  async benchmarkUnshieldETH(): Promise<FeeMetrics> {
     const receipts = await getValidTransactions({
       contractAddress: TORNADO_CASH_RELAYER_REGISTRY,
       events: UNSHIELD_ETH_EVENTS,

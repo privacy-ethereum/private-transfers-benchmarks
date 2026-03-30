@@ -1,4 +1,5 @@
 import { Intmax } from "./intmax/index.js";
+import { Monero } from "./monero/index.js";
 import { PrivacyPools } from "./privacy-pools/index.js";
 import { Railgun } from "./railgun/index.js";
 import { TornadoCash } from "./tornado-cash/index.js";
@@ -8,16 +9,18 @@ const railgun = new Railgun();
 const tornadoCash = new TornadoCash();
 const privacyPools = new PrivacyPools();
 const intmax = new Intmax();
+const monero = new Monero();
 
 await db.read();
 
 const start = Date.now();
 
-const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics] = await Promise.all([
+const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, moneroMetrics] = await Promise.all([
   railgun.benchmark(),
   tornadoCash.benchmark(),
   privacyPools.benchmark(),
   intmax.benchmark(),
+  monero.benchmark(),
 ]);
 
 await db.update((data) => {
@@ -44,6 +47,11 @@ await db.update((data) => {
   data[`${intmax.name}_${intmax.version}`] = {
     deposit_eth: intmaxMetrics.depositEth,
     withdraw_eth: intmaxMetrics.withdrawEth,
+  };
+
+  // eslint-disable-next-line no-param-reassign
+  data[`${monero.name}_${monero.version}`] = {
+    transfer: moneroMetrics.transfer,
   };
 });
 

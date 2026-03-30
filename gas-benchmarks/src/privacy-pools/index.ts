@@ -1,6 +1,6 @@
 import { mainnet } from "viem/chains";
 
-import type { GasMetrics } from "../utils/types.js";
+import type { FeeMetrics } from "../utils/types.js";
 
 import { MIN_SAMPLES } from "../utils/constants.js";
 import { getValidTransactions } from "../utils/rpc.js";
@@ -13,13 +13,13 @@ export class PrivacyPools {
 
   readonly version = "1.1.1";
 
-  async benchmark(): Promise<Record<string, GasMetrics>> {
+  async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [shieldEth, unshieldEth] = await Promise.all([this.benchmarkShieldETH(), this.benchmarkUnshieldETH()]);
 
     return { shieldEth, unshieldEth };
   }
 
-  async benchmarkShieldETH(): Promise<GasMetrics> {
+  async benchmarkShieldETH(): Promise<FeeMetrics> {
     const receipts = await getValidTransactions({
       contractAddress: PRIVACY_POOLS_ENTRYPOINT_PROXY,
       events: SHIELD_ETH_EVENTS,
@@ -33,7 +33,7 @@ export class PrivacyPools {
     return getAverageMetrics(receipts);
   }
 
-  async benchmarkUnshieldETH(): Promise<GasMetrics> {
+  async benchmarkUnshieldETH(): Promise<FeeMetrics> {
     const receipts = await getValidTransactions({
       contractAddress: PRIVACY_POOLS_ENTRYPOINT_PROXY,
       events: UNSHIELD_ETH_EVENTS,
