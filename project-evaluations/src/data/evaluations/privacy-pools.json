@@ -37,20 +37,21 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "0.2",
-      "notes": "Privacy Pools is deployed on Ethereum mainnet. Time to finality defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "value": "720",
+      "notes": "Privacy Pools is deployed on Ethereum mainnet. Time to finality defaults to the mainnet economic finality of 12 minutes. Mainnet single-slot finality of 12 seconds has a probabilistic guarantee that there would not be any block reorganization. It is used by wallets and apps to indicate a successful transaction even though in theory the containing block could be reverted. Mainnet economic finality of 12 minutes (2 epochs) is guaranteed by the block checkpointed by Casper the Friendly Finality Gadget (Casper-FFG). At that point reverting the block (and the transaction) would require more than one third of staked ETH to get slashed.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },
     {
       "name": "Deposit time",
       "value": "0",
-      "notes": "Deposits can be made immediately with no pre-deposit waiting period enforced by the protocol."
+      "notes": "Deposits can be made immediately with no pre-deposit waiting period enforced by the protocol. It is worth pointing out that Privacy Pools only allow for deposit and withdraw so even though there is no wait period in the deposit step, users will have to wait the withdraw time period in order to use the protocol with all its privacy features.",
+      "url": "https://docs.privacypools.com/protocol/deposit"
     },
     {
       "name": "Withdraw time",
-      "value": "604800",
-      "notes": "After depositing, the Association Set Provider (ASP) must vet the deposit before a private withdrawal is possible. This vetting process can take up to 7 days (604,800 seconds). If the ASP rejects the deposit or does not process it in time, users can recover funds publicly via the ragequit mechanism.",
-      "url": "https://0xbow.io/blog/unlocking-privacy-preserving-compliance-with-association-sets"
+      "value": "28800",
+      "notes": "After depositing, the Association Set Provider (ASP) must vet the deposit before a private withdrawal is possible. This vetting process can take up to 8 hours. If the ASP rejects the deposit or does not process it in time, users can recover funds publicly via the ragequit mechanism which withdraw funds to the original depositing address.",
+      "url": "https://x.com/0xbowio/status/1993006014422261784"
     },
     {
       "name": "Censorship resistance",
