@@ -150,7 +150,7 @@
       "url": "https://github.com/orgs/0xbow-io/repositories"
     },
     {
-      "name": "Scalable state",
+      "name": "Private State Scalability",
       "value": "Infinity grow",
       "notes": "When a user deposits funds to Privacy Pools, he needs to register a new commitment in the smart contract. All commitments are inserted in a merkle tree, therefore the tree goes infinitely as new deposit transactions are send to the protocol. At the same time withdraw function calls add nullifiers to the smart contract to prevent double spending. These nullifiers need to be stored permanently in order to mark which commitments have already been used.",
       "url": "https://docs.privacypools.com/layers/zk"
@@ -168,7 +168,7 @@
       "url": "https://docs.privacypools.com/"
     },
     {
-      "name": "On-chain storage",
+      "name": "Private Data Storage",
       "value": "Smart contracts",
       "notes": "Each commitment (deposit receipt) is saved in an on-chain Lean Incremental Merkle Tree (LeanIMT). The specific merkle tree was chosen due to its dynamic updates, storage and hashing optimizations.",
       "url": "https://docs.privacypools.com/layers/contracts#state-management-basics"
