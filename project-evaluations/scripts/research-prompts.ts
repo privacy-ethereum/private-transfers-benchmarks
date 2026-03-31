@@ -30,7 +30,7 @@ const BASE_RULES = `
   8. Never say "since X, the answer is Y". Just state the answer and explain why.
   9. Write technically but naturally — not robotic. Avoid marketing language (e.g. "banks", "your money", "advanced applied cryptography", "enhanced privacy", "cutting-edge", "innovative", "first practical application of").
   10. Do not reference PRs, config files, variable names, lines of code, or implementation details. Focus on protocol-level facts. You CAN reference technical standards and primitives (e.g. BIP32, BFT, zk-SNARKs, viewing keys, nullifier sets, commitment trees) — aim for a technical assessment, not a code review.
-  11. Do not describe governance processes (ZIP, EIP, BIP) unless the property is specifically about governance or upgradeability.
+  11. Do not reference ZIP/EIP/BIP numbers or processes unless the property is specifically about governance or upgradeability. You may mention that a feature is proposed or in development without naming the specific proposal.
   12. For properties with opt-in privacy (e.g. shielded vs transparent): if the privacy feature exists and is usable, the answer is Yes. Opt-in privacy still counts.
 
   PROPERTY GUIDANCE RULES:
@@ -41,11 +41,12 @@ const BASE_RULES = `
   17. For Escape hatch: For standalone L1 blockchains where funds are native to the chain, this may be N/A.
   18. For Asset privacy: For single-asset protocols (e.g. a chain with only one native currency), use No.
   19. For Censorship resistance: if the protocol is permissionless and any valid transaction can eventually be included (even if individual miners/validators can soft-censor), the answer is Yes. Soft censorship by some participants does not make the protocol censorship-susceptible if others can still include the transaction.
+
   SOURCE SELECTION RULES:
   20. The page must contain specific technical content about this property — not just a table of contents, navigation page, or landing page.
-  19. Do NOT return PDF URLs — they cannot be processed. Find an HTML alternative.
-  20. Avoid blog posts as primary sources — they may be outdated. Prefer official docs, specs, or project websites.
-  21. If the best source is a PDF, search for an HTML version of the same content.`;
+  21. Do NOT return PDF URLs — they cannot be processed. Find an HTML alternative.
+  22. Avoid blog posts as primary sources — they may be outdated. Prefer official docs, specs, or project websites.
+  23. If the best source is a PDF, search for an HTML version of the same content.`;
 
 // prettier-ignore
 export function buildResearchPrompt(

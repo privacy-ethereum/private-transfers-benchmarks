@@ -82,7 +82,7 @@ async function researchProperty(
     .join("");
 
   const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("No JSON in research response");
+  if (!jsonMatch) throw new Error("Malformed JSON in source research response");
 
   const parsed = JSON.parse(jsonMatch[0]);
   if (parsed.url?.endsWith(".pdf")) throw new Error(`PDF: ${parsed.url}`);
@@ -147,7 +147,10 @@ async function evaluateWithCitations(
   // Parse JSON from response
   const text = textParts.join("");
   const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch || text.includes("INSUFFICIENT_DATA")) {
+  if (!jsonMatch) {
+    throw new Error("Malformed JSON in evaluation response");
+  }
+  if (text.includes("INSUFFICIENT_DATA")) {
     return { name: propertyDefinition.name, value: "INSUFFICIENT_DATA" };
   }
 
@@ -189,6 +192,7 @@ async function fetchTextFromUrl(url: string): Promise<{ text: string; sourceUrl:
   const text = (await response.text())
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+    .replace(/<(nav|aside)[^>]*>[\s\S]*?<\/\1>/gi, "")
     .replace(/<\/?(h[1-6]|p|div|li|tr|br|hr|section|article|header|footer|blockquote)[^>]*>/gi, "\n")
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
