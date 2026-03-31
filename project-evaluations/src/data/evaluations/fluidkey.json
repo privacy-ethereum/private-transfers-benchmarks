@@ -132,7 +132,7 @@
       "url": "https://github.com/fluidkey"
     },
     {
-      "name": "Scalable state",
+      "name": "Private State Scalability",
       "value": "Stateless",
       "notes": "Fluidkey stealth accounts are counterfactually instantiated and each payment creates an independent smart account. There is no global shared state accumulation (no Merkle tree or registry that grows with usage). There could be a potential issue on deploying independent smart accounts every time a transaction is performed.",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
@@ -150,7 +150,7 @@
       "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#who-can-view-my-transactions"
     },
     {
-      "name": "On-chain storage",
+      "name": "Private Data Storage",
       "value": "Smart contracts",
       "notes": "Each stealth account is a Safe smart account deployed on-chain that holds user's funds. Contracts are deployed lazily (counterfactual instantiation), it is only deployed on-chain when the user wishes to move funds out.",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
@@ -185,6 +185,9 @@
       "notes": "No mandatory withdrawal waiting period enforced by the protocol. From the outside, the withdraw transaction is a normal Ethereum smart contract transaction sending funds to another on-chain address. If it is the first time using that specific stealth address, the smart account code needs to be deployed before the account can send any funds. This implies two Ethereum transactions which could be interpret as a waiting time of minimum 24 seconds (12 seconds for the smart account code deployment transaction and 12 seconds for the withdraw transaction itself).",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
     },
-    { "name": "On-chain gas cost: transfer", "value": "" }
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    }
   ]
 }
