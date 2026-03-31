@@ -5,10 +5,7 @@
   "documentation": "https://hinkal-team.gitbook.io/hinkal",
   "categories": ["Shielded pool", "Stealth addresses"],
   "properties": [
-    {
-      "name": "Anonymity set size",
-      "value": ""
-    },
+    { "name": "Anonymity set size", "value": "" },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -41,20 +38,21 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "0.2",
-      "notes": "Hinkal is deployed on EVM-compatible chains, primarily Ethereum mainnet. Time to finality defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "value": "720",
+      "notes": "Hinkal is deployed on EVM-compatible chains, primarily Ethereum mainnet. Time to finality defaults to the mainnet economic finality of 12 minutes. Mainnet single-slot finality of 12 seconds has a probabilistic guarantee that there would not be any block reorganization. It is used by wallets and apps to indicate a successful transaction even though in theory the containing block could be reverted. Mainnet economic finality of 12 minutes (2 epochs) is guaranteed by the block checkpointed by Casper the Friendly Finality Gadget (Casper-FFG). At that point reverting the block (and the transaction) would require more than one third of staked ETH to get slashed.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },
     {
       "name": "Deposit time",
       "value": "0",
       "notes": "Users that deposit into Hinkal will instantly be able to interact: private transfer, privately interact with other smart contracts, withdraw. But it is recommended to define a time window during which the transaction executes to reduce linkage between intent and settlement",
-      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-send/features#privacy-properties"
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/transactions/deposits-and-withdrawals"
     },
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "Hinkal does not impose a mandatory withdrawal waiting period. Users can withdraw shielded assets to a public address instantly, either self-initiated or via a relayer."
+      "notes": "Hinkal does not impose a mandatory withdrawal waiting period. Users can withdraw shielded assets to a public address instantly, either self-initiated or via a relayer. It is recommended to withdraw after a time period in order to avoid meta data and pattern linkage",
+      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/transactions/deposits-and-withdrawals"
     },
     {
       "name": "Censorship resistance",

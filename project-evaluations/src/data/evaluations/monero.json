@@ -37,7 +37,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "20",
+      "value": "1200",
       "notes": "Monero is an alternative L1 blockchain with a 2-minute target block time. Funds are considered spendable (effectively final) after 10 confirmations, giving a time to finality of approximately 20 minutes (10 × 2 min).",
       "url": "https://www.monero.how/monero-transaction-confirmation-time"
     },
@@ -143,8 +143,8 @@
     {
       "name": "Open source",
       "value": "Yes",
-      "url": "https://github.com/monero-project",
-      "notes": "Blockchain nodes code, protocol documentation, wallet interface and more repositories can be found at the Moreno project Github organization."
+      "notes": "Blockchain nodes code, protocol documentation, wallet interface and more repositories can be found at the Moreno project Github organization.",
+      "url": "https://github.com/monero-project"
     },
     {
       "name": "Scalable state",

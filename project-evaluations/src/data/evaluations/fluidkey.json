@@ -170,22 +170,21 @@
     {
       "name": "Time-to-finality",
       "value": "0.2",
-      "notes": "Deployed on Ethereum mainnet. Time to finality defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "notes": "Deployed on Ethereum mainnet. Time to finality defaults to the mainnet economic finality of 12 minutes. Mainnet single-slot finality of 12 seconds has a probabilistic guarantee that there would not be any block reorganization. It is used by wallets and apps to indicate a successful transaction even though in theory the containing block could be reverted. Mainnet economic finality of 12 minutes (2 epochs) is guaranteed by the block checkpointed by Casper the Friendly Finality Gadget (Casper-FFG). At that point reverting the block (and the transaction) would require more than one third of staked ETH to get slashed.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },
     {
       "name": "Deposit time",
       "value": "0",
-      "notes": "No mandatory deposit waiting period enforced by the protocol."
+      "notes": "No mandatory deposit waiting period enforced by the protocol. From the outside, the deposit transaction is a normal Ethereum transaction sending funds to a fresh contract address",
+      "url": "https://docs.fluidkey.com/readme/receiving-funds"
     },
     {
       "name": "Withdraw time",
-      "value": "0",
-      "notes": "No mandatory withdrawal waiting period enforced by the protocol."
+      "value": "24",
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol. From the outside, the withdraw transaction is a normal Ethereum smart contract transaction sending funds to another on-chain address. If it is the first time using that specific stealth address, the smart account code needs to be deployed before the account can send any funds. This implies two Ethereum transactions which could be interpret as a waiting time of minimum 24 seconds (12 seconds for the smart account code deployment transaction and 12 seconds for the withdraw transaction itself).",
+      "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
     },
-    {
-      "name": "On-chain gas cost: transfer",
-      "value": ""
-    }
+    { "name": "On-chain gas cost: transfer", "value": "" }
   ]
 }

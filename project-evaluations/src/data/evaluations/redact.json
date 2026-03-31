@@ -5,10 +5,7 @@
   "documentation": "https://docs.redact.money/",
   "categories": ["Homomorphic encryption (FHE - HE)"],
   "properties": [
-    {
-      "name": "Anonymity set size",
-      "value": ""
-    },
+    { "name": "Anonymity set size", "value": "" },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -41,19 +38,19 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "0.2",
-      "notes": "Redact is deployed on Ethereum using Fhenix's CoFHE coprocessor. The final settlement of transactions occurs on Ethereum, so time to finality defaults to the Ethereum blocktime of 12 seconds (0.2 minutes).",
+      "value": "720",
+      "notes": "Redact is deployed on Ethereum using Fhenix's CoFHE coprocessor. The final settlement of transactions occurs on Ethereum, so time to finality defaults to the mainnet economic finality of 12 minutes. Mainnet single-slot finality of 12 seconds has a probabilistic guarantee that there would not be any block reorganization. It is used by wallets and apps to indicate a successful transaction even though in theory the containing block could be reverted. Mainnet economic finality of 12 minutes (2 epochs) is guaranteed by the block checkpointed by Casper the Friendly Finality Gadget (Casper-FFG). At that point reverting the block (and the transaction) would require more than one third of staked ETH to get slashed.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },
     {
       "name": "Deposit time",
-      "value": "0",
-      "notes": "No mandatory deposit waiting period. Encrypting ERC20 tokens (depositing into Redact) is an immediate on-chain transaction."
+      "value": "60",
+      "notes": "No mandatory deposit waiting period. The ERC20 encryption process involves the Fhenix coprocessor which does not clearly state latency or computation times. Therefore we are assuming a 1 minute computation in order to homomorphically encrypt the deposited amount of funds."
     },
     {
       "name": "Withdraw time",
-      "value": "0",
-      "notes": "No mandatory withdrawal waiting period. Decrypting tokens (withdrawing from Redact) is available as soon as the user provides the required permit signature."
+      "value": "120",
+      "notes": "No mandatory withdrawal waiting period. Decrypting tokens (withdrawing from Redact) is performed by the Fhenix coprocessor threshold network which would have a specific latency. The latency value is not specified in Redact nor Fhenix documentation but we can assume it would take longer than an encryption. We assume double the time but it needs to be confirmed"
     },
     {
       "name": "Censorship resistance",
@@ -120,10 +117,7 @@
       "value": "[\"None\",\"Selective disclosure\"]",
       "url": "https://docs.redact.money/faq#q-what-are-permits"
     },
-    {
-      "name": "Point of enforcement",
-      "value": "[\"None\"]"
-    },
+    { "name": "Point of enforcement", "value": "[\"None\"]" },
     {
       "name": "Selective disclosure: viewing entity",
       "value": "[\"User\",\"Voluntary third-party disclosure\"]",
