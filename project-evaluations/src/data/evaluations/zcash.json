@@ -37,7 +37,7 @@
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "ZCash supports full anonymity for both sender and receiver when using shielded addresses. A transaction between two shielded addresses keeps the addresses, transaction amount and the memo field shielded from the public, and shielded addresses use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. Recipients of a shielded or deshielding transaction do not learn about the senders address through the transaction recipt in their wallet, confirming sender privacy even to the receiver. While ZCash also supports transparent addresses that work like Bitcoin with public visibility, the availability of fully shielded transactions means the protocol supports sender and receiver anonymity.",
+      "notes": "ZCash supports full anonymity for both sender and receiver when using shielded addresses. A transaction between two shielded addresses keeps the addresses, transaction amount and the memo field shielded from the public, and shielded addresses use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. Recipients of a shielded or deshielding transaction do not learn about the senders address through the transaction receipt in their wallet, confirming sender privacy even to the receiver. While ZCash also supports transparent addresses that work like Bitcoin with public visibility, the availability of fully shielded transactions means the protocol supports sender and receiver anonymity.",
       "citations": [
         {
           "cited_text": "¶ \n\nA transaction between two shielded addresses (a shielded transaction) keeps the addresses, transaction amount and the memo field shielded from the public (with the exception of migrating funds between Sprout and Sapling shielded addresses).\n\n",
@@ -52,7 +52,7 @@
           "end_char_index": 1799
         },
         {
-          "cited_text": "Recipients of a shielded or deshielding transaction do not learn about the senders address through the transaction recipt in their wallet. ",
+          "cited_text": "Recipients of a shielded or deshielding transaction do not learn about the senders address through the transaction receipt in their wallet. ",
           "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
           "start_char_index": 2505,
           "end_char_index": 2644
@@ -435,15 +435,9 @@
       "notes": "Zcash supports selective disclosure controlled by the user. The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for selective disclosure where transactions are auditable but disclosure is under the participant's control. The user decides whether and with whom to share viewing keys, enabling voluntary disclosure for compliance, auditing, or tax purposes without protocol-level enforcement.",
       "citations": [
         {
-          "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. ",
+          "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. ",
           "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
           "start_char_index": 2336,
-          "end_char_index": 2524
-        },
-        {
-          "cited_text": "This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 2524,
           "end_char_index": 2648
         }
       ]
