@@ -5,7 +5,10 @@
   "documentation": "https://docs.tongo.cash/",
   "categories": ["Homomorphic encryption (FHE - HE)"],
   "properties": [
-    { "name": "Anonymity set size", "value": "" },
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -151,7 +154,7 @@
       "url": "https://github.com/fatlabsxyz/tongo"
     },
     {
-      "name": "Scalable state",
+      "name": "Private State Scalability",
       "value": "Within contract",
       "notes": "Tongo uses an account-based model where each user's encrypted balance is stored as a mapping within the smart contract storage. New users add entries to the contract's account mapping, and the state grows proportionally to the number of accounts rather than to the number of transactions.",
       "url": "https://docs.tongo.cash/protocol/storage.html"
@@ -169,7 +172,7 @@
       "url": "https://docs.tongo.cash/protocol/storage.html#pending-balance"
     },
     {
-      "name": "On-chain storage",
+      "name": "Private Data Storage",
       "value": "Smart contracts",
       "notes": "All private state—including encrypted account balances (current and pending) and auditor configuration—is stored directly in the Tongo smart contract on Starknet. The state grows for every new Tongo account generated.",
       "url": "https://docs.tongo.cash/protocol/storage.html"

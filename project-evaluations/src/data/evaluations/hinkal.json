@@ -5,7 +5,10 @@
   "documentation": "https://hinkal-team.gitbook.io/hinkal",
   "categories": ["Shielded pool", "Stealth addresses"],
   "properties": [
-    { "name": "Anonymity set size", "value": "" },
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -151,7 +154,7 @@
       "url": "https://github.com/Hinkal-Protocol/Hinkal-Smart-Contracts/tree/main"
     },
     {
-      "name": "Scalable state",
+      "name": "Private State Scalability",
       "value": "Infinity grow",
       "notes": "Hinkal uses an append-only Merkle tree to store UTXO commitments and in the future its corresponding nullifiers. Every shielded operation adds new leaves to both trees, so state grows unboundedly over time, similar to other UTXO-based shielded pools. There is a removal-supporting Merkle tree variant that allows to delete leave values in some protocol scenarios where commitments can be revoked or expired.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/merkle-trees#summary-of-trade-offs"
@@ -169,7 +172,7 @@
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/utxos-commitments-and-nullifiers#utxos-commitments-and-nullifiers"
     },
     {
-      "name": "On-chain storage",
+      "name": "Private Data Storage",
       "value": "Smart contracts",
       "notes": "All UTXO commitments, nullifiers, and Merkle tree roots are stored directly in the Hinkal smart contracts deployed on supported EVM chains. The commitment creation or nullifier addition (nullified) actions are notified using events. This requires the wallet provider or integrator to have a RPC event scanning mechanism to keep the user shielded balance up to date in real-time.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/smart-contracts/hinkalbase"

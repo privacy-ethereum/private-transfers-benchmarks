@@ -147,7 +147,7 @@
       "url": "https://github.com/monero-project"
     },
     {
-      "name": "Scalable state",
+      "name": "Private State Scalability",
       "value": "Infinity grow",
       "notes": "Monero has private key images as nullifiers to prevent double spending attempts. So in every Monero transaction, a new set of private key images is added to the protocol state. The state can grow indefinitely depending on the usage.",
       "url": "https://docs.getmonero.org/cryptography/asymmetric/key-image/"
@@ -165,7 +165,7 @@
       "url": "https://www.getmonero.org/resources/user-guides/make-payment.html"
     },
     {
-      "name": "On-chain storage",
+      "name": "Private Data Storage",
       "value": "Smart contracts",
       "notes": "All data is stored on Monero blockchain itself. There is no concept of smart contracts but this option is the most appropriated because it represents saving state directly on-chain without depending on external networks or more complicated scanning mechanisms for emitted events.",
       "url": "https://www.getmonero.org/resources/moneropedia/blockchain.html"

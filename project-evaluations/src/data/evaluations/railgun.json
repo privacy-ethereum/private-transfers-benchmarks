@@ -5,7 +5,10 @@
   "documentation": "https://docs.railgun.org/wiki/learn/privacy-system",
   "categories": ["Shielded pool"],
   "properties": [
-    { "name": "Anonymity set size", "value": "" },
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -13,7 +16,7 @@
       "url": "https://docs.railgun.org/developer-guide/wallet/private-balances"
     },
     {
-      "name": "Scalable state",
+      "name": "Private State Scalability",
       "value": "Infinity grow",
       "notes": "The RAILGUN system contains an efficient internal implementation of a batch-incremental Merkle Tree. Each shield interaction generates a new note which takes the form of a new Root/Leaf on the Merkle Tree. All tokens within the RAILGUN system share the same Merkle Tree. Every interaction that updates the state of the Merkle Tree will generate a new Merkle Root/Leaf that is hashed and secured by the zk-SNARK circuits.",
       "url": "https://docs.railgun.org/wiki/learn/shielding-tokens#private-pools-and-merkle-trees"
@@ -31,7 +34,7 @@
       "url": "https://docs.railgun.org/wiki/learn/using-private-tokens"
     },
     {
-      "name": "On-chain storage",
+      "name": "Private Data Storage",
       "value": "Smart contracts",
       "notes": "RAILGUN protects this information by utilizing Private Balances, a confidential set of tokens and users where interactions appear to originate from. These Private Balances are known as an privacy set as, to an outside observer; transactions can be sent by anyone who has previously made a transaction.",
       "url": "https://docs.railgun.org/wiki/learn/privacy-system"

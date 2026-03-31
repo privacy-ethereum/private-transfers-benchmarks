@@ -156,7 +156,7 @@
       "url": "https://github.com/tornadocash/"
     },
     {
-      "name": "Scalable state",
+      "name": "Private State Scalability",
       "value": "Infinity grow",
       "notes": "Each deposit generates encrypted data that is stored on a Merkle tree. As more transactions happens, more encrypted data will be stored in the Merkle tree as leaves. In addition to that, every withdrawal transaction stores a nullifier on-chain to signal that a specific note has been used. The nullifier data structure also grows with the number of transactions.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
@@ -174,7 +174,7 @@
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
-      "name": "On-chain storage",
+      "name": "Private Data Storage",
       "value": "Smart contracts",
       "notes": "The Tornado cash smart contracts stored all the required data for the protocol to work. Every note is saved in a merkle tree of a specific pool contract depending on the denomination sent. Additionally, encrypted deposit data is stored in the smart contracts when using the Note Account feature.",
       "url": "https://docs.tornadocash.eth.limo/general/"

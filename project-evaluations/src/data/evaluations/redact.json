@@ -5,7 +5,10 @@
   "documentation": "https://docs.redact.money/",
   "categories": ["Homomorphic encryption (FHE - HE)"],
   "properties": [
-    { "name": "Anonymity set size", "value": "" },
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
     {
       "name": "Confidentiality",
       "value": "Yes",
@@ -117,7 +120,10 @@
       "value": "[\"None\",\"Selective disclosure\"]",
       "url": "https://docs.redact.money/faq#q-what-are-permits"
     },
-    { "name": "Point of enforcement", "value": "[\"None\"]" },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"None\"]"
+    },
     {
       "name": "Selective disclosure: viewing entity",
       "value": "[\"User\",\"Voluntary third-party disclosure\"]",
@@ -143,7 +149,7 @@
       "url": "https://github.com/FhenixProtocol"
     },
     {
-      "name": "Scalable state",
+      "name": "Private State Scalability",
       "value": "Within contract",
       "notes": "Redact uses an account-based model where each user's encrypted balance is stored as a mapping within the smart contract storage. State grows proportionally to the number of accounts rather than to the number of transactions.",
       "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances"
@@ -161,7 +167,7 @@
       "url": "https://docs.redact.money/architecture/fherc20.sol#state-changing-functions"
     },
     {
-      "name": "On-chain storage",
+      "name": "Private Data Storage",
       "value": "Smart contracts",
       "notes": "All encrypted balances (FHE ciphertexts) are stored on-chain and ciphertext pointers related to specific accounts are saved within the Redact smart contract state.",
       "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances"

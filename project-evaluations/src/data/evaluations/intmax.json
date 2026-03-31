@@ -150,7 +150,7 @@
       "url": "https://docs.network.intmax.io/developers-hub/code-repository"
     },
     {
-      "name": "Scalable state",
+      "name": "Private State Scalability",
       "value": "L2",
       "notes": "Intmax has a special L2 design similar to edge blockchains. Users are first-class agents who fully own and maintain their own state. Aggregators submit commitments on the L1 for global state coordination.",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/roles"
@@ -168,7 +168,7 @@
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#implications"
     },
     {
-      "name": "On-chain storage",
+      "name": "Private Data Storage",
       "value": "Off-chain storage with on-chain commitment",
       "notes": "Intmax minimises on-chain footprint by storing only block roots and validity proofs on Ethereum L1. All transaction data is kept off-chain and propagated through the P2P network, with on-chain commitments serving as the source of truth for finality.",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#minimal-on-chain-data"

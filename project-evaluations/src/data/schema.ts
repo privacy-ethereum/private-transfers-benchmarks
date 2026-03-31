@@ -60,7 +60,8 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Asset privacy",
     group: "Privacy",
-    description: "The asset being transferred is private",
+    description:
+      "Whether the specific asset being transferred is hidden from observers. For single-asset protocols, this is No since there is only one possible asset.",
     metric: "Yes / No",
     inputType: "select",
     options: ["Yes", "No"],
@@ -118,23 +119,26 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Deposit time",
     group: "UX",
-    description: "Duration required before you can deposit into the protocol (in seconds)",
-    metric: "Seconds",
-    inputType: "number",
+    description:
+      "Duration required before you can deposit into the protocol (in seconds). N/A for L1 protocols without a distinct deposit concept.",
+    metric: "Seconds or N/A",
+    inputType: "text",
   },
   {
     name: "Withdraw time",
     group: "UX",
-    description: "Duration required before you can withdraw funds from the protocol (in seconds)",
-    metric: "Seconds",
-    inputType: "number",
+    description:
+      "Duration required before you can withdraw funds from the protocol (in seconds). N/A for L1 protocols without a distinct withdraw concept.",
+    metric: "Seconds or N/A",
+    inputType: "text",
   },
 
   // ── Decentralization & Security ──────────────────────────────────────────
   {
     name: "Censorship resistance",
     group: "Decentralization & Security",
-    description: "Ability to use the protocol without any restriction or being censored",
+    description:
+      "Whether any entity can prevent valid transactions from being included in the chain. Considers mining/validator censorship, protocol-level restrictions, and network-level blocking.",
     metric: "Yes / No",
     inputType: "select",
     options: ["Yes", "No"],
@@ -151,18 +155,19 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Escape hatch",
     group: "Decentralization & Security",
     description:
-      "Whether users can withdraw shielded funds relying only on Ethereum consensus, smart contracts, and cryptography",
-    metric: "No / Can exit in a time period / Instantly",
+      "Whether users can withdraw shielded funds relying only on the underlying blockchain's consensus and cryptography. For standalone L1 blockchains, this may not apply.",
+    metric: "No / Can exit in a time period / Instantly / N/A",
     inputType: "select",
-    options: ["No", "Can exit in a time period", "Instantly"],
+    options: ["No", "Can exit in a time period", "Instantly", "N/A"],
   },
   {
     name: "Upgradeability",
     group: "Decentralization & Security",
-    description: "How upgrades to the system are performed",
-    metric: "Single admin / Multi-sig / DAO / Immutable",
+    description:
+      "How upgrades to the system are performed. For L1 blockchains, this includes the mechanism by which protocol rules change (e.g. hard/soft forks via improvement proposal processes).",
+    metric: "Single admin / Multi-sig / DAO / Network upgrade (hard/soft fork) / Immutable",
     inputType: "select",
-    options: ["Single admin", "Multi-sig", "DAO", "Immutable"],
+    options: ["Single admin", "Multi-sig", "DAO", "Network upgrade (hard/soft fork)", "Immutable"],
   },
   {
     name: "Client-side proving",
@@ -288,10 +293,11 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
 
   // ── State ────────────────────────────────────────────────────────────────
   {
-    name: "Scalable state",
+    name: "Private State Scalability",
     group: "State",
-    description: "How protocol-specific data is stored over time",
-    metric: "Infinity grow / L2 / Temporal grow / Stateless / Within contract",
+    description: "How protocol-specific private data is stored over time",
+    metric:
+      "Infinity grow (nullifier/note trees grow forever) / Temporal grow (state pruned at epochs, stored offchain) / Stateless (state updated but does not grow) / L2 / Within contract",
     inputType: "select",
     options: ["Infinity grow", "L2", "Temporal grow", "Stateless", "Within contract"],
   },
@@ -312,12 +318,12 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     options: ["UTXO-based state model", "Account-based state model", "Private shared state model"],
   },
   {
-    name: "On-chain storage",
+    name: "Private Data Storage",
     group: "State",
-    description: "Where the submitted on-chain data is stored",
-    metric: "Off-chain with on-chain commitment / Events / Smart contracts",
+    description: "Where private transaction data is stored",
+    metric: "Protocol state / Off-chain with on-chain commitment / Events / Smart contracts",
     inputType: "select",
-    options: ["Off-chain storage with on-chain commitment", "Events", "Smart contracts"],
+    options: ["Protocol state", "Off-chain storage with on-chain commitment", "Events", "Smart contracts"],
   },
 
   // ── Composability ────────────────────────────────────────────────────────
