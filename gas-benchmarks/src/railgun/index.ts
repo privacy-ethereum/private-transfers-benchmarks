@@ -1,6 +1,6 @@
 import { mainnet } from "viem/chains";
 
-import type { GasMetrics } from "../utils/types.js";
+import type { FeeMetrics } from "../utils/types.js";
 
 import { MIN_SAMPLES } from "../utils/constants.js";
 import { getValidTransactions } from "../utils/rpc.js";
@@ -18,7 +18,7 @@ export class Railgun {
 
   readonly version = "0.0.1";
 
-  async benchmark(): Promise<Record<string, GasMetrics>> {
+  async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [shieldErc20, unshieldErc20, transferErc20] = await Promise.all([
       this.benchmarkShieldERC20(),
       this.benchmarkUnshieldERC20(),
@@ -28,7 +28,7 @@ export class Railgun {
     return { shieldErc20, unshieldErc20, transferErc20 };
   }
 
-  async benchmarkShieldERC20(): Promise<GasMetrics> {
+  async benchmarkShieldERC20(): Promise<FeeMetrics> {
     const receipts = await getValidTransactions({
       contractAddress: RAILGUN_SMART_WALLET_PROXY,
       events: SHIELD_ERC20_EVENTS,
@@ -42,7 +42,7 @@ export class Railgun {
     return getAverageMetrics(receipts);
   }
 
-  async benchmarkUnshieldERC20(): Promise<GasMetrics> {
+  async benchmarkUnshieldERC20(): Promise<FeeMetrics> {
     const receipts = await getValidTransactions({
       contractAddress: RAILGUN_SMART_WALLET_PROXY,
       events: UNSHIELD_ERC20_EVENTS,
@@ -56,7 +56,7 @@ export class Railgun {
     return getAverageMetrics(receipts);
   }
 
-  async benchmarkTransferERC20(): Promise<GasMetrics> {
+  async benchmarkTransferERC20(): Promise<FeeMetrics> {
     const receipts = await getValidTransactions({
       contractAddress: RAILGUN_SMART_WALLET_PROXY,
       events: TRANSFER_ERC20_EVENTS,

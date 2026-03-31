@@ -1,6 +1,6 @@
 import { mainnet, scroll } from "viem/chains";
 
-import type { GasMetrics } from "../utils/types.js";
+import type { FeeMetrics } from "../utils/types.js";
 
 import { MIN_SAMPLES } from "../utils/constants.js";
 import { getValidTransactions } from "../utils/rpc.js";
@@ -20,13 +20,13 @@ export class Intmax {
 
   readonly version = "1.0.0";
 
-  async benchmark(): Promise<Record<string, GasMetrics>> {
+  async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [depositEth, withdrawEth] = await Promise.all([this.benchmarkDepositETH(), this.benchmarkWithdrawETH()]);
 
     return { depositEth, withdrawEth };
   }
 
-  async benchmarkDepositETH(): Promise<GasMetrics> {
+  async benchmarkDepositETH(): Promise<FeeMetrics> {
     const receipts = await getValidTransactions({
       contractAddress: INTMAX_LIQUIDITY_PROXY,
       events: DEPOSIT_ETH_EVENTS,
@@ -41,7 +41,7 @@ export class Intmax {
     return getAverageMetrics(receipts);
   }
 
-  async benchmarkWithdrawETH(): Promise<GasMetrics> {
+  async benchmarkWithdrawETH(): Promise<FeeMetrics> {
     const receipts = await getValidTransactions({
       contractAddress: INTMAX_WITHDRAWAL_PROXY,
       events: WITHDRAW_ETH_EVENTS,

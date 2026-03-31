@@ -27,21 +27,25 @@ describe("constants.ts files", () => {
   });
 
   it("should have at least one contract address", () => {
-    files.forEach(({ filePath, addresses }) => {
-      expect(
-        addresses.length,
-        `${filePath} must have at least one contract address (Address-typed constant)`,
-      ).toBeGreaterThanOrEqual(1);
-    });
+    files
+      .filter(({ filePath }) => !filePath.includes("monero"))
+      .forEach(({ filePath, addresses }) => {
+        expect(
+          addresses.length,
+          `${filePath} must have at least one contract address (Address-typed constant)`,
+        ).toBeGreaterThanOrEqual(1);
+      });
   });
 
   it("should have at least two events array", () => {
-    files.forEach(({ filePath, events }) => {
-      expect(
-        events.length,
-        `${filePath} must have at least two events arrays (array with parseAbiItem calls)`,
-      ).toBeGreaterThanOrEqual(2);
-    });
+    files
+      .filter(({ filePath }) => !filePath.includes("monero"))
+      .forEach(({ filePath, events }) => {
+        expect(
+          events.length,
+          `${filePath} must have at least two events arrays (array with parseAbiItem calls)`,
+        ).toBeGreaterThanOrEqual(2);
+      });
   });
 
   it("should have a URL to a .sol source file for each contract address", () => {

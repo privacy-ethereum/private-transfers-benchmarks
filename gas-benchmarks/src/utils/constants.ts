@@ -41,3 +41,17 @@ export const BLOCK_WINDOW_ETHEREUM = 50_400n;
  * 604800 / 1 = 604800 seconds
  */
 export const BLOCK_WINDOW_SCROLL = 604_800n;
+
+/**
+ * The number of Monero blocks to scan for transactions
+ * 1 week = 604800 seconds. 1 Monero block = 120 seconds
+ * 604800 / 120 = 5040 blocks
+ *
+ * Using 5 for dev and rate limiting on remote node
+ */
+export const BLOCK_WINDOW_MONERO = 5;
+
+/**
+ * One day in seconds used to calculate day of unixtimestamp
+ */
+export const ONE_DAY_IN_SECONDS = 24 * 60 * 60;

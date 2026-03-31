@@ -1,5 +1,5 @@
-export interface GasMetrics {
-  averageGasUsed: bigint | "no-data";
-  averageGasPrice: bigint | "no-data";
-  averageTxFee: bigint | "no-data";
+export interface FeeMetrics {
+  averageGasUsed: bigint | number | "no-data";
+  averageGasPrice: bigint | number | "no-data";
+  averageTxFee: bigint | number | "no-data";
 }
