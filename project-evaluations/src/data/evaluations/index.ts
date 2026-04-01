@@ -10,6 +10,7 @@ import fluidkeyData from "./fluidkey.json" with { type: "json" };
 import moneroData from "./monero.json" with { type: "json" };
 import redactData from "./redact.json" with { type: "json" };
 import hinkalData from "./hinkal.json" with { type: "json" };
+import zcashData from "./zcash.json" with { type: "json" };
 
 const rawEvaluations = [
   railgunData,
@@ -21,6 +22,7 @@ const rawEvaluations = [
   moneroData,
   redactData,
   hinkalData,
+  zcashData,
 ];
 
 export const evaluations: Evaluation[] = rawEvaluations.map((raw) => evaluationSchema.parse(raw));
