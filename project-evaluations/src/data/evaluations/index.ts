@@ -23,4 +23,4 @@ const rawEvaluations = [
   hinkalData,
 ];
 
-export const evaluations: Evaluation[] = rawEvaluations.map((raw) => evaluationSchema.parse(raw) as Evaluation);
+export const evaluations: Evaluation[] = rawEvaluations.map((raw) => evaluationSchema.parse(raw));

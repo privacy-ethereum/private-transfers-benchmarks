@@ -108,7 +108,10 @@ export default function PropertyRow({ def, prop, onUpdate }: PropertyRowProps) {
     <div className="bg-gray-900 border border-gray-800 rounded-lg p-3 space-y-2">
       <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="text-xs font-medium text-gray-200">{def.name}</p>
+          <p className="text-xs font-medium text-gray-200">
+            {def.name}
+            {prop?.needsResearchReview && <span className="ml-2 text-amber-400 font-normal">(needs review)</span>}
+          </p>
           <p className="text-xs text-gray-500 mt-0.5">{def.description}</p>
           {def.inputType === "multi-select" && <p className="text-xs text-indigo-400 mt-1">{getDisplayValue()}</p>}
         </div>
@@ -139,6 +142,28 @@ export default function PropertyRow({ def, prop, onUpdate }: PropertyRowProps) {
           onUpdate(def.name, "url", localUrl);
         }}
       />
+      {prop?.citations && prop.citations.length > 0 && (
+        <div className="bg-gray-800 border border-gray-700 rounded p-2 space-y-1">
+          <p className="text-xs font-medium text-gray-400">Citations</p>
+          {prop.citations.map((c, i) => (
+            <p key={i} className="text-xs text-gray-500">
+              [{i + 1}] &ldquo;{c.cited_text}&rdquo;{" "}
+              <span className="text-gray-600">
+                (chars {c.start_char_index}&ndash;{c.end_char_index})
+              </span>{" "}
+              &mdash;{" "}
+              <a
+                href={c.source}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-400 hover:underline break-all"
+              >
+                {c.source}
+              </a>
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
