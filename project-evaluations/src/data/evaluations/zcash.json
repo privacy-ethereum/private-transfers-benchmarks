@@ -285,22 +285,10 @@
       "notes": "Zcash shielded transactions are fully encrypted on-chain and cannot be inspected by third parties without explicit user consent. However, users can voluntarily share viewing keys that grant read-only access to their shielded transaction history. These viewing keys provide read access but not spend authority, enabling optional auditability while keeping transactions private by default. No external prover, validium, or other mechanism allows involuntary third-party inspection of private data.",
       "citations": [
         {
-          "cited_text": "The acronym zk-SNARK stands for Zero-Knowledge Succinct Non-Interactive Argument of Knowledge and refers to a proof construction where one can prove possession of certain information, e.g., a secret key, without revealing that information, and without any interaction between the prover and verifier.\n\n",
-          "source": "https://z.cash/learn/what-are-zk-snarks/",
-          "start_char_index": 3191,
-          "end_char_index": 3493
-        },
-        {
-          "cited_text": "In the first zero-knowledge protocols, the prover and verifier had to communicate back and forth for multiple rounds, but in “non-interactive” constructions, the proof consists of a single message sent from prover to verifier. ",
-          "source": "https://z.cash/learn/what-are-zk-snarks/",
-          "start_char_index": 4975,
-          "end_char_index": 5202
-        },
-        {
-          "cited_text": "The strong privacy guarantee of Zcash is derived from the fact that shielded transactions in Zcash can be fully encrypted on the blockchain, yet still be verified as valid under the network’s consensus rules by using zk-SNARK proofs.\n\n",
-          "source": "https://z.cash/learn/what-are-zk-snarks/",
-          "start_char_index": 3595,
-          "end_char_index": 3830
+          "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. This allows compliance with payment for auditing, tax regulations, or anti-money laundering rules.\n\n",
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
+          "start_char_index": 2336,
+          "end_char_index": 2748
         }
       ]
     },
@@ -410,22 +398,10 @@
       "notes": "Zcash has no protocol-level compliance enforcement at any stage. The protocol supports both transparent and shielded addresses with optional privacy, allowing users to freely move funds between pools through shielding and deshielding transactions. All transactions are validated by consensus rules using zero-knowledge proofs for shielded transfers, but there is no active restriction or filtering mechanism enforced by the protocol.",
       "citations": [
         {
-          "cited_text": "Therefore, there are four basic types of transactions:\n\nShielded/private (Value is not revealed on the blockchain) ¶ \n\nDeshielding (Value is revealed on the receiver end) ¶ \n\nShielding (Value is revealed on the sender end) ¶ \n\nTransparent/public (Value is revealed by both sender and receiver) ¶ \n\nShielded Addresses ¶ \n\nShielded addresses are the address type that use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 1325,
-          "end_char_index": 1799
-        },
-        {
-          "cited_text": "Shielded addresses and the values sent to or from them are not publicly visible. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 2105,
-          "end_char_index": 2186
-        },
-        {
-          "cited_text": "Transparent Addresses ¶ \n\nTransparent addresses work similarly to Bitcoin addresses and do not offer privacy for users.\n\nTransparent addresses and the values sent to or from them are publicly visible ¶ \n\nAt this time, some advanced features such as multisignature and the use of bitcoin-style scripting with opcodes are only supported by transparent addresses. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 4224,
-          "end_char_index": 4585
+          "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. This allows compliance with payment for auditing, tax regulations, or anti-money laundering rules.\n\n",
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
+          "start_char_index": 2336,
+          "end_char_index": 2748
         }
       ]
     },
