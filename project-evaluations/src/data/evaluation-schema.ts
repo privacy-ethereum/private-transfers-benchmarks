@@ -5,11 +5,22 @@ const propertyNames = PROPERTY_DEFINITIONS.map((d) => d.name) as [string, ...str
 const propertyNameEnum = z.enum(propertyNames);
 const categoryEnum = z.enum(CATEGORIES);
 
-const propertySchema = z.object({
+export const propertySchema = z.object({
   name: propertyNameEnum,
   value: z.string(),
   notes: z.string().optional(),
   url: z.string().optional(),
+  citations: z
+    .array(
+      z.object({
+        cited_text: z.string(),
+        source: z.string(),
+        start_char_index: z.number(),
+        end_char_index: z.number(),
+      }),
+    )
+    .optional(),
+  needsResearchReview: z.boolean().optional(),
 });
 
 export const evaluationSchema = z.object({
@@ -19,6 +30,5 @@ export const evaluationSchema = z.object({
   documentation: z.string(),
   categories: z.array(categoryEnum).min(1),
   properties: z.array(propertySchema),
+  sourceUrls: z.array(z.string()).optional(),
 });
-
-export type EvaluationInput = z.infer<typeof evaluationSchema>;

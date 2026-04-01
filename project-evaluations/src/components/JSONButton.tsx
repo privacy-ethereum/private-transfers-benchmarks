@@ -24,7 +24,7 @@ export default function JSONButton({ evaluations, setEvaluations, setSelectedId 
           alert("Invalid evaluation JSON:\n" + result.error.issues.map((i) => i.message).join("\n"));
           return;
         }
-        const imported = result.data as Evaluation;
+        const imported = result.data;
 
         setEvaluations((prev) => {
           const existing = prev.find((ev) => ev.id === imported.id);
