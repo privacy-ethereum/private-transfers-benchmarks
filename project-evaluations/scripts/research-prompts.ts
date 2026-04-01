@@ -46,7 +46,7 @@ const BASE_RULES = `
   SOURCE SELECTION RULES:
   21. The page must contain specific technical content about this property — not just a table of contents, navigation page, or landing page.
   22. Do NOT return PDF URLs — they cannot be processed. Find an HTML alternative.
-  23. Avoid blog posts as primary sources — they may be outdated. Prefer official docs, specs, or project websites.
+  23. Never use blog posts from exchanges, trading platforms, or non-official sources. Only use blog posts from the protocol's own team or foundation (e.g. electriccoin.co/blog for Zcash, blog.ethereum.org for Ethereum). Prefer official docs, specs, or project websites over any blog.
   24. If the best source is a PDF, search for an HTML version of the same content.`;
 
 // prettier-ignore
