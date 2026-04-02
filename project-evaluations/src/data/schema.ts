@@ -102,9 +102,9 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Time-to-finality",
     group: "Cost and Performance",
     description:
-      "The time it takes for a transaction is considered irreversible and permanently part of the blockchain (in seconds)",
-    metric: "Seconds",
-    inputType: "number",
+      "The time it takes for a transaction to be considered irreversible (in seconds). For protocols deployed on other blockchains (e.g. Ethereum L1 apps, L2s), this is N/A — list the deployed networks and note that finality is inherited from the underlying chain.",
+    metric: "Seconds or N/A",
+    inputType: "text",
   },
 
   // ── UX ───────────────────────────────────────────────────────────────────
@@ -112,7 +112,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Number of secrets",
     group: "UX",
     description:
-      "How many secrets does the app or protocol require a user to store? For example some protocols (e.g. Tornado Cash) might require a Ethereum wallet (secret #1) and a seed phrase (secret number #2). If there is more than one way to use the protocol (wallets, web apps, etc.), add an explanation to the description",
+      "How many new secrets must the user store to use the protocol. Only count secrets the user must independently back up — deterministically derived keys (e.g. a viewing key derived from a signed message) do not count as new secrets. The description should list all keys involved (spending key, viewing key, encryption key, etc.), how they are derived, and what cryptographic primitives are used (e.g. ECDH, BIP-32, EdDSA on Baby Jubjub). If everything derives from one wallet signature, the answer is 1.",
     metric: "Number of secrets",
     inputType: "number",
   },
@@ -138,7 +138,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Censorship resistance",
     group: "Decentralization & Security",
     description:
-      "Whether any entity can prevent valid transactions from being included in the chain. Considers mining/validator censorship, protocol-level restrictions, and network-level blocking.",
+      "Whether any entity can prevent valid transactions from being included in the chain. Considers mining/validator censorship, protocol-level restrictions, and network-level blocking. If the protocol uses relayers or broadcasters, note this in the description — but relayer dependence alone does not make the protocol censorship-susceptible if users can bypass relayers and interact with the underlying contracts directly.",
     metric: "Yes / No",
     inputType: "select",
     options: ["Yes", "No"],
@@ -224,7 +224,8 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Enforcement entities",
     group: "Compliance",
-    description: "Which entity or entities enforce compliance restrictions",
+    description:
+      "Which entities enforce compliance restrictions. DAO/Governance: the protocol's governance mechanism (token-based or otherwise) makes decisions on blocklists, policy changes, and responses to security breaches. Third party: specialized service providers or organizations handle compliance operations on behalf of the protocol (e.g. providing regulatory recommendations, legal and business guidance). Admin: designated administrators or core team members maintain operational control over compliance parameters and enforcement mechanisms. Asset issuer: the entity that issued the asset maintains a blocklist or controls transfers.",
     metric: "DAO/Governance / Third party / Admin / Asset issuer / None",
     inputType: "select",
     options: ["DAO/Governance", "Third party", "Admin", "Asset issuer", "None"],
@@ -232,7 +233,8 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Type of compliance",
     group: "Compliance",
-    description: "What type of compliance is being enforced",
+    description:
+      "What compliance mechanisms are available or enforced. POI/ASP: on-chain proof that funds are not associated with flagged addresses, using blocklists maintained with varying degrees of centralization. Selective disclosure: users can voluntarily reveal transaction details via viewing keys. KYC/KYB: identity verification required to participate. KYT: real-time transaction screening against risk databases. Programmatic policies: configurable rule-based restrictions (e.g. sanctions lists, allow/block lists). Other: compliance mechanism not covered above.",
     metric: "POI/ASP / Selective disclosure / KYC/KYB / KYT / Programmatic policies / Other / None",
     inputType: "multi-select",
     options: [
@@ -258,7 +260,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Selective disclosure: viewing entity",
     group: "Compliance",
     description:
-      "The ability to share only what's needed (e.g. proving you own an NFT without revealing your entire wallet history)",
+      "Who can access private transaction data and under what conditions. User (Self-View): users can query their own balance and transaction history. Voluntary third-party: users can delegate viewing rights to a trusted party (e.g. auditor, accountant) via a viewing key. Involuntary third-party: a designated party (e.g. admin, regulator, security council) can access a user's balance and transaction history without consent. Protocol-level: disclosure rules can be modified at the protocol level, for example through governance or security council decisions.",
     metric: "User / Voluntary third-party / Involuntary third-party / Protocol / None",
     inputType: "multi-select",
     options: ["User", "Voluntary third-party disclosure", "Involuntary third-party disclosure", "Protocol", "None"],
@@ -266,7 +268,8 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Selective disclosure: viewing control",
     group: "Compliance",
-    description: "How selective disclosure viewing control is managed",
+    description:
+      "Whether viewing permissions are fixed or can be updated. Pre-defined: permissions are set in advance and cannot be altered later (e.g. in ZK commitment-based systems, a recipient's viewing key is embedded in the proof at transfer time). Programmable: users or network participants can grant, revoke, or update viewing permissions at any time with full backward compatibility (e.g. retroactively granting an auditor access to past transactions, or a security council initiating an investigation).",
     metric: "Pre-defined / Programmable / None",
     inputType: "select",
     options: ["Pre-defined", "Programmable", "None"],
@@ -321,9 +324,9 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Private Data Storage",
     group: "State",
     description: "Where private transaction data is stored",
-    metric: "Protocol state / Off-chain with on-chain commitment / Events / Smart contracts",
+    metric: "Protocol state / Off-chain with on-chain commitment / Smart contracts",
     inputType: "select",
-    options: ["Protocol state", "Off-chain storage with on-chain commitment", "Events", "Smart contracts"],
+    options: ["Protocol state", "Off-chain storage with on-chain commitment", "Smart contracts"],
   },
 
   // ── Composability ────────────────────────────────────────────────────────
