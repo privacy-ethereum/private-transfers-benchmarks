@@ -12,37 +12,37 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "RAILGUN private (shielded) balances are built through a registry of UTXOs (unspent transaction outputs), similar to Bitcoin. The primary difference is that the RAILGUN UTXO list is encrypted with the sender and receiver’s keys, meaning that no outsider can view the contents of the UTXO unless it is the recipient of that transaction. In order to send a transaction, the user consumes its available UTXO notes and creates new encrypted notes that are send on-chain in order for the receiver wallet to find them and add them to the aggregated user's balance.",
+      "notes": "RAILGUN private (shielded) balances are built through a registry of UTXOs (unspent transaction outputs), similar to Bitcoin. The primary difference is that the RAILGUN UTXO list is encrypted with the sender and receiver's keys, meaning that no outsider can view the contents of the UTXO unless it is the recipient of that transaction. In order to send a transaction, the user consumes their available UTXO notes and creates new encrypted notes that are sent on-chain in order for the receiver wallet to find them and add them to the aggregated user's balance. These UTXOs form a Merkle tree — a structured hash list used to validate the balance state during transactions. To reconstruct a wallet's private balance, each commitment leaf in the tree must be synced and decrypted, a process that takes a few minutes before UTXO token balances are aggregated.",
       "url": "https://docs.railgun.org/developer-guide/wallet/private-balances"
     },
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
-      "notes": "The RAILGUN system contains an efficient internal implementation of a batch-incremental Merkle Tree. Each shield interaction generates a new note which takes the form of a new Root/Leaf on the Merkle Tree. All tokens within the RAILGUN system share the same Merkle Tree. Every interaction that updates the state of the Merkle Tree will generate a new Merkle Root/Leaf that is hashed and secured by the zk-SNARK circuits.",
+      "notes": "The RAILGUN system contains an efficient internal implementation of a batch-incremental Merkle tree. Each shielded interaction generates a new note which takes the form of a new root or leaf on the Merkle tree. All tokens within the RAILGUN system share the same Merkle tree. Every interaction that updates the state of the Merkle tree will generate a new Merkle root or leaf that is hashed and secured by the zk-SNARK circuits.",
       "url": "https://docs.railgun.org/wiki/learn/shielding-tokens#private-pools-and-merkle-trees"
     },
     {
       "name": "Client-side indexing",
       "value": "Partial scanning",
-      "notes": "While generating the most up-to-date merkle tree, each commitment leaf (which represent a transaction) must be synced and decrypted in order to build a RAILGUN wallet’s private balance. This syncing process can take a few minutes. Once the sync is complete, UTXO token balances are aggregated into a user’s balance.",
+      "notes": "While generating the most up-to-date merkle tree, each commitment leaf (which represents a transaction) must be synced and decrypted in order to build a RAILGUN wallet’s private balance. This syncing process can take a few minutes. Once the sync is complete, UTXO token balances are aggregated into a user’s balance.",
       "url": "https://docs.railgun.org/developer-guide/wallet/private-balances"
     },
     {
       "name": "Private state model",
       "value": "UTXO-based state model",
-      "notes": "RAILGUN operates on a (U)TXO (unspent transaction output) model, (U) is in brackets as transaction outputs are completely secure from outside observers. Each UTXO is an encrypted note of a public key that establishes who can spend the underlying asset, amount, token ID, and a randomness field to maintain encryption.",
+      "notes": "RAILGUN operates on an encrypted UTXO model. Transaction outputs are completely secure from outside observers. Each UTXO is an encrypted note of a public key that establishes who can spend the underlying asset, amount, token ID, and a randomness field.",
       "url": "https://docs.railgun.org/wiki/learn/using-private-tokens"
     },
     {
       "name": "Private Data Storage",
       "value": "Smart contracts",
-      "notes": "RAILGUN protects this information by utilizing Private Balances, a confidential set of tokens and users where interactions appear to originate from. These Private Balances are known as an privacy set as, to an outside observer; transactions can be sent by anyone who has previously made a transaction.",
-      "url": "https://docs.railgun.org/wiki/learn/privacy-system"
+      "notes": "All UTXO commitments, nullifiers, and Merkle tree roots are stored in Railgun's on-chain smart contracts on Ethereum and supported chains. Encrypted note data is emitted as events and persisted on-chain, allowing wallets to reconstruct private balances by scanning and decrypting commitment leaves.",
+      "url": "https://docs.railgun.org/wiki/learn/shielding-tokens#private-pools-and-merkle-trees"
     },
     {
       "name": "Access to DeFi",
-      "value": "Access to external, but limited choice of DeFi protocols",
-      "notes": "First, (1) an unshield is executed against the private balance, moving tokens temporarily into the Relay Adapt contract. Then, (2) a multi-call processes any number of contract calls against the balance. Finally, (3) the result is shielded back into the user’s private balance. This all occurs in a single block and one transaction.",
+      "value": "Unlimited access to DeFi applications",
+      "notes": "Railgun provides unlimited DeFi access through its relay adapt contract, which can execute arbitrary external contract calls against shielded balances. An unshield moves tokens temporarily into the relay adapt contract, a multi-call executes any number of contract interactions, and the result is shielded back into the user's private balance — all in a single atomic transaction.",
       "url": "https://docs.railgun.org/developer-guide/wallet/transactions/cross-contract-calls#how-it-works"
     },
     {
@@ -53,15 +53,15 @@
     },
     {
       "name": "Open source",
-      "value": "Yes",
-      "notes": "The Railgun smart contracts are open source in Github and verified in Etherscan. There are multiple community-maintained wallets. You can find more information about the wallets in: https://railgun.org/wallets",
+      "value": "No",
+      "notes": "Railgun's smart contracts are open source under the Unlicense (public domain) and the wallet SDK and engine use the MIT license. However, the core ZK circuits (circuits-v2 and circuits-ppoi) are source-available but not open source — circuits-v2 explicitly states 'No License is provided' and circuits-ppoi lists 'NONE'. The circuits can be inspected on GitHub but cannot be legally copied, modified, or redistributed.",
       "url": "https://github.com/Railgun-Privacy/"
     },
     {
       "name": "Cryptographic verifiability",
       "value": "Yes",
-      "notes": "Zero-Knowledge proofs are methods for one party, the prover, to mathematically satisfy another party, the verifier, the truth of information without revealing the originating details of the information.",
-      "url": "https://docs.railgun.org/wiki/learn/privacy-system/zero-knowledge-cryptography"
+      "notes": "Railgun uses the Groth16 proof system on the BN254 curve to verify shielded transactions on-chain. Spending keys use the Baby Jubjub elliptic curve with BIP-32 derivation, viewing keys use Ed25519 (EdDSA), and note commitments use Poseidon hashing. All state transitions are cryptographically verified by the smart contracts without revealing transaction details.",
+      "url": "https://docs.railgun.org/wiki/learn/wallets-and-keys"
     },
     {
       "name": "Point of enforcement",
@@ -84,7 +84,7 @@
     {
       "name": "Implementation maturity",
       "value": "5 : Mainnet for more than 2 years",
-      "notes": "Railgun is one of the early private transfers protocols in Ethereum. You can check the deployment date of the Railgun Relay in the documentation link.",
+      "notes": "Railgun deployed on Ethereum mainnet in July 2021, making it operational for over 4 years. It has since expanded to BSC, Polygon, and Arbitrum.",
       "url": "https://etherscan.io/tx/0x13954e0d1af4c619efbd502299e78e116d1309b2b85c15ac6fe09838bb8622aa"
     },
     {
@@ -96,25 +96,25 @@
     {
       "name": "Selective disclosure: viewing entity",
       "value": "[\"User\",\"Voluntary third-party disclosure\"]",
-      "notes": ". Viewing Keys enable the holder to decrypt the encoded interaction information but not send interactions. They merely scan the RAILGUN smart contract events to reveal what has been sent to users and what interactions users have sent.",
+      "notes": "Viewing Keys enable the holder to decrypt encoded interaction information but not send interactions. They scan the RAILGUN smart contract events to reveal what has been sent to users and what interactions users have sent. Users can share viewing keys with third parties for auditability.",
       "url": "https://docs.railgun.org/wiki/learn/wallets-and-keys#viewing-keys"
     },
     {
       "name": "Selective disclosure: viewing control",
-      "value": "Programmable",
-      "notes": "Users can define the beginning and ending block for which the Viewing Key can observe in a scoped way. This is useful for auditability purposes, for example, a user can define the beginning and end of a tax year for their Viewing Key by block number.",
+      "value": "Pre-defined",
+      "notes": "Viewing keys currently grant full read access to all transactions for a given address — they cannot be scoped or restricted. An upcoming update will allow viewing keys to be scoped by block number (e.g. only showing transactions from block X to block Y), which would make this programmable. Until that update ships, viewing control is pre-defined.",
       "url": "https://docs.railgun.org/wiki/learn/wallets-and-keys#viewing-keys"
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Proof of innocence (POI) / ASP\",\"KYT\"]",
-      "notes": "Private Proofs of Innocence works at the balance and transaction level. Meaning, Private Proofs of Innocence proofs are generated after the initial shield transaction and apply to the tokens that are a part of that interaction. They are then carried forward for every following transaction within RAILGUN involving those tokens.",
+      "value": "[\"Proof of innocence (POI) / ASP\"]",
+      "notes": "Railgun implements Private Proofs of Innocence (POI), where users generate a recursive zk-SNARK proving their shielded tokens are not associated with addresses on blocklists maintained by list providers. Proofs are generated locally by the user after the initial shield and carried forward for every subsequent transaction.",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#transaction-level-checks"
     },
     {
       "name": "Layer of enforcement",
-      "value": "Protocol/chain",
-      "notes": "Private Proofs of Innocence is a tool that monitors tokens entering the RAILGUN smart contract to verify that they are not from a known list of transactions or actors deemed to be illegitimate. Upon a shield, a ZK proof is automatically created that proves that the tokens are not a part of a pre-set list of interactions and wallets",
+      "value": "App",
+      "notes": "Private Proofs of Innocence (POI) is enforced at the wallet and broadcaster layer, not at the smart contract level. The RAILGUN smart contracts themselves do not reject transactions based on POI status. Instead, wallet providers require valid POI proofs before constructing transactions, and community broadcasters will not relay transactions without valid proofs. Users retain the ability to interact with the contracts directly, bypassing POI enforcement.",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#overview"
     },
     {
@@ -132,7 +132,7 @@
     {
       "name": "Third-party inspectability",
       "value": "No",
-      "notes": "With this knowledge of ZK proofs and zk-SNARKs, we can see how RAILGUN maintains privacy. Users can prove they can spend tokens without needing to share what those tokens are and how much they have of it. Broadcasters and the privacy set then enhance the data confidentiality for senders and recipients of interactions such that no identifiable information is compromised at any stage in the process.\n\nBroadcasters are also unable to decrypt details about the interactions, nor can they change the details of an interaction as changing any information would lead to an invalid hash and be rejected by the system as an incorrect cryptographic proof.",
+      "notes": "No third party can inspect private transaction data within Railgun. Shielded transactions are encrypted such that only the sender and recipient can decrypt the contents. Broadcasters relay encrypted transaction data on-chain but cannot decrypt or modify it — any alteration would invalidate the cryptographic proof and be rejected by the smart contracts.",
       "url": "https://docs.railgun.org/wiki/learn/privacy-system/privacy-overview"
     },
     {
@@ -144,49 +144,49 @@
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "notes": "Users and wallets are free to use whatever combination of List Providers they please, although some wallet providers will require a default List Provider. This means that Railgun is censorship resistant at the protocol/smart contract level but compliance is enforced in external components like wallets. Similarly, community broadcasters will not accept any transaction that does not contain a valid Private Proof of Innocence (PPOI) proof. These proofs can be independently generated using different list providers. Overall, all these constraints leave users fewer options to use the Railgun protocol in a total private way even though the underlying protocol is theoretically censorship resistant.",
+      "notes": "Railgun is censorship resistant at the smart contract level — any user can interact with the contracts directly without restriction. However, the practical user experience is constrained by wallet providers and community broadcasters that require valid Private Proofs of Innocence (POI) proofs. Users who are flagged by list providers may have fewer options for submitting transactions through standard wallets, though direct contract interaction remains available.",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#list-providers"
     },
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Unshielding (withdrawing) is available as soon as the user constructs the required ZK proof to withdraw. There is no standby wait period because the withdraw transaction only checks that the Private Proof of Innocence (PPOI) proofs of that transaction are valid.",
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Unshielding (withdrawing) is available as soon as the user constructs the required ZK proof to withdraw. There is no standby wait period because the withdraw transaction only checks that the Private Proof of Innocence (PPOI) proofs of that transaction are valid. TODO: needs more info and research",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#transaction-level-checks"
     },
     {
       "name": "Deposit time",
       "value": "3600",
-      "notes": "Users depositing funds (shielding funds) into the Railgun smart contracts have to wait a time period for List Providers to check that the transaction origin is clean. According to the Railgun documentation, the time period could take around an hour for most users. In this standby period the user could withdraw his funds to the depositing address at any time.",
+      "notes": "Users depositing funds (shielding funds) into the Railgun smart contracts have to wait a time period for List Providers to check that the transaction origin is clean. According to the Railgun documentation, the time period could take around an hour for most users. In this standby period the user could withdraw their funds to the depositing address at any time. TODO: needs more info and research",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#unshield-only-standby-period"
     },
     {
       "name": "Time-to-finality",
-      "value": "720",
-      "notes": "RAILGUN is deployed on Ethereum mainnet (as well as BSC, Polygon, and Arbitrum). Time to finality for the primary Ethereum deployment defaults to the mainnet economic finality of 12 minutes (already covered on the deposit time window). Mainnet single-slot finality of 12 seconds has a probabilistic guarantee that there would not be any block reorganization. It is used by wallets and apps to indicate a successful transaction even though in theory the containing block could be reverted. Mainnet economic finality of 12 minutes (2 epochs) is guaranteed by the block checkpointed by Casper the Friendly Finality Gadget (Casper-FFG). At that point reverting the block (and the transaction) would require more than one third of staked ETH to get slashed.",
+      "value": "N/A",
+      "notes": "RAILGUN is deployed on Ethereum mainnet (as well as BSC, Polygon, and Arbitrum). Time to finality is based on the underlying blockchain finality.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },
     {
       "name": "Number of secrets",
-      "value": "2",
-      "notes": "It requires an Ethereum wallet for public interactions and a private encryption key for Railgun interactions.",
-      "url": "https://docs.railgun.org/developer-guide/wallet/private-wallets/encryption-keys-new"
+      "value": "1",
+      "notes": "Users store one mnemonic seed phrase. The spending key (Baby Jubjub curve, BIP-32 derivation) and viewing key (Ed25519/EdDSA) are both deterministically derived from this seed. A database encryption key protects the stored mnemonic but is derived from a user-provided password, not an independent secret.",
+      "url": "https://docs.railgun.org/wiki/learn/wallets-and-keys"
     },
     {
       "name": "Plausible deniability",
       "value": "No",
-      "notes": "All the 3 steps (shield, transfer or unshield) require an interaction with the Railgun smart contracts. This action publicly show that an address is interacting with the Railgun protocol therefore plausible deniability of using the protocol is not possible. A user can use a community broadcaster to submit encrypted transaction information on-chain when sending private transfers. This method could potentially allow the user to plausible deny sending a specific transaction inside the Railgun protocol.",
+      "notes": "All the 3 steps (shield, transfer or unshield) require an interaction with the Railgun smart contracts. These actions publicly show that an address is interacting with the Railgun protocol. A user can use a community broadcaster to submit encrypted transaction information on-chain when sending private transfers. This method could potentially allow the user to plausible deny sending a specific transaction inside the Railgun protocol.",
       "url": "https://docs.railgun.org/developer-guide/wallet/transactions/shielding"
     },
     {
       "name": "Asset privacy",
       "value": "Yes",
-      "notes": "Everybody can see that ERC-20 tokens interactions with the Railgun contract in the deposit and withdrawal steps. Therefore there is no asset privacy when users are entering or leaving the Railgun protocol. But iniside a private transfer, it is not possible to identify which asset is being transferred because the on-chain actions are only notes creation (commitments added) and notes consumption (nullifiers added).",
+      "notes": "Everybody can see ERC-20 tokens interact with the Railgun contract in the deposit and withdrawal steps. Therefore there is no asset privacy when users are entering or leaving the Railgun protocol. But once inside the pool, it is not possible to identify which asset is being transferred because the on-chain actions are only notes creation (commitments added) and notes consumption (nullifiers added).",
       "url": "https://docs.railgun.org/developer-guide/wallet/transactions/private-transfers"
     },
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "When a user sends a transaction using Railgun, he consumes his available UTXOs (notes) by adding a nullifier to the on-chain state. In the same step new UTXOs belonging to the recipient are generated and added to the commitments merkle tree. These new UTXOs are encrypted and only the recipient has the ability to check their values and aggregate his total balance. An outside on-chain observer can see commitments added (notes generated) and nullifiers (notes consumed) but cannot link the sender or recipient with a specific transaction.",
+      "notes": "When a user sends a transaction using Railgun, they consume their available UTXOs (notes) by adding a nullifier to the on-chain state. In the same step new UTXOs belonging to the recipient are generated and added to the commitments merkle tree. These new UTXOs are encrypted and only the recipient has the ability to check their values and aggregate their total balance. An outside on-chain observer can see commitments added (notes generated) and nullifiers (notes consumed) but cannot link the sender or recipient with a specific transaction.",
       "url": "https://docs.railgun.org/wiki/learn/using-private-tokens"
     }
   ]
