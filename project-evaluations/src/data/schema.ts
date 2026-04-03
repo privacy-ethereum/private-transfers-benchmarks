@@ -102,7 +102,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Time-to-finality",
     group: "Cost and Performance",
     description:
-      "The time it takes for a transaction to be considered irreversible (in seconds). For protocols deployed on other blockchains (e.g. Ethereum L1 apps, L2s), this is N/A — list the deployed networks and note that finality is inherited from the underlying chain.",
+      "The time it takes for a transaction to be considered irreversible (in seconds). For protocols deployed on other blockchains (e.g. Ethereum L1 apps, L2s), this is N/A — list the deployed networks and note that finality is inherited from the underlying chain. Exception: L3s may have their own finality time if their settlement adds delay beyond the underlying L2.",
     metric: "Seconds or N/A",
     inputType: "text",
   },
@@ -279,16 +279,17 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Cryptographic verifiability",
     group: "Verifiable",
-    description: "Whether correctness is guaranteed by cryptography rather than social or majority-based mechanisms",
-    metric: "Yes / No",
+    description:
+      "Whether transaction correctness is guaranteed by cryptographic proofs rather than social or majority-based mechanisms. For L1 blockchains, note that consensus (PoW/PoS) provides block ordering while cryptography verifies transaction validity — use 'Yes, with L1 consensus' to distinguish this mixed model. For protocols with upgradable contracts or permissioned components, note these additional trust assumptions.",
+    metric: "Yes / Yes, with L1 consensus / No",
     inputType: "select",
-    options: ["Yes", "No"],
+    options: ["Yes", "Yes, with L1 consensus", "No"],
   },
   {
     name: "Open source",
     group: "Verifiable",
     description:
-      "The source code for the underlying protocol, any backend infrastructure, and any frontend applications is publicly available to inspect and has an open source software license.",
+      "The source code for the underlying protocol, any backend infrastructure, and any frontend applications is publicly available to inspect and has an open source software license. Check all critical repositories (contracts, circuits, SDKs) — different components may have different licenses. Source-available without a license is not open source.",
     metric: "Yes / No",
     inputType: "select",
     options: ["Yes", "No"],
@@ -300,9 +301,16 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     group: "State",
     description: "How protocol-specific private data is stored over time",
     metric:
-      "Infinity grow (nullifier/note trees grow forever) / Temporal grow (state pruned at epochs, stored offchain) / Stateless (state updated but does not grow) / L2 / Within contract",
+      "Infinity grow (nullifier/note trees grow forever) / Temporal grow (state pruned at epochs, stored offchain) / Stateless (state updated but does not grow) / L2 / Within contract / Off-chain DA with on-chain handles",
     inputType: "select",
-    options: ["Infinity grow", "L2", "Temporal grow", "Stateless", "Within contract"],
+    options: [
+      "Infinity grow",
+      "L2",
+      "Temporal grow",
+      "Stateless",
+      "Within contract",
+      "Off-chain DA with on-chain handles",
+    ],
   },
   {
     name: "Client-side indexing",
@@ -339,6 +347,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     inputType: "select",
     options: [
       "No access to DeFi",
+      "Composable interface, but requires DeFi protocol changes",
       "Access to internal DeFi ecosystem",
       "Access to external, but limited choice of DeFi protocols",
       "Unlimited access to DeFi applications",
@@ -353,6 +362,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     inputType: "select",
     options: [
       "Only payments",
+      "Transfers and DeFi operations",
       "Partial programmability",
       "Full programmability with public and private state",
       "TBD: to be delivered",
