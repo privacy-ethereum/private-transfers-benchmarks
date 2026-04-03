@@ -1,3 +1,4 @@
+import { Hinkal } from "./hinkal/index.js";
 import { Intmax } from "./intmax/index.js";
 import { Monero } from "./monero/index.js";
 import { PrivacyPools } from "./privacy-pools/index.js";
@@ -10,18 +11,21 @@ const tornadoCash = new TornadoCash();
 const privacyPools = new PrivacyPools();
 const intmax = new Intmax();
 const monero = new Monero();
+const hinkal = new Hinkal();
 
 await db.read();
 
 const start = Date.now();
 
-const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, moneroMetrics] = await Promise.all([
-  railgun.benchmark(),
-  tornadoCash.benchmark(),
-  privacyPools.benchmark(),
-  intmax.benchmark(),
-  monero.benchmark(),
-]);
+const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, moneroMetrics, hinkalMetrics] =
+  await Promise.all([
+    railgun.benchmark(),
+    tornadoCash.benchmark(),
+    privacyPools.benchmark(),
+    intmax.benchmark(),
+    monero.benchmark(),
+    hinkal.benchmark(),
+  ]);
 
 await db.update((data) => {
   // eslint-disable-next-line no-param-reassign
@@ -52,6 +56,16 @@ await db.update((data) => {
   // eslint-disable-next-line no-param-reassign
   data[`${monero.name}_${monero.version}`] = {
     transfer: moneroMetrics.transfer,
+  };
+
+  // eslint-disable-next-line no-param-reassign
+  data[`${hinkal.name}_${hinkal.version}`] = {
+    shield_eth: hinkalMetrics.shieldEth,
+    unshield_eth: hinkalMetrics.unshieldEth,
+    internal_transfer: hinkalMetrics.internalTransfer,
+    shield_erc20: hinkalMetrics.shieldErc20,
+    unshield_erc20: hinkalMetrics.unshieldErc20,
+    transfer_erc20: hinkalMetrics.internalTransfer,
   };
 });
 
