@@ -7,44 +7,44 @@
   "properties": [
     {
       "name": "Confidentiality",
-      "value": "Only balances",
-      "notes": "When a user transfers assets into a pool (deposit), a private note is generated. This private note works as a private key or secret to access the assets. A user can have multiple private notes that are not related between each other therefore achieving balance confidentiality. The transfer amounts are visible because anyone can check on-chain transactions and see that a deposit transaction send a specific amount of tokens from a specific address into a Tornado Cash pool.",
+      "value": "No",
+      "notes": "Tornado Cash uses fixed-denomination pools, so deposit and withdrawal amounts are publicly visible on-chain (e.g. 0.1, 1, 10, or 100 ETH). The protocol provides unlinkability between deposit and withdrawal addresses, not amount or balance confidentiality.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
       "name": "Anonymity",
       "value": "Unlinkability",
-      "notes": "Tornado Cash achieves anonymity by breaking the on-chain link between source and destination addresses through \"anonymity pools\". These pools are immutable smart contracts that accepts fixed denominations of a currency (e.g. 0.1 ETH, 1 ETH, 10 ETH, 100 ETH, etc.), acting as what is known as a mix network. A user would deposit a specific amount of ETH with one wallet and withdraw that same amount with another wallet totally disconnected with the former one.",
-      "url": "https://docs.tornadocash.eth.limo/"
+      "notes": "Tornado Cash achieves anonymity by breaking the on-chain link between source and destination addresses via mixing pools. These pools are immutable smart contracts that accept fixed denominations of a currency (e.g. 0.1 ETH, 1 ETH, 10 ETH, 100 ETH), acting as a mix network. A user deposits a specific amount of ETH with one wallet and withdraws that same amount with another wallet totally disconnected from the former one.",
+      "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
       "name": "Asset privacy",
       "value": "No",
-      "notes": "The user sends a deposit transaction that sends their public assets to the Tornado Cash contracts. Everybody can see the asset type of that specific transaction. When the user withdraws the funds with a different address, the public assets are sent to the receiver address. In this case everybody can also see the asset type of that specific transaction. Tornado Cash main goal is unlinkability, not asset privacy.",
+      "notes": "The user sends a deposit transaction that sends their public assets to the Tornado Cash contracts. Everybody can see the asset type of that specific transaction. When the user withdraws the funds with a different address, the public assets are sent to the receiver address and the asset type is again visible. Tornado Cash's main feature is unlinkability, not asset privacy.",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
     {
       "name": "Plausible deniability",
       "value": "No",
-      "notes": "Everyone with access to on-chain data can see which addresses have interacted with the Tornado Cash pools and smart contracts. Therefore anyone can identify depositor users and withdraw users. There is no way to deny that a specific address have used Tornado Cash to break unlinkability. This is why the US government was able to sanction all addresses interacting with Tornado Cash.",
+      "notes": "Everyone with access to on-chain data can see which addresses have interacted with the Tornado Cash pools and smart contracts. Depositors and withdrawers are identifiable by their interactions with the contract. There is no way to deny that a specific address has used Tornado Cash, as shielded transactions are distinguishable from regular transfers.",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
     {
       "name": "Time-to-finality",
-      "value": "720",
-      "notes": "Tornado Cash is deployed on Ethereum mainnet. Time to finality defaults to the mainnet economic finality of 12 minutes. Mainnet single-slot finality of 12 seconds has a probabilistic guarantee that there would not be any block reorganization. It is used by wallets and apps to indicate a successful transaction even though in theory the containing block could be reverted. Mainnet economic finality of 12 minutes (2 epochs) is guaranteed by the block checkpointed by Casper the Friendly Finality Gadget (Casper-FFG). At that point reverting the block (and the transaction) would require more than one third of staked ETH to get slashed.",
-      "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+      "value": "N/A",
+      "notes": "Tornado Cash is deployed on Ethereum, BNB Chain, Polygon, Arbitrum, Optimism, Avalanche, and Gnosis. Finality is inherited from each underlying chain.",
+      "url": "https://docs.tornadocash.eth.limo/general/deployments.html"
     },
     {
       "name": "On-chain gas cost: transfer",
       "value": "0",
-      "notes": "There are no internal transactions in classic Tornado Cash. A user could \"transfer\" his secret note to allow another user to withdraw his shielded tokens. This transfer would happen off-chain and cannot be considered a Tornado Cash private transfer because it is not described in the documentation and was not in the original design. The new version called Tornado Cash Nova allows shielded transfers similar to shielded pool protocols like Railgun or Hinkal.",
+      "notes": "There are no internal transactions in classic Tornado Cash. A user could \"transfer\" their secret note to allow another user to withdraw their shielded tokens. This transfer would happen off-chain and cannot be considered a Tornado Cash private transfer because it is not described in the documentation and was not in the original design. The new version called Tornado Cash Nova allows shielded transfers similar to shielded pool protocols",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-nova/shielded-transfers.html"
     },
     {
       "name": "Number of secrets",
       "value": "2",
-      "notes": "You need an Ethereum wallet (secret #1) to send deposit and withdraw transactions as any other on-chain transaction. In every deposit to Tornado Cash, a private note (secret #2) is generated and it would be used as a key to access (withdraw) funds at any time in the future. There is a Note Account feature inside Tornado Cash protocol to stored an encrypted backup of private notes on-chain that only the owner would be able to access using his private key. That being the case, we consider that any Tornado Cash user would need at least two secrets to use the protocol.",
+      "notes": "Each deposit generates a random 62-byte preimage (nullifier + secret), which is Pedersen-hashed on the Baby Jubjub curve to produce a commitment stored in a Merkle tree. The nullifier and secret are randomly generated in the user's browser, not derived from the wallet key. This deposit note is an independent secret that must be backed up separately. The wallet key is the first secret, and the deposit note is the second. The Note Account feature allows encrypted on-chain backup of notes using the wallet key, but the note itself is not derivable from the wallet.",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
     {
@@ -62,13 +62,13 @@
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "notes": "Tornado cash smart contracts are immutable and unstoppable. This was tested in August 2022 when the US government decided to sanction every address that have interacted with Tornado Cash and asked the developers to take down the protocol. Multiple frontend applications where taken down and transactions were censored at the block building level. But Tornado Cash smart contracts were still working and users were able to use them with different tools and approaches. Today if a web UI is taken down, users can build and setup their own in their local machine using their open-source code.",
+      "notes": "Tornado Cash smart contracts are immutable and permissionless. In August 2022, the US government sanctioned addresses that had interacted with Tornado Cash and multiple frontend applications were taken down. Transactions were censored at the block-building level by compliant MEV relays. Despite this, the smart contracts remained functional and users were able to interact with them directly or through alternative frontends. A relayer network exists for gas-free withdrawals but is optional — users can call the contracts directly.",
       "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/"
     },
     {
       "name": "External network dependence",
       "value": "No",
-      "notes": "There is a network of relayers which handle the withdrawal process to unshield funds safely without linking the receiver addresses with any other address than Tornado Cash. The process goes as follows: users send their signed transactions to the relayer, the relayer pays for transaction fees and sends an on-chain transaction to be executed. The user receives the withdrawal amount minus the relayer fee. The recipient address does not need to have gas funds in order to receive the transaction",
+      "notes": "A relayer network handles withdrawals so that the recipient address does not need gas funds — the relayer pays fees and deducts them from the withdrawn amount. However, relayers are optional: users can call the withdraw function on the smart contract directly if they are willing to fund gas from the recipient address. The protocol has no dependency on any external network with additional crypto-economic assumptions.",
       "url": "https://docs.tornadocash.eth.limo/general/guides/relayer.html"
     },
     {
@@ -86,43 +86,43 @@
     {
       "name": "Client-side proving",
       "value": "Yes",
-      "notes": "zkSNARKs proofs (using the Groth16 proving system) are generated on the clients' devices without the need of any external service. Under the hood the proofs are only a proof-of-inclusion in the merkle tree of a specific pool contract. These kinds of proofs are easily generated in any user devices (even mobiles).",
+      "notes": "Groth16 zk-SNARK proofs over the BN254 curve are generated on the user's device without any external service. The proofs demonstrate inclusion in the Merkle tree of a specific pool contract.",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/connect-wallet.html"
     },
     {
       "name": "Third-party inspectability",
       "value": "No",
-      "notes": "No third-party can link deposit to withdraws or obtain total user balances. In order to do so, third parties would require all secret values to generate the private notes of a specific user. If the Note Account feature is enabled, this data is encrypted using a user's key and submitted on-chain. The user balance or linkability will be totally safe unless the user decides to share his private key to a third party.",
+      "notes": "No third-party can link deposit to withdraws or obtain total user balances. In order to do so, third parties would require all secret values to generate the private notes of a specific user. If the Note Account feature is enabled, this data is encrypted using a user's key and submitted on-chain. The user balance or linkability will be totally safe unless the user decides to share their private key to a third party.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
       "name": "Implementation maturity",
       "value": "5 : Mainnet for more than 2 years",
-      "notes": "The Tornado Cash Router contract was deployed on Feb 9th 2022.",
+      "notes": "Tornado Cash Classic pool contracts have been live on Ethereum mainnet since December 2019. The Router contract was deployed in February 2022 as an additional entrypoint, but the core protocol has been operational for over five years.",
       "url": "https://etherscan.io/tx/0x51baa3dbb7e8756d52ba1b863f41e7af38373d0bb9943b9585d7f0db2d419e6e"
     },
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "It uses Pedersen hashing and Groth16 zk proofs which are based on elliptic curve cryptography. This type of cryptographic primitives have been proven vulnerable to Shor's algorithm and could be attacked with quantum computers on the future. The protocol would need to migrate to a different proving system (e.g. hash based zk proofs like STARKs) in order to be considered quantum ready.",
+      "notes": "Tornado Cash uses Pedersen hashing and Groth16 zk-SNARKs over the BN254 curve. These elliptic curve-based primitives are vulnerable to Shor's algorithm and could be attacked with quantum computers in the future.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
       "name": "Layer of enforcement",
       "value": "None",
-      "notes": "There is no layer of enforce for compliance. Anyone can setup their own UI and relayer in order to interact with the deployed smart contracts. This feature motivated the 2022 sanctions by the US government trying to prevent money laundering from illicit sources.",
+      "notes": "There is no compliance enforcement layer. Anyone can set up their own UI and relayer to interact with the deployed smart contracts. This lack of enforcement motivated the 2022 sanctions by the US government.",
       "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/"
     },
     {
       "name": "Enforcement entities",
       "value": "None",
-      "notes": "External entities such as exchanges or dApps could potentially block access to addresses that have interacted with Tornado Cash. In practice this happens with centralized exchanges and AML-compliant dApps that uses external enforcement strategies provided by external third parties.",
-      "url": "https://www.chainalysis.com/blog/tornado-cash-sanctions-challenges/"
+      "notes": "External entities such as exchanges or dApps could potentially block access to addresses that have interacted with Tornado Cash. In practice this happens with centralized exchanges and AML-compliant dApps that use external enforcement strategies provided by third parties.",
+      "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/"
     },
     {
       "name": "Type of compliance",
-      "value": "[\"None\",\"Selective disclosure\"]",
-      "notes": "There is no compliance by default but users can generate selective disclosure reports linking deposit and withdraw in order to show it to the enforcement entity or regulator. This type of compliance give more freedom and responsibility to each user, in contrast to stricter methods such as blocking transactions or freezing funds.",
+      "value": "[\"Selective disclosure\"]",
+      "notes": "There is no enforced compliance, but users can generate selective disclosure reports linking deposit and withdrawal to show to a regulator.",
       "url": "https://docs.tornadocash.eth.limo/general/resources/compliance-tool.html"
     },
     {
@@ -139,26 +139,26 @@
     },
     {
       "name": "Selective disclosure: viewing control",
-      "value": "None",
-      "notes": "There is no view control, the compliance tool links the private note generated by the deposit action to the withdrawal transaction. The user decides to whom share the report with. There is no way to remove the viewing access after sharing the report.",
+      "value": "Pre-defined",
+      "notes": "The compliance tool generates a static report linking a deposit to its withdrawal using the private note. Once shared, the report cannot be revoked or scoped. The user decides who to share it with, but the disclosure structure is fixed by the protocol.",
       "url": "https://docs.tornadocash.eth.limo/general/resources/compliance-tool.html"
     },
     {
       "name": "Cryptographic verifiability",
       "value": "Yes",
-      "notes": "It uses zkSNARKs (using Groth16 proving system), Merkle trees and Pedersen hashes as encryption functions. All these methods are cryptographically verifiable.",
+      "notes": "Tornado Cash uses Groth16 zk-SNARKs over the BN254 curve with Pedersen hash commitments stored in Merkle trees. The deposit commitment and withdrawal proof are verified on-chain by the smart contract's verifier, ensuring correctness without revealing the link between depositor and withdrawer.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
       "name": "Open source",
       "value": "Yes",
-      "notes": "All code (smart contracts, UI interfaces, relayers code) is public and open-source in their Github organization. It is worth pointing out that in some point in the past these repositories were removed / hidden by Github.",
+      "notes": "The core smart contracts (tornado-core) are licensed under GPL-3.0. The UI and relayer are MIT licensed. The CLI is ISC licensed. All 47 repositories in the GitHub organization are archived following the 2022 OFAC sanctions but remain publicly accessible. The community maintains mirrors on independent git instances.",
       "url": "https://github.com/tornadocash/"
     },
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
-      "notes": "Each deposit generates encrypted data that is stored on a Merkle tree. As more transactions happens, more encrypted data will be stored in the Merkle tree as leaves. In addition to that, every withdrawal transaction stores a nullifier on-chain to signal that a specific note has been used. The nullifier data structure also grows with the number of transactions.",
+      "notes": "Each deposit generates a commitment that is stored in a Merkle tree. As more transactions happen, more commitments are added as leaves. Every withdrawal transaction stores a nullifier hash on-chain to signal that a specific note has been spent. Both data structures grow with the number of transactions.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
@@ -170,26 +170,26 @@
     {
       "name": "Private state model",
       "value": "UTXO-based state model",
-      "notes": "Each deposit acts as a private note. Each private note gives access to the specific amount of funds related to the deposit transaction. In order to find the total balance, the user needs to sums up all its private notes. Therefore the Tornado Cash protocol is considered an Unspent Transaction Output (UTXO) model.",
+      "notes": "Each deposit acts as a private note that gives access to the specific amount of funds related to that deposit transaction. To find their total balance, a user sums all their unspent private notes.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
       "name": "Private Data Storage",
       "value": "Smart contracts",
-      "notes": "The Tornado cash smart contracts stored all the required data for the protocol to work. Every note is saved in a merkle tree of a specific pool contract depending on the denomination sent. Additionally, encrypted deposit data is stored in the smart contracts when using the Note Account feature.",
-      "url": "https://docs.tornadocash.eth.limo/general/"
+      "notes": "The Tornado Cash smart contracts store all required data for the protocol to work. Every commitment is saved in a Merkle tree within the specific pool contract for that denomination. Nullifier hashes are also stored on-chain to prevent double-spending. Encrypted deposit data is stored in the smart contracts when using the Note Account feature.",
+      "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
       "name": "Access to DeFi",
       "value": "No access to DeFi",
-      "notes": "In order to interact with any DeFi protocol, the user needs to withdraw the funds from the Tornado Cash contracts. A user could use Tornado Cash in a bigger workflow where he does not want his main address to be linked to a specific DeFi action that he will perform in the future.",
-      "url": "https://docs.tornadocash.eth.limo/"
+      "notes": "In order to interact with any DeFi protocol, the user needs to withdraw funds from the Tornado Cash contracts first. A user could use Tornado Cash in a larger workflow where they do not want their main address linked to a specific DeFi action they will perform later.",
+      "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
     {
       "name": "Programmability / Generality",
       "value": "Only payments",
-      "notes": "Tornado Cash Classic is a set of tools to break the link between deposit and withdraws. Tornado Cash Nova allows for shielded private transfers between 2 users that have an account inside the Tornado Cash ecosystem. There has been no news to develop more programmable functionalities",
-      "url": "https://docs.tornadocash.eth.limo/"
+      "notes": "Tornado Cash Classic is a set of tools to break the link between deposits and withdrawals. Tornado Cash Nova allows shielded transfers between two users that have an account inside the Tornado Cash ecosystem. There is no programmable logic beyond fixed-denomination deposits, withdrawals, and Nova shielded transfers.",
+      "url": "https://docs.tornadocash.eth.limo/tornado-cash-nova/shielded-transfers.html"
     }
   ]
 }
