@@ -32,7 +32,7 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "Users sign a single message with their Ethereum wallet, from which spending and viewing keys are derived using BIP-32 HD key derivation following the ERC-5564 standard. Therefore, 2 secrets which can be deterministically dervied are required to use the Fluidkey protocol.  The spending key controls fund transfers while the viewing key enables transaction scanning. No additional seed or mnemonic is needed beyond the Ethereum wallet.",
+      "notes": "Users sign a single message with their Ethereum wallet, from which spending and viewing keys are derived using BIP-32 HD key derivation following the ERC-5564 standard. Therefore, 2 secrets which can be deterministically derived are required to use the Fluidkey protocol.  The spending key controls fund transfers while the viewing key enables transaction scanning. No additional seed or mnemonic is needed beyond the Ethereum wallet.",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
     },
     {
@@ -68,7 +68,7 @@
     {
       "name": "Third-party inspectability",
       "value": "Yes",
-      "notes": "Fluidkey has read access to all incoming transactions and stealth account balances through the shared viewing key node. This access is required for Fluidkey to scan the blockchain and display the user's dashboard. Fluidkey cannot move funds (no spending key access), but can see all transaction history by default without explicit user consent per transaction.",
+      "notes": "Fluidkey has read access to all incoming transactions and stealth account balances through the shared viewing key node. This access is required for Fluidkey to scan the blockchain and display the user's dashboard. Fluidkey cannot move funds (no spending key access), but can see all transaction history by default without explicit user consent per transaction. It is theoretically possible for a user to run their own indexer to scan the blockchain and infer their balance.",
       "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#who-can-view-my-transactions"
     },
     {

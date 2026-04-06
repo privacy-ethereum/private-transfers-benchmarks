@@ -156,7 +156,7 @@
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
-      "notes": "Hinkal uses an append-only Merkle tree to store UTXO commitments and nullifiers. Every shielded operation adds new leaves, so state grows unboundedly over time. The documentation mentions a removal-supporting Merkle tree variant, but it is unclear whether this is used in production. TODO: verify if the removal-supporting Merkle tree is active in production contracts",
+      "notes": "Hinkal uses an append-only Merkle tree to store UTXO commitments and nullifiers. Every shielded operation adds new leaves, so state grows unboundedly over time. A removal-supporting Merkle tree variant is supported for certain interactions.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/merkle-trees#summary-of-trade-offs"
     },
     {

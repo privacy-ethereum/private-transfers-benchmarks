@@ -102,7 +102,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Time-to-finality",
     group: "Cost and Performance",
     description:
-      "The time it takes for a transaction to be considered irreversible (in seconds). For protocols deployed on other blockchains (e.g. Ethereum L1 apps, L2s), this is N/A — list the deployed networks and note that finality is inherited from the underlying chain. Exception: L3s may have their own finality time if their settlement adds delay beyond the underlying L2.",
+      "The time it takes for a transaction to be considered irreversible (in seconds). For protocols deployed on blockchains (e.g. Ethereum L1 apps, L2s), this is N/A — list the deployed networks and note that finality is inherited from the underlying chain. Exception: L2s and L3s have their own finality time if their settlement adds delay beyond the underlying chain.",
     metric: "Seconds or N/A",
     inputType: "text",
   },
