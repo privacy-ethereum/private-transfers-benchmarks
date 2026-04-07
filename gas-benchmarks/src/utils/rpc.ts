@@ -17,8 +17,8 @@ import {
   SCROLL_RPC_URL,
   BLOCK_RANGE,
   MAX_SAMPLES,
-  BLOCK_WINDOW_ETHEREUM,
-  BLOCK_WINDOW_SCROLL,
+  BLOCK_WINDOW_ETHEREUM_1_WEEK,
+  BLOCK_WINDOW_SCROLL_1_WEEK,
 } from "./constants.js";
 
 /** Pre-configured RPC clients keyed by chain ID */
@@ -39,10 +39,10 @@ const getClient = (chain: Chain): PublicClient => {
 /** Returns the 1-week block window size for a given chain */
 const getBlockWindow = (chainId: number): bigint => {
   if (chainId === mainnet.id) {
-    return BLOCK_WINDOW_ETHEREUM;
+    return BLOCK_WINDOW_ETHEREUM_1_WEEK;
   }
   if (chainId === scroll.id) {
-    return BLOCK_WINDOW_SCROLL;
+    return BLOCK_WINDOW_SCROLL_1_WEEK;
   }
   throw new Error(`No block window configured for chain ID: ${chainId}`);
 };
@@ -114,17 +114,20 @@ export const getValidTransactions = async ({
   events,
   chain,
   latestBlock,
+  blockWindow,
 }: {
   contractAddress: Address;
   events: readonly AbiEvent[];
   chain: Chain;
   latestBlock?: bigint;
+  blockWindow?: bigint;
 }): Promise<TransactionReceipt[]> => {
   const client = getClient(chain);
-  const blockWindow = getBlockWindow(chain.id);
+
+  const scanWindow = blockWindow ?? getBlockWindow(chain.id);
   const scanStart = latestBlock ?? (await client.getBlockNumber());
 
-  let scanEnd = scanStart - blockWindow;
+  let scanEnd = scanStart - scanWindow;
   if (scanEnd < 0n) {
     scanEnd = 0n;
   }

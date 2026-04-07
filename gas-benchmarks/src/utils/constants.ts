@@ -29,18 +29,25 @@ export const BLOCK_RANGE = 2_000n;
 export const BENCHMARKS_OUTPUT_PATH = "./benchmarks.json";
 
 /**
- * The number of Ethereum blocks to scan for events
+ * The number of Ethereum blocks to scan for events for 1 week
  * 1 week = 604800 seconds. 1 Ethereum block = 12 seconds
- * 604800 / 12 = 50400 seconds
+ * 604800 / 12 = 50400 blocks
  */
-export const BLOCK_WINDOW_ETHEREUM = 50_400n;
+export const BLOCK_WINDOW_ETHEREUM_1_WEEK = 50_400n;
 
 /**
- * The number of Scroll blocks to scan for events
- * 1 week = 604800 seconds. 1 Scroll block = 1 second
- * 604800 / 1 = 604800 seconds
+ * The number of Ethereum blocks to scan for events for 4 weeks
+ * 4 weeks = 2419200 seconds. 1 Ethereum block = 12 seconds
+ * 2419200 / 12 = 201600 blocks
  */
-export const BLOCK_WINDOW_SCROLL = 604_800n;
+export const BLOCK_WINDOW_ETHEREUM_4_WEEKS = 201_600n;
+
+/**
+ * The number of Scroll blocks to scan for events for 1 week
+ * 1 week = 604800 seconds. 1 Scroll block = 1 second
+ * 604800 / 1 = 604800 blocks
+ */
+export const BLOCK_WINDOW_SCROLL_1_WEEK = 604_800n;
 
 /**
  * The number of Monero blocks to scan for transactions
