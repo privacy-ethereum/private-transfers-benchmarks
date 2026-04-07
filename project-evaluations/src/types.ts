@@ -1,4 +1,6 @@
-import { type CATEGORIES, type PROPERTY_GROUPS } from "./schema";
+import { type z } from "zod/v4";
+import { type CATEGORIES, type PROPERTY_GROUPS } from "./data/schema";
+import { type evaluationSchema, type propertySchema } from "./data/evaluation-schema";
 
 export type Category = (typeof CATEGORIES)[number];
 
@@ -16,22 +18,8 @@ export interface PropertyContent {
   options?: readonly string[];
 }
 
-/** One property value stored on an evaluation */
-export interface Property {
-  name: string;
-  value: string;
-  notes?: string;
-  url?: string;
-}
-
-export interface Evaluation {
-  id: string;
-  title: string;
-  description: string;
-  documentation: string;
-  categories: Category[];
-  properties: Property[];
-}
+export type Evaluation = z.infer<typeof evaluationSchema>;
+export type Property = z.infer<typeof propertySchema>;
 
 export interface EvaluationsData {
   evaluations: Evaluation[];

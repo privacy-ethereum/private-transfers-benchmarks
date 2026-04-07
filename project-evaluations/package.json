@@ -7,18 +7,24 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "research": "tsx scripts/index.ts"
   },
   "dependencies": {
+    "jszip": "^3.10.1",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
     "@tailwindcss/vite": "^4.1.8",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",
     "@vitejs/plugin-react": "^4.5.1",
+    "dotenv": "^17.3.1",
     "tailwindcss": "^4.1.8",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite": "^6.3.5"
   }

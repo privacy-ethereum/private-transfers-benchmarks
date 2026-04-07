@@ -1,6 +1,9 @@
+import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
-import type { Evaluation, EvaluationsData } from "../types.js";
+import type { Evaluation } from "../types.js";
+import { evaluationSchema } from "../data/evaluation-schema.js";
+import SaveModal from "./SaveModal.js";
 
 interface JSONButtonProps {
   evaluations: Evaluation[];
@@ -9,24 +12,28 @@ interface JSONButtonProps {
 }
 
 export default function JSONButton({ evaluations, setEvaluations, setSelectedId }: JSONButtonProps) {
-  const saveJSON = (): void => {
-    const content = JSON.stringify({ evaluations }, null, 2) + "\n";
-    const blob = new Blob([content], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "evaluations.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const [showSaveModal, setShowSaveModal] = useState(false);
 
   const importJSON = (file: File): void => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const parsed = JSON.parse(e.target?.result as string) as EvaluationsData;
-        setEvaluations(parsed.evaluations);
-        setSelectedId(parsed.evaluations[0]?.id ?? null);
+        const parsed: unknown = JSON.parse(e.target?.result as string);
+        const result = evaluationSchema.safeParse(parsed);
+        if (!result.success) {
+          alert("Invalid evaluation JSON:\n" + result.error.issues.map((i) => i.message).join("\n"));
+          return;
+        }
+        const imported = result.data;
+
+        setEvaluations((prev) => {
+          const existing = prev.find((ev) => ev.id === imported.id);
+          if (existing) {
+            return prev.map((ev) => (ev.id === imported.id ? imported : ev));
+          }
+          return [...prev, imported];
+        });
+        setSelectedId(imported.id);
       } catch {
         alert("Invalid JSON file.");
       }
@@ -35,27 +42,38 @@ export default function JSONButton({ evaluations, setEvaluations, setSelectedId 
   };
 
   return (
-    <div className="flex gap-2">
-      <button
-        onClick={() => {
-          saveJSON();
-        }}
-        className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded px-2 py-1.5 transition-colors"
-      >
-        Save JSON
-      </button>
-      <label className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded px-2 py-1.5 transition-colors text-center cursor-pointer">
-        Import
-        <input
-          type="file"
-          accept=".json"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) importJSON(file);
+    <>
+      <div className="flex gap-2">
+        <button
+          onClick={() => {
+            setShowSaveModal(true);
+          }}
+          className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded px-2 py-1.5 transition-colors"
+        >
+          Save JSON
+        </button>
+        <label className="flex-1 text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 rounded px-2 py-1.5 transition-colors text-center cursor-pointer">
+          Import
+          <input
+            type="file"
+            accept=".json"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) importJSON(file);
+            }}
+          />
+        </label>
+      </div>
+
+      {showSaveModal && (
+        <SaveModal
+          evaluations={evaluations}
+          onClose={() => {
+            setShowSaveModal(false);
           }}
         />
-      </label>
-    </div>
+      )}
+    </>
   );
 }

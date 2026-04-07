@@ -1,0 +1,193 @@
+{
+  "id": "tongo",
+  "title": "Tongo",
+  "description": "A confidential payment protocol on Starknet that uses ElGamal homomorphic encryption and zero-knowledge proofs to enable private ERC20 token transfers. Account balances are stored as encrypted ciphertexts on-chain, hiding amounts while keeping the protocol verifiable and supporting an optional auditor for regulatory compliance.",
+  "documentation": "https://docs.tongo.cash/",
+  "categories": ["Homomorphic encryption (FHE - HE)"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Tongo uses ElGamal homomorphic encryption over the Stark curve to store account balances as encrypted ciphertexts. Each account maintains a current balance (spendable) and a pending balance (received but requiring an explicit rollover operation before spending). The pending balance exists to prevent balance manipulation attacks where an attacker sends a small encrypted amount to a sender mid-proof-generation, changing the sender's balance and invalidating their ZK proof. Both balances are stored as ciphertexts invisible to external observers. Mathematical operations (additions, subtractions) are performed homomorphically without decryption.",
+      "url": "https://docs.tongo.cash/protocol/introduction.html#introduction-to-tongo"
+    },
+    {
+      "name": "Anonymity",
+      "value": "No",
+      "notes": "Tongo uses an account-based model where each account is identified by a public key. Transfers are sent from one account's public key to another, meaning both the sender and receiver addresses are visible on-chain when a Tongo transaction is submitted. The protocol provides no anonymity mechanism.",
+      "url": "https://docs.tongo.cash/sdk/operations/transfer.html"
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "When funding a Tongo account, the user deposits a specific ERC20 token into the contract. When withdrawing, the smart contract sends the specific ERC20 token to the user. When transacting between Tongo accounts, the transaction shows the ERC20 token being sent but the amount and balances are encrypted. The asset type is visible in all three operations: funding, withdrawing, and transacting.",
+      "url": "https://docs.tongo.cash/sdk/operations/fund.html"
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Tongo interactions (funding, withdrawing, and transacting) are direct calls to the Tongo smart contract, making it publicly visible that users are interacting with the privacy protocol. There is no way a user can plausibly deny using the protocol or sending tokens to a Tongo account. ",
+      "url": "https://docs.tongo.cash/protocol/introduction.html#funding"
+    },
+    {
+      "name": "Number of secrets",
+      "value": "2",
+      "notes": "Users require a Starknet wallet to submit on-chain transactions and a separate Tongo ElGamal keypair over the Stark curve for encrypting and decrypting private balances. The Tongo private key is independently generated, not derived from the Starknet wallet.",
+      "url": "https://docs.tongo.cash/sdk/accounts.html#creating-an-account"
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "Tongo is deployed on the Starknet L2, a ZK-rollup on Ethereum. Finality is inherited from the underlying chain. Starknet's time to L1 finality at the time of writing is around 29 minutes. Finality is dependent on the sequencer submitting proofs to the L1. After proof submissions, SHARP (StarkWare's proof aggregator) consolidates all proofs into a single STARK proof that gets posted and verified on Ethereum L1. TODO: Verify all of this is true",
+      "url": "https://l2beat.com/scaling/projects/starknet#liveness"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "No mandatory deposit waiting period. Funding a Tongo account is an immediate Starknet transaction.",
+      "url": "https://docs.tongo.cash/sdk/operations/fund.html"
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "There is no mandatory withdrawal waiting period. Users can withdraw their partial or full balance at any time, including via the instant ragequit mechanism (withdraw all current balance to a public Starknet account address).",
+      "url": "https://docs.tongo.cash/sdk/operations/withdraw.html"
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "Yes",
+      "notes": "Tongo supports multiple optional compliance models configured at deployment: a global auditor for real-time transaction monitoring, selective disclosure via viewing keys, ex-post proving for retroactive investigations, range compliance (transfer amount thresholds), velocity limits (cumulative amount bounds), and whitelist compliance (authorized recipient addresses). The auditor can examine but not censor transactions. TODO: verify which compliance features are enabled on the mainnet instances - if whitelist compliance is active, specific instances may be censorship-susceptible.",
+      "url": "https://docs.tongo.cash/protocol/auditor.html#advanced-features"
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "Tongo requires no trusted setup ceremony. The protocol's cryptography relies solely on the discrete logarithm assumption over the Stark curve, eliminating the need for any external trusted parties or multi-party computation ceremonies. All operations are self-contained within the Starknet smart contracts.",
+      "url": "https://docs.tongo.cash/protocol/introduction.html#no-trusted-setup"
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "notes": "Tongo provides a ragequit mechanism that allows users to instantly withdraw their full current balance back to ERC20 tokens. The user submits a ZK proof demonstrating ownership of the account private key and that the disclosed amount equals their full balance. The contract converts the encrypted balance to ERC20 and sends it to the specified address. The pending balance is not affected by this operation.",
+      "url": "https://docs.tongo.cash/sdk/operations/ragequit.html"
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "notes": "The deployed contracts show OpenZeppelin Cairo access control functions (is_upgrade_governor, has_role, get_role_admin), indicating the contracts use Starknet's native upgradeability via the replace_class syscall with role-based access control. The contract owner can also rotate the auditor public key. TODO: verify on-chain who holds the upgrade governor role.",
+      "url": "https://docs.tongo.cash/protocol/contracts.html"
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Tongo uses ElGamal homomorphic encryption and Sigma protocol zero-knowledge proofs over the Stark curve to update on-chain encrypted balances. The SHE (Somewhat Homomorphic Encryption) library provides proof primitives for operations like same-encryption verification, range proofs, and bit proofs. The SDK runs these provers on the user's device with no external proving service.",
+      "url": "https://docs.tongo.cash/protocol/introduction.html#introduction-to-tongo"
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "If configured at deployment, a global auditor can decrypt balances and transfer amounts for regulation and compliance purposes. This is an optional feature - instances deployed without an auditor have no third-party inspectability. The auditor key can be rotated by the contract owner but cannot be added after deployment. The global auditor keys can be distributed across multiple parties using threshold encryption.",
+      "url": "https://docs.tongo.cash/protocol/auditor.html#global-auditor"
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "Tongo has 7 mainnet instances deployed on Starknet (STRK, ETH, wBTC, USDC.e, USDC, USDT, DAI). TODO: verify Tongo mainnet deployment date.",
+      "url": "https://docs.tongo.cash/protocol/contracts.html"
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Tongo's security relies on ElGamal encryption over the Stark curve, which is vulnerable to Shor's algorithm. Additionally, encrypted balances stored on-chain are subject to harvest-now-decrypt-later attacks, where adversaries collect ciphertexts today for future decryption by quantum computers.",
+      "url": "https://docs.tongo.cash/protocol/encryption.html"
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "App",
+      "notes": "Compliance is enforced at the application layer through optional methods activated at deployment time: the global auditor mechanism that allows viewing access to authorities, range compliance that proves transfer amounts are below a threshold, velocity limits that prove cumulative amounts are within bounds, and whitelist compliance that proves a recipient is in an authorized addresses list.",
+      "url": "https://docs.tongo.cash/protocol/auditor.html"
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Admin",
+      "notes": "The Tongo contract owner configures compliance features at deployment. All compliance mechanisms (global auditor, range compliance, velocity limits, whitelist) are optional and instance-specific. The auditor role is a designated party (single key or threshold key) that can examine transactions.",
+      "url": "https://docs.tongo.cash/protocol/auditor.html"
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"Programmatic policies\",\"Selective disclosure\"]",
+      "notes": "All compliance features are optional and configured per-instance at deployment. The global auditor enables selective disclosure of encrypted balances and transfer amounts. Advanced features include range compliance (transfer amounts below a threshold), velocity limits (cumulative amounts within bounds), and whitelist compliance (authorized recipient addresses). These are programmatic policies proven via zero-knowledge proofs without revealing amounts.",
+      "url": "https://docs.tongo.cash/protocol/auditor.html#regulatory-compliance"
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"Deposit\",\"Transfer\",\"Withdrawal\"]",
+      "notes": "If configured, the auditor can examine balances or amounts at all stages of the transaction lifecycle: deposits (funding), internal transfers, and withdrawals. The other advance compliance features (range compliance, velocity limits and whitelist compliance) can be implemented at any step of the lifecycle.",
+      "url": "https://docs.tongo.cash/protocol/auditor.html#real-time-monitoring"
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"Involuntary third-party disclosure\",\"User\"]",
+      "notes": "If an auditor is configured, it can view transaction details without user consent (involuntary third-party disclosure). Users can also voluntarily disclose transaction details to any third party via ex-post proving, which creates a new encryption of the transfer amount for the third party's public key with a ZK proof of correctness. The auditor is optional and instance-specific.",
+      "url": "https://docs.tongo.cash/protocol/auditor.html?highlight=view%20keys#ex-post-proving--viewing-keys"
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Programmable",
+      "notes": "Tongo supports multiple configurable compliance mechanisms: the global auditor is set at deployment and can be rotated by the owner, ex-post proving allows users to create on-demand disclosures for any third party, and advanced features (range compliance, velocity limits, whitelist) provide programmable policy enforcement. Viewing keys can be jurisdiction-specific with time-limited access.",
+      "url": "https://docs.tongo.cash/protocol/auditor.html#global-auditor"
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Tongo uses ElGamal homomorphic encryption over the Stark curve combined with Sigma protocol zero-knowledge proofs to ensure that all operations (fund, transfer, withdrawal) are cryptographically verifiable. The protocol relies on the discrete logarithm assumption over the Stark curve and requires no trusted setup.",
+      "url": "https://docs.tongo.cash/protocol/encryption.html"
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The Tongo smart contracts (Cairo) and TypeScript SDK are licensed under Apache-2.0. The SHE cryptographic library used for Sigma protocol proofs is also Apache-2.0. Both are publicly available under the fatlabsxyz GitHub organization.",
+      "url": "https://github.com/fatlabsxyz/tongo/blob/master/LICENSE"
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Within contract",
+      "notes": "Tongo uses an account-based model where each user's encrypted balance is stored as a mapping within the smart contract storage. New users add entries to the contract's account mapping, and the state grows proportionally to the number of accounts rather than to the number of transactions.",
+      "url": "https://docs.tongo.cash/protocol/storage.html"
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No scanning",
+      "notes": "Because Tongo uses an account-based model with balances stored directly as contract state, users can retrieve their encrypted balance directly from the contract without scanning past blockchain events or transactions.",
+      "url": "https://docs.tongo.cash/sdk/accounts.html"
+    },
+    {
+      "name": "Private state model",
+      "value": "Account-based state model",
+      "notes": "Tongo maintains an account-based private state where each account holds an encrypted current balance (immediately spendable) and an encrypted pending balance (received but not yet rolled over). Users must explicitly rollover pending funds to make them spendable.",
+      "url": "https://docs.tongo.cash/protocol/storage.html#pending-balance"
+    },
+    {
+      "name": "Private Data Storage",
+      "value": "Smart contracts",
+      "notes": "All private state—including encrypted account balances (current and pending) and auditor configuration—is stored directly in the Tongo smart contract on Starknet.",
+      "url": "https://docs.tongo.cash/protocol/storage.html"
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Composable interface, but requires DeFi protocol changes",
+      "notes": "Tongo uses an ERC20-compatible encrypted token interface. The docs list AMMs (hidden trade sizes) and DAO governance (confidential voting) as use cases. DeFi protocols would need to be built or adapted to work with encrypted balances and ZK proofs. Currently no DeFi integrations exist, but the design is composable.",
+      "url": "https://docs.tongo.cash/sdk/operations/operations.html"
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Transfers and DeFi operations",
+      "notes": "Tongo currently implements confidential payment operations (fund, transfer, rollover, withdraw). The SHE library provides general-purpose ZK proof primitives that support building AMMs with hidden trade sizes and DAO governance with confidential voting, as described in the use cases documentation.",
+      "url": "https://docs.tongo.cash/protocol/introduction.html#use-cases"
+    }
+  ]
+}

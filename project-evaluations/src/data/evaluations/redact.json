@@ -1,0 +1,193 @@
+{
+  "id": "redact",
+  "title": "Redact",
+  "description": "A confidential transfer protocol on Ethereum using Fhenix's CoFHE (Coprocessor for Fully Homomorphic Encryption) to encrypt ERC20 token balances on-chain. All FHE computations are handled off-chain by the coprocessor network. Balances are hidden while addresses are fully visible.",
+  "documentation": "https://docs.redact.money/",
+  "categories": ["Homomorphic encryption (FHE - HE)"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Redact uses Fhenix's coprocessor to encrypt ERC20 token balances on-chain. Balances are stored as ciphertexts and transactions modify them using FHE operations. Nobody except the owner can see the plaintext balance or the transaction amounts.",
+      "url": "https://docs.redact.money/technical-walkthrough#encrypting-your-erc20-balance"
+    },
+    {
+      "name": "Anonymity",
+      "value": "No",
+      "notes": "Redact operates on Ethereum where all transaction senders and recipients are publicly visible on-chain. The protocol encrypts only token amounts and balances, not the addresses involved in transfers.",
+      "url": "https://docs.redact.money/technical-walkthrough"
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "The asset type is directly inferred by the contract under a token model, like ERC20. During the encryption step, users approve the specific token contract, which is a public on-chain operation. Therefore the contract address is visible to any observer, revealing which asset type is being used.",
+      "url": "https://docs.redact.money/using-redact/encrypting#id-2.-approval"
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "The encryption operation is a direct call to the Redact smart contract, making it publicly visible on-chain that the user is interacting with the confidential transfer protocol. Both sender and receiver encrypted balances are updated on each transfer. External observers can see that two Redact accounts have been updated.",
+      "url": "https://docs.redact.money/using-redact/encrypting#id-3.-encryption"
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "Users only need their existing Ethereum wallet to interact with Redact. Permits are temporary EIP-712 signatures derived from the wallet key with a 24-hour default expiration. Balances are encrypted using the CoFHE network's TFHE public key, which is published on-chain. The corresponding private key is distributed across threshold network nodes using MPC, so no single node holds the decryption key.",
+      "url": "https://docs.redact.money/technical-walkthrough"
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "Redact is deployed on Ethereum mainnet. Finality is inherited from the underlying chain. The roadmap mentions future expansion to additional blockchains.",
+      "url": "https://docs.redact.money/roadmap"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "No mandatory deposit waiting period enforced by the protocol. Encryption requires two transactions: the first approves and encrypts the ERC20 tokens via the CoFHE coprocessor, which introduces some operational latency for FHE computation. This is not a protocol-enforced delay.",
+      "url": "https://docs.redact.money/technical-walkthrough#encrypting-your-erc20-balance"
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Decryption requires two separate transactions: the first triggers an on-chain decryption request via the CoFHE coprocessor, which typically takes 5-10 seconds to finalize. The second transaction claims the decrypted ERC20 tokens back.",
+      "url": "https://docs.redact.money/technical-walkthrough#decrypting-confidentialerc20-and-claiming-erc20"
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Redact depends on Fhenix's CoFHE coprocessor network for all FHE operations. The threshold network is permissioned with predefined roles (coordinator, party members, trusted dealer) and no public process for joining as a node operator. The network runs an MPC protocol to decrypt ciphertexts. Full ciphertexts are stored on an off-chain data availability (DA) layer, with only 128-bit handles stored on-chain. The coprocessor could refuse to process operations for specific users or transactions.",
+      "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network"
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Redact relies on Fhenix's CoFHE coprocessor network for all FHE computations. The architecture consists of a task manager contract, an aggregator, the fheOS computation engine, and a threshold network for decryption via MPC. Full ciphertexts are stored on an off-chain DA layer with only 128-bit handles on-chain. A trusted dealer initializes the threshold network's key distribution (with plans to eliminate this dependency). If the coprocessor network goes down, the protocol cannot process transfers or decrypt balances.",
+      "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network"
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "There is no escape hatch mechanism for encrypted balances. Decryption requires the CoFHE threshold network's MPC protocol. If the coprocessor becomes unavailable or censors a user, there is no alternative cryptographic path to recover encrypted funds. Once a user has completed both decryption transactions and claimed their ERC20 tokens, those funds are standard tokens and no longer depend on CoFHE.",
+      "url": "https://docs.redact.money/technical-walkthrough#decrypting-confidentialerc20-and-claiming-erc20"
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Network upgrade (hard/soft fork)",
+      "notes": "The fhERC20 smart contracts do not document on-chain upgradeability. However, the CoFHE coprocessor network (threshold network, fheOS, DA layer) is separately managed by Fhenix and can be upgraded independently, making the system as a whole upgradeable even if the on-chain contracts are immutable. TODO: verify on-chain whether Redact contracts use a proxy pattern. TODO: add a schema option for upgradeable external/decentralised networks without forks.",
+      "url": "https://docs.redact.money/architecture/fherc20-token-standard"
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Not applicable",
+      "notes": "Redact executes FHE computation via an off-chain coprocessor network, no client-side proving is needed. All cryptographic operations are processed by the external CoFHE network and do not involve proof generation on the user's device.",
+      "url": "https://docs.redact.money/technical-walkthrough#encrypted-transfer"
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "The threshold decryption network, operated by Fhenix, holds distributed shares of the FHE private key and uses an MPC protocol for collaborative decryption. A colluding majority of party members could reconstruct the key and decrypt user balances. The system currently uses a trusted dealer to initialize secret shares, with plans to eliminate this centralization risk.",
+      "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network"
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "2 : Public testnet",
+      "notes": "Redact is currently in Phase 0 (testnet deployment) per its roadmap. The protocol is available on public testnet with core encrypt, decrypt, and confidential transfer functionality operational.",
+      "url": "https://test.redact.money/"
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "The TFHE encryption layer uses lattice-based cryptography (LWE problem), which is believed to be post-quantum secure. However, the underlying Ethereum transactions use ECDSA signatures, and the threshold network and DA layer likely use classical cryptographic primitives that are not post-quantum resistant. The system as a whole is not post-quantum secure. TODO: verify post-quantum status of threshold MPC scheme and DA layer primitives. ",
+      "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network#decryption-process"
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "Redact currently has no built-in compliance enforcement mechanism. The protocol focuses solely on confidential transfers without restricting who can participate.",
+      "url": "https://docs.redact.money/#core-functionalities"
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "There is no compliance enforcement entity in Redact. The coprocessor network could collude with an enforcement entity to decrypt specific balances or censor specific addresses.",
+      "url": "https://docs.redact.money/#overview"
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"Selective disclosure\"]",
+      "notes": "No enforced compliance mechanism exists. Users can issue Fhenix Permits, which are signed EIP-712 messages that authorize off-chain decrypt and seal operations on encrypted balances. Permits come in three types (self, sharing, and recipient), are network-specific, expire after 24 hours by default, and require signature verification. This enables voluntary selective disclosure to authorized parties. Selective disclosure of transaction history and DeFi actions will be possible in the future.",
+      "url": "https://docs.redact.money/faq#q-what-are-permits"
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"None\"]",
+      "notes": "There is no compliance enforcement at any point in the transfer lifecycle. Anyone can encrypt, transfer, and decrypt tokens without restriction.",
+      "url": "https://docs.redact.money/#core-functionalities"
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "notes": "Users can issue EIP-712 permits that grant temporary, scoped read access to their encrypted balances. These permits allow the user to voluntarily disclose their confidential balance to any authorized smart contract or third party.",
+      "url": "https://docs.redact.money/faq#q-what-are-permits"
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "Permits use a fixed EIP-712 schema with three defined types (self, sharing, recipient) and a 24-hour default expiry. Users can issue permits within this fixed structure but cannot create custom viewing policies or modify the disclosure schema. Selective disclosure of transaction history and DeFi actions will be possible in the future.",
+      "url": "https://docs.redact.money/faq#q-what-are-permits"
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "No",
+      "notes": "The system relies on a permissioned threshold network for decryption and an off-chain DA layer for ciphertext storage, introducing crypto-economic trust assumptions beyond pure cryptographic guarantees. The CoFHE architecture claims to use zero-knowledge proofs of knowledge (ZKPoK) alongside TFHE, but the specific verification mechanism is not detailed in current documentation. TODO: verify whether ZKPoK verification is implemented ",
+      "url": "https://docs.redact.money/architecture/cofhe-overview#security-and-privacy-measures"
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "The Redact repository and cofhe-contracts are licensed under MIT. However, the fheOS computation engine, threshold network node code, and DA layer do not appear in the FhenixProtocol GitHub organization. These are critical infrastructure components. TODO: confirm whether core Fhenix infrastructure (fheOS server, threshold network, DA layer) licenses are published",
+      "url": "https://github.com/FhenixProtocol/redact"
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Off-chain DA with on-chain handles",
+      "notes": "Redact uses an account-based model where each user's encrypted balance handle is stored as a mapping within the smart contract storage. On-chain state grows proportionally to the number of accounts. Full ciphertexts grow on the off-chain DA layer proportionally to the number of operations.",
+      "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances"
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No scanning",
+      "notes": "Since Redact uses an account-based model with encrypted balances stored directly as contract state, users can retrieve their encrypted balance directly from the contract without scanning past blockchain events.",
+      "url": "https://docs.redact.money/using-redact/confidential-balances-wallet"
+    },
+    {
+      "name": "Private state model",
+      "value": "Account-based state model",
+      "notes": "Each Redact account holds an encrypted balance stored directly in the smart contract. The balance ciphertext is updated in-place on each transfer",
+      "url": "https://docs.redact.money/architecture/fherc20.sol#state-changing-functions"
+    },
+    {
+      "name": "Private Data Storage",
+      "value": "Smart contracts",
+      "notes": "Ciphertext handles (128-bit pointers) are stored in the Redact smart contract state as account balance mappings. Full ciphertexts are too large for on-chain storage and are kept on an off-chain data availability (DA) layer.",
+      "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances"
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "No access to DeFi",
+      "notes": "The fhERC20 standard is designed for compatibility with existing wallets and tooling. The docs describe Redact as the foundation for private DeFi with plans for lending, borrowing, and swapping. Currently only confidential transfers are supported, so there is no live DeFi access.",
+      "url": "https://docs.redact.money/technical-walkthrough#caveat-invalid-transfer-amount"
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Partial programmability",
+      "notes": "The CoFHE framework enables smart contracts to process encrypted data via FHE operations (addition, subtraction, conditional logic on ciphertexts). Redact currently implements only confidential ERC20 transfers, but the underlying framework supports more general encrypted computation. The docs position Redact as the foundation for a private DeFi ecosystem.",
+      "url": "https://docs.redact.money/motivation#why-redact"
+    }
+  ]
+}

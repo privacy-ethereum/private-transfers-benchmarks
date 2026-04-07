@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import type { Category } from "../types.js";
-import { CATEGORIES } from "../schema.js";
+import { CATEGORIES } from "../data/schema.js";
 
 interface AddModalProps {
   onClose: () => void;
