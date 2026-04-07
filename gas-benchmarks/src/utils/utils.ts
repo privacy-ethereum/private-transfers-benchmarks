@@ -18,3 +18,17 @@ export const getAverageMetrics = (txs: TransactionReceipt[]): FeeMetrics => {
 
   return { averageGasUsed, averageGasPrice, averageTxFee };
 };
+
+/**
+ * Determines if a transaction receipt represents a native ETH transfer
+ * @param receipt - The transaction receipt to check
+ * @returns A boolean indicating whether the receipt represents a native ETH transfer
+ */
+export const isNativeTransfer = (receipt: TransactionReceipt): boolean => {
+  const isGasUsed21000 = receipt.gasUsed === 21000n;
+  const hasNoLogs = receipt.logs.length === 0;
+  const isNotContractDeployment = receipt.contractAddress === null;
+  const hasRecipient = receipt.to !== null; // ensures it's not a contract creation transaction
+
+  return isGasUsed21000 && hasNoLogs && isNotContractDeployment && hasRecipient;
+};

@@ -3,6 +3,10 @@ import { join } from "node:path";
 
 import type { AddressEntry, EventsEntry } from "./types.js";
 
+const SOL_WITH_HASH_LINE_REF = /https?:\/\/\S+\.sol#L\d+(?=\s|$)/i;
+const SOL_WITH_QUERY_LINE_REF = /https?:\/\/\S+\.sol\?\S*[?&]start=\d+(?=\s|$)/i;
+const ENCODED_SOL_WITH_QUERY_LINE_REF = /https?:\/\/\S+\?\S*\.sol\S*[?&]start=\d+(?=\s|$)/i;
+
 /**
  * Recursively scan `srcDir` for `constants.ts` files, skipping excluded directories.
  */
@@ -81,9 +85,16 @@ export function hasSolUrl(comment: string): boolean {
   return /https?:\/\/\S+\.sol(?:#\S*)?(?=\s|$)/i.test(comment);
 }
 
-/** Checks that a JSDoc comment contains a URL to a `.sol` file with a line number anchor (e.g., `#L123`). */
+/**
+ * Checks that a JSDoc comment contains a URL to a `.sol` file with a line reference.
+ * Accepts both hash anchors (e.g., `#L123`) and query params (e.g., `?file=...sol&start=30`).
+ */
 export function hasSolUrlWithLineNumber(comment: string): boolean {
-  return /https?:\/\/\S+\.sol#L\d+(?=\s|$)/i.test(comment);
+  return (
+    SOL_WITH_HASH_LINE_REF.test(comment) ||
+    SOL_WITH_QUERY_LINE_REF.test(comment) ||
+    ENCODED_SOL_WITH_QUERY_LINE_REF.test(comment)
+  );
 }
 
 /** Extracts etherscan transaction URLs from a JSDoc comment. */

@@ -1,3 +1,4 @@
+import { Fluidkey } from "./fluidkey/index.js";
 import { Hinkal } from "./hinkal/index.js";
 import { Intmax } from "./intmax/index.js";
 import { Monero } from "./monero/index.js";
@@ -12,20 +13,29 @@ const privacyPools = new PrivacyPools();
 const intmax = new Intmax();
 const monero = new Monero();
 const hinkal = new Hinkal();
+const fluidkey = new Fluidkey();
 
 await db.read();
 
 const start = Date.now();
 
-const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, moneroMetrics, hinkalMetrics] =
-  await Promise.all([
-    railgun.benchmark(),
-    tornadoCash.benchmark(),
-    privacyPools.benchmark(),
-    intmax.benchmark(),
-    monero.benchmark(),
-    hinkal.benchmark(),
-  ]);
+const [
+  railgunMetrics,
+  tornadoCashMetrics,
+  privacyPoolsMetrics,
+  intmaxMetrics,
+  moneroMetrics,
+  hinkalMetrics,
+  fluidkeyMetrics,
+] = await Promise.all([
+  railgun.benchmark(),
+  tornadoCash.benchmark(),
+  privacyPools.benchmark(),
+  intmax.benchmark(),
+  monero.benchmark(),
+  hinkal.benchmark(),
+  fluidkey.benchmark(),
+]);
 
 await db.update((data) => {
   // eslint-disable-next-line no-param-reassign
@@ -66,6 +76,14 @@ await db.update((data) => {
     shield_erc20: hinkalMetrics.shieldErc20,
     unshield_erc20: hinkalMetrics.unshieldErc20,
     transfer_erc20: hinkalMetrics.internalTransfer,
+  };
+
+  // eslint-disable-next-line no-param-reassign
+  data[`${fluidkey.name}_${fluidkey.version}`] = {
+    shield_eth: fluidkeyMetrics.shieldEth,
+    shield_erc20: fluidkeyMetrics.shieldErc20,
+    transfer_eth: fluidkeyMetrics.transferEth,
+    transfer_erc20: fluidkeyMetrics.transferErc20,
   };
 });
 

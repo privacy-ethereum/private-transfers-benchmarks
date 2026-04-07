@@ -2,7 +2,7 @@ import { mainnet } from "viem/chains";
 
 import type { FeeMetrics } from "../utils/types.js";
 
-import { BLOCK_WINDOW_ETHEREUM_4_WEEKS, MIN_SAMPLES } from "../utils/constants.js";
+import { BLOCK_WINDOW_ETHEREUM_5_WEEKS, MIN_SAMPLES } from "../utils/constants.js";
 import { getValidTransactions } from "../utils/rpc.js";
 import { getAverageMetrics } from "../utils/utils.js";
 
@@ -37,7 +37,7 @@ export class Hinkal {
       contractAddress: HINKAL_POOL,
       events: SHIELD_ETH_EVENTS,
       chain: mainnet,
-      blockWindow: BLOCK_WINDOW_ETHEREUM_4_WEEKS,
+      blockWindow: BLOCK_WINDOW_ETHEREUM_5_WEEKS,
     });
 
     if (receipts.length < MIN_SAMPLES) {
@@ -52,7 +52,7 @@ export class Hinkal {
       contractAddress: HINKAL_POOL,
       events: UNSHIELD_ETH_EVENTS,
       chain: mainnet,
-      blockWindow: BLOCK_WINDOW_ETHEREUM_4_WEEKS,
+      blockWindow: BLOCK_WINDOW_ETHEREUM_5_WEEKS,
     });
 
     if (receipts.length < MIN_SAMPLES) {
@@ -67,7 +67,7 @@ export class Hinkal {
       contractAddress: HINKAL_POOL,
       events: INTERNAL_TRANSFER_EVENTS,
       chain: mainnet,
-      blockWindow: BLOCK_WINDOW_ETHEREUM_4_WEEKS,
+      blockWindow: BLOCK_WINDOW_ETHEREUM_5_WEEKS,
     });
 
     if (receipts.length < MIN_SAMPLES) {
@@ -82,7 +82,7 @@ export class Hinkal {
       contractAddress: HINKAL_POOL,
       events: SHIELD_ERC20_EVENTS,
       chain: mainnet,
-      blockWindow: BLOCK_WINDOW_ETHEREUM_4_WEEKS,
+      blockWindow: BLOCK_WINDOW_ETHEREUM_5_WEEKS,
     });
 
     if (receipts.length < MIN_SAMPLES) {
@@ -97,7 +97,7 @@ export class Hinkal {
       contractAddress: HINKAL_POOL,
       events: UNSHIELD_ERC20_EVENTS,
       chain: mainnet,
-      blockWindow: BLOCK_WINDOW_ETHEREUM_4_WEEKS,
+      blockWindow: BLOCK_WINDOW_ETHEREUM_5_WEEKS,
     });
 
     if (receipts.length < MIN_SAMPLES) {

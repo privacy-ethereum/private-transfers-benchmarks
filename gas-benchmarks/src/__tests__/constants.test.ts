@@ -57,12 +57,12 @@ describe("constants.ts files", () => {
     });
   });
 
-  it("should have a URL to a .sol source file with line number for each events array indicating the function that emits the events", () => {
+  it("should have a URL to a .sol source file with line reference for each events array indicating the function that emits the events", () => {
     files.forEach(({ filePath, events }) => {
       events.forEach(({ name, comment }) => {
         expect(
           hasSolUrlWithLineNumber(comment),
-          `JSDoc for ${name} in ${filePath} must have a URL to a .sol file with a line number anchor (e.g., #L123)`,
+          `JSDoc for ${name} in ${filePath} must have a URL to a .sol file with a line reference (e.g., #L123 or start=30)`,
         ).toBe(true);
       });
     });
