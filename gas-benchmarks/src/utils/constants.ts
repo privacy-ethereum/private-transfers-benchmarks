@@ -29,6 +29,13 @@ export const BLOCK_RANGE = 2_000n;
 export const BENCHMARKS_OUTPUT_PATH = "./benchmarks.json";
 
 /**
+ * The number of Ethereum blocks to scan for events for 10 minutes
+ * 10 minutes = 600 seconds. 1 Ethereum block = 12 seconds
+ * 600 / 12 = 50 blocks
+ */
+export const BLOCK_WINDOW_ETHEREUM_10_MINUTES = 50n;
+
+/**
  * The number of Ethereum blocks to scan for events for 1 week
  * 1 week = 604800 seconds. 1 Ethereum block = 12 seconds
  * 604800 / 12 = 50400 blocks
@@ -36,11 +43,11 @@ export const BENCHMARKS_OUTPUT_PATH = "./benchmarks.json";
 export const BLOCK_WINDOW_ETHEREUM_1_WEEK = 50_400n;
 
 /**
- * The number of Ethereum blocks to scan for events for 4 weeks
- * 4 weeks = 2419200 seconds. 1 Ethereum block = 12 seconds
- * 2419200 / 12 = 201600 blocks
+ * The number of Ethereum blocks to scan for events for 5 weeks
+ * 5 weeks = 3024000 seconds. 1 Ethereum block = 12 seconds
+ * 3024000 / 12 = 252000 blocks
  */
-export const BLOCK_WINDOW_ETHEREUM_4_WEEKS = 201_600n;
+export const BLOCK_WINDOW_ETHEREUM_5_WEEKS = 252_000n;
 
 /**
  * The number of Scroll blocks to scan for events for 1 week

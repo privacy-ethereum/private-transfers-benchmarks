@@ -2,8 +2,7 @@ import {
   createPublicClient,
   encodeEventTopics,
   http,
-  type AbiEvent,
-  type Address,
+  toHex,
   type Chain,
   type Hash,
   type Log,
@@ -11,6 +10,16 @@ import {
   type TransactionReceipt,
 } from "viem";
 import { mainnet, scroll } from "viem/chains";
+
+import type {
+  EthGetBlockReceiptsSchema,
+  GetAllLogsInput,
+  GetBlockWindowInput,
+  GetBlockWindowOutput,
+  GetValidEthTransfersInput,
+  GetValidReceiptsInput,
+  GetValidTransactionsInput,
+} from "./interfaces.js";
 
 import {
   ETH_RPC_URL,
@@ -20,6 +29,7 @@ import {
   BLOCK_WINDOW_ETHEREUM_1_WEEK,
   BLOCK_WINDOW_SCROLL_1_WEEK,
 } from "./constants.js";
+import { isNativeTransfer } from "./utils.js";
 
 /** Pre-configured RPC clients keyed by chain ID */
 const clients: Record<number, PublicClient | undefined> = {
@@ -36,25 +46,42 @@ const getClient = (chain: Chain): PublicClient => {
   return client;
 };
 
-/** Returns the 1-week block window size for a given chain */
-const getBlockWindow = (chainId: number): bigint => {
-  if (chainId === mainnet.id) {
-    return BLOCK_WINDOW_ETHEREUM_1_WEEK;
+/**
+ * Returns the block window (start block/latest to end block/oldest) for a given chain
+ * @param client - The RPC client to use for fetching the blocks
+ * @param chainId - The chain ID to determine the default block window
+ * @param latestBlock - Optional latest block number to start scanning from (defaults to current block)
+ * @param blockWindow - Optional block window size to scan (overrides default if provided)
+ * @returns An object containing the scanStart and scanEnd block numbers
+ * { scanStart: bigint; scanEnd: bigint }
+ */
+const getBlockWindow = async ({
+  client,
+  chainId,
+  latestBlock,
+  blockWindow,
+}: GetBlockWindowInput): Promise<GetBlockWindowOutput> => {
+  let scanWindow: bigint;
+
+  if (blockWindow !== undefined) {
+    scanWindow = blockWindow;
+  } else if (chainId === mainnet.id) {
+    scanWindow = BLOCK_WINDOW_ETHEREUM_1_WEEK;
+  } else if (chainId === scroll.id) {
+    scanWindow = BLOCK_WINDOW_SCROLL_1_WEEK;
+  } else {
+    throw new Error(`No block window configured for chain ID: ${chainId}`);
   }
-  if (chainId === scroll.id) {
-    return BLOCK_WINDOW_SCROLL_1_WEEK;
-  }
-  throw new Error(`No block window configured for chain ID: ${chainId}`);
+
+  const scanStart = latestBlock ?? (await client.getBlockNumber());
+
+  const scanEnd = scanStart > scanWindow ? scanStart - scanWindow : 0n;
+
+  return { scanStart, scanEnd };
 };
 
 /** Scans blocks in chunks from scanStart down to scanEnd, deduplicating by tx hash */
-const getAllLogs = async (
-  client: PublicClient,
-  contractAddress: Address,
-  events: readonly AbiEvent[],
-  scanEnd: bigint,
-  scanStart: bigint,
-): Promise<Log[]> => {
+const getAllLogs = async ({ client, contractAddress, events, scanEnd, scanStart }: GetAllLogsInput): Promise<Log[]> => {
   let toBlock = scanStart;
   const uniqueLogs: Log[] = [];
   const seen = new Set<Hash>();
@@ -92,11 +119,7 @@ const getAllLogs = async (
 };
 
 /** Fetches receipts and filters to those matching the expected event pattern */
-const getValidReceipts = async (
-  client: PublicClient,
-  logs: Log[],
-  events: readonly AbiEvent[],
-): Promise<TransactionReceipt[]> => {
+const getValidReceipts = async ({ client, logs, events }: GetValidReceiptsInput): Promise<TransactionReceipt[]> => {
   const eventTopics = events.map((event) => encodeEventTopics({ abi: [event] })[0]);
 
   const receipts = await Promise.all(logs.map((log) => client.getTransactionReceipt({ hash: log.transactionHash! })));
@@ -115,23 +138,55 @@ export const getValidTransactions = async ({
   chain,
   latestBlock,
   blockWindow,
-}: {
-  contractAddress: Address;
-  events: readonly AbiEvent[];
-  chain: Chain;
-  latestBlock?: bigint;
-  blockWindow?: bigint;
-}): Promise<TransactionReceipt[]> => {
+}: GetValidTransactionsInput): Promise<TransactionReceipt[]> => {
   const client = getClient(chain);
 
-  const scanWindow = blockWindow ?? getBlockWindow(chain.id);
-  const scanStart = latestBlock ?? (await client.getBlockNumber());
+  const { scanStart, scanEnd } = await getBlockWindow({ client, chainId: chain.id, latestBlock, blockWindow });
 
-  let scanEnd = scanStart - scanWindow;
-  if (scanEnd < 0n) {
-    scanEnd = 0n;
+  const logs = await getAllLogs({ client, contractAddress, events, scanEnd, scanStart });
+  return getValidReceipts({ client, logs, events });
+};
+
+/**
+ * Fetches receipts and filters to those matching the expected event pattern for native ETH transfers
+ * @param chain - The chain to scan for native ETH transfers
+ * @param latestBlock - Optional latest block number to start scanning from (defaults to current block)
+ * @param blockWindow - Optional block window size to scan (overrides default if provided)
+ * @returns An array of transaction receipts for valid native ETH transfers
+ */
+export const getValidEthTransfers = async ({
+  chain,
+  latestBlock,
+  blockWindow,
+}: GetValidEthTransfersInput): Promise<TransactionReceipt[]> => {
+  const client = getClient(chain);
+
+  const { scanStart, scanEnd } = await getBlockWindow({ client, chainId: chain.id, latestBlock, blockWindow });
+
+  const receipts: TransactionReceipt[] = [];
+
+  let block = scanStart;
+
+  while (block >= scanEnd) {
+    // eslint-disable-next-line no-await-in-loop
+    const receiptsFromRPC = await client.request<EthGetBlockReceiptsSchema>({
+      method: "eth_getBlockReceipts",
+      params: [toHex(block)],
+    });
+
+    const gasUsedAsQuantity = receiptsFromRPC.map((receipt) => ({
+      ...receipt,
+      // RPC returns gasUsed and effectiveGasPrice as hex string
+      gasUsed: BigInt(receipt.gasUsed as unknown as string),
+      effectiveGasPrice: BigInt(receipt.effectiveGasPrice as unknown as string),
+    }));
+
+    const nativeTransfers = gasUsedAsQuantity.filter((receipt) => isNativeTransfer(receipt));
+
+    receipts.push(...nativeTransfers);
+
+    block -= 1n;
   }
 
-  const uniqueLogs = await getAllLogs(client, contractAddress, events, scanEnd, scanStart);
-  return getValidReceipts(client, uniqueLogs, events);
+  return receipts;
 };
