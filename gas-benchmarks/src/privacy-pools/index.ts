@@ -1,6 +1,7 @@
 import { mainnet } from "viem/chains";
 
-import type { FeeMetrics } from "../utils/types.js";
+import type { IAggregatedMetrics } from "./types.js";
+import type { TransactionReceipt } from "viem";
 
 import { MIN_SAMPLES } from "../utils/constants.js";
 import { getValidTransactions } from "../utils/rpc.js";
@@ -18,13 +19,20 @@ export class PrivacyPools {
 
   readonly version = PRIVACY_POOLS_CONFIG.version;
 
-  async benchmark(): Promise<Record<string, FeeMetrics>> {
-    const [shieldEth, unshieldEth] = await Promise.all([this.benchmarkShieldETH(), this.benchmarkUnshieldETH()]);
+  async benchmark(): Promise<IAggregatedMetrics> {
+    const [shieldEthReceipts, unshieldEthReceipts] = await Promise.all([
+      this.benchmarkShieldETH(),
+      this.benchmarkUnshieldETH(),
+    ]);
 
-    return { shieldEth, unshieldEth };
+    return {
+      shieldEth: getAverageMetrics(shieldEthReceipts),
+      unshieldEth: getAverageMetrics(unshieldEthReceipts),
+      anonymitySetSize: shieldEthReceipts.length - unshieldEthReceipts.length,
+    };
   }
 
-  async benchmarkShieldETH(): Promise<FeeMetrics> {
+  private async benchmarkShieldETH(): Promise<TransactionReceipt[]> {
     const receipts = await getValidTransactions({
       contractAddress: PRIVACY_POOLS_ENTRYPOINT_PROXY,
       events: SHIELD_ETH_EVENTS,
@@ -35,10 +43,10 @@ export class PrivacyPools {
       throw new Error(`${this.name} shield ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(receipts);
+    return receipts;
   }
 
-  async benchmarkUnshieldETH(): Promise<FeeMetrics> {
+  private async benchmarkUnshieldETH(): Promise<TransactionReceipt[]> {
     const receipts = await getValidTransactions({
       contractAddress: PRIVACY_POOLS_ENTRYPOINT_PROXY,
       events: UNSHIELD_ETH_EVENTS,
@@ -49,6 +57,6 @@ export class PrivacyPools {
       throw new Error(`${this.name} unshield ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(receipts);
+    return receipts;
   }
 }

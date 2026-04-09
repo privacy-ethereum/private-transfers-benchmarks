@@ -1,6 +1,7 @@
 import { mainnet, scroll } from "viem/chains";
 
-import type { FeeMetrics } from "../utils/types.js";
+import type { IAggregatedMetrics } from "./types.js";
+import type { TransactionReceipt } from "viem";
 
 import { MIN_SAMPLES } from "../utils/constants.js";
 import { getValidTransactions } from "../utils/rpc.js";
@@ -21,12 +22,20 @@ export class Intmax {
 
   readonly version = INTMAX_CONFIG.version;
 
-  async benchmark(): Promise<Record<string, FeeMetrics>> {
-    const [depositEth, withdrawEth] = await Promise.all([this.benchmarkDepositETH(), this.benchmarkWithdrawETH()]);
-    return { depositEth, withdrawEth };
+  async benchmark(): Promise<IAggregatedMetrics> {
+    const [depositEthReceipts, withdrawEthReceipts] = await Promise.all([
+      this.benchmarkDepositETH(),
+      this.benchmarkWithdrawETH(),
+    ]);
+
+    return {
+      depositEth: getAverageMetrics(depositEthReceipts),
+      withdrawEth: getAverageMetrics(withdrawEthReceipts),
+      anonymitySetSize: depositEthReceipts.length - withdrawEthReceipts.length,
+    };
   }
 
-  async benchmarkDepositETH(): Promise<FeeMetrics> {
+  private async benchmarkDepositETH(): Promise<TransactionReceipt[]> {
     const receipts = await getValidTransactions({
       contractAddress: INTMAX_LIQUIDITY_PROXY,
       events: DEPOSIT_ETH_EVENTS,
@@ -38,10 +47,10 @@ export class Intmax {
       throw new Error(`${this.name} deposit ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(receipts);
+    return receipts;
   }
 
-  async benchmarkWithdrawETH(): Promise<FeeMetrics> {
+  private async benchmarkWithdrawETH(): Promise<TransactionReceipt[]> {
     const receipts = await getValidTransactions({
       contractAddress: INTMAX_WITHDRAWAL_PROXY,
       events: WITHDRAW_ETH_EVENTS,
@@ -53,6 +62,6 @@ export class Intmax {
       throw new Error(`${this.name} withdraw ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getAverageMetrics(receipts);
+    return receipts;
   }
 }

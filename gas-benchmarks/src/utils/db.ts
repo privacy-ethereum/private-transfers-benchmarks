@@ -6,7 +6,13 @@ import type { FeeMetrics } from "./types.js";
 
 import { BENCHMARKS_OUTPUT_PATH } from "./constants.js";
 
-type BenchmarkDb = Record<string, Record<string, FeeMetrics | undefined>>;
+type BenchmarkDb = Record<
+  string,
+  | Record<string, FeeMetrics | undefined>
+  | {
+      anonymity_set_size: Record<string, bigint | number> | bigint | number;
+    }
+>;
 
 const serializeBigInt = (_key: string, value: unknown) => (typeof value === "bigint" ? `${value.toString()}n` : value);
 

@@ -1,8 +1,8 @@
-import type { FeeMetrics } from "../utils/types.js";
+import type { IAggregatedMetrics } from "./types.js";
 
 import { MIN_SAMPLES } from "../utils/constants.js";
 
-import { getMoneroMetrics, getOneInputTwoOutputsTransactions } from "./utils.js";
+import { getMoneroMetrics, getOneInputTwoOutputsTransactions, type MoneroTransaction } from "./utils.js";
 
 export class Monero {
   readonly name = "monero";
@@ -14,19 +14,19 @@ export class Monero {
    */
   readonly version = "0.18.4.6";
 
-  async benchmark(): Promise<Record<string, FeeMetrics>> {
-    const transfer = await this.benchmarkTransfer();
+  async benchmark(): Promise<IAggregatedMetrics> {
+    const transactions = await this.benchmarkTransfer();
 
-    return { transfer };
+    return { transfer: getMoneroMetrics(transactions), anonymitySetSize: transactions.length };
   }
 
-  async benchmarkTransfer(): Promise<FeeMetrics> {
+  private async benchmarkTransfer(): Promise<MoneroTransaction[]> {
     const transactions = await getOneInputTwoOutputsTransactions();
 
     if (transactions.length < MIN_SAMPLES) {
       throw new Error(`${this.name} transactions (${transactions.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
     }
 
-    return getMoneroMetrics(transactions);
+    return transactions;
   }
 }

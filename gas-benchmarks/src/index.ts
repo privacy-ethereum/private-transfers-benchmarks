@@ -43,29 +43,34 @@ await db.update((data) => {
     shield_erc20: railgunMetrics.shieldErc20,
     unshield_erc20: railgunMetrics.unshieldErc20,
     transfer_erc20: railgunMetrics.transferErc20,
+    anonymity_set_size: railgunMetrics.anonymitySetSize,
   };
 
   // eslint-disable-next-line no-param-reassign
   data[`${tornadoCash.name}_${tornadoCash.version}`] = {
     shield_eth: tornadoCashMetrics.shieldEth,
     unshield_eth: tornadoCashMetrics.unshieldEth,
+    anonymity_set_size: tornadoCashMetrics.anonymitySetSize,
   };
 
   // eslint-disable-next-line no-param-reassign
   data[`${privacyPools.name}_${privacyPools.version}`] = {
     shield_eth: privacyPoolsMetrics.shieldEth,
     unshield_eth: privacyPoolsMetrics.unshieldEth,
+    anonymity_set_size: privacyPoolsMetrics.anonymitySetSize,
   };
 
   // eslint-disable-next-line no-param-reassign
   data[`${intmax.name}_${intmax.version}`] = {
     deposit_eth: intmaxMetrics.depositEth,
     withdraw_eth: intmaxMetrics.withdrawEth,
+    anonymity_set_size: intmaxMetrics.anonymitySetSize,
   };
 
   // eslint-disable-next-line no-param-reassign
   data[`${monero.name}_${monero.version}`] = {
     transfer: moneroMetrics.transfer,
+    anonymity_set_size: moneroMetrics.anonymitySetSize,
   };
 
   // eslint-disable-next-line no-param-reassign
@@ -76,6 +81,7 @@ await db.update((data) => {
     shield_erc20: hinkalMetrics.shieldErc20,
     unshield_erc20: hinkalMetrics.unshieldErc20,
     transfer_erc20: hinkalMetrics.internalTransfer,
+    anonymity_set_size: hinkalMetrics.anonymitySetSize,
   };
 
   // eslint-disable-next-line no-param-reassign
@@ -84,6 +90,7 @@ await db.update((data) => {
     shield_erc20: fluidkeyMetrics.shieldErc20,
     transfer_eth: fluidkeyMetrics.transferEth,
     transfer_erc20: fluidkeyMetrics.transferErc20,
+    anonymity_set_size: fluidkeyMetrics.anonymitySetSize,
   };
 });
 
