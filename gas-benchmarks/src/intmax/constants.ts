@@ -1,30 +1,28 @@
 import { parseAbiItem, type Address } from "viem";
 
+import type { ProtocolConfig } from "../utils/types.js";
+
 /** Last block before Intmax froze deposits on Ethereum mainnet */
-export const DEPOSIT_ETH_FROM_BLOCK = 24_402_900n;
+const DEPOSIT_ETH_FROM_BLOCK = 24_402_900n;
 
 /**
- * INTMAX Liquidity contract on Ethereum mainnet that handles ETH native deposits and withdrawals:
- * https://github.com/InternetMaximalism/intmax2-contract/blob/main/contracts/liquidity/Liquidity.sol
+ * INTMAX Liquidity contract on Ethereum mainnet that handles ETH native deposits and withdrawals.
  */
-export const INTMAX_LIQUIDITY_PROXY: Address = "0xF65e73aAc9182e353600a916a6c7681F810f79C3";
+const INTMAX_LIQUIDITY_PROXY: Address = "0xF65e73aAc9182e353600a916a6c7681F810f79C3";
 
 /**
- * Liquidity.depositNativeToken function:
- * https://github.com/InternetMaximalism/intmax2-contract/blob/83b00c76049a75ac5186661ee7ecb10d0ce6ec25/contracts/liquidity/Liquidity.sol#L269
+ * Liquidity.depositNativeToken function.
  *
  * Emits:
  * TaskValidated() - To notify AML permission (emitted by one of Predicate contracts.
  * I couldn't find the specific event in the codebase. Intmax uses this package https://www.npmjs.com/package/@predicate/contracts)
  * Deposited() - To notify the deposit to the INTMAX network (emitted by the Liquidity contract)
  *
- * Example:
- * https://etherscan.io/tx/0x6de98a249147cb1b384add0a9e1770094728fffbe811f9909ba0c59c528e4d37
- *
- * NOTE: Intmax paused deposits and withdrawals due to a ZK bug on Feb 7th, 2026. There are a lot of reverted txs since then
+ * NOTE: Intmax paused deposits and withdrawals due to a ZK bug on Feb 7th, 2026.
+ * There are a lot of reverted txs since then.
  * Reference: https://x.com/intmaxIO/status/2020114765171855805
  */
-export const DEPOSIT_ETH_EVENTS = [
+const DEPOSIT_ETH_EVENTS = [
   parseAbiItem(
     "event TaskValidated(address indexed msgSender, address indexed target, uint256 indexed value, string policyID, string taskId, uint256 quorumThresholdCount, uint256 expireByTime, address[] signerAddresses)",
   ),
@@ -34,17 +32,15 @@ export const DEPOSIT_ETH_EVENTS = [
 ] as const;
 
 /** Last block before Intmax froze withdrawals on Scroll */
-export const WITHDRAW_ETH_FROM_BLOCK = 29_328_200n;
+const WITHDRAW_ETH_FROM_BLOCK = 29_328_200n;
 
 /**
- * INTMAX Withdrawal contract on Scroll (L2) that handles withdrawal proof submission and processing:
- * https://github.com/InternetMaximalism/intmax2-contract/blob/main/contracts/withdrawal/Withdrawal.sol
+ * INTMAX Withdrawal contract on Scroll (L2) that handles withdrawal proof submission and processing.
  */
-export const INTMAX_WITHDRAWAL_PROXY: Address = "0x86B06D2604D9A6f9760E8f691F86d5B2a7C9c449";
+const INTMAX_WITHDRAWAL_PROXY: Address = "0x86B06D2604D9A6f9760E8f691F86d5B2a7C9c449";
 
 /**
  * Withdrawal.submitWithdrawalProof function on Scroll (L2) - Called by the end user to initiate withdrawal to Ethereum.
- * https://github.com/InternetMaximalism/intmax2-contract/blob/main/contracts/withdrawal/Withdrawal.sol#L147
  *
  * This is the user-facing transaction that initiates the withdrawal process:
  * 1. User submits withdrawal proof on Withdrawal contract (Scroll L2) - this is the tx the end user pays
@@ -59,13 +55,10 @@ export const INTMAX_WITHDRAWAL_PROXY: Address = "0x86B06D2604D9A6f9760E8f691F86d
  * DirectWithdrawalQueued() - Emitted for each withdrawal
  * DirectWithdrawalQueued() - Emitted for each withdrawal
  * AppendMessage() - From the L2 Message Queue (0x5300000000000000000000000000000000000000)
- * SentMessage()- From the L2 Scroll Messenger (0x781e90f1c8fc4611c9b7497c3b47f99ef6969cbc)
+ * SentMessage() - From the L2 Scroll Messenger (0x781e90f1c8fc4611c9b7497c3b47f99ef6969cbc)
  * ContributionRecorded() - From the Contribution contract to track withdrawal contributions
- *
- * Example:
- * https://scrollscan.com/tx/0x7613bc4349afc1946cb124ea4c64b295951c101d87c808f9b1ae3950268a3747#eventlog
  */
-export const WITHDRAW_ETH_EVENTS = [
+const WITHDRAW_ETH_EVENTS = [
   parseAbiItem(
     "event DirectWithdrawalQueued(bytes32 indexed withdrawalHash, address indexed recipient, (address, uint32, uint256, bytes32) withdrawal)",
   ),
@@ -89,3 +82,43 @@ export const WITHDRAW_ETH_EVENTS = [
     "event ContributionRecorded(uint256 indexed periodNumber, bytes32 indexed tag, address indexed user, uint256 amount)",
   ),
 ] as const;
+
+/** Intmax configuration */
+const INTMAX_CONFIG = {
+  name: "intmax",
+  version: "1.0.0",
+  contracts: [
+    {
+      address: INTMAX_LIQUIDITY_PROXY,
+      sourceUrl: "https://github.com/InternetMaximalism/intmax2-contract/blob/main/contracts/liquidity/Liquidity.sol",
+    },
+    {
+      address: INTMAX_WITHDRAWAL_PROXY,
+      sourceUrl: "https://github.com/InternetMaximalism/intmax2-contract/blob/main/contracts/withdrawal/Withdrawal.sol",
+    },
+  ],
+  operations: [
+    {
+      functionSourceUrl:
+        "https://github.com/InternetMaximalism/intmax2-contract/blob/83b00c76049a75ac5186661ee7ecb10d0ce6ec25/contracts/liquidity/Liquidity.sol#L269",
+      exampleTxUrl: "https://etherscan.io/tx/0x6de98a249147cb1b384add0a9e1770094728fffbe811f9909ba0c59c528e4d37",
+      events: DEPOSIT_ETH_EVENTS,
+    },
+    {
+      functionSourceUrl:
+        "https://github.com/InternetMaximalism/intmax2-contract/blob/main/contracts/withdrawal/Withdrawal.sol#L147",
+      exampleTxUrl: "https://scrollscan.com/tx/0x7613bc4349afc1946cb124ea4c64b295951c101d87c808f9b1ae3950268a3747",
+      events: WITHDRAW_ETH_EVENTS,
+    },
+  ],
+} satisfies ProtocolConfig;
+
+export {
+  DEPOSIT_ETH_FROM_BLOCK,
+  WITHDRAW_ETH_FROM_BLOCK,
+  INTMAX_LIQUIDITY_PROXY,
+  INTMAX_WITHDRAWAL_PROXY,
+  DEPOSIT_ETH_EVENTS,
+  WITHDRAW_ETH_EVENTS,
+  INTMAX_CONFIG,
+};

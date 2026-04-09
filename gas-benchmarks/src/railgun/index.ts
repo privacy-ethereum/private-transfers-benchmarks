@@ -7,6 +7,7 @@ import { getValidTransactions } from "../utils/rpc.js";
 import { getAverageMetrics } from "../utils/utils.js";
 
 import {
+  RAILGUN_CONFIG,
   RAILGUN_SMART_WALLET_PROXY,
   SHIELD_ERC20_EVENTS,
   TRANSFER_ERC20_EVENTS,
@@ -14,9 +15,9 @@ import {
 } from "./constants.js";
 
 export class Railgun {
-  readonly name = "railgun";
+  readonly name = RAILGUN_CONFIG.name;
 
-  readonly version = "0.0.1";
+  readonly version = RAILGUN_CONFIG.version;
 
   async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [shieldErc20, unshieldErc20, transferErc20] = await Promise.all([

@@ -13,16 +13,16 @@ import {
   INTMAX_WITHDRAWAL_PROXY,
   DEPOSIT_ETH_EVENTS,
   WITHDRAW_ETH_EVENTS,
+  INTMAX_CONFIG,
 } from "./constants.js";
 
 export class Intmax {
-  readonly name = "intmax";
+  readonly name = INTMAX_CONFIG.name;
 
-  readonly version = "1.0.0";
+  readonly version = INTMAX_CONFIG.version;
 
   async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [depositEth, withdrawEth] = await Promise.all([this.benchmarkDepositETH(), this.benchmarkWithdrawETH()]);
-
     return { depositEth, withdrawEth };
   }
 

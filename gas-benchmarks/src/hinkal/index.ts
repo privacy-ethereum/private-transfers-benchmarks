@@ -13,12 +13,13 @@ import {
   INTERNAL_TRANSFER_EVENTS,
   UNSHIELD_ERC20_EVENTS,
   UNSHIELD_ETH_EVENTS,
+  HINKAL_CONFIG,
 } from "./constants.js";
 
 export class Hinkal {
-  readonly name = "hinkal";
+  readonly name = HINKAL_CONFIG.name;
 
-  readonly version = "1.0.0";
+  readonly version = HINKAL_CONFIG.version;
 
   async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [shieldEth, unshieldEth, internalTransfer, shieldErc20, unshieldErc20] = await Promise.all([

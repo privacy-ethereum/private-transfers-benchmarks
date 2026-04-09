@@ -6,12 +6,17 @@ import { MIN_SAMPLES } from "../utils/constants.js";
 import { getValidTransactions } from "../utils/rpc.js";
 import { getAverageMetrics } from "../utils/utils.js";
 
-import { PRIVACY_POOLS_ENTRYPOINT_PROXY, SHIELD_ETH_EVENTS, UNSHIELD_ETH_EVENTS } from "./constants.js";
+import {
+  PRIVACY_POOLS_CONFIG,
+  PRIVACY_POOLS_ENTRYPOINT_PROXY,
+  SHIELD_ETH_EVENTS,
+  UNSHIELD_ETH_EVENTS,
+} from "./constants.js";
 
 export class PrivacyPools {
-  readonly name = "privacy-pools";
+  readonly name = PRIVACY_POOLS_CONFIG.name;
 
-  readonly version = "1.1.1";
+  readonly version = PRIVACY_POOLS_CONFIG.version;
 
   async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [shieldEth, unshieldEth] = await Promise.all([this.benchmarkShieldETH(), this.benchmarkUnshieldETH()]);

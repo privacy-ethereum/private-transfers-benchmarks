@@ -7,6 +7,7 @@ import { getValidEthTransfers, getValidTransactions } from "../utils/rpc.js";
 import { getAverageMetrics } from "../utils/utils.js";
 
 import {
+  FLUIDKEY_CONFIG,
   FLUIDKEY_RELAYER_CONTRACT,
   SHIELD_ERC20_EVENTS,
   TRANSFER_ERC20_EVENTS,
@@ -15,9 +16,9 @@ import {
 } from "./constants.js";
 
 export class Fluidkey {
-  readonly name = "fluidkey";
+  readonly name = FLUIDKEY_CONFIG.name;
 
-  readonly version = "1.3.0";
+  readonly version = FLUIDKEY_CONFIG.version;
 
   async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [shieldEth, shieldErc20, transferEth, transferErc20] = await Promise.all([

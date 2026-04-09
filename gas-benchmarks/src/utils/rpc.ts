@@ -75,7 +75,10 @@ const getBlockWindow = async ({
 
   const scanStart = latestBlock ?? (await client.getBlockNumber());
 
-  const scanEnd = scanStart > scanWindow ? scanStart - scanWindow : 0n;
+  let scanEnd = scanStart - scanWindow;
+  if (scanEnd < 0n) {
+    scanEnd = 0n;
+  }
 
   return { scanStart, scanEnd };
 };
