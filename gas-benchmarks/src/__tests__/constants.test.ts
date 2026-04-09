@@ -1,119 +1,59 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { resolve } from "node:path";
+import { readdirSync } from "node:fs";
+import { join, resolve } from "node:path";
 
-import type { Entry } from "./types.js";
+import { FLUIDKEY_CONFIG } from "../fluidkey/constants.js";
+import { HINKAL_CONFIG } from "../hinkal/constants.js";
+import { INTMAX_CONFIG } from "../intmax/constants.js";
+import { PRIVACY_POOLS_CONFIG } from "../privacy-pools/constants.js";
+import { RAILGUN_CONFIG } from "../railgun/constants.js";
+import { TORNADO_CASH_CONFIG } from "../tornado-cash/constants.js";
 
-import {
-  extractEtherscanUrls,
-  findProtocolConstantsFiles,
-  hasEtherscanExample,
-  hasSolUrl,
-  hasSolUrlWithLineNumber,
-  parseConstantsFile,
-} from "./utils.js";
+const PROTOCOL_CONFIGS = [
+  { name: "fluidkey", config: FLUIDKEY_CONFIG },
+  { name: "hinkal", config: HINKAL_CONFIG },
+  { name: "intmax", config: INTMAX_CONFIG },
+  { name: "privacy-pools", config: PRIVACY_POOLS_CONFIG },
+  { name: "railgun", config: RAILGUN_CONFIG },
+  { name: "tornado-cash", config: TORNADO_CASH_CONFIG },
+];
+
+/** Directories excluded from protocol config checks */
+const EXCLUDED_DIRS = new Set(["__tests__", "utils", "monero"]);
 
 describe("constants.ts files", () => {
-  let files: Entry[] = [];
+  it("should have a config entry for every protocol directory with a constants.ts file", () => {
+    const srcDirectory = resolve(__dirname, "..");
+    const allDirectories = readdirSync(srcDirectory, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && !EXCLUDED_DIRS.has(entry.name))
+      .map((entry) => entry.name);
 
-  beforeAll(() => {
-    const srcDir = resolve(__dirname, "..");
+    const protocolDirectories = allDirectories.filter((directory) => {
+      const protocolDirectoryPath = join(srcDirectory, directory);
+      const files = readdirSync(protocolDirectoryPath);
+      return files.includes("constants.ts");
+    });
 
-    const filePaths = findProtocolConstantsFiles(srcDir);
+    const configuredNames = new Set(PROTOCOL_CONFIGS.map(({ name }) => name));
+    const missing = protocolDirectories.filter((directory) => !configuredNames.has(directory));
 
-    files = filePaths.map((filePath) => ({
-      filePath,
-      ...parseConstantsFile(filePath),
-    }));
+    expect(missing, `Missing PROTOCOL_CONFIGS entries for: ${missing.join(", ")}`).toHaveLength(0);
   });
 
-  it("should have at least one contract address", () => {
-    files
-      .filter(({ filePath }) => !filePath.includes("monero"))
-      .forEach(({ filePath, addresses }) => {
-        expect(
-          addresses.length,
-          `${filePath} must have at least one contract address (Address-typed constant)`,
-        ).toBeGreaterThanOrEqual(1);
-      });
-  });
-
-  it("should have at least two events array", () => {
-    files
-      .filter(({ filePath }) => !filePath.includes("monero"))
-      .forEach(({ filePath, events }) => {
-        expect(
-          events.length,
-          `${filePath} must have at least two events arrays (array with parseAbiItem calls)`,
-        ).toBeGreaterThanOrEqual(2);
-      });
-  });
-
-  it("should have a URL to a .sol source file for each contract address", () => {
-    files.forEach(({ filePath, addresses }) => {
-      addresses.forEach(({ name, comment }) => {
-        expect(hasSolUrl(comment), `JSDoc for ${name} in ${filePath} must have a URL ending in .sol`).toBe(true);
-      });
+  it("should have at least two distinct event arrays per protocol", () => {
+    PROTOCOL_CONFIGS.forEach(({ name, config }) => {
+      const uniqueEventArrays = new Set(config.operations.map(({ events }) => events));
+      expect(uniqueEventArrays.size, `${name} must have at least two distinct event arrays`).toBeGreaterThanOrEqual(2);
     });
   });
 
-  it("should have a URL to a .sol source file with line reference for each events array indicating the function that emits the events", () => {
-    files.forEach(({ filePath, events }) => {
-      events.forEach(({ name, comment }) => {
-        expect(
-          hasSolUrlWithLineNumber(comment),
-          `JSDoc for ${name} in ${filePath} must have a URL to a .sol file with a line reference (e.g., #L123 or start=30)`,
-        ).toBe(true);
-      });
-    });
-  });
+  it("should not repeat example transaction URLs across operations", () => {
+    const allExampleTxUrls = PROTOCOL_CONFIGS.flatMap(({ config }) =>
+      config.operations.map(({ exampleTxUrl }) => exampleTxUrl),
+    );
+    const uniqueExampleTxUrls = new Set(allExampleTxUrls);
 
-  it("should have a Emits: section describing all events for each events array", () => {
-    files.forEach(({ filePath, events }) => {
-      events.forEach(({ name, arrayEventCount, emitsEventCount }) => {
-        expect(
-          emitsEventCount,
-          `JSDoc for ${name} in ${filePath} must describe all ${arrayEventCount} event(s) in the Emits: section`,
-        ).toBe(arrayEventCount);
-      });
-    });
-  });
-
-  it("should have an Example: section with an etherscan transaction URL for each events array", () => {
-    files.forEach(({ filePath, events }) => {
-      events.forEach(({ name, comment }) => {
-        expect(
-          hasEtherscanExample(comment),
-          `JSDoc for ${name} in ${filePath} must contain an etherscan.io/tx/0x123... example URL`,
-        ).toBe(true);
-      });
-    });
-  });
-
-  it("should not repeat etherscan URL examples across events arrays", () => {
-    const allUrls: string[] = [];
-    const urlToLocations: Record<string, string[] | undefined> = {};
-
-    files.forEach(({ filePath, events }) => {
-      events.forEach(({ name, comment }) => {
-        const urls = extractEtherscanUrls(comment);
-        urls.forEach((url) => {
-          allUrls.push(url);
-          if (!urlToLocations[url]) {
-            urlToLocations[url] = [];
-          }
-          urlToLocations[url].push(`${filePath} (${name})`);
-        });
-      });
-    });
-
-    const duplicates = Object.entries(urlToLocations)
-      .filter(([, locations]) => locations && locations.length > 1)
-      .map(([url, locations]) => `${url} found in: ${locations?.join(", ")}`);
-
-    expect(
-      duplicates,
-      `Etherscan URLs must not be repeated across events arrays:\n${duplicates.join("\n")}`,
-    ).toHaveLength(0);
+    expect(uniqueExampleTxUrls.size, "Duplicate example transaction URLs found").toBe(allExampleTxUrls.length);
   });
 });

@@ -8,15 +8,16 @@ import { getAverageMetrics } from "../utils/utils.js";
 
 import {
   SHIELD_ETH_EVENTS,
+  TORNADO_CASH_CONFIG,
   TORNADO_CASH_RELAYER_REGISTRY,
   TORNADO_CASH_ROUTER,
   UNSHIELD_ETH_EVENTS,
 } from "./constants.js";
 
 export class TornadoCash {
-  readonly name = "tornado-cash";
+  readonly name = TORNADO_CASH_CONFIG.name;
 
-  readonly version = "unstoppable-release";
+  readonly version = TORNADO_CASH_CONFIG.version;
 
   async benchmark(): Promise<Record<string, FeeMetrics>> {
     const [shieldEth, unshieldEth] = await Promise.all([this.benchmarkShieldETH(), this.benchmarkUnshieldETH()]);
