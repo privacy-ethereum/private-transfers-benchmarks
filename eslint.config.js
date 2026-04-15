@@ -13,9 +13,8 @@ import unusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
 
 import { readFileSync } from "fs";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 
 const { configs } = pkg;
 
@@ -206,18 +205,89 @@ const evalConfig = {
       "error",
       {
         builtinGlobals: true,
-        allow: [
-          "location",
-          "event",
-          "history",
-          "name",
-          "status",
-          "Option",
-          "test",
-          "expect",
-          "jest",
-          "PropertyDefinition",
-        ],
+        allow: ["name", "PropertyDefinition"],
+      },
+    ],
+  },
+};
+
+const subgraphExtends = fixupConfigRules(
+  compat.extends(
+    "airbnb",
+    "prettier",
+    "plugin:import/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/strict",
+    "plugin:@typescript-eslint/stylistic",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/stylistic-type-checked",
+  ),
+);
+
+const subgraphConfig = {
+  files: ["subgraph/src/**/*.ts", "subgraph/tests/**/*.ts"],
+  extends: subgraphExtends,
+  plugins: sharedPlugins,
+  languageOptions: {
+    parser: tsParser,
+    sourceType: "module",
+    ecmaVersion: 2022,
+    globals: globals.node,
+    parserOptions: {
+      ...sharedParserOptions,
+      project: resolve(__dirname, "./subgraph/tsconfig.json"),
+    },
+  },
+  settings: {
+    react: { version: "999.999.999" },
+    "import/resolver": {
+      typescript: {},
+      node: { extensions: [".ts", ".js"], moduleDirectory: ["node_modules", "src", "tests", "generated"] },
+    },
+  },
+  linterOptions: { reportUnusedDisableDirectives: isProduction },
+  rules: {
+    ...sharedRules,
+    "import/no-unresolved": ["error", { ignore: ["generated"] }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        devDependencies: ["**/*.test.ts", "**/tests/**"],
+      },
+    ],
+    "no-debugger": isProduction ? "error" : "off",
+    "no-underscore-dangle": "error",
+    "no-redeclare": ["error", { builtinGlobals: true }],
+    "import/order": [
+      "error",
+      {
+        groups: ["external", "builtin", "internal", "type", "parent", "sibling", "index", "object"],
+        alphabetize: { order: "asc", caseInsensitive: true },
+        warnOnUnassignedImports: true,
+        "newlines-between": "always",
+      },
+    ],
+    "import/prefer-default-export": "off",
+    "import/extensions": ["error", { json: "always" }],
+    "class-methods-use-this": "off",
+    "prefer-promise-reject-errors": "off",
+    "max-classes-per-file": "off",
+    "no-use-before-define": ["off"],
+    "no-shadow": "off",
+    curly: ["error", "all"],
+    "no-return-await": "off",
+    "prefer-destructuring": "off",
+    "@typescript-eslint/prefer-for-of": "off",
+    "@typescript-eslint/consistent-type-imports": "off",
+    "@typescript-eslint/explicit-member-accessibility": ["error", { accessibility: "no-public" }],
+    "@typescript-eslint/explicit-module-boundary-types": "error",
+    "@typescript-eslint/no-use-before-define": ["error", { functions: false, classes: false }],
+    "@typescript-eslint/no-shadow": [
+      "error",
+      {
+        builtinGlobals: true,
+        allow: ["BigInt", "Request", "describe", "afterEach", "beforeEach", "beforeAll"],
       },
     ],
   },
@@ -228,5 +298,6 @@ const evalConfig = {
 export default defineConfig([
   gasConfig,
   evalConfig,
-  globalIgnores(["**/node_modules", "**/dist", "**/coverage", "**/build", "eslint.config.js"]),
+  subgraphConfig,
+  globalIgnores(["**/node_modules", "**/dist", "**/coverage", "**/build", "eslint.config.js", "subgraph/generated"]),
 ]);
