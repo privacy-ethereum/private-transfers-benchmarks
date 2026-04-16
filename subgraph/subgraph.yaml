@@ -17,7 +17,6 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Shield
-        - Nullified
         - Unshield
         - Transact
       abis:
@@ -30,8 +29,7 @@ dataSources:
         - event: Unshield(address,(uint8,address,uint256),uint256,uint256)
           handler: handleUnshield
           receipt: true
-        # - event: Nullified(uint16,bytes32[])
-        #   handler: handleNullified
-        # - event: Transact(uint256,uint256,bytes32[],(bytes32[4],bytes32,bytes32,bytes,bytes)[])
-        #   handler: handleTransact
+        - event: Transact(uint256,uint256,bytes32[],(bytes32[4],bytes32,bytes32,bytes,bytes)[])
+          handler: handleTransact
+          receipt: true
       file: ./src/railgun-smart-wallet.ts

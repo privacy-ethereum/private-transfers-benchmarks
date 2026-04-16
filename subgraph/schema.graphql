@@ -5,6 +5,7 @@ type RailgunProtocolStats @entity(immutable: false) {
 
   shield: RailgunOperationStats!
   unshield: RailgunOperationStats!
+  transact: RailgunOperationStats!
 }
 
 type RailgunShieldTokenStats @entity(immutable: false) {
@@ -76,18 +77,6 @@ type RailgunShieldCiphertext @entity(immutable: true) {
   shieldKey: Bytes!
 }
 
-type RailgunNullified @entity(immutable: true) {
-  id: ID!
-  treeNumber: Int!
-
-  nullifiers: [Bytes!]!
-
-  blockNumber: BigInt!
-  timestamp: BigInt!
-  txHash: Bytes!
-  gasUsed: BigInt!
-}
-
 type RailgunUnshield @entity(immutable: true) {
   id: ID!
   to: Bytes!
@@ -118,6 +107,7 @@ type RailgunTransact @entity(immutable: true) {
   timestamp: BigInt!
   txHash: Bytes!
   gasUsed: BigInt!
+  gasPrice: BigInt!
 }
 
 type RailgunTransactCiphertext @entity(immutable: true) {
