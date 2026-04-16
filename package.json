@@ -5,8 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint gas-benchmarks/src project-evaluations/src",
-    "lint:fix": "eslint --fix gas-benchmarks/src project-evaluations/src",
+    "lint": "eslint gas-benchmarks/src project-evaluations/src subgraph/src subgraph/tests",
+    "lint:fix": "pnpm run lint --fix",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "prepare": "husky"

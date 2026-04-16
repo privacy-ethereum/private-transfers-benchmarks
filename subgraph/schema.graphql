@@ -1,0 +1,137 @@
+type RailgunProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shield: RailgunOperationStats!
+  unshield: RailgunOperationStats!
+}
+
+type RailgunShieldTokenStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: RailgunOperationStats!
+}
+
+type RailgunUnshieldTokenStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: RailgunOperationStats!
+}
+
+type RailgunOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shieldTokenStats: [RailgunShieldTokenStats!]! @derivedFrom(field: "operationStats")
+  unshieldTokenStats: [RailgunUnshieldTokenStats!]! @derivedFrom(field: "operationStats")
+}
+
+type RailgunShield @entity(immutable: true) {
+  id: ID!
+  treeNumber: BigInt!
+  startPosition: BigInt!
+  fees: [BigInt!]!
+
+  commitments: [RailgunCommitment!]! @derivedFrom(field: "shield")
+  ciphertexts: [RailgunShieldCiphertext!]! @derivedFrom(field: "shield")
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type RailgunCommitment @entity(immutable: true) {
+  id: ID!
+  shield: RailgunShield!
+
+  npk: Bytes!
+
+  tokenType: Int!
+  tokenAddress: Bytes!
+  tokenSubID: BigInt!
+
+  value: BigInt!
+}
+
+type RailgunShieldCiphertext @entity(immutable: true) {
+  id: ID!
+  shield: RailgunShield!
+
+  encryptedBundle0: Bytes!
+  encryptedBundle1: Bytes!
+  encryptedBundle2: Bytes!
+
+  shieldKey: Bytes!
+}
+
+type RailgunNullified @entity(immutable: true) {
+  id: ID!
+  treeNumber: Int!
+
+  nullifiers: [Bytes!]!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+}
+
+type RailgunUnshield @entity(immutable: true) {
+  id: ID!
+  to: Bytes!
+
+  tokenType: Int!
+  tokenAddress: Bytes!
+  tokenSubID: BigInt!
+
+  amount: BigInt!
+  fee: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type RailgunTransact @entity(immutable: true) {
+  id: ID!
+  treeNumber: BigInt!
+  startPosition: BigInt!
+  hash: [Bytes!]!
+
+  ciphertexts: [RailgunTransactCiphertext!]! @derivedFrom(field: "transact")
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+}
+
+type RailgunTransactCiphertext @entity(immutable: true) {
+  id: ID!
+  transact: RailgunTransact!
+
+  ciphertext0: Bytes!
+  ciphertext1: Bytes!
+  ciphertext2: Bytes!
+  ciphertext3: Bytes!
+
+  blindedSenderViewingKey: Bytes!
+  blindedReceiverViewingKey: Bytes!
+
+  annotationData: Bytes!
+  memo: Bytes!
+}
