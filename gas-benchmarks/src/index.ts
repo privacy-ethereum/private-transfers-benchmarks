@@ -4,6 +4,7 @@ import { Intmax } from "./intmax/index.js";
 import { Monero } from "./monero/index.js";
 import { PrivacyPools } from "./privacy-pools/index.js";
 import { Railgun } from "./railgun/index.js";
+import { Redact } from "./redact/index.js";
 import { TornadoCash } from "./tornado-cash/index.js";
 import { db } from "./utils/db.js";
 
@@ -14,6 +15,7 @@ const intmax = new Intmax();
 const monero = new Monero();
 const hinkal = new Hinkal();
 const fluidkey = new Fluidkey();
+const redact = new Redact();
 
 await db.read();
 
@@ -27,6 +29,7 @@ const [
   moneroMetrics,
   hinkalMetrics,
   fluidkeyMetrics,
+  redactMetrics,
 ] = await Promise.all([
   railgun.benchmark(),
   tornadoCash.benchmark(),
@@ -35,6 +38,7 @@ const [
   monero.benchmark(),
   hinkal.benchmark(),
   fluidkey.benchmark(),
+  redact.benchmark(),
 ]);
 
 await db.update((data) => {
@@ -84,6 +88,12 @@ await db.update((data) => {
     shield_erc20: fluidkeyMetrics.shieldErc20,
     transfer_eth: fluidkeyMetrics.transferEth,
     transfer_erc20: fluidkeyMetrics.transferErc20,
+  };
+
+  // eslint-disable-next-line no-param-reassign
+  data[`${redact.name}_${redact.version}`] = {
+    encrypt_eth: redactMetrics.encryptEth,
+    decrypt_eth: redactMetrics.decryptEth,
   };
 });
 

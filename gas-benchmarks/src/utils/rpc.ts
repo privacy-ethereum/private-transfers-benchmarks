@@ -9,7 +9,7 @@ import {
   type PublicClient,
   type TransactionReceipt,
 } from "viem";
-import { mainnet, scroll } from "viem/chains";
+import { mainnet, scroll, sepolia } from "viem/chains";
 
 import type {
   EthGetBlockReceiptsSchema,
@@ -28,12 +28,16 @@ import {
   MAX_SAMPLES,
   BLOCK_WINDOW_ETHEREUM_1_WEEK,
   BLOCK_WINDOW_SCROLL_1_WEEK,
+  SEPOLIA_RPC_URL,
+  BATCH_SIZE_FOR_RPC_CALLS,
 } from "./constants.js";
-import { isNativeTransfer } from "./utils.js";
+import { withRetries } from "./http.js";
+import { isNativeTransfer, sleep } from "./utils.js";
 
 /** Pre-configured RPC clients keyed by chain ID */
 const clients: Record<number, PublicClient | undefined> = {
   [mainnet.id]: createPublicClient({ chain: mainnet, transport: http(ETH_RPC_URL, { batch: true }) }),
+  [sepolia.id]: createPublicClient({ chain: sepolia, transport: http(SEPOLIA_RPC_URL, { batch: true }) }),
   [scroll.id]: createPublicClient({ chain: scroll, transport: http(SCROLL_RPC_URL, { batch: true }) }),
 };
 
@@ -69,6 +73,8 @@ const getBlockWindow = async ({
     scanWindow = BLOCK_WINDOW_ETHEREUM_1_WEEK;
   } else if (chainId === scroll.id) {
     scanWindow = BLOCK_WINDOW_SCROLL_1_WEEK;
+  } else if (chainId === sepolia.id) {
+    scanWindow = BLOCK_WINDOW_ETHEREUM_1_WEEK;
   } else {
     throw new Error(`No block window configured for chain ID: ${chainId}`);
   }
@@ -100,6 +106,7 @@ const getAllLogs = async ({ client, contractAddress, events, scanEnd, scanStart 
     const batchLogs = await client.getLogs({
       address: contractAddress,
       events,
+      strict: true,
       fromBlock,
       toBlock,
     });
@@ -125,7 +132,21 @@ const getAllLogs = async ({ client, contractAddress, events, scanEnd, scanStart 
 const getValidReceipts = async ({ client, logs, events }: GetValidReceiptsInput): Promise<TransactionReceipt[]> => {
   const eventTopics = events.map((event) => encodeEventTopics({ abi: [event] })[0]);
 
-  const receipts = await Promise.all(logs.map((log) => client.getTransactionReceipt({ hash: log.transactionHash! })));
+  const receipts: TransactionReceipt[] = [];
+
+  for (let i = 0; i < logs.length; i += BATCH_SIZE_FOR_RPC_CALLS) {
+    const batch = logs.slice(i, i + BATCH_SIZE_FOR_RPC_CALLS);
+
+    // eslint-disable-next-line no-await-in-loop
+    const tempReceipts = await Promise.all(
+      batch.map((log) => withRetries(() => client.getTransactionReceipt({ hash: log.transactionHash! }))),
+    );
+
+    receipts.push(...tempReceipts);
+
+    // eslint-disable-next-line no-await-in-loop
+    await sleep(100); // delay between batches to avoid overwhelming the RPC
+  }
 
   return receipts.filter((receipt) => {
     const hasExpectedLogCount = receipt.logs.length === events.length;

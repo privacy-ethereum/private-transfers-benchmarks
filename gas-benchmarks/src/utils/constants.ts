@@ -10,12 +10,17 @@ if (!process.env.SCROLL_RPC_URL) {
   throw new Error("SCROLL_RPC_URL is not set");
 }
 
+if (!process.env.SEPOLIA_RPC_URL) {
+  throw new Error("SEPOLIA_RPC_URL is not set");
+}
+
 if (!process.env.MIN_SAMPLES) {
   throw new Error("MIN_SAMPLES is not set");
 }
 
 export const { ETH_RPC_URL } = process.env;
 export const { SCROLL_RPC_URL } = process.env;
+export const { SEPOLIA_RPC_URL } = process.env;
 
 /** Minimum number of valid samples required per benchmark */
 export const MIN_SAMPLES = Number(process.env.MIN_SAMPLES);
@@ -26,6 +31,9 @@ export const MAX_SAMPLES = 100_000;
 /** Number of blocks to fetch per RPC getLogs call */
 export const BLOCK_RANGE = 2_000n;
 
+/** How many RPC calls will be performed concurrently */
+export const BATCH_SIZE_FOR_RPC_CALLS = 1500;
+
 export const BENCHMARKS_OUTPUT_PATH = "./benchmarks.json";
 
 /**
@@ -34,6 +42,13 @@ export const BENCHMARKS_OUTPUT_PATH = "./benchmarks.json";
  * 600 / 12 = 50 blocks
  */
 export const BLOCK_WINDOW_ETHEREUM_10_MINUTES = 50n;
+
+/**
+ * The number of Ethereum blocks to scan for events for 3 days
+ * 3 days = 259200 seconds. 1 Ethereum block = 12 seconds
+ * 259200 / 12 = 21600 blocks
+ */
+export const BLOCK_WINDOW_ETHEREUM_3_DAYS = 21_600n;
 
 /**
  * The number of Ethereum blocks to scan for events for 1 week
@@ -64,8 +79,3 @@ export const BLOCK_WINDOW_SCROLL_1_WEEK = 604_800n;
  * Using 5 for dev and rate limiting on remote node
  */
 export const BLOCK_WINDOW_MONERO = 5;
-
-/**
- * One day in seconds used to calculate day of unixtimestamp
- */
-export const ONE_DAY_IN_SECONDS = 24 * 60 * 60;
