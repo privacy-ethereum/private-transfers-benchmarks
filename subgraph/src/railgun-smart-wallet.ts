@@ -1,6 +1,10 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 
-import { Shield as ShieldEvent, Unshield as UnshieldEvent } from "../generated/RailgunSmartWallet/RailgunSmartWallet";
+import {
+  Shield as ShieldEvent,
+  Unshield as UnshieldEvent,
+  Transact as TransactEvent,
+} from "../generated/RailgunSmartWallet/RailgunSmartWallet";
 import {
   RailgunShield,
   RailgunCommitment,
@@ -10,6 +14,8 @@ import {
   RailgunShieldTokenStats,
   RailgunUnshieldTokenStats,
   RailgunUnshield,
+  RailgunTransact,
+  RailgunTransactCiphertext,
 } from "../generated/schema";
 
 function createOrLoadProtocolStats(): RailgunProtocolStats {
@@ -23,6 +29,7 @@ function createOrLoadProtocolStats(): RailgunProtocolStats {
 
     const shieldStats = new RailgunOperationStats(`${id}-shield`);
     const unshieldStats = new RailgunOperationStats(`${id}-unshield`);
+    const transactStats = new RailgunOperationStats(`${id}-transact`);
 
     stats.shield = shieldStats.id;
     shieldStats.totalCount = BigInt.fromI32(0);
@@ -32,9 +39,14 @@ function createOrLoadProtocolStats(): RailgunProtocolStats {
     unshieldStats.totalCount = BigInt.fromI32(0);
     unshieldStats.totalGasUsed = BigInt.fromI32(0);
 
+    stats.transact = transactStats.id;
+    transactStats.totalCount = BigInt.fromI32(0);
+    transactStats.totalGasUsed = BigInt.fromI32(0);
+
     stats.save();
     shieldStats.save();
     unshieldStats.save();
+    transactStats.save();
   }
 
   return stats;
@@ -82,7 +94,7 @@ export function handleShield(event: ShieldEvent): void {
   const shield = new RailgunShield(id);
   const stats = createOrLoadProtocolStats();
 
-  stats.totalTxCount = stats.totalTxCount.plus(BigInt.fromI32(1));
+  stats.totalTxCount = stats.totalTxCount.plus(BigInt.fromI32(event.params.commitments.length));
 
   if (event.receipt !== null) {
     stats.totalGasUsed = stats.totalGasUsed.plus(event.receipt!.gasUsed);
@@ -91,12 +103,10 @@ export function handleShield(event: ShieldEvent): void {
   const shieldStats = RailgunOperationStats.load(stats.shield);
 
   if (shieldStats !== null) {
-    shieldStats.totalCount = shieldStats.totalCount.plus(BigInt.fromI32(1));
+    shieldStats.totalCount = shieldStats.totalCount.plus(BigInt.fromI32(event.params.commitments.length));
 
     if (event.receipt !== null) {
       shieldStats.totalGasUsed = shieldStats.totalGasUsed.plus(event.receipt!.gasUsed);
-    } else {
-      shieldStats.totalGasUsed = shieldStats.totalGasUsed.plus(BigInt.fromI32(0));
     }
 
     shieldStats.save();
@@ -189,8 +199,6 @@ export function handleUnshield(event: UnshieldEvent): void {
 
     if (event.receipt !== null) {
       unshieldStats.totalGasUsed = unshieldStats.totalGasUsed.plus(event.receipt!.gasUsed);
-    } else {
-      unshieldStats.totalGasUsed = unshieldStats.totalGasUsed.plus(BigInt.fromI32(0));
     }
 
     unshieldStats.save();
@@ -232,4 +240,69 @@ export function handleUnshield(event: UnshieldEvent): void {
   }
 
   unshield.save();
+}
+
+export function handleTransact(event: TransactEvent): void {
+  const id = `${event.transaction.hash.toHex()}-${event.logIndex.toString()}`;
+
+  const transact = new RailgunTransact(id);
+  const stats = createOrLoadProtocolStats();
+
+  stats.totalTxCount = stats.totalTxCount.plus(BigInt.fromI32(1));
+
+  if (event.receipt !== null) {
+    stats.totalGasUsed = stats.totalGasUsed.plus(event.receipt!.gasUsed);
+  }
+
+  const transactStats = RailgunOperationStats.load(stats.transact);
+
+  if (transactStats !== null) {
+    transactStats.totalCount = transactStats.totalCount.plus(BigInt.fromI32(event.params.hash.length));
+
+    if (event.receipt !== null) {
+      transactStats.totalGasUsed = transactStats.totalGasUsed.plus(event.receipt!.gasUsed);
+    }
+
+    transactStats.save();
+  }
+
+  stats.save();
+
+  transact.treeNumber = event.params.treeNumber;
+  transact.startPosition = event.params.startPosition;
+  transact.hash = event.params.hash;
+
+  transact.blockNumber = event.block.number;
+  transact.timestamp = event.block.timestamp;
+  transact.txHash = event.transaction.hash;
+
+  if (event.receipt !== null) {
+    transact.gasUsed = event.receipt!.gasUsed;
+  }
+
+  transact.gasPrice = event.transaction.gasPrice;
+
+  const ciphertexts = event.params.ciphertext;
+
+  for (let index = 0; index < ciphertexts.length; index += 1) {
+    const ctId = `${id}-ct-${index.toString()}`;
+    const cipher = new RailgunTransactCiphertext(ctId);
+
+    cipher.transact = id;
+
+    const bundle = ciphertexts[index].ciphertext;
+    cipher.ciphertext0 = bundle[0];
+    cipher.ciphertext1 = bundle[1];
+    cipher.ciphertext2 = bundle[2];
+    cipher.ciphertext3 = bundle[3];
+
+    cipher.blindedReceiverViewingKey = ciphertexts[index].blindedReceiverViewingKey;
+    cipher.blindedSenderViewingKey = ciphertexts[index].blindedSenderViewingKey;
+    cipher.annotationData = ciphertexts[index].annotationData;
+    cipher.memo = ciphertexts[index].memo;
+
+    cipher.save();
+  }
+
+  transact.save();
 }

@@ -1,7 +1,7 @@
 import { ethereum, BigInt, Address, Bytes } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as";
 
-import { Shield, Unshield } from "../generated/RailgunSmartWallet/RailgunSmartWallet";
+import { Shield, Transact, Unshield } from "../generated/RailgunSmartWallet/RailgunSmartWallet";
 
 export function createShieldEvent(
   treeNumber: BigInt,
@@ -85,6 +85,41 @@ export function createUnshieldEvent(
   event.parameters.push(new ethereum.EventParam("token", ethereum.Value.fromTuple(tokenTuple)));
   event.parameters.push(new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(amount)));
   event.parameters.push(new ethereum.EventParam("fee", ethereum.Value.fromUnsignedBigInt(fee)));
+
+  return event;
+}
+
+export function createTransactCiphertextTuple(
+  ciphertext: Bytes[],
+  blindedSenderViewingKey: Bytes,
+  blindedReceiverViewingKey: Bytes,
+  annotationData: Bytes,
+  memo: Bytes,
+): ethereum.Tuple {
+  const tuple = new ethereum.Tuple();
+
+  tuple.push(ethereum.Value.fromFixedBytesArray(ciphertext));
+  tuple.push(ethereum.Value.fromFixedBytes(blindedSenderViewingKey));
+  tuple.push(ethereum.Value.fromFixedBytes(blindedReceiverViewingKey));
+  tuple.push(ethereum.Value.fromBytes(annotationData));
+  tuple.push(ethereum.Value.fromBytes(memo));
+
+  return tuple;
+}
+
+export function createTransactEvent(
+  treeNumber: BigInt,
+  startPosition: BigInt,
+  hashes: Bytes[],
+  ciphertexts: ethereum.Tuple[],
+): Transact {
+  const event = changetype<Transact>(newMockEvent());
+  event.parameters = [];
+
+  event.parameters.push(new ethereum.EventParam("treeNumber", ethereum.Value.fromUnsignedBigInt(treeNumber)));
+  event.parameters.push(new ethereum.EventParam("startPosition", ethereum.Value.fromUnsignedBigInt(startPosition)));
+  event.parameters.push(new ethereum.EventParam("hash", ethereum.Value.fromFixedBytesArray(hashes)));
+  event.parameters.push(new ethereum.EventParam("ciphertext", ethereum.Value.fromTupleArray(ciphertexts)));
 
   return event;
 }
