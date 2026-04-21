@@ -60,8 +60,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Asset privacy",
     group: "Privacy",
-    description:
-      "Whether the specific asset being transferred is hidden from observers. For single-asset protocols, this is No since there is only one possible asset.",
+    description: "Whether the specific asset being transferred is hidden from observers.",
     metric: "Yes / No",
     inputType: "select",
     options: ["Yes", "No"],
@@ -101,8 +100,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Time-to-finality",
     group: "Cost and Performance",
-    description:
-      "The time it takes for a transaction to be considered irreversible (in seconds). For protocols deployed on blockchains (e.g. Ethereum L1 apps, L2s), this is N/A — list the deployed networks and note that finality is inherited from the underlying chain. Exception: L2s and L3s have their own finality time if their settlement adds delay beyond the underlying chain.",
+    description: "The time it takes for a transaction to be considered irreversible (in seconds).",
     metric: "Seconds or N/A",
     inputType: "text",
   },
@@ -111,24 +109,21 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Number of secrets",
     group: "UX",
-    description:
-      "How many new secrets must the user store to use the protocol. Only count secrets the user must independently back up — deterministically derived keys (e.g. a viewing key derived from a signed message) do not count as new secrets. The description should list all keys involved (spending key, viewing key, encryption key, etc.), how they are derived, and what cryptographic primitives are used (e.g. ECDH, BIP-32, EdDSA on Baby Jubjub). If everything derives from one wallet signature, the answer is 1.",
+    description: "How many new secrets must the user store to use the protocol.",
     metric: "Number of secrets",
     inputType: "number",
   },
   {
     name: "Deposit time",
     group: "UX",
-    description:
-      "Duration required before you can deposit into the protocol (in seconds). N/A for L1 protocols without a distinct deposit concept.",
+    description: "Duration required before you can deposit into the protocol (in seconds).",
     metric: "Seconds or N/A",
     inputType: "text",
   },
   {
     name: "Withdraw time",
     group: "UX",
-    description:
-      "Duration required before you can withdraw funds from the protocol (in seconds). N/A for L1 protocols without a distinct withdraw concept.",
+    description: "Duration required before you can withdraw funds from the protocol (in seconds).",
     metric: "Seconds or N/A",
     inputType: "text",
   },
@@ -138,7 +133,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Censorship resistance",
     group: "Decentralization & Security",
     description:
-      "Whether any entity can prevent valid transactions from being included in the chain. Considers mining/validator censorship, protocol-level restrictions, and network-level blocking. If the protocol uses relayers or broadcasters, note this in the description — but relayer dependence alone does not make the protocol censorship-susceptible if users can bypass relayers and interact with the underlying contracts directly.",
+      "Whether any entity can prevent valid transactions from being included in the chain. Considers mining/validator censorship, protocol-level restrictions, and network-level blocking.",
     metric: "Yes / No",
     inputType: "select",
     options: ["Yes", "No"],
@@ -155,7 +150,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Escape hatch",
     group: "Decentralization & Security",
     description:
-      "Whether users can withdraw shielded funds relying only on the underlying blockchain's consensus and cryptography. For standalone L1 blockchains, this may not apply.",
+      "Whether users can withdraw shielded funds relying only on the underlying blockchain's consensus and cryptography.",
     metric: "No / Can exit in a time period / Instantly / N/A",
     inputType: "select",
     options: ["No", "Can exit in a time period", "Instantly", "N/A"],
@@ -163,8 +158,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Upgradeability",
     group: "Decentralization & Security",
-    description:
-      "How upgrades to the system are performed. For L1 blockchains, this includes the mechanism by which protocol rules change (e.g. hard/soft forks via improvement proposal processes).",
+    description: "How upgrades to the system are performed.",
     metric: "Single admin / Multi-sig / DAO / Network upgrade (hard/soft fork) / Immutable",
     inputType: "select",
     options: ["Single admin", "Multi-sig", "DAO", "Network upgrade (hard/soft fork)", "Immutable"],
@@ -234,14 +228,13 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Type of compliance",
     group: "Compliance",
     description:
-      "What compliance mechanisms are available or enforced. POI/ASP: on-chain proof that funds are not associated with flagged addresses, using blocklists maintained with varying degrees of centralization. Selective disclosure: users can voluntarily reveal transaction details via viewing keys. KYC/KYB: identity verification required to participate. KYT: real-time transaction screening against risk databases. Programmatic policies: configurable rule-based restrictions (e.g. sanctions lists, allow/block lists). Other: compliance mechanism not covered above.",
-    metric: "POI/ASP / Selective disclosure / KYC/KYB / KYT / Programmatic policies / Other / None",
+      "What compliance mechanisms are available or enforced. Programmatic policies: programmable per-transaction rule sets, validated by an external API or oracle that returns a cryptographic attestation of compliance (Predicate-style). Data sources commonly include blockchain-analytics vendors (Chainalysis, TRM, Elliptic), ISACs, fraud-detection feeds, off-chain KYC platforms, and ZK-identity tools — these data inputs are subsumed under Programmatic policies, not separate categories. KYC/KYB: identity verification required to participate (passport / liveness / sanctions screening); ZK-identity is an emerging privacy-preserving variant of the same category. POI/ASP: inclusion/exclusion-based ZK proofs over a curated set — Proof of Innocence proves funds do NOT intersect a disallowed set; Association Set Provider proves funds DO belong to an allowed set. Same ZK primitive, opposite set semantics. Selective disclosure: users can voluntarily reveal transaction details via viewing keys. Other: compliance mechanism not covered above.",
+    metric: "POI/ASP / Selective disclosure / KYC/KYB / Programmatic policies / Other / None",
     inputType: "multi-select",
     options: [
       "Proof of innocence (POI) / ASP",
       "Selective disclosure",
       "KYC/KYB",
-      "KYT",
       "Programmatic policies",
       "Other",
       "None",
@@ -280,7 +273,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Cryptographic verifiability",
     group: "Verifiable",
     description:
-      "Whether transaction correctness is guaranteed by cryptographic proofs rather than social or majority-based mechanisms. For L1 blockchains, note that consensus (PoW/PoS) provides block ordering while cryptography verifies transaction validity — use 'Yes, with L1 consensus' to distinguish this mixed model. For protocols with upgradable contracts or permissioned components, note these additional trust assumptions.",
+      "Whether transaction correctness is guaranteed by cryptographic proofs rather than social or majority-based mechanisms.",
     metric: "Yes / Yes, with L1 consensus / No",
     inputType: "select",
     options: ["Yes", "Yes, with L1 consensus", "No"],
@@ -289,7 +282,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Open source",
     group: "Verifiable",
     description:
-      "The source code for the underlying protocol, any backend infrastructure, and any frontend applications is publicly available to inspect and has an open source software license. Check all critical repositories (contracts, circuits, SDKs) — different components may have different licenses. Source-available without a license is not open source.",
+      "The source code for the underlying protocol, any backend infrastructure, and any frontend applications is publicly available to inspect and has an OSI-approved open source license.",
     metric: "Yes / No",
     inputType: "select",
     options: ["Yes", "No"],
@@ -299,18 +292,11 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Private State Scalability",
     group: "State",
-    description: "How protocol-specific private data is stored over time",
+    description: "How protocol-specific private data grows over time.",
     metric:
-      "Infinity grow (nullifier/note trees grow forever) / Temporal grow (state pruned at epochs, stored offchain) / Stateless (state updated but does not grow) / L2 / Within contract / Off-chain DA with on-chain handles",
+      "Infinity grow (nullifier/note trees grow forever) / Temporal grow (state pruned at epochs, stored offchain) / Stateless (state updated but does not grow)",
     inputType: "select",
-    options: [
-      "Infinity grow",
-      "L2",
-      "Temporal grow",
-      "Stateless",
-      "Within contract",
-      "Off-chain DA with on-chain handles",
-    ],
+    options: ["Infinity grow", "Temporal grow", "Stateless"],
   },
   {
     name: "Client-side indexing",
