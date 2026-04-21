@@ -433,8 +433,9 @@
     },
     {
       "name": "Cryptographic verifiability",
-      "value": "Yes",
-      "notes": "Yes, ZCash has cryptographic verifiability. The acronym zk-SNARK stands for Zero-Knowledge Succinct Non-Interactive Argument of Knowledge and refers to a proof construction where one can prove possession of certain information without revealing that information and without any interaction between the prover and verifier. Shielded transactions in Zcash can be fully encrypted on the blockchain, yet still be verified as valid under the network's consensus rules by using zk-SNARK proofs. These succinct zero-knowledge proofs can be verified within a few milliseconds, with a proof length of only a few hundred bytes, and in non-interactive constructions, the proof consists of a single message sent from prover to verifier.",
+      "value": "Yes, with L1 consensus",
+      "notes": "Zcash is an L1 blockchain whose individual transaction correctness is enforced by zk-SNARK verification (Halo2 / Orchard, Groth16 for legacy Sapling), while block ordering and inclusion are decided by majority-based PoW consensus. Shielded transactions are fully encrypted on-chain yet still verifiable as valid under the network's consensus rules. Per the rule, L1 protocols with cryptographic transaction correctness plus consensus-based ordering take \"Yes, with L1 consensus\".",
+      "needsResearchReview": true,
       "citations": [
         {
           "cited_text": "The acronym zk-SNARK stands for Zero-Knowledge Succinct Non-Interactive Argument of Knowledge and refers to a proof construction where one can prove possession of certain information, e.g., a secret key, without revealing that information, and without any interaction between the prover and verifier.\n\n",

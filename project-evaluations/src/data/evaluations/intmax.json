@@ -115,8 +115,9 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"KYT\",\"Proof of innocence (POI) / ASP\"]",
-      "notes": "Intmax applies Know Your Transaction (KYT) screening to incoming deposits and uses a Proof of Innocence (POI) model whereby users must demonstrate that their funds are not associated with sanctioned or illicit activity before being accepted into the network.",
+      "value": "[\"Programmatic policies\",\"Proof of innocence (POI) / ASP\"]",
+      "notes": "Intmax gates incoming deposits via Predicate AVS — a programmable per-deposit policy framework that returns a cryptographic attestation of compliance against rule sets sourcing from blockchain-analytics vendors. Predicate is the canonical example of programmatic policies. Users additionally demonstrate via a Proof of Innocence model that their funds are not associated with sanctioned or illicit activity before being accepted into the network.",
+      "needsResearchReview": true,
       "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#aml-rules"
     },
     {
@@ -139,8 +140,9 @@
     },
     {
       "name": "Cryptographic verifiability",
-      "value": "No",
-      "notes": "State transitions within Intmax are cryptographically verified using Plonky2 ZK proofs with FRI commitments and BN254 curve operations. However, the overall system has additional trust assumptions beyond cryptography: contracts are upgradable by a 2/4 multisig with no time delay or exit window, deposits are gated by Predicate AVS (a permissioned AML screening layer), and balance data is entirely self-custodied with no on-chain recovery mechanism. The system settles through Scroll (L2) to Ethereum (L1), inheriting their respective trust models. While the proof system itself is cryptographically sound, the protocol's correctness guarantees are not purely cryptographic.",
+      "value": "Yes",
+      "notes": "State transitions within Intmax are cryptographically verified using Plonky2 ZK proofs with FRI commitments and BN254 curve operations — an external observer can re-check the proofs against the published verifier. Additional trust concerns (contracts upgradable by a 2/4 multisig, Predicate AVS deposit gating, self-custodied balance data) are captured separately by Upgradeability and Censorship resistance rather than this property. The system settles through Scroll (L2) to Ethereum (L1), inheriting their consensus models for ordering.",
+      "needsResearchReview": true,
       "url": "https://docs.network.intmax.io/developers-hub/security-and-privacy/architecture-principles"
     },
     {
@@ -151,8 +153,8 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "L2",
-      "notes": "Users maintain their own state locally on their devices. Only salted transaction hashes and block commitments are published to the settlement layer. There is no global shared state that grows with usage — state growth is distributed across individual users.",
+      "value": "Stateless",
+      "notes": "Users maintain their own state locally on their devices. A significant part of state growth is distributed across individual users. Aggregators post the Merkle root, aggregated signature, and public key list to the rollup contract. The contract verifies aggregate proofs",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/roles"
     },
     {

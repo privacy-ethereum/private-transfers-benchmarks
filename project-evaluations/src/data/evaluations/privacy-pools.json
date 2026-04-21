@@ -176,7 +176,7 @@
     {
       "name": "Access to DeFi",
       "value": "No access to DeFi",
-      "notes": "Privacy Pools implemented a yield earning module for some of its token pools. This means that some tokens can earn yield privately while being idle on the anonymity pool. There is no mention about the yield module in the documentation but there is an announcement on social media and the UI shows some pools APR percentage.",
+      "notes": "Privacy Pools implemented a yield earning module for some of its token pools. This means that some tokens can earn yield privately while being idle on the anonymity pool. There is no mention of the yield module in the official docs but there is an announcement on social media and the UI shows some pools' APR percentage.",
       "url": "https://x.com/0xprivacypools/status/2010441283211530254"
     },
     {
