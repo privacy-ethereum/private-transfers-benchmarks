@@ -1,0 +1,627 @@
+{
+  "id": "nullmask",
+  "title": "Nullmask",
+  "description": "Nullmask is a privacy layer that sits between an ordinary wallet (e.g. MetaMask) and a chain via a custom RPC proxy. Users sign a single authorization message to derive viewing, nullifying and encryption keys; the proxy converts a user's normal transactions into shielded UTXO-style 'Notes' and produces UltraHonk zk-SNARK proofs (~2s) for deposits, transfers and withdrawals. Shielded state is represented as encrypted notes on-chain alongside a key registry; users trial-decrypt notes to find their own. Retroactive compliance allows flagged deposits to be revoked.",
+  "documentation": "https://nmskdiagram.vercel.app/",
+  "categories": ["VPN (Private Intents)"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Shielded balances exist as encrypted UTXO-style notes rather than public ERC-20 balances, and transaction token and amount stay private for shielded transfers, though token and amount are visible for shielded swaps and withdrawals . All incoming and outgoing account transfers are completely private, and no external observer can decrypt the fields of shielded transactions. Both the per-user balance (as a set of encrypted notes) and in-protocol transfer amounts are hidden from external observers, with amounts only becoming visible at the public boundary of swaps and withdrawals.",
+      "citations": [
+        {
+          "cited_text": "Specifically:\n\n* **Sender privacy** — Transaction sender always stays hidden\n* **Recipient privacy** — Transaction recipient always stays hidden except for protocol withdrawals, which go to a public 0x address\n* **Amount and token privacy** — Transaction token and amount stay private for shielded transfers (token and amount are visible for shielded swaps and withdrawals)\n\n## Security Objective\n\nEvery shielded action must be authorized by an in-wallet-confirmed (signed) virtual transaction. ",
+          "source": "https://docs.nullmask.io/protocol-specification/security-objectives.md",
+          "start_char_index": 291,
+          "end_char_index": 786
+        },
+        {
+          "cited_text": "# Security Objectives\n\n## Privacy Objective\n\nAll incoming and outgoing account transfers are completely private. No external observer can decrypt the fields of shielded transactions. ",
+          "source": "https://docs.nullmask.io/protocol-specification/security-objectives.md",
+          "start_char_index": 0,
+          "end_char_index": 183
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Both sender and recipient remain hidden for shielded transfers within the protocol. All incoming and outgoing account transfers are completely private, and no external observer can decrypt the fields of shielded transactions. Sender privacy keeps the transaction sender hidden, and recipient privacy keeps the recipient hidden except for protocol withdrawals, which go to a public 0x address; token and amount stay private for shielded transfers but are visible for shielded swaps and withdrawals. Entry and exit points therefore touch public addresses, but transfers inside the shielded set conceal both parties.",
+      "citations": [
+        {
+          "cited_text": "# Security Objectives\n\n## Privacy Objective\n\nAll incoming and outgoing account transfers are completely private. No external observer can decrypt the fields of shielded transactions. ",
+          "source": "https://docs.nullmask.io/protocol-specification/security-objectives.md",
+          "start_char_index": 0,
+          "end_char_index": 183
+        },
+        {
+          "cited_text": "Specifically:\n\n* **Sender privacy** — Transaction sender always stays hidden\n* **Recipient privacy** — Transaction recipient always stays hidden except for protocol withdrawals, which go to a public 0x address\n* **Amount and token privacy** — Transaction token and amount stay private for shielded transfers (token and amount are visible for shielded swaps and withdrawals)\n\n## Security Objective\n\nEvery shielded action must be authorized by an in-wallet-confirmed (signed) virtual transaction. ",
+          "source": "https://docs.nullmask.io/protocol-specification/security-objectives.md",
+          "start_char_index": 291,
+          "end_char_index": 786
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "Asset privacy is Yes for shielded transfers. Each note contains a coin_id field representing the token address (with the zero address used for native ETH) , and this coin_id is bound into the value commitment via Poseidon2, which is then hashed into the final note commitment stored on-chain . Since only the commitment is published, the specific asset identity is hidden alongside the amount within the shielded pool. Asset type is visible at deposit and withdrawal boundaries because users must move a specific ERC-20 across the shielded boundary.",
+      "citations": [
+        {
+          "cited_text": "## Note Structure\n\n{% hint style=\"success\" %}\n**Definition 4: Note**\n\nA Nullmask *Note* is a tuple $$(\\mathtt{rk\\_hash}, \\mathtt{value}, \\mathtt{coin\\_id}, \\mathtt{rk\\_trapdoor}, \\mathtt{value\\_trapdoor}, \\mathtt{nfs\\_hash})$$ where:\n\n* $$\\mathtt{rk\\_hash}$$: hash of the Receiving Key that owns the note\n* $$\\mathtt{value}$$: note value (token amount)\n* $$\\mathtt{coin\\_id}$$: token address (zero address for native ETH)\n* $$\\mathtt{rk\\_trapdoor}$$: masking factor of note owner\n* $$\\mathtt{value\\_trapdoor}$$: masking factor of note value\n* $$\\mathtt{nfs\\_hash}$$: hash of all nullifiers from the shielded action that created this note\n{% endhint %}\n\n### The Role of nfs\\_hash\n\nFor notes created via deposits, `nfs_hash` is set to a unique deposit index. ",
+          "source": "https://docs.nullmask.io/protocol-specification/notes.md",
+          "start_char_index": 193,
+          "end_char_index": 950
+        },
+        {
+          "cited_text": "$$\\mathtt{value\\_commitment} \\gets \\operatorname{Poseidon2T4}(\\mathtt{value}, \\mathtt{coin\\_id}, \\mathtt{value\\_trapdoor})$$\n3. Return $$\\operatorname{Poseidon2T4}(\\mathtt{rk\\_commitment}, \\mathtt{value\\_commitment}, \\mathtt{nfs\\_hash})$$\n{% endhint %}\n\nThe commitment is a single field element that is stored in the on-chain Merkle tree. ",
+          "source": "https://docs.nullmask.io/protocol-specification/notes.md",
+          "start_char_index": 1777,
+          "end_char_index": 2116
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Nullmask does not offer plausible deniability for deposits: entering the pool requires interacting with a known privacy contract. Deposits are screened by a guard service that monitors pending deposits on the contract, approves legitimate ones by adding note commitments to the Merkle tree, and rejects flagged ones , meaning the deposit is a visible call to the Nullmask contract rather than a plain transfer. The on-chain contract verifies ZK proofs, manages the note commitment Merkle tree, and tracks spent nullifiers , making any interaction with it identifiable as privacy-pool activity on-chain.",
+      "citations": [
+        {
+          "cited_text": "## Guard\n\nApproves or rejects deposits entering the privacy pool.\n\n**Responsibilities:**\n\n* Monitors pending deposits on the contract\n* Screens depositing addresses using chain analysis tools\n* Approves legitimate deposits (adds note commitments to the Merkle tree)\n* Rejects flagged deposits (refunds the depositor)\n* Publishes revocation keys with each approved deposit\n\n## Smart Contract (Nullmask.sol)\n\nThe on-chain privacy pool. ",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 2278,
+          "end_char_index": 2712
+        },
+        {
+          "cited_text": "**Responsibilities:**\n\n* Verifies ZK proofs using on-chain verifier contracts\n* Manages the note commitment Merkle tree (LeanIMT with Poseidon2)\n* Tracks spent nullifiers (note nullifiers and transaction nullifiers)\n* Holds deposited funds (ETH and ERC-20 tokens)\n* Executes Uniswap V2 swaps during shielded swap operations\n* Maintains a key registry for receiving key registration\n* Manages token whitelist",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 2762,
+          "end_char_index": 3169
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "Time-to-finality is N/A — Nullmask is an application-layer protocol with no independent consensus, so finality is inherited from whichever underlying chain a user transacts on. It is deployed on Ethereum Mainnet, MegaETH, Arbitrum One, Base, and BSC, with Ethereum Sepolia as the testnet , and each of these chains determines the irreversibility timing for transactions routed through the protocol.",
+      "citations": [
+        {
+          "cited_text": "# Supported Networks\n\n## Deployments\n\n| Network | Virtual Chain ID | Contract (Proxy) | App URL |\n| --------------------------- | ---------------- | -------------------------------------------- | ---------------------------------------------------- |\n| Ethereum Sepolia (testnet) | 43611 | `0x8D7E5c312eFeb54124C4966005F923D3A3b0E04D` | [sepolia.nullmask.io](https://sepolia.nullmask.io) |\n| Hardhat (local development) | 43613 | `0xF9884b1ceF2AadFcFec536191679ee4240a8C6c9` | localhost |\n| Ethereum Mainnet | 43615 | `0x88888888Eb71E1D68aD0C471C6893EdEEa00B026` | [app.nullmask.io](https://app.nullmask.io) |\n| MegaETH | 43616 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [megaeth.nullmask.io](https://megaeth.nullmask.io) |\n| Arbitrum One | 43617 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [arbitrum.nullmask.io](https://arbitrum.nullmask.io) |\n| Base | 43618 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [base.nullmask.io](https://base.nullmask.io) |\n| BSC | 43619 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [bsc.nullmask.io](https://bsc.nullmask.io) |",
+          "source": "https://docs.nullmask.io/architecture/supported-networks.md",
+          "start_char_index": 0,
+          "end_char_index": 1075
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "The number of secrets a user must store is 1 — only the wallet key itself. All cryptographic keys are derived deterministically from a single wallet signature, and because modern wallets use deterministic signatures (RFC 6979), the keys can be recovered by re-signing a fixed message. From that signature, a seed is produced via Poseidon2 T4 hashing, and the nullifying key, incoming viewing key, and outgoing viewing key are each derived as further Poseidon2 T4 hashes of the seed with a domain separator. The encryption key is then computed as ek = ivk · G on the associated curve, so no additional secret material beyond the wallet key needs independent storage.",
+      "citations": [
+        {
+          "cited_text": "# Key Derivation\n\nNullmask derives all cryptographic keys deterministically from a single wallet signature. Since modern wallets use deterministic signatures (RFC 6979), all keys can be recovered by re-signing a fixed message.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/key-derivation.md",
+          "start_char_index": 0,
+          "end_char_index": 228
+        },
+        {
+          "cited_text": "$$\\mathtt{ek} \\gets \\mathtt{ivk} \\cdot \\mathsf{G}$$\n3. ",
+          "source": "https://docs.nullmask.io/protocol-specification/key-derivation.md",
+          "start_char_index": 2794,
+          "end_char_index": 2849
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Deposits execute as a single on-chain call with no protocol-imposed waiting period before submission. After the user calls `deposit()` the funds are held by the contract, a pending event is emitted, and a guard service then screens the depositor address and calls approve or reject ; this screening gates acceptance into the Merkle tree but does not impose a delay on initiating the deposit itself.",
+      "citations": [
+        {
+          "cited_text": "## Deposit Flow\n\n```mermaid\nstateDiagram-v2\n[*] --> Pending: User calls deposit()\nPending --> Approved: Guard approves\nPending --> Rejected: Guard rejects\nPending --> Reverted: Depositor withdraws\n\nApproved --> [*]: Note added to Merkle tree\nRejected --> [*]: Funds refunded to depositor\nReverted --> [*]: Funds refunded to depositor\n```\n\n1. User calls `deposit()` → funds are held by the contract\n2. `DepositPending` event is emitted with deposit details\n3. Guard service monitors for pending deposits\n4. Guard screens the depositor address\n5. Guard calls `approveDeposit()` or `rejectDeposit()`\n\n## Guard Operations\n\n### `approveDeposit(...)`\n\n```solidity\nfunction approveDeposit(\nuint256 index,\naddress recipient,\naddress token,\nuint256 amount,\naddress depositor,\nuint256 gasEscrow,\nuint256 revocationPublicKeyX,\nuint256 revocationPublicKeyY,\nuint256 revocationPublicKeyHash\n) external nonReentrant\n```\n\nOnly callable by the guard. ",
+          "source": "https://docs.nullmask.io/smart-contract-reference/deposit.md",
+          "start_char_index": 1264,
+          "end_char_index": 2199
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Withdrawals complete within a single transaction, so the effective withdraw time is 0 seconds. The execution flow verifies the zero-knowledge proof, spends note nullifiers, records the transaction nullifier, adds change note commitments to the Merkle tree, pays the relayer fee, and transfers the withdrawal amount to the recipient — all within one call. There is no time-lock, challenge window, or queued withdrawal step in the settlement path.",
+      "citations": [
+        {
+          "cited_text": "**Verify ZK proof** via `ShieldedWithdrawalVerifier.verify()`\n6. **Spend note nullifiers**\n7. **Record transaction nullifier**\n8. **Add 2 change note commitments** to the Merkle tree\n9. **Pay relayer fee** to `msg.sender`\n10. **Transfer withdrawal amount** to the recipient address:\n* ETH: via low-level `call{value: amount}(\"\")`\n* ERC-20: via `safeTransfer`\n11. ",
+          "source": "https://docs.nullmask.io/smart-contract-reference/shielded-withdrawal.md",
+          "start_char_index": 1156,
+          "end_char_index": 1519
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Deposits cannot enter the shielded pool without explicit approval from a Nullmask-operated Guard, which screens depositing addresses with chain-analysis tools and refunds flagged ones — there is no permissionless path that bypasses the Guard at entry. Post-deposit shielded operations are submitted by a relayer but the underlying contract is permissionless, so a user holding their note secrets and able to generate a valid proof can in principle submit directly. The aggregator sits behind a UUPS proxy whose upgrade controller can swap verifier contracts or pause functionality, giving the operator an admin-level censorship vector on top of the deposit gate. A flagged user is therefore censorable at entry.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "## Guard\n\nApproves or rejects deposits entering the privacy pool.\n\n**Responsibilities:**\n\n* Monitors pending deposits on the contract\n* Screens depositing addresses using chain analysis tools\n* Approves legitimate deposits (adds note commitments to the Merkle tree)\n* Rejects flagged deposits (refunds the depositor)\n* Publishes revocation keys with each approved deposit\n\n## Smart Contract (Nullmask.sol)\n\nThe on-chain privacy pool. ",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 2278,
+          "end_char_index": 2712
+        },
+        {
+          "cited_text": "**Responsibilities:**\n\n* **Key management** — Generates viewing keys and receiving keys from wallet signatures; stores them locally\n* **Transaction shielding** — Parses transaction intent, selects funding notes, generates ZK proofs\n* **Balance tracking** — Scans the blockchain for new notes, trial-decrypts them, maintains shielded balances\n* **State isolation** — Per-user state via access tokens (HTTP-only cookies)\n* **Key registry sync** — Caches on-chain receiving keys for privacy-preserving lookups\n\n**Key internal services:**\n\n| Service | Purpose |\n| ------------------ | ---------------------------------------------------- |\n| ShieldingService | Orchestrates proof generation and relayer submission |\n| NoteTreeService | Manages the local Merkle tree for membership proofs |\n| NotesScanner | Scans blockchain events for incoming notes |\n| NotesStorage | Per-user encrypted note storage (LMDB) |\n| KeyStorageService | Per-user key storage |\n| KeyRegistryService | Syncs on-chain receiving key registry |\n| AccessTableService | Maps access tokens to account addresses |\n\n## Relayer\n\nExecutes shielded transactions on behalf of users.\n\n**Responsibilities:**\n\n* Receives shielded transaction data (proof + public inputs) from the proxy\n* Submits transactions to the Nullmask contract\n* Pays gas fees (reimbursed from the transaction's fee allocation)\n* Hides the sender's IP address and identity\n\nThe relayer never sees the transaction contents — it only forwards the opaque proof and public inputs.\n\n",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 770,
+          "end_char_index": 2278
+        },
+        {
+          "cited_text": "Deployed behind a UUPS proxy for upgradeability.\n\n**Responsibilities:**\n\n* Verifies ZK proofs using on-chain verifier contracts\n* Manages the note commitment Merkle tree (LeanIMT with Poseidon2)\n* Tracks spent nullifiers (note nullifiers and transaction nullifiers)\n* Holds deposited funds (ETH and ERC-20 tokens)\n* Executes Uniswap V2 swaps during shielded swap operations\n* Maintains a key registry for receiving key registration\n* Manages token whitelist",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 2712,
+          "end_char_index": 3169
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Nullmask relies on several off-chain services operated by the project team that are external to the underlying blockchain. An RPC proxy sits between the wallet and the blockchain, intercepting JSON-RPC calls , and handles key management, transaction shielding via ZK proof generation, balance tracking, and state isolation . A relayer receives shielded transaction data from the proxy, submits transactions to the contract, and pays gas fees, hiding the sender's IP and identity . A guard monitors pending deposits, screens depositing addresses using chain-analysis tools, and approves or rejects them , making these permissioned operator roles rather than an open network.",
+      "citations": [
+        {
+          "cited_text": "```mermaid\ngraph TB\nsubgraph Client[\"Client Side\"]\nU[User]\nW[Wallet]\nend\n\nsubgraph Services[\"Backend Services\"]\nP[RPC Proxy]\nR[Relayer]\nG[Guard]\nend\n\nsubgraph Chain[\"On-Chain\"]\nC[Nullmask Contract]\nV1[Transfer Verifier]\nV2[Withdrawal Verifier]\nV3[Swap Verifier]\nend\n\nU --> W\nW --> P\nP --> R\nR --> C\nG --> C\nC --> V1\nC --> V2\nC --> V3\n```\n\n## Wallet\n\nAny standard EVM wallet that supports:\n\n* **Custom networks** (custom RPC endpoints)\n* **`personal_sign`** method (for key generation)\n* **EIP-1559** transactions\n\n## RPC Proxy\n\nThe core orchestration service. It sits between the wallet and the blockchain, intercepting JSON-RPC calls.\n\n",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 133,
+          "end_char_index": 770
+        },
+        {
+          "cited_text": "**Responsibilities:**\n\n* **Key management** — Generates viewing keys and receiving keys from wallet signatures; stores them locally\n* **Transaction shielding** — Parses transaction intent, selects funding notes, generates ZK proofs\n* **Balance tracking** — Scans the blockchain for new notes, trial-decrypts them, maintains shielded balances\n* **State isolation** — Per-user state via access tokens (HTTP-only cookies)\n* **Key registry sync** — Caches on-chain receiving keys for privacy-preserving lookups\n\n**Key internal services:**\n\n| Service | Purpose |\n| ------------------ | ---------------------------------------------------- |\n| ShieldingService | Orchestrates proof generation and relayer submission |\n| NoteTreeService | Manages the local Merkle tree for membership proofs |\n| NotesScanner | Scans blockchain events for incoming notes |\n| NotesStorage | Per-user encrypted note storage (LMDB) |\n| KeyStorageService | Per-user key storage |\n| KeyRegistryService | Syncs on-chain receiving key registry |\n| AccessTableService | Maps access tokens to account addresses |\n\n## Relayer\n\nExecutes shielded transactions on behalf of users.\n\n",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 770,
+          "end_char_index": 1914
+        },
+        {
+          "cited_text": "**Responsibilities:**\n\n* Receives shielded transaction data (proof + public inputs) from the proxy\n* Submits transactions to the Nullmask contract\n* Pays gas fees (reimbursed from the transaction's fee allocation)\n* Hides the sender's IP address and identity\n\nThe relayer never sees the transaction contents — it only forwards the opaque proof and public inputs.\n\n",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 1914,
+          "end_char_index": 2278
+        },
+        {
+          "cited_text": "## Guard\n\nApproves or rejects deposits entering the privacy pool.\n\n**Responsibilities:**\n\n* Monitors pending deposits on the contract\n* Screens depositing addresses using chain analysis tools\n* Approves legitimate deposits (adds note commitments to the Merkle tree)\n* Rejects flagged deposits (refunds the depositor)\n* Publishes revocation keys with each approved deposit\n\n## Smart Contract (Nullmask.sol)\n\nThe on-chain privacy pool. ",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 2278,
+          "end_char_index": 2712
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "notes": "Withdrawals are typically submitted by a relayer who pays gas in exchange for a fee, but the on-chain withdrawal entry point has no caller restriction — a user holding their note secrets and able to generate a valid ZK proof can submit the withdrawal transaction directly on-chain without a third-party relayer, relying only on the host chain's consensus. There is no dedicated user-side escape-hatch mechanism documented, so practical exit still depends on access to the proving system and circuit keys.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "**Pay relayer fee** to `msg.sender`\n10. ",
+          "source": "https://docs.nullmask.io/smart-contract-reference/shielded-withdrawal.md",
+          "start_char_index": 1342,
+          "end_char_index": 1382
+        },
+        {
+          "cited_text": "**Verify ZK proof** via `ShieldedWithdrawalVerifier.verify()`\n6. **Spend note nullifiers**\n7. **Record transaction nullifier**\n8. **Add 2 change note commitments** to the Merkle tree\n9. **Pay relayer fee** to `msg.sender`\n10. **Transfer withdrawal amount** to the recipient address:\n* ETH: via low-level `call{value: amount}(\"\")`\n* ERC-20: via `safeTransfer`\n11. ",
+          "source": "https://docs.nullmask.io/smart-contract-reference/shielded-withdrawal.md",
+          "start_char_index": 1156,
+          "end_char_index": 1519
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "notes": "Nullmask uses a single-admin upgrade model: the main contract sits behind a UUPS proxy, and the current upgrade permission is held by a single admin upgrade controller (the deployer). That single party can rotate the upgrade controller itself and swap out verifier contracts and the implementation. Migration to a timelock, multisig, or DAO governance model is described as a future possibility, but is not live today.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "### State.sol\n\nAbstract contract defining the storage layout:\n\n* `_noteTree` — Merkle tree for note commitments\n* `_keyRegistryTree` — Merkle tree for receiving key hashes\n* `pendingDepositHashes` — Hash of pending deposit data\n* `noteNullifiers` — Mapping of spent note nullifiers\n* `txNullifiers` — Mapping of spent transaction nullifiers\n* `tokenWhitelist` — Token type registry\n* `guard` — Deposit guard address\n* `upgradeController` — Upgrade authorization address\n* `__gap[45]` — Reserved storage for future upgrades\n\n### Enums\n\n```solidity\nenum DepositStatus {\nREJECTED,\nPENDING,\nACTION_REQUIRED,\nAPPROVED,\nREVERTED\n}\n\nenum TokenType {\nNOT_ALLOWED,\nNATIVE_TOKEN,\nERC20,\nERC20_FEE_ON_TRANSFER\n}\n```\n\n### ReceivingKey Struct\n\n```solidity\nstruct ReceivingKey {\nbytes32 pkX; // Public key x-coordinate\nbytes32 pkY; // Public key y-coordinate\nbytes32 keyData; // Ethereum address (20 bytes) + 9 zero bytes + 3 padding\nbytes32 pnk; // Public nullifying key hash\nbytes32 ekX; // Encryption key x-coordinate\nbytes32 ekY; // Encryption key y-coordinate\n}\n```\n\n## Immutables\n\nSet in the constructor (vary per deployment):\n\n| Immutable | Description |\n| ------------------- | --------------------------------------- |\n| `VIRTUAL_CHAIN_ID` | Virtual chain ID for this deployment |\n| `UNISWAP_V2_ROUTER` | Uniswap V2 Router address on this chain |\n\n## UUPS Upgradeability\n\nThe upgrade permission mechanism is itself upgradeable via `setUpgradeController()`:\n\n1. **Current**: `AdminUpgradeController` — single admin (deployer)\n2. ",
+          "source": "https://docs.nullmask.io/smart-contract-reference/contracts.md",
+          "start_char_index": 955,
+          "end_char_index": 2478
+        },
+        {
+          "cited_text": "`setUpgradeController` is callable only by the current upgrade controller. `setVerifiers` requires upgrade controller authorization.",
+          "source": "https://docs.nullmask.io/smart-contract-reference/contracts.md",
+          "start_char_index": 4253,
+          "end_char_index": 4385
+        },
+        {
+          "cited_text": "**Future**: Can migrate to timelock, multisig, or DAO governance\n\nOnly the current `upgradeController` contract can call `setUpgradeController()`.\n\n",
+          "source": "https://docs.nullmask.io/smart-contract-reference/contracts.md",
+          "start_char_index": 2478,
+          "end_char_index": 2626
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Proof generation occurs on the user side via the RPC proxy rather than a third-party prover. The proxy handles transaction shielding by parsing transaction intent, selecting funding notes, and generating ZK proofs locally , and it can be self-hosted for full custody of the proving path. The relayer that follows only forwards the opaque proof — it receives shielded transaction data (proof plus public inputs) from the proxy and never sees the transaction contents .",
+      "citations": [
+        {
+          "cited_text": "**Responsibilities:**\n\n* **Key management** — Generates viewing keys and receiving keys from wallet signatures; stores them locally\n* **Transaction shielding** — Parses transaction intent, selects funding notes, generates ZK proofs\n* **Balance tracking** — Scans the blockchain for new notes, trial-decrypts them, maintains shielded balances\n* **State isolation** — Per-user state via access tokens (HTTP-only cookies)\n* **Key registry sync** — Caches on-chain receiving keys for privacy-preserving lookups\n\n**Key internal services:**\n\n| Service | Purpose |\n| ------------------ | ---------------------------------------------------- |\n| ShieldingService | Orchestrates proof generation and relayer submission |\n| NoteTreeService | Manages the local Merkle tree for membership proofs |\n| NotesScanner | Scans blockchain events for incoming notes |\n| NotesStorage | Per-user encrypted note storage (LMDB) |\n| KeyStorageService | Per-user key storage |\n| KeyRegistryService | Syncs on-chain receiving key registry |\n| AccessTableService | Maps access tokens to account addresses |\n\n## Relayer\n\nExecutes shielded transactions on behalf of users.\n\n",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 770,
+          "end_char_index": 1914
+        },
+        {
+          "cited_text": "**Responsibilities:**\n\n* Receives shielded transaction data (proof + public inputs) from the proxy\n* Submits transactions to the Nullmask contract\n* Pays gas fees (reimbursed from the transaction's fee allocation)\n* Hides the sender's IP address and identity\n\nThe relayer never sees the transaction contents — it only forwards the opaque proof and public inputs.\n\n",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 1914,
+          "end_char_index": 2278
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "Yes. The RPC proxy parses transaction intent, selects funding notes, and generates ZK proofs , meaning it handles plaintext recipient, amount, and token data before shielding. Per-user state, including note storage and key storage, is held by the proxy , so when the proxy is operated by a third party (rather than self-hosted) that operator can inspect user transactions. The relayer, by contrast, never sees transaction contents and only forwards the opaque proof and public inputs.",
+      "citations": [
+        {
+          "cited_text": "**Responsibilities:**\n\n* **Key management** — Generates viewing keys and receiving keys from wallet signatures; stores them locally\n* **Transaction shielding** — Parses transaction intent, selects funding notes, generates ZK proofs\n* **Balance tracking** — Scans the blockchain for new notes, trial-decrypts them, maintains shielded balances\n* **State isolation** — Per-user state via access tokens (HTTP-only cookies)\n* **Key registry sync** — Caches on-chain receiving keys for privacy-preserving lookups\n\n**Key internal services:**\n\n| Service | Purpose |\n| ------------------ | ---------------------------------------------------- |\n| ShieldingService | Orchestrates proof generation and relayer submission |\n| NoteTreeService | Manages the local Merkle tree for membership proofs |\n| NotesScanner | Scans blockchain events for incoming notes |\n| NotesStorage | Per-user encrypted note storage (LMDB) |\n| KeyStorageService | Per-user key storage |\n| KeyRegistryService | Syncs on-chain receiving key registry |\n| AccessTableService | Maps access tokens to account addresses |\n\n## Relayer\n\nExecutes shielded transactions on behalf of users.\n\n",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 770,
+          "end_char_index": 1914
+        },
+        {
+          "cited_text": "**Responsibilities:**\n\n* Receives shielded transaction data (proof + public inputs) from the proxy\n* Submits transactions to the Nullmask contract\n* Pays gas fees (reimbursed from the transaction's fee allocation)\n* Hides the sender's IP address and identity\n\nThe relayer never sees the transaction contents — it only forwards the opaque proof and public inputs.\n\n",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 1914,
+          "end_char_index": 2278
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "Nullmask is live on multiple Ethereum mainnets, with deployments on Ethereum Mainnet, MegaETH, Arbitrum One, Base, and BSC alongside a Sepolia testnet and a production app at app.nullmask.io . No mainnet launch date is available in the deployment table to determine whether production has exceeded one year, so the conservative classification is mainnet for less than one year.",
+      "citations": [
+        {
+          "cited_text": "# Supported Networks\n\n## Deployments\n\n| Network | Virtual Chain ID | Contract (Proxy) | App URL |\n| --------------------------- | ---------------- | -------------------------------------------- | ---------------------------------------------------- |\n| Ethereum Sepolia (testnet) | 43611 | `0x8D7E5c312eFeb54124C4966005F923D3A3b0E04D` | [sepolia.nullmask.io](https://sepolia.nullmask.io) |\n| Hardhat (local development) | 43613 | `0xF9884b1ceF2AadFcFec536191679ee4240a8C6c9` | localhost |\n| Ethereum Mainnet | 43615 | `0x88888888Eb71E1D68aD0C471C6893EdEEa00B026` | [app.nullmask.io](https://app.nullmask.io) |\n| MegaETH | 43616 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [megaeth.nullmask.io](https://megaeth.nullmask.io) |\n| Arbitrum One | 43617 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [arbitrum.nullmask.io](https://arbitrum.nullmask.io) |\n| Base | 43618 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [base.nullmask.io](https://base.nullmask.io) |\n| BSC | 43619 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [bsc.nullmask.io](https://bsc.nullmask.io) |",
+          "source": "https://docs.nullmask.io/architecture/supported-networks.md",
+          "start_char_index": 0,
+          "end_char_index": 1075
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Nullmask is not post-quantum secure, as its entire cryptographic stack relies on classical primitives vulnerable to quantum attacks. The protocol uses the UltraHonk proof system via the Barretenberg prover over the BN254 elliptic curve, the Grumpkin embedded curve whose base field equals the BN254 scalar field , the Poseidon2 hash function designed for zk-SNARK circuits , and secp256k1 ECDSA for Ethereum transaction signatures verified inside the circuit . Discrete-log-based curves (BN254, Grumpkin, secp256k1) are broken by Shor's algorithm, and SNARK-friendly hashes offer no post-quantum guarantees.",
+      "citations": [
+        {
+          "cited_text": "## UltraHonk\n\nNullmask uses the UltraHonk proof system (via the Barretenberg prover) for generating and verifying ZK proofs.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/cryptographic-primitives.md",
+          "start_char_index": 3887,
+          "end_char_index": 4013
+        },
+        {
+          "cited_text": "## Grumpkin\n\nNullmask uses the Grumpkin embedded curve for elliptic curve operations within ZK circuits. Grumpkin's base field equals the BN254 scalar field, meaning all curve point coordinates are native field elements — making in-circuit EC operations efficient.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/cryptographic-primitives.md",
+          "start_char_index": 2521,
+          "end_char_index": 2787
+        },
+        {
+          "cited_text": "# Cryptographic Primitives\n\n## Poseidon2 T4\n\nNullmask uses the Poseidon2 hash function with state width 4 (T4) throughout the protocol. Poseidon2 is a zk-SNARK-friendly hash function designed for minimal constraint count in arithmetic circuits.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/cryptographic-primitives.md",
+          "start_char_index": 0,
+          "end_char_index": 246
+        },
+        {
+          "cited_text": "## secp256k1 ECDSA\n\nStandard Ethereum transaction signatures are verified inside the ZK circuit.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/cryptographic-primitives.md",
+          "start_char_index": 3280,
+          "end_char_index": 3378
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "Protocol/chain",
+      "notes": "Compliance is enforced at the protocol/chain layer: the Nullmask smart contract requires Guard approval before adding a note commitment to the Merkle tree, so the gate runs on-chain rather than as an off-chain advisory. The Guard service is operated off-chain (chain-analysis screening), but its approval decision is materialised on-chain through an approve / reject signal that the contract verifies. There is no asset-level hook.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "## Guard\n\nApproves or rejects deposits entering the privacy pool.\n\n**Responsibilities:**\n\n* Monitors pending deposits on the contract\n* Screens depositing addresses using chain analysis tools\n* Approves legitimate deposits (adds note commitments to the Merkle tree)\n* Rejects flagged deposits (refunds the depositor)\n* Publishes revocation keys with each approved deposit\n\n## Smart Contract (Nullmask.sol)\n\nThe on-chain privacy pool. ",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 2278,
+          "end_char_index": 2712
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Admin",
+      "notes": "Compliance is enforced by the Nullmask team acting as administrators, with a third-party screening vendor supplying data. The Guard component approves or rejects deposits entering the privacy pool, monitoring pending deposits, screening depositing addresses using chain analysis tools, approving legitimate deposits, and rejecting flagged deposits by refunding the depositor. The Guard address is swappable via an admin-gated setter controlled by the upgrade controller, making the core team the ultimate enforcement authority, while the chain-analysis provider functions as an upstream data source rather than an independent decision-maker.",
+      "citations": [
+        {
+          "cited_text": "## Guard\n\nApproves or rejects deposits entering the privacy pool.\n\n**Responsibilities:**\n\n* Monitors pending deposits on the contract\n* Screens depositing addresses using chain analysis tools\n* Approves legitimate deposits (adds note commitments to the Merkle tree)\n* Rejects flagged deposits (refunds the depositor)\n* Publishes revocation keys with each approved deposit\n\n## Smart Contract (Nullmask.sol)\n\nThe on-chain privacy pool. ",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 2278,
+          "end_char_index": 2712
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"Proof of innocence (POI) / ASP\"]",
+      "notes": "Nullmask uses the same exclusion-proof / association-set construction as Privacy Pools by 0xbow (Buterin et al). A Guard curates the approved set by chain-analysis screening of depositing addresses; only approved deposits are added to the note commitment Merkle tree, and flagged users can only de-shield their funds back to the original deposit address. This is a proof-of-innocence pattern: shielded users implicitly demonstrate membership in the approved set via the Merkle inclusion their proofs reference. Each approved deposit also publishes a revocation key for post-hoc revocation. There is no KYC/KYB gate.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "## Guard\n\nApproves or rejects deposits entering the privacy pool.\n\n**Responsibilities:**\n\n* Monitors pending deposits on the contract\n* Screens depositing addresses using chain analysis tools\n* Approves legitimate deposits (adds note commitments to the Merkle tree)\n* Rejects flagged deposits (refunds the depositor)\n* Publishes revocation keys with each approved deposit\n\n## Smart Contract (Nullmask.sol)\n\nThe on-chain privacy pool. ",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 2278,
+          "end_char_index": 2712
+        },
+        {
+          "cited_text": "**Responsibilities:**\n\n* Monitors pending deposits on the contract\n* Screens depositing addresses using chain analysis tools\n* Approves legitimate deposits (adds note commitments to the Merkle tree)\n* Rejects flagged deposits (refunds the depositor)\n* Publishes revocation keys with each approved deposit\n\n## Smart Contract (Nullmask.sol)\n\nThe on-chain privacy pool. ",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 2345,
+          "end_char_index": 2712
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"Deposit\",\"Withdrawal\"]",
+      "notes": "Two enforcement points. (1) Deposit: all deposits require Guard approval before the note commitment is added to the Merkle tree — the Guard monitors pending deposits, screens the depositor address, and then issues an approve or reject signal. (2) Withdrawal: flagged users are constrained to de-shield only back to the original deposit address (a ragequit-style restriction at withdraw), and the per-deposit revocation key allows post-hoc revocation acting at withdrawal time. Internal shielded transfers are not subject to an additional compliance screen.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "All deposits require guard approval before the note is added to the Merkle tree.\n\n",
+          "source": "https://docs.nullmask.io/smart-contract-reference/deposit.md",
+          "start_char_index": 87,
+          "end_char_index": 169
+        },
+        {
+          "cited_text": "Guard service monitors for pending deposits\n4. Guard screens the depositor address\n5. Guard calls `approveDeposit()` or `rejectDeposit()`\n\n## Guard Operations\n\n### `approveDeposit(...)`\n\n```solidity\nfunction approveDeposit(\nuint256 index,\naddress recipient,\naddress token,\nuint256 amount,\naddress depositor,\nuint256 gasEscrow,\nuint256 revocationPublicKeyX,\nuint256 revocationPublicKeyY,\nuint256 revocationPublicKeyHash\n) external nonReentrant\n```\n\nOnly callable by the guard. ",
+          "source": "https://docs.nullmask.io/smart-contract-reference/deposit.md",
+          "start_char_index": 1723,
+          "end_char_index": 2199
+        },
+        {
+          "cited_text": "The revocation key is published with the deposit for compliance (see [Revocation Keys](https://docs.nullmask.io/compliance/revocation-keys)).\n\n",
+          "source": "https://docs.nullmask.io/smart-contract-reference/deposit.md",
+          "start_char_index": 2329,
+          "end_char_index": 2472
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "notes": "Users hold the viewing key tuple (pk, nk, ivk, ovk), where ivk is the incoming viewing key for trial-decrypting incoming notes and ovk is the outgoing viewing key for decrypting receipts of sent notes , enabling self-view of balance and transaction history. Voluntary delegation is possible because the viewing key grants view access to the account's transaction history and can be shared with a third party such as an auditor, who would then be able to decrypt incoming and outgoing notes without any spending capability (spending requires the wallet signature). No involuntary or protocol-level viewer is defined — the viewing key is derived solely from a user wallet signature and is never posted on-chain , leaving no mechanism for an admin, regulator, or governance process to access user data without consent.",
+      "citations": [
+        {
+          "cited_text": "Key derivation: H denotes the Poseidon2T4 hash function\n\n## Viewing Key\n\n{% hint style=\"success\" %}\n**Definition 1: Viewing Key**\n\nA Nullmask *Viewing Key* is a tuple $$(\\mathtt{pk}, \\mathtt{nk}, \\mathtt{ivk}, \\mathtt{ovk})$$ where:\n\n* $$\\mathtt{pk}$$: Public Key — a secp256k1 point corresponding to the wallet account's public key\n* $$\\mathtt{nk} \\in \\mathbb{F}$$: Nullifying Key — used for derivation of deterministic note nullifiers\n* $$\\mathtt{ivk} \\in \\mathbb{F}$$: Incoming Viewing Key — used for trial decryption of incoming notes\n* $$\\mathtt{ovk}$$: Outgoing Viewing Key — an $$\\mathbb{E}$$ scalar for encrypting receipts of sent notes\n{% endhint %}\n\n{% hint style=\"success\" %}\n**Definition 2: Export Viewing Key Message**\n\nThe Nullmask `EXPORT_VK_MESSAGE` is a special protocol-fixed message. ",
+          "source": "https://docs.nullmask.io/protocol-specification/key-derivation.md",
+          "start_char_index": 228,
+          "end_char_index": 1031
+        },
+        {
+          "cited_text": "Return $$(\\mathtt{pk}, \\mathtt{nk}, \\mathtt{ivk}, \\mathtt{ovk})$$\n{% endhint %}\n\nThe viewing key grants view access to the account's transaction history. It remains stored in the proxy service and is never posted on-chain.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/key-derivation.md",
+          "start_char_index": 1778,
+          "end_char_index": 2002
+        },
+        {
+          "cited_text": "It remains stored in the proxy service and is never posted on-chain.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/key-derivation.md",
+          "start_char_index": 1932,
+          "end_char_index": 2002
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "Viewing permissions in Nullmask are pre-defined and non-revocable. All cryptographic keys are derived deterministically from a single wallet signature, and since modern wallets use deterministic signatures (RFC 6979), the keys can be recovered by re-signing a fixed message. The viewing key tuple (pk, nk, ivk, ovk) is derived once via Poseidon2 hashing of the signature seed, with no mechanism for scoping, rotation, or revocation; it grants view access to the account's transaction history and remains stored in the proxy service , so sharing it confers full historical read access that cannot be time-bounded or withdrawn.",
+      "citations": [
+        {
+          "cited_text": "# Key Derivation\n\nNullmask derives all cryptographic keys deterministically from a single wallet signature. Since modern wallets use deterministic signatures (RFC 6979), all keys can be recovered by re-signing a fixed message.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/key-derivation.md",
+          "start_char_index": 0,
+          "end_char_index": 228
+        },
+        {
+          "cited_text": "Return $$(\\mathtt{pk}, \\mathtt{nk}, \\mathtt{ivk}, \\mathtt{ovk})$$\n{% endhint %}\n\nThe viewing key grants view access to the account's transaction history. It remains stored in the proxy service and is never posted on-chain.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/key-derivation.md",
+          "start_char_index": 1778,
+          "end_char_index": 2002
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Each shielded operation is gated on UltraHonk zk-SNARK verification on-chain via dedicated verifier contracts (transfer, withdrawal, swap), with ECDSA signatures over the underlying EIP-1559 transaction also verified inside the circuit. An external observer can re-check the proofs against the published verifier. The aggregator is a UUPS proxy whose upgrade controller can swap the verifier contracts and the deposit path is gated by a Guard, both controlled by a single admin; that admin authority is captured separately by Upgradeability and Censorship resistance rather than this property.",
+      "needsResearchReview": true,
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "## UltraHonk\n\nNullmask uses the UltraHonk proof system (via the Barretenberg prover) for generating and verifying ZK proofs.\n\n### Properties\n\n* **Proof system**: UltraPlonk/UltraHonk\n* **Prover**: Barretenberg (`bb`)\n* **Verification**: On-chain Solidity verifiers (generated from circuit compilation)\n* **Proving time**: \\~2 seconds on consumer hardware for transfer circuits\n\n### Proof Verification\n\nOn-chain verification is performed by generated Solidity verifier contracts. ",
+          "source": "https://docs.nullmask.io/protocol-specification/cryptographic-primitives.md",
+          "start_char_index": 3887,
+          "end_char_index": 4366
+        },
+        {
+          "cited_text": "### Properties\n\n* **Proof system**: UltraPlonk/UltraHonk\n* **Prover**: Barretenberg (`bb`)\n* **Verification**: On-chain Solidity verifiers (generated from circuit compilation)\n* **Proving time**: \\~2 seconds on consumer hardware for transfer circuits\n\n### Proof Verification\n\nOn-chain verification is performed by generated Solidity verifier contracts. Each circuit type (transfer, withdrawal, swap) has its own verifier. ",
+          "source": "https://docs.nullmask.io/protocol-specification/cryptographic-primitives.md",
+          "start_char_index": 4013,
+          "end_char_index": 4435
+        },
+        {
+          "cited_text": "## secp256k1 ECDSA\n\nStandard Ethereum transaction signatures are verified inside the ZK circuit.\n\n### Usage\n\n* **Transaction authorization**: The circuit verifies the ECDSA signature of the EIP-1559 transaction\n* **Key recovery**: The sender's public key is recovered from the signature\n* **Address derivation**: The Ethereum address is derived from the public key via `keccak256(pk)[12:]`\n\n### Constraint Cost\n\nECDSA verification is the most expensive operation in the circuit (\\~42,000 gates). ",
+          "source": "https://docs.nullmask.io/protocol-specification/cryptographic-primitives.md",
+          "start_char_index": 3280,
+          "end_char_index": 3776
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "No. The published materials describe the protocol architecture, smart contract interfaces, and RPC API in detail, but no public source repository or OSI-approved license is referenced for the contracts, relayer backend, or frontend. The stack names Solidity, Next.js, Fastify, and Noir circuits as components , yet without a linked repository and license declaration for these critical pieces, the code cannot be treated as open source.",
+      "citations": [
+        {
+          "cited_text": "High-level introduction to the protocol\n\nHow It Works \n\nEnd-to-end architecture walkthrough\n\nProtocol Specification \n\nCryptographic details, algorithms, and proofs\n\nSmart Contract Reference \n\nSolidity API for deposits, transfers, and swaps\n\nRPC API Reference \n\nJSON-RPC methods exposed by the proxy\n\nDeveloper Guide \n\nBuild and run locally\n\nUser Guide \n\nStep-by-step instructions for end users\n\nhashtag \n\nKey Features\n\nShielded Transfers — Send tokens privately without revealing sender, recipient, or amount on-chain\n\nShielded Swaps — Execute Uniswap V2 swaps without exposing user identity\n\nPrivate Deposits & Withdrawals — Move funds in and out of the shielded pool with ZK-verified proofs\n\nMulti-Chain — Deployed on Ethereum, Arbitrum, MegaETH, Base, and BSC \n\nStandard Wallet UX — No special wallet needed; works with MetaMask and any EIP-1559 compatible wallet\n\nHardware Wallet Support — Full security without extracting spending authority from the device\n\nERC-20 Support — Shield any supported ERC-20 token alongside native ETH\n\nBuilt-in Compliance — Deposit screening with retrospective taint recovery via revocation keys\n\nhashtag \n\nTech Stack\n\nLayer\n\nTechnology\n\nZK Circuits\n\nNoir arrow-up-right + Barretenberg arrow-up-right \n\nSmart Contracts\n\nSolidity 0.8.28, Hardhat v3, OpenZeppelin v5\n\nFrontend\n\nNext.js 15, React 19, TailwindCSS 4\n\nBackend Services\n\nFastify 5, Node.js 24\n\nWeb3\n\nViem, Wagmi\n\nMonorepo\n\nTurborepo, pnpm\n\nStorage\n\nLMDB (persistent state)\n\nCode Quality\n\nBiome, TypeScript 5.9, knip\n\nNext What is Nullmask? ",
+          "source": "https://docs.nullmask.io/",
+          "start_char_index": 702,
+          "end_char_index": 2236
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Infinity grow",
+      "notes": "Private state in Nullmask grows unboundedly with protocol usage. The shielded state uses a UTXO model where each UTXO is an encrypted note containing value, token type, and owner information , and each note commitment is stored in an on-chain Merkle tree . When a note is spent, its nullifier is published on-chain, and the contract maintains a set of all spent nullifiers to reject double-spends , so both the commitment tree and the nullifier set accumulate monotonically. No pruning mechanism is described; a 64-root history buffer exists only for inclusion-proof validity windows while the underlying tree persists in full.",
+      "citations": [
+        {
+          "cited_text": "# Notes (Encrypted UTXOs)\n\nNullmask uses a UTXO model for the shielded account state. Each UTXO is called a **note** — an encrypted container holding value, token type, and owner information.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/notes.md",
+          "start_char_index": 0,
+          "end_char_index": 193
+        },
+        {
+          "cited_text": "Return $$\\operatorname{Poseidon2T4}(\\mathtt{rk\\_commitment}, \\mathtt{value\\_commitment}, \\mathtt{nfs\\_hash})$$\n{% endhint %}\n\nThe commitment is a single field element that is stored in the on-chain Merkle tree. ",
+          "source": "https://docs.nullmask.io/protocol-specification/notes.md",
+          "start_char_index": 1905,
+          "end_char_index": 2116
+        },
+        {
+          "cited_text": "## Note Nullifier\n\n{% hint style=\"success\" %}\n**Definition 5: Note Nullifier**\n\nFor a note with commitment $$\\mathtt{cm}$$ belonging to a Viewing Key whose nullifying key is $$\\mathtt{nk}$$, the *note nullifier* is:\n\n$$\\mathtt{nf} := \\operatorname{Poseidon2T4}(\\mathtt{cm}, \\mathtt{nk})$$\n{% endhint %}\n\nWhen a note is spent, its nullifier is published on-chain. The contract maintains a set of all spent nullifiers and rejects any transaction that attempts to spend a note whose nullifier has already been recorded. ",
+          "source": "https://docs.nullmask.io/protocol-specification/notes.md",
+          "start_char_index": 2216,
+          "end_char_index": 2733
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Always scanning",
+      "notes": "User devices (via the RPC proxy) must continuously scan the chain to identify incoming notes, since ownership is not indexed by recipient address. The RPC proxy handles balance tracking by scanning the blockchain for new notes, trial-decrypting them, and maintaining shielded balances , with a dedicated notes scanner service that monitors blockchain events for incoming notes. This constitutes always-on scanning rather than targeted lookups.",
+      "citations": [
+        {
+          "cited_text": "**Responsibilities:**\n\n* **Key management** — Generates viewing keys and receiving keys from wallet signatures; stores them locally\n* **Transaction shielding** — Parses transaction intent, selects funding notes, generates ZK proofs\n* **Balance tracking** — Scans the blockchain for new notes, trial-decrypts them, maintains shielded balances\n* **State isolation** — Per-user state via access tokens (HTTP-only cookies)\n* **Key registry sync** — Caches on-chain receiving keys for privacy-preserving lookups\n\n**Key internal services:**\n\n| Service | Purpose |\n| ------------------ | ---------------------------------------------------- |\n| ShieldingService | Orchestrates proof generation and relayer submission |\n| NoteTreeService | Manages the local Merkle tree for membership proofs |\n| NotesScanner | Scans blockchain events for incoming notes |\n| NotesStorage | Per-user encrypted note storage (LMDB) |\n| KeyStorageService | Per-user key storage |\n| KeyRegistryService | Syncs on-chain receiving key registry |\n| AccessTableService | Maps access tokens to account addresses |\n\n## Relayer\n\nExecutes shielded transactions on behalf of users.\n\n",
+          "source": "https://docs.nullmask.io/architecture/components.md",
+          "start_char_index": 770,
+          "end_char_index": 1914
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Nullmask uses a UTXO-based private state model: the shielded account state is managed as a UTXO set, with each UTXO called a note — an encrypted container holding value, token type, and owner information . Each note is a tuple containing a receiving-key hash, value, coin identifier, masking trapdoors, and a hash of nullifiers from the action that created it . Note commitments are published to an on-chain Merkle tree, and spending a note publishes its nullifier, with the contract maintaining a set of spent nullifiers to prevent double-spending without revealing which note was spent .",
+      "citations": [
+        {
+          "cited_text": "# Notes (Encrypted UTXOs)\n\nNullmask uses a UTXO model for the shielded account state. Each UTXO is called a **note** — an encrypted container holding value, token type, and owner information.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/notes.md",
+          "start_char_index": 0,
+          "end_char_index": 193
+        },
+        {
+          "cited_text": "## Note Structure\n\n{% hint style=\"success\" %}\n**Definition 4: Note**\n\nA Nullmask *Note* is a tuple $$(\\mathtt{rk\\_hash}, \\mathtt{value}, \\mathtt{coin\\_id}, \\mathtt{rk\\_trapdoor}, \\mathtt{value\\_trapdoor}, \\mathtt{nfs\\_hash})$$ where:\n\n* $$\\mathtt{rk\\_hash}$$: hash of the Receiving Key that owns the note\n* $$\\mathtt{value}$$: note value (token amount)\n* $$\\mathtt{coin\\_id}$$: token address (zero address for native ETH)\n* $$\\mathtt{rk\\_trapdoor}$$: masking factor of note owner\n* $$\\mathtt{value\\_trapdoor}$$: masking factor of note value\n* $$\\mathtt{nfs\\_hash}$$: hash of all nullifiers from the shielded action that created this note\n{% endhint %}\n\n### The Role of nfs\\_hash\n\nFor notes created via deposits, `nfs_hash` is set to a unique deposit index. ",
+          "source": "https://docs.nullmask.io/protocol-specification/notes.md",
+          "start_char_index": 193,
+          "end_char_index": 950
+        },
+        {
+          "cited_text": "## Note Nullifier\n\n{% hint style=\"success\" %}\n**Definition 5: Note Nullifier**\n\nFor a note with commitment $$\\mathtt{cm}$$ belonging to a Viewing Key whose nullifying key is $$\\mathtt{nk}$$, the *note nullifier* is:\n\n$$\\mathtt{nf} := \\operatorname{Poseidon2T4}(\\mathtt{cm}, \\mathtt{nk})$$\n{% endhint %}\n\nWhen a note is spent, its nullifier is published on-chain. The contract maintains a set of all spent nullifiers and rejects any transaction that attempts to spend a note whose nullifier has already been recorded. This prevents double-spending without revealing which note was spent.\n\n",
+          "source": "https://docs.nullmask.io/protocol-specification/notes.md",
+          "start_char_index": 2216,
+          "end_char_index": 2804
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": "Off-chain storage with on-chain commitment",
+      "notes": "Private transaction data in Nullmask is split between on-chain commitments and off-chain ciphertexts. The main contract maintains a Merkle tree for note commitments along with mappings of spent note nullifiers and transaction nullifiers as part of its on-chain storage layout. The contract handles deposits, shielded transfers, withdrawals, swaps, and receiving key registration , with encrypted note payloads delivered off-chain (via event logs) for recipients to trial-decrypt, while only the commitment hashes and nullifier set persist in contract state.",
+      "citations": [
+        {
+          "cited_text": "### State.sol\n\nAbstract contract defining the storage layout:\n\n* `_noteTree` — Merkle tree for note commitments\n* `_keyRegistryTree` — Merkle tree for receiving key hashes\n* `pendingDepositHashes` — Hash of pending deposit data\n* `noteNullifiers` — Mapping of spent note nullifiers\n* `txNullifiers` — Mapping of spent transaction nullifiers\n* `tokenWhitelist` — Token type registry\n* `guard` — Deposit guard address\n* `upgradeController` — Upgrade authorization address\n* `__gap[45]` — Reserved storage for future upgrades\n\n### Enums\n\n```solidity\nenum DepositStatus {\nREJECTED,\nPENDING,\nACTION_REQUIRED,\nAPPROVED,\nREVERTED\n}\n\nenum TokenType {\nNOT_ALLOWED,\nNATIVE_TOKEN,\nERC20,\nERC20_FEE_ON_TRANSFER\n}\n```\n\n### ReceivingKey Struct\n\n```solidity\nstruct ReceivingKey {\nbytes32 pkX; // Public key x-coordinate\nbytes32 pkY; // Public key y-coordinate\nbytes32 keyData; // Ethereum address (20 bytes) + 9 zero bytes + 3 padding\nbytes32 pnk; // Public nullifying key hash\nbytes32 ekX; // Encryption key x-coordinate\nbytes32 ekY; // Encryption key y-coordinate\n}\n```\n\n## Immutables\n\nSet in the constructor (vary per deployment):\n\n| Immutable | Description |\n| ------------------- | --------------------------------------- |\n| `VIRTUAL_CHAIN_ID` | Virtual chain ID for this deployment |\n| `UNISWAP_V2_ROUTER` | Uniswap V2 Router address on this chain |\n\n## UUPS Upgradeability\n\nThe upgrade permission mechanism is itself upgradeable via `setUpgradeController()`:\n\n1. ",
+          "source": "https://docs.nullmask.io/smart-contract-reference/contracts.md",
+          "start_char_index": 955,
+          "end_char_index": 2411
+        },
+        {
+          "cited_text": "Handles:\n\n* Deposits (ETH and ERC-20)\n* Shielded transfers, withdrawals, and swaps\n* Receiving key registration\n* Token whitelist management\n* ZK proof verification (delegates to verifier contracts)\n\n### NullmaskProxy.sol\n\nERC1967 proxy wrapper for UUPS upgradeability. ",
+          "source": "https://docs.nullmask.io/smart-contract-reference/contracts.md",
+          "start_char_index": 594,
+          "end_char_index": 864
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Access to external, but limited choice of DeFi protocols",
+      "notes": "Shielded swaps route through an external DEX: a shielded swap executes a Uniswap V2 swap within the privacy pool , with supported functions covering swapExactTokensForTokens, swapExactETHForTokens, and swapExactTokensForETH . The contract executes the swap using the appropriate Uniswap V2 function and measures the actual output amount via balance delta , producing shielded output notes directly to the sender without unshielding. Integration is currently limited to Uniswap V2-style AMM swaps; other DeFi primitives (lending, staking, derivatives) are not supported from within the pool.",
+      "citations": [
+        {
+          "cited_text": "# Shielded Swaps\n\nA shielded swap executes a Uniswap V2 swap within the privacy pool. ",
+          "source": "https://docs.nullmask.io/protocol-specification/shielded-swaps.md",
+          "start_char_index": 0,
+          "end_char_index": 86
+        },
+        {
+          "cited_text": "## Supported Swap Functions\n\n| Selector | Function | Input | Output |\n| ------------ | -------------------------- | ------ | ------ |\n| `0x38ed1739` | `swapExactTokensForTokens` | ERC-20 | ERC-20 |\n| `0x7ff36ab5` | `swapExactETHForTokens` | ETH | ERC-20 |\n| `0x18cbafe5` | `swapExactTokensForETH` | ERC-20 | ETH |\n\nFee-on-transfer token variants are automatically used when the token whitelist indicates a fee-on-transfer token is in the path.",
+          "source": "https://docs.nullmask.io/protocol-specification/shielded-swaps.md",
+          "start_char_index": 3647,
+          "end_char_index": 4090
+        },
+        {
+          "cited_text": "Executes the swap using the appropriate Uniswap V2 function\n5. Measures the actual output amount via balance delta (supports fee-on-transfer tokens)\n6. ",
+          "source": "https://docs.nullmask.io/protocol-specification/shielded-swaps.md",
+          "start_char_index": 2176,
+          "end_char_index": 2328
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Transfers and DeFi operations",
+      "notes": "Nullmask offers programmability limited to payments and a narrow set of DeFi operations, not general private smart-contract execution. The protocol is built around privacy-preserving transactions on EVM chains using zero-knowledge proofs , with the core primitives being private UTXO notes, nullifiers preventing double-spending, viewing keys, and receiving keys for shielded transfers . Beyond shielded transfers, withdrawals, and a swap primitive, there is no private-state execution layer or arbitrary shielded contract interaction.",
+      "citations": [
+        {
+          "cited_text": "# Overview\n\nThe Nullmask protocol enables privacy-preserving transactions on EVM chains using zero-knowledge proofs. ",
+          "source": "https://docs.nullmask.io/protocol-specification/protocol.md",
+          "start_char_index": 0,
+          "end_char_index": 117
+        },
+        {
+          "cited_text": "## Core Concepts\n\n| Concept | Description |\n| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |\n| **Notes** | Private UTXOs — encrypted value containers. Note commitments are stored in an on-chain Merkle tree; encrypted note data is emitted in contract events |\n| **Nullifiers** | Unique spend identifiers that prevent double-spending without revealing which note was spent |\n| **Viewing Key** | Enables decryption of incoming and outgoing notes; grants view access to transaction history |\n| **Receiving Key** | Public key registered on-chain that enables others to send shielded funds to an address |\n| **Transaction Nullifier** | Prevents replay of signed transactions by a malicious proxy |\n\n## Cryptographic Stack\n\n| Primitive | Purpose |\n| --------------- | ------------------------------------------------------------------------------- |\n| Poseidon2 T4 | Hash function for note commitments, nullifiers, key derivation, and Merkle tree |\n| LeanIMT | Incremental Merkle tree for note storage (depth 16, \\~65K leaves) |\n| Grumpkin | Embedded curve for key exchange and encryption |\n| secp256k1 ECDSA | Transaction signature verification (standard Ethereum signatures) |\n| UltraHonk | ZK proof system (Barretenberg prover) |\n\n## Notation\n\nThroughout this specification:\n\n* $$\\mathbb{E}$$ denotes the Grumpkin embedded curve\n* $$\\mathbb{F}$$ denotes the base field of $$\\mathbb{E}$$ (scalar field of BN254)\n* $$\\mathsf{G}$$ denotes the generator point of $$\\mathbb{E}$$\n* $$\\operatorname{Poseidon2T4}(x)$$ denotes the Poseidon2 hash function with state width 4",
+          "source": "https://docs.nullmask.io/protocol-specification/protocol.md",
+          "start_char_index": 180,
+          "end_char_index": 1873
+        }
+      ]
+    }
+  ]
+}
