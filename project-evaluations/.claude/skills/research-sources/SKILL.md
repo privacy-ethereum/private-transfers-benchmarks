@@ -32,6 +32,7 @@ Populate the research cache consumed by `pnpm run research <protocol>`. This ski
 6. **Compose a short factual `summary`** (≤400 characters) describing what that page establishes about this property. The summary will be fed into the citations phase of the API script — it should be concrete, not narrative.
 
 7. **Write the cache file** at `scripts/research-cache/{id}.json`:
+
    ```json
    {
      "id": "<protocol>",
