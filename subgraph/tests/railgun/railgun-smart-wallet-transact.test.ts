@@ -1,7 +1,7 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { assert, describe, test, clearStore, beforeAll, afterAll } from "matchstick-as/assembly/index";
 
-import { handleTransact } from "../src/railgun/railgun-smart-wallet";
+import { handleTransact } from "../../src/railgun/railgun-smart-wallet";
 
 import { createTransactEvent, createTransactCiphertextTuple } from "./railgun-smart-wallet-utils";
 
