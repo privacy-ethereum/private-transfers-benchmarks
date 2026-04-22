@@ -14,8 +14,11 @@ if (!process.env.MIN_SAMPLES) {
   throw new Error("MIN_SAMPLES is not set");
 }
 
-export const { ETH_RPC_URL } = process.env;
-export const { SCROLL_RPC_URL } = process.env;
+if (!process.env.SUBGRAPH_URL) {
+  throw new Error("SUBGRAPH_URL is not set");
+}
+
+export const { ETH_RPC_URL, SUBGRAPH_URL, SCROLL_RPC_URL } = process.env;
 
 /** Minimum number of valid samples required per benchmark */
 export const MIN_SAMPLES = Number(process.env.MIN_SAMPLES);

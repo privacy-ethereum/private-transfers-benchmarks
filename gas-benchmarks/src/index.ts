@@ -19,6 +19,10 @@ await db.read();
 
 const start = Date.now();
 
+// const client = new GraphQLClient(SUBGRAPH_URL);
+// const result = await client.request<TRootQuery>(RootQuery);
+// console.log(result);
+
 const [
   railgunMetrics,
   tornadoCashMetrics,

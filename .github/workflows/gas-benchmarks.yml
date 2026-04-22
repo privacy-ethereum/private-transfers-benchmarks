@@ -29,6 +29,8 @@ jobs:
       - name: Test
         run: pnpm run test
         working-directory: gas-benchmarks
+        env:
+          SUBGRAPH_URL: ${{ secrets.SUBGRAPH_URL }}
 
       - name: Benchmark
         run: pnpm run benchmark
@@ -36,5 +38,6 @@ jobs:
         env:
           ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
           SCROLL_RPC_URL: ${{ secrets.SCROLL_RPC_URL }}
+          SUBGRAPH_URL: ${{ secrets.SUBGRAPH_URL }}
           MIN_SAMPLES: ${{ vars.MIN_SAMPLES }}
           MONERO_FAIL_NODES_API_URL: ${{ vars.MONERO_FAIL_NODES_API_URL }}
