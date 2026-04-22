@@ -1,7 +1,7 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { assert, describe, test, clearStore, beforeAll, afterAll } from "matchstick-as/assembly/index";
 
-import { handleShield } from "../src/railgun-smart-wallet";
+import { handleShield } from "../src/railgun/railgun-smart-wallet";
 
 import { createShieldEvent, createCommitmentTuple, createShieldCiphertextTuple } from "./railgun-smart-wallet-utils";
 

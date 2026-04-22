@@ -4,7 +4,7 @@ import {
   Shield as ShieldEvent,
   Unshield as UnshieldEvent,
   Transact as TransactEvent,
-} from "../generated/RailgunSmartWallet/RailgunSmartWallet";
+} from "../../generated/RailgunSmartWallet/RailgunSmartWallet";
 import {
   RailgunShield,
   RailgunCommitment,
@@ -16,7 +16,7 @@ import {
   RailgunUnshield,
   RailgunTransact,
   RailgunTransactCiphertext,
-} from "../generated/schema";
+} from "../../generated/schema";
 
 function createOrLoadProtocolStats(): RailgunProtocolStats {
   const id = "railgun-protocol-stats";

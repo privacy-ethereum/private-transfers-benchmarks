@@ -26,11 +26,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Codegen and build
+      - name: Codegen and build (mainnet)
         run: |-
           pnpm run codegen
           pnpm run build
         working-directory: subgraph
+        env: NETWORK=mainnet
+
+      - name: Codegen and build (sepolia)
+        run: |-
+          pnpm run codegen
+          pnpm run build
+        working-directory: subgraph
+        env: NETWORK=sepolia
 
       - name: Test
         run: pnpm run test

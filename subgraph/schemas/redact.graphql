@@ -1,0 +1,38 @@
+type RedactProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shieldedNative: RedactOperationStats!
+}
+
+type RedactShieldedStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: RedactOperationStats!
+}
+
+type RedactOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shieldedNativeStats: [RedactShieldedStats!]! @derivedFrom(field: "operationStats")
+}
+
+type RedactShieldedNative @entity(immutable: true) {
+  id: ID!
+  from: Bytes!
+  to: Bytes!
+  value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
