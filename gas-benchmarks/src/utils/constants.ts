@@ -6,22 +6,40 @@ if (!process.env.ETH_RPC_URL) {
   throw new Error("ETH_RPC_URL is not set");
 }
 
-if (!process.env.SCROLL_RPC_URL) {
-  throw new Error("SCROLL_RPC_URL is not set");
+if (!process.env.SEPOLIA_RPC_URL) {
+  throw new Error("SEPOLIA_RPC_URL is not set");
 }
 
-if (!process.env.MIN_SAMPLES) {
-  throw new Error("MIN_SAMPLES is not set");
+if (!process.env.SCROLL_RPC_URL) {
+  throw new Error("SCROLL_RPC_URL is not set");
 }
 
 if (!process.env.SUBGRAPH_URL) {
   throw new Error("SUBGRAPH_URL is not set");
 }
 
-export const { ETH_RPC_URL, SUBGRAPH_URL, SCROLL_RPC_URL } = process.env;
+if (!process.env.MIN_SAMPLES) {
+  throw new Error("MIN_SAMPLES is not set");
+}
+
+if (!process.env.BATCH_SIZE_FOR_RPC_CALLS) {
+  throw new Error("BATCH_SIZE_FOR_RPC_CALLS is not set");
+}
+
+if (!process.env.DELAY_BETWEEN_BATCHES) {
+  throw new Error("DELAY_BETWEEN_BATCHES is not set");
+}
+
+export const { ETH_RPC_URL, SEPOLIA_RPC_URL, SCROLL_RPC_URL, SUBGRAPH_URL } = process.env;
 
 /** Minimum number of valid samples required per benchmark */
 export const MIN_SAMPLES = Number(process.env.MIN_SAMPLES);
+
+/** Number of RPC calls to batch together concurrently when interacting with the RPC */
+export const BATCH_SIZE_FOR_RPC_CALLS = Number(process.env.BATCH_SIZE_FOR_RPC_CALLS);
+
+/** Delay in milliseconds between batches when interacting with the RPC to avoid rate limiting */
+export const DELAY_BETWEEN_BATCHES = Number(process.env.DELAY_BETWEEN_BATCHES);
 
 /** Maximum unique logs to collect before stopping the block scan */
 export const MAX_SAMPLES = 100_000;
@@ -67,8 +85,3 @@ export const BLOCK_WINDOW_SCROLL_1_WEEK = 604_800n;
  * Using 5 for dev and rate limiting on remote node
  */
 export const BLOCK_WINDOW_MONERO = 5;
-
-/**
- * One day in seconds used to calculate day of unixtimestamp
- */
-export const ONE_DAY_IN_SECONDS = 24 * 60 * 60;

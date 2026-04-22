@@ -30,14 +30,11 @@ jobs:
         run: pnpm run test
         working-directory: gas-benchmarks
         env:
-          SUBGRAPH_URL: ${{ secrets.SUBGRAPH_URL }}
-
-      - name: Benchmark
-        run: pnpm run benchmark
-        working-directory: gas-benchmarks
-        env:
           ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
+          SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
           SCROLL_RPC_URL: ${{ secrets.SCROLL_RPC_URL }}
           SUBGRAPH_URL: ${{ secrets.SUBGRAPH_URL }}
-          MIN_SAMPLES: ${{ vars.MIN_SAMPLES }}
           MONERO_FAIL_NODES_API_URL: ${{ vars.MONERO_FAIL_NODES_API_URL }}
+          MIN_SAMPLES: ${{ vars.MIN_SAMPLES }}
+          BATCH_SIZE_FOR_RPC_CALLS: ${{ vars.BATCH_SIZE_FOR_RPC_CALLS }}
+          DELAY_BETWEEN_BATCHES: ${{ vars.DELAY_BETWEEN_BATCHES }}

@@ -3,17 +3,19 @@ import {
   encodeEventTopics,
   http,
   toHex,
+  type Block,
   type Chain,
   type Hash,
   type Log,
   type PublicClient,
   type TransactionReceipt,
 } from "viem";
-import { mainnet, scroll } from "viem/chains";
+import { mainnet, scroll, sepolia } from "viem/chains";
 
 import type {
   EthGetBlockReceiptsSchema,
   GetAllLogsInput,
+  GetBaseFeePerGasAverageInDaysWindowInput,
   GetBlockWindowInput,
   GetBlockWindowOutput,
   GetValidEthTransfersInput,
@@ -23,18 +25,22 @@ import type {
 
 import {
   ETH_RPC_URL,
+  SEPOLIA_RPC_URL,
   SCROLL_RPC_URL,
   BLOCK_RANGE,
   MAX_SAMPLES,
   BLOCK_WINDOW_ETHEREUM_1_WEEK,
   BLOCK_WINDOW_SCROLL_1_WEEK,
+  BATCH_SIZE_FOR_RPC_CALLS,
+  DELAY_BETWEEN_BATCHES,
 } from "./constants.js";
-import { isNativeTransfer } from "./utils.js";
+import { isNativeTransfer, sleep } from "./utils.js";
 
 /** Pre-configured RPC clients keyed by chain ID */
 const clients: Record<number, PublicClient | undefined> = {
   [mainnet.id]: createPublicClient({ chain: mainnet, transport: http(ETH_RPC_URL, { batch: true }) }),
   [scroll.id]: createPublicClient({ chain: scroll, transport: http(SCROLL_RPC_URL, { batch: true }) }),
+  [sepolia.id]: createPublicClient({ chain: sepolia, transport: http(SEPOLIA_RPC_URL, { batch: true }) }),
 };
 
 /** Returns the RPC client for a given chain */
@@ -66,6 +72,8 @@ const getBlockWindow = async ({
   if (blockWindow !== undefined) {
     scanWindow = blockWindow;
   } else if (chainId === mainnet.id) {
+    scanWindow = BLOCK_WINDOW_ETHEREUM_1_WEEK;
+  } else if (chainId === sepolia.id) {
     scanWindow = BLOCK_WINDOW_ETHEREUM_1_WEEK;
   } else if (chainId === scroll.id) {
     scanWindow = BLOCK_WINDOW_SCROLL_1_WEEK;
@@ -192,4 +200,56 @@ export const getValidEthTransfers = async ({
   }
 
   return receipts;
+};
+
+/** Returns the number of blocks produced in an hour for a given chain */
+const getBlocksPerHour = (chainId: number): number => {
+  switch (chainId) {
+    case mainnet.id:
+    case sepolia.id:
+      return 300; // 3600s / 12s
+    case scroll.id:
+      return 3600; // 3600s / 1s
+    default:
+      throw new Error(`No block time configured for chain ID: ${chainId}`);
+  }
+};
+
+/** Returns the average base fee per gas price within a days window */
+export const getBaseFeePerGasAverageInDaysWindow = async ({
+  chain,
+  windowDays,
+  latestBlock,
+}: GetBaseFeePerGasAverageInDaysWindowInput): Promise<bigint> => {
+  const client = getClient(chain);
+  const step = getBlocksPerHour(chain.id);
+  const samples = windowDays * 24; // 24 hours per day
+
+  const endBlock = latestBlock ?? (await client.getBlockNumber());
+
+  const blockNumbers = Array.from({ length: samples }, (_, index) => endBlock - BigInt(index * step));
+
+  const blocks: Block[] = [];
+
+  for (let i = 0; i < blockNumbers.length; i += BATCH_SIZE_FOR_RPC_CALLS) {
+    const batch = blockNumbers.slice(i, i + BATCH_SIZE_FOR_RPC_CALLS);
+
+    // eslint-disable-next-line no-await-in-loop
+    const batchBlocks = await Promise.all(batch.map((blockNumber) => client.getBlock({ blockNumber })));
+
+    blocks.push(...batchBlocks);
+
+    // eslint-disable-next-line no-await-in-loop
+    await sleep(DELAY_BETWEEN_BATCHES);
+  }
+
+  const baseFees = blocks
+    .map((block) => block.baseFeePerGas)
+    .filter((baseFeePerGas): baseFeePerGas is bigint => baseFeePerGas !== null);
+
+  if (baseFees.length === 0) {
+    throw new Error(`No base fee values found for chain ID: ${chain.id}`);
+  }
+
+  return baseFees.reduce((sum, baseFeePerGas) => sum + baseFeePerGas, 0n) / BigInt(baseFees.length);
 };

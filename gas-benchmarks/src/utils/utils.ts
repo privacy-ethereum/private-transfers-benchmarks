@@ -32,3 +32,13 @@ export const isNativeTransfer = (receipt: TransactionReceipt): boolean => {
 
   return isGasUsed21000 && hasNoLogs && isNotContractDeployment && hasRecipient;
 };
+
+/**
+ * Sleep for a specified number of milliseconds
+ * @param ms - The number of milliseconds to sleep
+ * @returns A promise that resolves after the specified time has elapsed
+ */
+export const sleep = (ms: number): Promise<void> =>
+  new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
