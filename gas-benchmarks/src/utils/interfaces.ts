@@ -67,3 +67,12 @@ export interface GetValidEthTransfersInput {
   latestBlock?: bigint;
   blockWindow?: bigint;
 }
+
+/**
+ * Input for getBaseFeePerGasAverageInDaysWindow
+ */
+export interface GetBaseFeePerGasAverageInDaysWindowInput {
+  chain: Chain;
+  windowDays: number;
+  latestBlock?: bigint;
+}
