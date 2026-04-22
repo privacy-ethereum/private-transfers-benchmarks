@@ -5,8 +5,11 @@
   "repository": "https://github.com/privacy-ethereum/private-transfers-benchmarks",
   "type": "module",
   "scripts": {
+    "prebenchmark": "pnpm run codegen",
     "benchmark": "tsx src/index.ts",
-    "test": "vitest run"
+    "pretest": "pnpm run codegen",
+    "test": "vitest run",
+    "codegen": "graphql-codegen-esm --config codegen.ts"
   },
   "keywords": [
     "private-transfers",
@@ -15,19 +18,28 @@
   ],
   "author": "PSE",
   "license": "MIT",
-  "packageManager": "pnpm@10.29.3",
+  "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": "24",
     "pnpm": "10"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "6.3.1",
+    "@graphql-codegen/client-preset": "5.3.0",
+    "@graphql-codegen/introspection": "5.0.2",
+    "@graphql-codegen/typed-document-node": "^6.1.8",
+    "@graphql-codegen/typescript": "^5.0.10",
+    "@graphql-codegen/typescript-operations": "^5.1.0",
     "@types/node": "^25.2.3",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
   "dependencies": {
+    "@graphql-typed-document-node/core": "^3.2.0",
     "dotenv": "^17.2.4",
+    "graphql": "^16.13.2",
+    "graphql-request": "^7.4.0",
     "lowdb": "^7.0.1",
     "viem": "^2.45.3"
   }

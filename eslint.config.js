@@ -299,5 +299,13 @@ export default defineConfig([
   gasConfig,
   evalConfig,
   subgraphConfig,
-  globalIgnores(["**/node_modules", "**/dist", "**/coverage", "**/build", "eslint.config.js", "subgraph/generated"]),
+  globalIgnores([
+    "**/node_modules",
+    "**/dist",
+    "**/coverage",
+    "**/build",
+    "eslint.config.js",
+    "gas-benchmarks/src/generated",
+    "subgraph/generated",
+  ]),
 ]);
