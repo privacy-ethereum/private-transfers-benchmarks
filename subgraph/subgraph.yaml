@@ -1,35 +1,6 @@
 specVersion: 1.3.0
-indexerHints:
-  prune: auto
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: RailgunSmartWallet
-    network: mainnet
-    source:
-      address: "0xfa7093cdd9ee6932b4eb2c9e1cde7ce00b1fa4b9"
-      abi: RailgunSmartWallet
-      startBlock: 14693013
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.9
-      language: wasm/assemblyscript
-      entities:
-        - Shield
-        - Unshield
-        - Transact
-      abis:
-        - name: RailgunSmartWallet
-          file: ./abis/RailgunSmartWallet.json
-      eventHandlers:
-        - event: Shield(uint256,uint256,(bytes32,(uint8,address,uint256),uint120)[],(bytes32[3],bytes32)[],uint256[])
-          handler: handleShield
-          receipt: true
-        - event: Unshield(address,(uint8,address,uint256),uint256,uint256)
-          handler: handleUnshield
-          receipt: true
-        - event: Transact(uint256,uint256,bytes32[],(bytes32[4],bytes32,bytes32,bytes,bytes)[])
-          handler: handleTransact
-          receipt: true
-      file: ./src/railgun-smart-wallet.ts
+    name: Test configuration file for Matchstick
