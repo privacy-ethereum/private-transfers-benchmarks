@@ -1,8 +1,9 @@
 import "dotenv/config";
 import Anthropic from "@anthropic-ai/sdk";
+import { existsSync, readFileSync } from "fs";
 import { PROPERTY_DEFINITIONS } from "../src/data/schema.js";
 import type { Property, PropertyContent } from "../src/types.js";
-import { buildResearchPrompt, buildEvaluationPrompt } from "./research-prompts.js";
+import { buildEvaluationPrompt } from "./research-prompts.js";
 import { type ProtocolConfig } from "./research-config.js";
 
 const SKIP_PROPERTIES = new Set([
@@ -12,9 +13,37 @@ const SKIP_PROPERTIES = new Set([
   "On-chain gas cost: withdraw",
 ]);
 
-/** Loop through property definitions, skip/keep as needed, and evaluate each. */
+type CacheEntry = { name: string; url: string; summary: string };
+type ResearchCache = { id: string; generatedAt: string; properties: CacheEntry[] };
+
+export function loadResearchCache(protocolId: string): ResearchCache {
+  const cachePath = new URL(`./research-cache/${protocolId}.json`, import.meta.url);
+  if (!existsSync(cachePath)) {
+    throw new Error(
+      `Research cache missing at ${cachePath.pathname}.\n` +
+        `Run /research-sources ${protocolId} in Claude Code to populate it before invoking this script.`,
+    );
+  }
+  return JSON.parse(readFileSync(cachePath, "utf-8"));
+}
+
 export async function evaluateProperties(config: ProtocolConfig, existingProperties: Property[], only: string[]) {
   const client = new Anthropic();
+  const cache = loadResearchCache(config.id);
+  const cacheByName = new Map(cache.properties.map((entry) => [entry.name, entry]));
+
+  const targetedUrls = cache.properties
+    .filter((entry) => only.length === 0 || only.includes(entry.name))
+    .map((entry) => entry.url);
+  const uniqueUrls = Array.from(new Set(targetedUrls));
+  const fetchedByUrl = new Map<string, { text: string; sourceUrl: string }>();
+  await Promise.all(
+    uniqueUrls.map(async (url) => {
+      const fetched = await fetchTextFromUrl(url);
+      if (fetched) fetchedByUrl.set(url, fetched);
+      else console.warn(`warn: failed to fetch ${url} — properties citing it will be INSUFFICIENT_DATA`);
+    }),
+  );
 
   const properties: Property[] = [];
   let okCount = 0;
@@ -30,20 +59,31 @@ export async function evaluateProperties(config: ProtocolConfig, existingPropert
       continue;
     }
 
-    console.log(`Analysing ${propertyDefinition.name}`);
-    let property: Property = { name: propertyDefinition.name, value: "INSUFFICIENT_DATA" };
-    const triedUrls: string[] = [];
+    const cached = cacheByName.get(propertyDefinition.name);
+    if (!cached) {
+      throw new Error(
+        `Research cache is missing an entry for "${propertyDefinition.name}". ` +
+          `Rerun /research-sources ${config.id} --only "${propertyDefinition.name}" to populate it.`,
+      );
+    }
 
-    for (let attempt = 0; attempt < 3; attempt++) {
-      try {
-        const { url, summary } = await researchProperty(client, propertyDefinition, config, triedUrls);
-        triedUrls.push(url);
-        console.log(`source: ${url}${attempt > 0 ? ` (retry ${attempt})` : ""}`);
-        property = await evaluateWithCitations(client, propertyDefinition, config.title, url, summary);
-        if (property.value !== "INSUFFICIENT_DATA") break;
-      } catch (err) {
-        console.log(`retry: ${err instanceof Error ? err.message : err}`);
-      }
+    console.log(`Analysing ${propertyDefinition.name}`);
+    console.log(`source: ${cached.url}`);
+
+    let property: Property = { name: propertyDefinition.name, value: "INSUFFICIENT_DATA" };
+    try {
+      const fetched = fetchedByUrl.get(cached.url);
+      if (!fetched) throw new Error(`Failed to fetch ${cached.url}`);
+      property = await evaluateWithCitations(
+        client,
+        propertyDefinition,
+        config.title,
+        fetched,
+        cached.summary,
+        config.context,
+      );
+    } catch (err) {
+      console.log(`error: ${err instanceof Error ? err.message : err}`);
     }
 
     if (property.value && property.value !== "INSUFFICIENT_DATA" && !property.citations?.length) {
@@ -59,53 +99,32 @@ export async function evaluateProperties(config: ProtocolConfig, existingPropert
   return properties;
 }
 
-/** Web search to find the best source URL and summary. */
-async function researchProperty(
-  client: Anthropic,
-  propertyDefinition: PropertyContent,
-  config: ProtocolConfig,
-  triedUrls: string[] = [],
-): Promise<{ url: string; summary: string }> {
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-5",
-    max_tokens: 2048,
-    temperature: 0,
-    messages: [
-      { role: "user", content: buildResearchPrompt(propertyDefinition, config.title, config.sourceUrls, triedUrls) },
-    ],
-    tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }],
-  });
-
-  const text = response.content
-    .filter((b): b is Anthropic.TextBlock => b.type === "text")
-    .map((b) => b.text)
-    .join("");
-
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("Malformed JSON in source research response");
-
-  const parsed = JSON.parse(jsonMatch[0]);
-  if (parsed.url?.endsWith(".pdf")) throw new Error(`PDF: ${parsed.url}`);
-  if (!parsed.url) throw new Error("No URL found");
-
-  return { url: parsed.url, summary: parsed.summary || "" };
-}
-
-/** Fetch source page, pass as citable document, return property with citations. */
 async function evaluateWithCitations(
   client: Anthropic,
   propertyDefinition: PropertyContent,
   protocolName: string,
-  sourceUrl: string,
+  fetched: { text: string; sourceUrl: string },
   researchSummary: string,
+  context?: string,
 ): Promise<Property> {
-  const fetched = await fetchTextFromUrl(sourceUrl);
-  if (!fetched) throw new Error(`Failed to fetch ${sourceUrl}`);
+  const tool: Anthropic.Tool = {
+    name: "record_evaluation",
+    description: "Record the final evaluation. Call exactly once after writing your prose answer.",
+    input_schema: {
+      type: "object",
+      properties: {
+        value: buildValueSchema(propertyDefinition),
+        insufficient_data: { type: "boolean" },
+      },
+      required: [],
+    },
+  };
 
   const response = await client.messages.create({
-    model: "claude-sonnet-4-5",
+    model: "claude-opus-4-7",
     max_tokens: 2048,
-    temperature: 0,
+    tools: [tool],
+    tool_choice: { type: "auto", disable_parallel_tool_use: true },
     messages: [
       {
         role: "user",
@@ -115,23 +134,39 @@ async function evaluateWithCitations(
             source: { type: "text", media_type: "text/plain", data: fetched.text },
             title: fetched.sourceUrl,
             citations: { enabled: true },
+            cache_control: { type: "ephemeral" },
           },
-          { type: "text", text: buildEvaluationPrompt(propertyDefinition, protocolName, researchSummary) },
+          { type: "text", text: buildEvaluationPrompt(propertyDefinition, protocolName, researchSummary, context) },
         ],
       },
     ],
   });
 
-  // Extract text and deduplicated char_location citations
+  const usage = response.usage;
+  console.log(
+    `cache: read=${usage.cache_read_input_tokens ?? 0} write=${usage.cache_creation_input_tokens ?? 0} miss=${usage.input_tokens}`,
+  );
+
+  if (process.env.DEBUG_RESEARCH) {
+    console.log("=== raw response.content ===");
+    console.log(JSON.stringify(response.content, null, 2));
+    console.log("=== end raw response.content ===");
+  }
+
   const textParts: string[] = [];
   const citations: NonNullable<Property["citations"]> = [];
   const seen = new Set<string>();
+  let toolInput: { value?: string; insufficient_data: boolean } | null = null;
 
   for (const block of response.content) {
+    if (block.type === "tool_use" && block.name === "record_evaluation") {
+      if (toolInput) throw new Error("Model called record_evaluation more than once");
+      toolInput = normalizeToolInput(block.input, propertyDefinition.options);
+      continue;
+    }
     if (block.type !== "text") continue;
     textParts.push(block.text);
-    if (!block.citations) continue;
-    for (const citation of block.citations) {
+    for (const citation of block.citations ?? []) {
       if (citation.type === "char_location" && !seen.has(citation.cited_text)) {
         seen.add(citation.cited_text);
         citations.push({
@@ -144,33 +179,44 @@ async function evaluateWithCitations(
     }
   }
 
-  // Parse JSON from response
-  const text = textParts.join("");
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error("Malformed JSON in evaluation response");
-  }
-  if (text.includes("INSUFFICIENT_DATA")) {
+  if (!toolInput) throw new Error("Model did not call record_evaluation");
+  if (toolInput.insufficient_data || !toolInput.value) {
     return { name: propertyDefinition.name, value: "INSUFFICIENT_DATA" };
   }
 
-  let parsed: { value?: string; notes?: string };
-  try {
-    parsed = JSON.parse(jsonMatch[0]);
-  } catch {
-    return { name: propertyDefinition.name, value: "INSUFFICIENT_DATA" };
-  }
-
-  // Normalize multi-select: model outputs "Option" instead of ["Option"]
-  let value = String(parsed.value || "");
-  if (propertyDefinition.inputType === "multi-select" && !value.startsWith("[")) {
-    value = JSON.stringify([value]);
-  }
-
-  const property: Property = { name: propertyDefinition.name, value };
-  if (parsed.notes) property.notes = String(parsed.notes).replace(/<\/?cite[^>]*>/g, "");
+  const notes = textParts.join("\n").replace(/\s+/g, " ").trim();
+  const property: Property = { name: propertyDefinition.name, value: toolInput.value };
+  if (notes) property.notes = notes;
   if (citations.length > 0) property.citations = citations;
   return property;
+}
+
+function buildValueSchema(p: PropertyContent): Record<string, unknown> {
+  if (p.inputType === "multi-select") return { type: "array", items: { type: "string" } };
+  return { type: "string" };
+}
+
+function normalizeToolInput(
+  input: unknown,
+  options: readonly string[] | undefined,
+): { value?: string; insufficient_data: boolean } {
+  const raw = (input ?? {}) as Record<string, unknown>;
+  const insufficientData = raw.insufficient_data === true;
+  const rawValue = raw.value;
+
+  if (Array.isArray(rawValue)) {
+    const allStrings = rawValue.every((x) => typeof x === "string");
+    const allAllowed = !options || (allStrings && rawValue.every((x) => options.includes(x as string)));
+    return {
+      value: allStrings && allAllowed ? JSON.stringify(rawValue) : undefined,
+      insufficient_data: insufficientData,
+    };
+  }
+  if (typeof rawValue === "string") {
+    const allowed = !options || options.includes(rawValue);
+    return { value: allowed ? rawValue : undefined, insufficient_data: insufficientData };
+  }
+  return { value: undefined, insufficient_data: insufficientData };
 }
 
 /** Fetch a URL and strip to plain text. Returns null on failure. */
@@ -179,14 +225,16 @@ async function fetchTextFromUrl(url: string): Promise<{ text: string; sourceUrl:
     return fetchTextFromUrl(url.replace(/\.pdf$/, ".html"));
   }
 
-  // GitHub HTML pages are mostly navigation — fetch the raw markdown instead
   if (url.match(/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/)) {
-    const rawUrl = url.replace("github.com", "raw.githubusercontent.com") + "/master/README.md";
-    const response = await fetch(rawUrl).catch(() => null);
-    if (response?.ok) return { text: (await response.text()).replace(/<[^>]+>/g, "").trim(), sourceUrl: rawUrl };
+    const base = url.replace("github.com", "raw.githubusercontent.com").replace(/\/$/, "");
+    for (const branch of ["main", "master"]) {
+      const rawUrl = `${base}/${branch}/README.md`;
+      const response = await fetch(rawUrl, { signal: AbortSignal.timeout(15_000) }).catch(() => null);
+      if (response?.ok) return { text: (await response.text()).replace(/<[^>]+>/g, "").trim(), sourceUrl: rawUrl };
+    }
   }
 
-  const response = await fetch(url).catch(() => null);
+  const response = await fetch(url, { signal: AbortSignal.timeout(15_000) }).catch(() => null);
   if (!response?.ok) return null;
 
   const text = (await response.text())

@@ -1,0 +1,623 @@
+{
+  "id": "houdiniswap",
+  "title": "Houdini Swap",
+  "description": "Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains privacy by routing each swap through two independent off-chain CEX partners and three separate blockchains, so no single counterparty sees the full path from source to destination. It is not a mixer: liquidity is not pooled and no zero-knowledge proofs are used; privacy comes from partitioning knowledge across routing hops. The service aggregates DEXes and bridges across 100+ chains and curates CEX partners that run industry-standard AML programmes.",
+  "documentation": "https://docs.houdiniswap.com/",
+  "categories": ["Cross-L1 CEX aggregator and mixer"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "No",
+      "notes": "Balances and transfer amounts are fully transparent, so the answer is No. Each swap consists of two legs routed through non-custodial exchanges, where token A is sent from the source wallet, swapped into a temporary layer 1 intermediary, then routed to a second exchange and delivered as token B to the recipient , meaning every hop settles as an ordinary on-chain transfer whose amount and resulting address balance are visible on the underlying ledger. There are no shielded commitments, notes, or encrypted amounts — privacy comes from breaking the sender-receiver link across hops, not from hiding values. The sender and receiver never appear in the same transaction or transaction trail , but the individual amounts at each leg remain publicly readable.",
+      "citations": [
+        {
+          "cited_text": "​\n\nHow it Works \n\nA Private Swap routes each transaction through two unrelated intermediaries: \n\nLeg 1 (Source Chain): You send Token A from your source wallet. This is routed to a non-custodial exchange and swapped into a temporary, privacy-centric Layer 1 intermediary token.\n\nThe Intermediary Step: This temporary asset acts as a “buffer,” effectively breaking the trail of the original transaction.\n\nLeg 2 (Destination Chain): The intermediary asset is routed to a second non-custodial exchange, swapped into your desired Token B , and delivered to the recipient wallet.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1940,
+          "end_char_index": 2516
+        },
+        {
+          "cited_text": "No Direct Link: The sender and receiver never appear in the same transaction nor transaction trail.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 2836,
+          "end_char_index": 2937
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Unlinkability",
+      "notes": "Sender and receiver addresses are unlinkable on-chain rather than both being cryptographically hidden. Each swap is routed through two separate non-custodial exchanges with a temporary Layer 1 token as an intermediary , and the sender and receiver never appear in the same transaction nor transaction trail . Each leg of the transaction appears to terminate independently, so to an outside observer each leg looks like a standard, unrelated transaction . Addresses themselves remain visible on their respective chains — privacy comes from partitioning the path across off-chain CEX hops and multiple chains, not from concealing sender or receiver identities.",
+      "citations": [
+        {
+          "cited_text": "A Private Swap breaks this link by routing the transaction through two separate non-custodial exchanges and utilizing a temporary Layer 1 token as an intermediary. \n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1113,
+          "end_char_index": 1278
+        },
+        {
+          "cited_text": "No Direct Link: The sender and receiver never appear in the same transaction nor transaction trail.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 2836,
+          "end_char_index": 2937
+        },
+        {
+          "cited_text": "Each Leg of the transaction is unique and appears to end, so it’s impossible for observers to prove that Leg 1 and Leg 2 are part of the same swap. To an outside observer, each leg looks like a standard, unrelated transaction.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 3049,
+          "end_char_index": 3277
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "The asset being transferred is visible to observers at every hop. Each leg routes funds through a non-custodial exchange, with Token A swapped into a temporary Layer 1 intermediary token on the source side , and the intermediary is then routed to a second non-custodial exchange and swapped into the desired Token B before delivery to the recipient . Every leg settles in a plaintext native or ERC-20 asset on a public chain, so the token type is exposed at each CEX deposit, at the intermediary step, and at the final payout. There is no cryptographic mechanism (shielded notes, commitments, confidential amounts) to hide which asset is moving.",
+      "citations": [
+        {
+          "cited_text": "​\n\nHow it Works \n\nA Private Swap routes each transaction through two unrelated intermediaries: \n\nLeg 1 (Source Chain): You send Token A from your source wallet. This is routed to a non-custodial exchange and swapped into a temporary, privacy-centric Layer 1 intermediary token.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1940,
+          "end_char_index": 2219
+        },
+        {
+          "cited_text": "Leg 2 (Destination Chain): The intermediary asset is routed to a second non-custodial exchange, swapped into your desired Token B , and delivered to the recipient wallet.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 2344,
+          "end_char_index": 2516
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "Yes",
+      "notes": "Plausible deniability holds for the entry leg only. The user's outbound transaction is a plain transfer to a non-custodial exchange deposit address with no deterministic markers identifying it as a Houdini flow, and to an outside observer each leg looks like a standard, unrelated transaction . Because routing is performed off-chain by CEX partners rather than through a privacy-specific smart contract, there is no distinctive calldata or contract address that would flag the deposit as entering a privacy protocol. Deniability does not extend to the payout leg: the second CEX leg delivers the destination asset to the recipient as a visible, standalone on-chain withdrawal on the destination chain — the recipient's side is not covered by the sender's deniability.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "No Transaction Markers: There are no deterministic data markers that show this is a “Houdini Swap” transaction. Each Leg of the transaction is unique and appears to end, so it’s impossible for observers to prove that Leg 1 and Leg 2 are part of the same swap. To an outside observer, each leg looks like a standard, unrelated transaction.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 2937,
+          "end_char_index": 3277
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "Time-to-finality for Houdini Swap is N/A, since it is a routing service rather than its own chain or rollup and inherits finality from whichever source and destination networks a given swap touches. Houdini does not execute swaps itself; each route is handled by the underlying protocol or exchange partner selected for that transaction. Bridging or swaps are offered between most EVM chains, native Bitcoin, Solana and SUI, with the up-to-date list of supported networks available via the API. Effective time-to-finality therefore varies per swap and equals the slower of the two endpoint chains' finality plus off-chain CEX-hop latency.",
+      "citations": [
+        {
+          "cited_text": "Chain Coverage & Partners - Houdini documentation \n\nSkip to main content \n\nHoudini documentation home page \n\nSearch...\n\n⌘ K \n\nSearch... \n\nNavigation \n\nCoverage and Economy \n\nChain Coverage & Partners\n\nOverview\n\nGuides\n\nDeveloper Hub\n\nAPI V2 Reference \n\nAPI v1\n\nChangelog\n\nSupport & FAQs\n\nGetting started\n\nAbout Houdini \n\nCore Swap Concepts \n\nPrivacy and Compliance \n\nSwaps & Transfers\n\nPrivate Swap \n\nNo Wallet Connect \n\nOn-chain DEX or Bridge \n\nProducts and Features\n\nMultiSwap \n\nHoudiniPay \n\nPointless (Rewards Program) \n\nCoverage and Economy\n\nChain Coverage & Partners \n\nFees & Pricing \n\nEarn with Houdini\n\n$LOCK Tokenomics \n\nStaking program \n\nMedia Kit \n\nPrivacy Notice \n\nCompliance Policy \n\nTerms of Service \n\nOn this page \n\nPartners \n\nPrivate and No Wallet Connect (CEXs) \n\nOnchain (DEX or Bridge) \n\nChain Coverage \n\nCoverage and Economy\n\nChain Coverage & Partners\n\nCopy page \n\nCopy page \n\n​\n\nPartners \n\nHoudini does not execute swaps itself. Each route is handled by the underlying protocol or exchange partner selected for that transaction. \n",
+          "source": "https://docs.houdiniswap.com/overview/coverage-and-economy/chain-tokens-partners",
+          "start_char_index": 0,
+          "end_char_index": 1050
+        },
+        {
+          "cited_text": "​\n\nOnchain (DEX or Bridge) \n\nPartner Partner Partner Partner \n\nChainFlip deBridge Aerodrome Wormhole \n\nUniswap Jupiter Mayan Raydium \n\nPancakeSwap CowSwap Kodiak Wanchain \n\nCetus SushiSwap Titan Sodax \n\nAllbridge Beam \n\n​\n\nChain Coverage \n\nHoudini offers bridging or swaps between most EVM chains, native Bitcoin, Solana and SUI. \nFor the most up-to-date list of supported networks refer to the API. \n\n",
+          "source": "https://docs.houdiniswap.com/overview/coverage-and-economy/chain-tokens-partners",
+          "start_char_index": 1509,
+          "end_char_index": 1911
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "One secret — the source wallet key the user signs with on the source chain (e.g. secp256k1 ECDSA on EVM chains, Ed25519 on Solana). Houdini is a non-custodial routing service that holds no user funds and adds no viewing key, spending key, nullifier, or shielded account; the user transacts with the wallet they already control and no protocol-specific identity material is generated. The wallet signature is the one secret in use because the user must hold it to authorise the source-leg deposit.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "Copy page \n\n​\n\nIntroduction \n\nHoudini is a non-custodial, cross-chain swap aggregator. \nIt routes token swaps across multiple liquidity sources, including decentralized exchanges, cross-chain solvers, and non-custodial exchange partners, to coordinate the most efficient execution path for each transaction. \nHoudini does not operate its own exchange and does not hold user funds. It does not maintain balances or act as a counterparty. ",
+          "source": "https://docs.houdiniswap.com/overview/getting-started/what-is-houdini",
+          "start_char_index": 913,
+          "end_char_index": 1350
+        },
+        {
+          "cited_text": "​\n\nHoudini is an aggregator \n\nHoudini does not operate its own liquidity pools, order books, or exchange. \n",
+          "source": "https://docs.houdiniswap.com/overview/getting-started/what-is-houdini",
+          "start_char_index": 2290,
+          "end_char_index": 2397
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "No protocol-enforced waiting period applies before a user can deposit; funds can be sent to the Houdini-provided deposit address immediately upon receiving a quote. The flow begins with the user sending funds to a Houdini-provided deposit address, with no pre-deposit delay in the routing sequence. The 15–45 minute window for private swaps reflects downstream CEX processing and multi-hop routing, not a deposit lockout.",
+      "citations": [
+        {
+          "cited_text": "1\n\nUser deposits source token\n\nUser sends funds to Houdini-provided deposit address \n\n2\n\nMulti-hop CEX routing\n\nFunds route through 2 partner exchanges to break transaction trail \n\n3\n\nDelivery to destination\n\nFinal token arrives at user’s destination address \n\n​\n\nTechnical Flow for Integrators \n\nFor detailed integration steps, see the Private Swap Integration Guide . \n\n",
+          "source": "https://docs.houdiniswap.com/developer-hub/core-concepts/routing-types",
+          "start_char_index": 2059,
+          "end_char_index": 2431
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "N/A",
+      "notes": "No separate withdraw step exists in the private swap flow; the second CEX leg delivers the destination asset directly to the user-specified recipient address, so withdraw time is N/A. The final hop settles to the destination address within the overall 3–30 minute standard swap window , and for multi-hop private swaps the final token arrives at the user's destination address as the last routing step within the end-to-end 15–45 minute window, with no additional payout delay.",
+      "citations": [
+        {
+          "cited_text": "1\n\nUser deposits source token\n\nUser sends funds to deposit address \n\n2\n\nSingle CEX hop\n\nFunds route through one partner exchange \n\n3\n\nQuick delivery\n\nFaster settlement to destination address (3-30 minutes) \n\n​\n\nTechnical Flow for Integrators \n\nFor detailed integration steps, see the Standard Swap Integration Guide . \n\n",
+          "source": "https://docs.houdiniswap.com/developer-hub/core-concepts/routing-types",
+          "start_char_index": 3235,
+          "end_char_index": 3555
+        },
+        {
+          "cited_text": "1\n\nUser deposits source token\n\nUser sends funds to Houdini-provided deposit address \n\n2\n\nMulti-hop CEX routing\n\nFunds route through 2 partner exchanges to break transaction trail \n\n3\n\nDelivery to destination\n\nFinal token arrives at user’s destination address \n\n​\n\nTechnical Flow for Integrators \n\nFor detailed integration steps, see the Private Swap Integration Guide . \n\n",
+          "source": "https://docs.houdiniswap.com/developer-hub/core-concepts/routing-types",
+          "start_char_index": 2059,
+          "end_char_index": 2431
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "No. Routing in the private swap flow depends on curated third-party centralised exchanges that actively filter transactions: exchange partners are strictly curated non-custodial exchanges that maintain rigorous industry-compliant processes, with routine reviews covering Anti-Money Laundering and Anti-Terrorist Financing , and all AML/AFT liability rests with these partners, who employ real-time risk-based transaction screening and prevent transactions from sanctioned entities and jurisdictions listed on the United States Office of Foreign Assets Control (OFAC) . Partner CEXes can reject deposits or refuse payouts based on sanctions screening, Tor usage, monitoring-tool flags, or a $100,000 transaction cap, and issue resolution processes are triggered when a transaction is flagged as high risk or when a law enforcement information request is received . Since the Private Swap flow cannot bypass these vetted intermediaries, a CEX refusal blocks the swap at the off-chain hop regardless of underlying chain-level permissionlessness.",
+      "citations": [
+        {
+          "cited_text": "​\n\nOur Exchange Partners \n\nCompliance means we strictly curate our exchange partners, using only established non-custodial exchanges that maintain rigorous industry-compliant processes. Routine reviews ensure the continuance of the policies and compliance procedures necessary to protect us, our customers, and their users, particularly in areas of Anti-Money Laundering (AML) and Anti-Terrorist Financing (ATF). \n\n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 7861,
+          "end_char_index": 8276
+        },
+        {
+          "cited_text": "​\n\nAnti-Money Laundering and Anti-Terrorist Financing (AML/ATF) \n\nAll AML/AFT liability for our users is the responsibility of exchange partners. They each employ advanced transaction monitoring tools, integral to this Compliance Policy. These tools include real-time, risk-based screening systems, aligning with industry best practices to detect and investigate suspicious financial activities. \nAdhering to international regulatory standards, our partners prevent transactions from sanctioned entities and jurisdictions listed on the United States Office of Foreign Assets Control (OFAC), ensuring we avoid transactions from these sanctioned sources. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 11632,
+          "end_char_index": 12286
+        },
+        {
+          "cited_text": "Conducting issue resolution processes when a transaction is flagged as high risk or where an information request has been received by law enforcement agencies.\n\n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 6333,
+          "end_char_index": 6494
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Houdini's Private Swap routing depends on external networks with their own crypto-economic assumptions, specifically third-party centralized exchanges and cross-chain bridges that it does not operate. CEX partners provide the multi-hop routing used for private swaps and the single-hop path used for standard swaps, with compliance and AML screening happening at the partner level. On-chain legs route through external DEX aggregators and AMMs such as Uniswap, cross-chain bridges including deBridge and Mayan, and intent-based protocols like CoW Swap and Sodax. The routing engine itself only analyzes routes, calculates optimal paths, and orchestrates order lifecycle — it is off-chain and has no validator set or chain of its own, so all settlement security is inherited from these external permissioned CEXs and permissionless bridges/DEXs.",
+      "citations": [
+        {
+          "cited_text": "CEX Partners \n\nIntegrated centralized exchanges that enable: \n\nPrivate Swaps : Multi-hop routing through exchanges for maximum privacy\n\nStandard Swaps : Single CEX hop for faster execution\n\nCompliance and AML screening at partner level\n\nDeep liquidity for major trading pairs\n\nPrivacy Model : When using CEX routes, funds briefly touch partner exchanges. ",
+          "source": "https://docs.houdiniswap.com/developer-hub/overview/architecture",
+          "start_char_index": 2046,
+          "end_char_index": 2401
+        },
+        {
+          "cited_text": "On-Chain DeFi Protocols \n\nDirect blockchain integration with: \n\nDEX aggregators and AMMs (Uniswap, etc.)\n\nCross-chain bridges (Debridge, Mayan, etc.)\n\nIntent-based protocols (Cowswap, Sodax, etc.)\n\n",
+          "source": "https://docs.houdiniswap.com/developer-hub/overview/architecture",
+          "start_char_index": 2522,
+          "end_char_index": 2720
+        },
+        {
+          "cited_text": "Houdini Routing Engine \n\nThe core intelligence layer that: \n\nAnalyzes available routes across CEXs and DEXs\n\nCalculates optimal paths based on amount, fees, and speed\n\nHandles route-specific logic and orchestration\n\nManages order lifecycle and status updates\n\n​\n\n3. ",
+          "source": "https://docs.houdiniswap.com/developer-hub/overview/architecture",
+          "start_char_index": 1780,
+          "end_char_index": 2046
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "N/A",
+      "notes": "The escape hatch property does not apply here because there is no protocol-controlled pool or shielded balance to exit from. The routing is non-custodial and executed through exchange protocols rather than a Houdini-held contract , and each swap passes through two separate non-custodial exchanges with a temporary intermediary asset acting as a buffer between legs . If a partner exchange fails to deliver during the brief window between legs, recovery is a customer-service matter with that venue, not an on-chain withdrawal path secured by any base-chain consensus or cryptography.",
+      "citations": [
+        {
+          "cited_text": "Non-Custodial: Houdini never takes possession of your funds; the process is entirely automated via exchange protocols.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1575,
+          "end_char_index": 1695
+        },
+        {
+          "cited_text": "​\n\nHow it Works \n\nA Private Swap routes each transaction through two unrelated intermediaries: \n\nLeg 1 (Source Chain): You send Token A from your source wallet. This is routed to a non-custodial exchange and swapped into a temporary, privacy-centric Layer 1 intermediary token.\n\nThe Intermediary Step: This temporary asset acts as a “buffer,” effectively breaking the trail of the original transaction.\n\nLeg 2 (Destination Chain): The intermediary asset is routed to a second non-custodial exchange, swapped into your desired Token B , and delivered to the recipient wallet.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1940,
+          "end_char_index": 2516
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "notes": "Upgrades are controlled unilaterally by Houdini as the operator of an off-chain routing service, placing this under Single admin. The routing engine is the core intelligence layer that analyzes available routes, calculates optimal paths, handles route-specific logic and orchestration, and manages order lifecycle — all of which run off-chain and can be modified by the operator at any time without user consent or on-chain governance. The set of integrated CEX partners and on-chain venues (DEX aggregators, cross-chain bridges, and intent-based protocols) is curated by Houdini , so partner list, pricing, and routing strategy are changeable server-side. There are no Houdini-deployed smart contracts with a formal upgrade path, so the property maps to operator control over the SaaS backend rather than a proxy or governance contract.",
+      "citations": [
+        {
+          "cited_text": "Houdini Routing Engine \n\nThe core intelligence layer that: \n\nAnalyzes available routes across CEXs and DEXs\n\nCalculates optimal paths based on amount, fees, and speed\n\nHandles route-specific logic and orchestration\n\nManages order lifecycle and status updates\n\n​\n\n3. ",
+          "source": "https://docs.houdiniswap.com/developer-hub/overview/architecture",
+          "start_char_index": 1780,
+          "end_char_index": 2046
+        },
+        {
+          "cited_text": "CEX Partners \n\nIntegrated centralized exchanges that enable: \n\nPrivate Swaps : Multi-hop routing through exchanges for maximum privacy\n\nStandard Swaps : Single CEX hop for faster execution\n\nCompliance and AML screening at partner level\n\nDeep liquidity for major trading pairs\n\nPrivacy Model : When using CEX routes, funds briefly touch partner exchanges. ",
+          "source": "https://docs.houdiniswap.com/developer-hub/overview/architecture",
+          "start_char_index": 2046,
+          "end_char_index": 2401
+        },
+        {
+          "cited_text": "On-Chain DeFi Protocols \n\nDirect blockchain integration with: \n\nDEX aggregators and AMMs (Uniswap, etc.)\n\nCross-chain bridges (Debridge, Mayan, etc.)\n\nIntent-based protocols (Cowswap, Sodax, etc.)\n\n",
+          "source": "https://docs.houdiniswap.com/developer-hub/overview/architecture",
+          "start_char_index": 2522,
+          "end_char_index": 2720
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Not applicable",
+      "notes": "Houdini Swap has no proving component at all, so client-side proving is not applicable. Privacy is produced by routing funds through two separate non-custodial exchanges with a temporary Layer 1 token as an intermediary , not by any zero-knowledge proof system. The process is automated via exchange protocols off-chain, meaning there are no notes, nullifiers, or proofs generated on either the client or a server.",
+      "citations": [
+        {
+          "cited_text": "A Private Swap breaks this link by routing the transaction through two separate non-custodial exchanges and utilizing a temporary Layer 1 token as an intermediary. \n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1113,
+          "end_char_index": 1278
+        },
+        {
+          "cited_text": "Non-Custodial: Houdini never takes possession of your funds; the process is entirely automated via exchange protocols.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1575,
+          "end_char_index": 1695
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "Yes — third parties can inspect user transaction information under Houdini Swap's architecture. Each non-custodial exchange partner observes the leg of the swap routed through it, including source address, amount, and payout address, and exchange partners maintain records for their side only of each transaction, which is required to support regulatory and law enforcement investigations . Under valid legal process these partners can reconcile their respective logs to reconstruct the full source-to-destination path, and when approached by law enforcement for data, the platform adheres to a legally compliant process, ensuring data sharing is within legal confines and in response to valid requests . The routing engine additionally has visibility into orchestration metadata, and transaction data is retained for 72 hours before auto-deletion, though it is still held by exchange partners who maintain records for their side of a transaction .",
+      "citations": [
+        {
+          "cited_text": "Exchange partners maintain records for their side only of each transaction, which is required to support regulatory and law enforcement investigations. \n\n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 12286,
+          "end_char_index": 12440
+        },
+        {
+          "cited_text": "​\n\nInformation Sharing with Law Enforcement \n\n‘When approached by law enforcement for data, we adhere to a legally compliant process, ensuring data sharing is within legal confines and in response to valid requests while safeguarding user privacy. \n\n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 13022,
+          "end_char_index": 13272
+        },
+        {
+          "cited_text": "​\n\nData Processes \n\n​\n\nData Retention Policy \n\nBalancing the need for regulatory compliance with privacy and data minimization principles, we retain transaction data for 72 hours. At 72 hours this data is auto-deleted, but is still held by our exchange partners who maintain records for their side of a transaction. ",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 12440,
+          "end_char_index": 12756
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "5 : Mainnet for more than 2 years",
+      "notes": "Houdini has operated as a live cross-chain routing service since 2022, placing it well past the two-year threshold as of 2026. Because it is a non-custodial, cross-chain swap aggregator that routes token swaps across decentralized exchanges, cross-chain solvers, and non-custodial exchange partners , maturity reflects service uptime rather than a mainnet smart-contract deployment. The service operates no liquidity pools, order books, or exchange of its own, instead connecting to external venues and selecting execution paths , so there is no canonical on-chain protocol whose mainnet age could be measured directly; the three-plus years of production operation across 60+ chains and dozens of CEX/DEX partners is the relevant track record.",
+      "citations": [
+        {
+          "cited_text": "Copy page \n\n​\n\nIntroduction \n\nHoudini is a non-custodial, cross-chain swap aggregator. \nIt routes token swaps across multiple liquidity sources, including decentralized exchanges, cross-chain solvers, and non-custodial exchange partners, to coordinate the most efficient execution path for each transaction. \n",
+          "source": "https://docs.houdiniswap.com/overview/getting-started/what-is-houdini",
+          "start_char_index": 913,
+          "end_char_index": 1222
+        },
+        {
+          "cited_text": "​\n\nHoudini is an aggregator \n\nHoudini does not operate its own liquidity pools, order books, or exchange. \nIt connects to decentralized exchanges, cross-chain solvers, bridges, and non-custodial exchange partners, compares available routes, and selects the most efficient execution path at that moment. \n",
+          "source": "https://docs.houdiniswap.com/overview/getting-started/what-is-houdini",
+          "start_char_index": 2290,
+          "end_char_index": 2594
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Houdini Swap is not post-quantum secure. The protocol adds no cryptography of its own, instead relying on each leg's underlying chain signatures (secp256k1 ECDSA on EVM chains, Ed25519 on Solana) plus TLS to partner exchange APIs, none of which resist quantum attacks. The routing model depends on two non-custodial exchange hops with a temporary Layer 1 intermediary token , so transport security and settlement finality inherit the pre-quantum elliptic-curve primitives of the source, intermediary, and destination chains. No lattice-based, hash-based, or other post-quantum signature or KEM scheme is part of the design.",
+      "citations": [
+        {
+          "cited_text": "​\n\nHow it Works \n\nA Private Swap routes each transaction through two unrelated intermediaries: \n\nLeg 1 (Source Chain): You send Token A from your source wallet. This is routed to a non-custodial exchange and swapped into a temporary, privacy-centric Layer 1 intermediary token.\n\nThe Intermediary Step: This temporary asset acts as a “buffer,” effectively breaking the trail of the original transaction.\n\nLeg 2 (Destination Chain): The intermediary asset is routed to a second non-custodial exchange, swapped into your desired Token B , and delivered to the recipient wallet.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1940,
+          "end_char_index": 2516
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "App",
+      "notes": "Compliance enforcement sits at the application layer, operated by Houdini's curated set of centralised exchange partners rather than by any on-chain contract or asset-level control. AML and anti-terrorist-financing liability for users is delegated to the exchange partners , who employ transaction monitoring tools including real-time, risk-based screening systems to detect and investigate suspicious financial activities . These partners also screen against United States Office of Foreign Assets Control (OFAC) sanctions lists to block transactions from sanctioned entities and jurisdictions . Houdini itself contributes by curating exchange partners and using only established non-custodial exchanges that maintain industry-compliant processes , with no protocol-layer or asset-layer gating in place.",
+      "citations": [
+        {
+          "cited_text": "​\n\nAnti-Money Laundering and Anti-Terrorist Financing (AML/ATF) \n\nAll AML/AFT liability for our users is the responsibility of exchange partners. ",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 11632,
+          "end_char_index": 11778
+        },
+        {
+          "cited_text": "They each employ advanced transaction monitoring tools, integral to this Compliance Policy. These tools include real-time, risk-based screening systems, aligning with industry best practices to detect and investigate suspicious financial activities. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 11778,
+          "end_char_index": 12029
+        },
+        {
+          "cited_text": "Adhering to international regulatory standards, our partners prevent transactions from sanctioned entities and jurisdictions listed on the United States Office of Foreign Assets Control (OFAC), ensuring we avoid transactions from these sanctioned sources. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 12029,
+          "end_char_index": 12286
+        },
+        {
+          "cited_text": "​\n\nOur Exchange Partners \n\nCompliance means we strictly curate our exchange partners, using only established non-custodial exchanges that maintain rigorous industry-compliant processes. ",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 7861,
+          "end_char_index": 8047
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Third party",
+      "notes": "Compliance enforcement sits primarily with third-party exchange partners, with Houdini's internal compliance team acting as orchestrator and auditor. All AML/ATF liability for users is the responsibility of exchange partners, who employ advanced transaction monitoring tools including real-time, risk-based screening systems to detect and investigate suspicious financial activities. These partners prevent transactions from sanctioned entities and jurisdictions listed on the United States Office of Foreign Assets Control (OFAC) , and maintain records for their side of each transaction to support regulatory and law enforcement investigations. Houdini additionally retains a designated Compliance Officer and Process Owner plus external compliance advisors specialising in Web3 law, AML/ATF, regulatory compliance, cryptography and transaction screening who work with management to confirm ongoing compliance , making both Third party (partner CEXes and external advisors) and Admin (internal compliance roles) relevant, though the actual screening, blocking, and law-enforcement response is executed by the exchange partners.",
+      "citations": [
+        {
+          "cited_text": "​\n\nAnti-Money Laundering and Anti-Terrorist Financing (AML/ATF) \n\nAll AML/AFT liability for our users is the responsibility of exchange partners. They each employ advanced transaction monitoring tools, integral to this Compliance Policy. These tools include real-time, risk-based screening systems, aligning with industry best practices to detect and investigate suspicious financial activities. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 11632,
+          "end_char_index": 12029
+        },
+        {
+          "cited_text": "Adhering to international regulatory standards, our partners prevent transactions from sanctioned entities and jurisdictions listed on the United States Office of Foreign Assets Control (OFAC), ensuring we avoid transactions from these sanctioned sources. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 12029,
+          "end_char_index": 12286
+        },
+        {
+          "cited_text": "Exchange partners maintain records for their side only of each transaction, which is required to support regulatory and law enforcement investigations. \n\n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 12286,
+          "end_char_index": 12440
+        },
+        {
+          "cited_text": "Compliance Advisors \n\nOur external compliance advisors comprise recognised specialists in international Web3 law, AML/ATF and regulatory compliance as well as cryptography and transaction screening. Each works with the company’s management and compliance team to confirm we remain compliant, stay up to date with best practice standards, and identify areas of improvement. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 7182,
+          "end_char_index": 7556
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"KYC/KYB\",\"Programmatic policies\"]",
+      "notes": "Compliance mechanisms in use are KYC/KYB at the partner level and programmable per-transaction policies enforced by partner exchanges (real-time transaction screening + sanctions blocklists are data sources feeding the programmatic policy layer, not a separate category). AML/ATF liability for users is handled by exchange partners, who employ real-time, risk-based screening systems to detect and investigate suspicious financial activities. Partners adhere to international regulatory standards and prevent transactions from sanctioned entities and jurisdictions listed on the United States Office of Foreign Assets Control (OFAC). Exchange partner onboarding includes review of AML policies, user terms, law enforcement protocols, and auditable transaction data, with periodic reviews conducted at least quarterly . Access from Tor and sanctioned jurisdictions is blocked, and a hard per-transaction cap of $100,000 applies.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "​\n\nAnti-Money Laundering and Anti-Terrorist Financing (AML/ATF) \n\nAll AML/AFT liability for our users is the responsibility of exchange partners. They each employ advanced transaction monitoring tools, integral to this Compliance Policy. These tools include real-time, risk-based screening systems, aligning with industry best practices to detect and investigate suspicious financial activities. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 11632,
+          "end_char_index": 12029
+        },
+        {
+          "cited_text": "Adhering to international regulatory standards, our partners prevent transactions from sanctioned entities and jurisdictions listed on the United States Office of Foreign Assets Control (OFAC), ensuring we avoid transactions from these sanctioned sources. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 12029,
+          "end_char_index": 12286
+        },
+        {
+          "cited_text": "​\n\nPeriodic Reviews \n\nAt Houdini Swap, maintaining our high compliance standard is ensured through periodic reviews with each exchange partner, conducted at least quarterly. ",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 10283,
+          "end_char_index": 10457
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"Deposit\",\"Withdrawal\"]",
+      "notes": "Enforcement occurs at both the deposit and withdrawal legs, handled by the non-custodial exchange partners that bracket the swap. At the entry side, partner exchanges employ advanced transaction monitoring tools, including real-time, risk-based screening systems, aligning with industry best practices to detect and investigate suspicious financial activities , and prevent transactions from sanctioned entities and jurisdictions listed on the United States Office of Foreign Assets Control (OFAC) , which applies symmetrically to refusing payout destinations on the exit leg. There is no in-protocol transfer step to police, since the platform is 100% non-custodial, never holds custody of user assets, and each transaction occurs discretely and independently with user funds never pooled or controlled by the platform .",
+      "citations": [
+        {
+          "cited_text": "They each employ advanced transaction monitoring tools, integral to this Compliance Policy. These tools include real-time, risk-based screening systems, aligning with industry best practices to detect and investigate suspicious financial activities. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 11778,
+          "end_char_index": 12029
+        },
+        {
+          "cited_text": "Adhering to international regulatory standards, our partners prevent transactions from sanctioned entities and jurisdictions listed on the United States Office of Foreign Assets Control (OFAC), ensuring we avoid transactions from these sanctioned sources. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 12029,
+          "end_char_index": 12286
+        },
+        {
+          "cited_text": "​\n\nHoudini Swap Platform \n\nOur platform distinguishes itself in being 100% non-custodial. It means we never hold custody of any user assets at any time. Each transaction occurs discretely and independently with user funds never pooled or controlled by us. \n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 3975,
+          "end_char_index": 4232
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"Involuntary third-party disclosure\"]",
+      "notes": "Houdini Swap's selective disclosure model is limited to involuntary third-party access via law enforcement requests directed at exchange partners, with no user-facing viewing mechanism. When approached by law enforcement for data, the platform adheres to a legally compliant process, responding to valid requests while safeguarding user privacy. Exchange partners maintain records for their side only of each transaction, which is required to support regulatory and law enforcement investigations. No cryptographic viewing key, self-view portal, or voluntary delegation mechanism exists — partitioning is the privacy primitive, and disclosure happens off-chain through legal process against the CEX legs.",
+      "citations": [
+        {
+          "cited_text": "​\n\nInformation Sharing with Law Enforcement \n\n‘When approached by law enforcement for data, we adhere to a legally compliant process, ensuring data sharing is within legal confines and in response to valid requests while safeguarding user privacy. \n\n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 13022,
+          "end_char_index": 13272
+        },
+        {
+          "cited_text": "Exchange partners maintain records for their side only of each transaction, which is required to support regulatory and law enforcement investigations. \n\n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 12286,
+          "end_char_index": 12440
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "None",
+      "notes": "None of Houdini Swap's described architecture includes a user-facing viewing-key or selective-disclosure primitive, so viewing control is not applicable. Disclosure is handled off-chain: when approached by law enforcement for data, the platform adheres to a legally compliant process, ensuring data sharing is within legal confines and in response to valid requests , and exchange partners maintain records for their side only of each transaction, which is required to support regulatory and law enforcement investigations . There is no cryptographic permission object that could be either fixed at transfer time or later updated, since routing and record-keeping occur off-chain across CEX partners rather than through on-chain notes or viewing keys.",
+      "citations": [
+        {
+          "cited_text": "​\n\nInformation Sharing with Law Enforcement \n\n‘When approached by law enforcement for data, we adhere to a legally compliant process, ensuring data sharing is within legal confines and in response to valid requests while safeguarding user privacy. \n\n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 13022,
+          "end_char_index": 13272
+        },
+        {
+          "cited_text": "Exchange partners maintain records for their side only of each transaction, which is required to support regulatory and law enforcement investigations. \n\n",
+          "source": "https://docs.houdiniswap.com/products/swap-transfer/compliance-policy",
+          "start_char_index": 12286,
+          "end_char_index": 12440
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "No",
+      "notes": "No cryptographic proofs guarantee the correctness of a Private Swap's routing or settlement. Execution relies on two separate non-custodial exchanges, with leg 1 swapping the source token into a temporary intermediary asset and leg 2 swapping that intermediary into the destination token at a second exchange , meaning settlement depends on off-chain CEX bookkeeping rather than on-chain verifiable computation. Each leg appears as a distinct, self-contained transaction with no deterministic on-chain link , so there is no proof a user can check to confirm the two legs corresponded to the same intended swap or that routing was performed honestly. Trust is placed in the exchange partners and routing engine, which is a social/operational guarantee rather than a cryptographic one.",
+      "citations": [
+        {
+          "cited_text": "​\n\nHow it Works \n\nA Private Swap routes each transaction through two unrelated intermediaries: \n\nLeg 1 (Source Chain): You send Token A from your source wallet. This is routed to a non-custodial exchange and swapped into a temporary, privacy-centric Layer 1 intermediary token.\n\nThe Intermediary Step: This temporary asset acts as a “buffer,” effectively breaking the trail of the original transaction.\n\nLeg 2 (Destination Chain): The intermediary asset is routed to a second non-custodial exchange, swapped into your desired Token B , and delivered to the recipient wallet.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1940,
+          "end_char_index": 2516
+        },
+        {
+          "cited_text": "Each Leg of the transaction is unique and appears to end, so it’s impossible for observers to prove that Leg 1 and Leg 2 are part of the same swap. ",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 3049,
+          "end_char_index": 3197
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "No. The public GitHub organization for Houdini Swap contains only a single repository, houdini-api-examples, written in TypeScript , which is a client-facing API example set rather than the core routing, matching, or compliance logic. The proprietary routing engine and CEX partner integrations that implement the privacy model are not published, and no OSI-approved license covers the protocol internals.",
+      "citations": [
+        {
+          "cited_text": "Dismiss alert \n\n{{ message }}\n\nHoudini Swap\n\nhttps://houdiniswap.com/\n\nPopular repositories\n\nLoading \n\nhoudini-api-examples\nhoudini-api-examples \nPublic \n\nTypeScript \n\nRepositories\n\n--> \n\nLoading \n\nType \n\nSelect type \n\nAll \n\nPublic \n\nSources \n\nForks \n\nArchived \n\nMirrors \n\nTemplates \n\nLanguage \n\nSelect language \n\nAll \n\nTypeScript \n\nSort \n\nSelect order \n\nLast updated \n\nName \n\nStars \n\nShowing 1 of 1 repositories \n\nhoudini-api-examples \n\nPublic\n\nUh oh!\n\n",
+          "source": "https://github.com/houdiniswap",
+          "start_char_index": 887,
+          "end_char_index": 1341
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Stateless",
+      "notes": "Houdini Swap is stateless with respect to protocol-specific private data, since it maintains no note tree, nullifier set, shielded pool, or user-level commitments. Each swap routes through two unrelated non-custodial exchanges with a temporary layer-1 intermediary asset acting as a buffer, and once both legs settle the on-chain trail between sender and receiver is severed , leaving no persistent privacy-related state that accumulates with usage. Privacy derives from off-chain knowledge partitioning across CEX hops and multiple chains rather than from any growing cryptographic accumulator, so the property does not really apply in the way it does for shielded-pool designs.",
+      "citations": [
+        {
+          "cited_text": "​\n\nHow it Works \n\nA Private Swap routes each transaction through two unrelated intermediaries: \n\nLeg 1 (Source Chain): You send Token A from your source wallet. This is routed to a non-custodial exchange and swapped into a temporary, privacy-centric Layer 1 intermediary token.\n\nThe Intermediary Step: This temporary asset acts as a “buffer,” effectively breaking the trail of the original transaction.\n\nLeg 2 (Destination Chain): The intermediary asset is routed to a second non-custodial exchange, swapped into your desired Token B , and delivered to the recipient wallet.\n\nBy the time the funds reach the destination, the on-chain “paper trail” connecting the original sender to the final receiver is completely severed. \n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1940,
+          "end_char_index": 2666
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No scanning",
+      "notes": "Houdini Swap requires no client-side chain scanning, as balances on the destination chain are held in standard wallet addresses readable by any block explorer or wallet software. The intermediary asset is routed to a second non-custodial exchange, swapped into the desired destination token, and delivered to the recipient wallet , meaning the recipient simply holds a normal asset at a normal address with no notes, commitments, or encrypted state to decrypt or track. Privacy derives from routing through two separate non-custodial exchanges and utilizing a temporary Layer 1 token as an intermediary rather than from any client-side cryptographic bookkeeping.",
+      "citations": [
+        {
+          "cited_text": "Leg 2 (Destination Chain): The intermediary asset is routed to a second non-custodial exchange, swapped into your desired Token B , and delivered to the recipient wallet.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 2344,
+          "end_char_index": 2516
+        },
+        {
+          "cited_text": "A Private Swap breaks this link by routing the transaction through two separate non-custodial exchanges and utilizing a temporary Layer 1 token as an intermediary. \n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1113,
+          "end_char_index": 1278
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "Account-based state model",
+      "notes": "Houdini Swap does not maintain any protocol-level private state; user balances remain ordinary wallet balances on whichever host chain they reside on, whether that chain uses a UTXO or account model. Routing moves tokens between wallets via two non-custodial exchanges and a temporary layer-1 intermediary asset , so there are no shielded notes, commitments, or nullifiers managed by the service itself. Since most of the supported chains (Ethereum, Tron, BNB, Solana, etc.) and the majority of swap volume sit on account-model networks, the closest enum match is the account-based model, though this property does not really apply to an off-chain routing service with no on-chain privacy contracts.",
+      "citations": [
+        {
+          "cited_text": "​\n\nHow it Works \n\nA Private Swap routes each transaction through two unrelated intermediaries: \n\nLeg 1 (Source Chain): You send Token A from your source wallet. This is routed to a non-custodial exchange and swapped into a temporary, privacy-centric Layer 1 intermediary token.\n\nThe Intermediary Step: This temporary asset acts as a “buffer,” effectively breaking the trail of the original transaction.\n\nLeg 2 (Destination Chain): The intermediary asset is routed to a second non-custodial exchange, swapped into your desired Token B , and delivered to the recipient wallet.\n\n",
+          "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
+          "start_char_index": 1940,
+          "end_char_index": 2516
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": "Off-chain storage with on-chain commitment",
+      "notes": "Off-chain storage with on-chain commitment is the closest fit, though the property does not cleanly apply since there are no on-chain privacy contracts, notes, or commitments involved. Houdini operates as a non-custodial aggregator and affiliate partner rather than a custodial exchange, and does not hold user funds long-term; CEX routes involve brief custody by partner exchanges which handle their own compliance screening. Per-leg transaction records reside inside each partner exchange's internal systems, while the routing engine keeps order metadata off-chain to orchestrate legs and manage order lifecycle and status updates exposed via the API. The only on-chain footprint is the deposit and withdrawal transactions on each blockchain hop, which are ordinary transfers rather than privacy commitments.",
+      "citations": [
+        {
+          "cited_text": "​\n\nSecurity & Custody Model \n\nImportant : Houdini is an aggregator and affiliate partner, not a custodial exchange . \n\nNon-Custodial : Houdini doesn’t hold user funds long-term\n\nPartner Routing : CEX routes involve brief custody by partner exchanges\n\nSmart Contracts : DEX routes use audited smart contracts\n\nNo Registration : Most flows don’t require user accounts or KYC\n\nPartner Compliance : CEX partners handle their own AML/compliance screening\n\n​\n\nNext Steps \n\nGet API Keys\n\nSet up authentication and get your API credentials \n\nCore Concepts\n\nDeep dive into routing types and order lifecycle \n\nWhat You Can Build API Keys & Authentication \n\n⌘ I \n\nx github \n\nPowered by \n\nThis documentation is built and hosted on Mintlify, a developer documentation platform",
+          "source": "https://docs.houdiniswap.com/developer-hub/overview/architecture",
+          "start_char_index": 3502,
+          "end_char_index": 4265
+        },
+        {
+          "cited_text": "Houdini Routing Engine \n\nThe core intelligence layer that: \n\nAnalyzes available routes across CEXs and DEXs\n\nCalculates optimal paths based on amount, fees, and speed\n\nHandles route-specific logic and orchestration\n\nManages order lifecycle and status updates\n\n​\n\n3. ",
+          "source": "https://docs.houdiniswap.com/developer-hub/overview/architecture",
+          "start_char_index": 1780,
+          "end_char_index": 2046
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Unlimited access to DeFi applications",
+      "notes": "Every Houdini Swap terminates by delivering plain tokens to a user-controlled address on the destination chain, from where the recipient can interact with any DeFi protocol on that chain without restriction. The service also exposes a DEX swap routing type that executes on-chain through a curated set of aggregated venues (Uniswap, PancakeSwap, Raydium, Jupiter, Aerodrome, CowSwap) — that curation applies to Houdini's DEX-swap product, not to the user's DeFi access after receiving funds. There is no native shielded DeFi ecosystem because privacy ends at delivery; post-swap DeFi usage happens on the destination chain with ordinary tokens and therefore inherits the full DeFi surface of that chain.",
+      "needsResearchReview": true,
+      "citations": [
+        {
+          "cited_text": "DEX Swap \n\n​\n\nHow It Works \n\nDEX swaps execute directly on-chain through decentralized exchanges and bridges. \n\n",
+          "source": "https://docs.houdiniswap.com/developer-hub/core-concepts/routing-types",
+          "start_char_index": 4099,
+          "end_char_index": 4211
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "Houdini Swap's programmability is limited to payments only, specifically token swaps and cross-chain transfers. The protocol exposes three swap primitives — private, no wallet connect, and DEX — all of which route token movements rather than execute arbitrary private logic. All other features are built on top of these swap primitives , so there is no private smart-contract layer, no general private computation, and no notes or state objects that user logic could operate on. Privacy derives from off-chain routing across CEX partners and multiple chains, which inherently scopes functionality to transferring value between a source and a destination.",
+      "citations": [
+        {
+          "cited_text": "Copy page \n\nAt its core, Houdini Swap utilizes three swap primitives to handle transactions: Private, No Wallet Connect, and DEX. ",
+          "source": "https://docs.houdiniswap.com/overview/getting-started/core-swap-concepts",
+          "start_char_index": 1008,
+          "end_char_index": 1138
+        },
+        {
+          "cited_text": "While all other Houdini features are built on top of these primitives, the swap type you choose ultimately determines how your transaction is routed and settled across chains. \n",
+          "source": "https://docs.houdiniswap.com/overview/getting-started/core-swap-concepts",
+          "start_char_index": 1220,
+          "end_char_index": 1397
+        }
+      ]
+    }
+  ]
+}

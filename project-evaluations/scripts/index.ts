@@ -1,4 +1,5 @@
-import { readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
+import { PROPERTY_DEFINITIONS } from "../src/data/schema";
 import { configs } from "./research-config";
 import { evaluateProperties } from "./research-protocol";
 import { Evaluation, Property } from "../src/types";
@@ -12,7 +13,9 @@ async function main() {
   const protocolId = positional[0];
   if (!protocolId || !configs[protocolId]) {
     console.error(
-      `Usage: pnpm run research <protocol> [--only "A,B"]\n` + `Available: ${Object.keys(configs).join(", ")}`,
+      `Usage: pnpm run research <protocol> [--only "A,B"]\n` +
+        `Requires scripts/research-cache/<protocol>.json — generate it first with /research-sources <protocol> in Claude Code.\n` +
+        `Available: ${Object.keys(configs).join(", ")}`,
     );
     process.exit(1);
   }
@@ -23,7 +26,9 @@ async function main() {
 
   const config = configs[protocolId];
   const evalPath = new URL(`../src/data/evaluations/${config.id}.json`, import.meta.url);
-  const existingProperties: Property[] = JSON.parse(readFileSync(evalPath, "utf-8")).properties;
+  const existingProperties: Property[] = existsSync(evalPath)
+    ? JSON.parse(readFileSync(evalPath, "utf-8")).properties
+    : PROPERTY_DEFINITIONS.map((p) => ({ name: p.name, value: "" }));
 
   const properties = await evaluateProperties(config, existingProperties, only ?? []);
 

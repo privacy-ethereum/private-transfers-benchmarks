@@ -119,8 +119,9 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"KYT\",\"Selective disclosure\"]",
-      "notes": "Hinkal enforces Know-Your-Transaction (KYT) screening via Chainalysis compliance components integrated into the smart contracts. Screening applies at deposit and withdrawal, where public addresses are visible. Private transfers within the shielded pool are note-to-note and do not expose public addresses to the compliance layer. Users can also voluntarily share their viewing key with third parties for selective disclosure.",
+      "value": "[\"Programmatic policies\",\"Selective disclosure\"]",
+      "notes": "Hinkal enforces programmable per-transaction policies via Chainalysis compliance components integrated into the smart contracts; the chain-analytics signal is a data input to the policy layer (not a separate compliance category). Screening applies at deposit and withdrawal, where public addresses are visible. Private transfers within the shielded pool are note-to-note and do not expose public addresses to the compliance layer. Users can also voluntarily share their viewing key with third parties for selective disclosure.",
+      "needsResearchReview": true,
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
     },
     {
