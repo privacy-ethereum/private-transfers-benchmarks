@@ -144,7 +144,8 @@
     {
       "name": "Cryptographic verifiability",
       "value": "No",
-      "notes": "The system relies on a permissioned threshold network for decryption and an off-chain DA layer for ciphertext storage, introducing crypto-economic trust assumptions beyond pure cryptographic guarantees. The CoFHE architecture claims to use zero-knowledge proofs of knowledge (ZKPoK) alongside TFHE, but the specific verification mechanism is not detailed in current documentation. TODO: verify whether ZKPoK verification is implemented ",
+      "notes": "Correctness rests on a permissioned threshold-decryption network (an economic / multi-party trust mechanism), so the value is No per the rule that excludes economic mechanisms from cryptographic verifiability. The CoFHE architecture claims to use zero-knowledge proofs of knowledge (ZKPoK) alongside TFHE, but even if ZKPoK is implemented, decryption itself depends on threshold-network honesty rather than pure math. TODO: verify whether ZKPoK verification is implemented (this would not flip the value but would tighten the description).",
+      "needsResearchReview": true,
       "url": "https://docs.redact.money/architecture/cofhe-overview#security-and-privacy-measures"
     },
     {
@@ -155,9 +156,10 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Off-chain DA with on-chain handles",
-      "notes": "Redact uses an account-based model where each user's encrypted balance handle is stored as a mapping within the smart contract storage. On-chain state grows proportionally to the number of accounts. Full ciphertexts grow on the off-chain DA layer proportionally to the number of operations.",
-      "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances"
+      "value": "Infinity grow",
+      "notes": "Redact uses an account-based model where each user's encrypted balance handle is stored as a mapping within the smart contract storage. On-chain state grows proportionally to the number of accounts. Full ciphertexts grow on the off-chain DA layer proportionally to the number of operations — every transfer emits a new ciphertext that must be retained for balance reconstruction.",
+      "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances",
+      "needsResearchReview": true
     },
     {
       "name": "Client-side indexing",
