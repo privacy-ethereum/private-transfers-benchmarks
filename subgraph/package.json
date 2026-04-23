@@ -1,10 +1,11 @@
 {
   "name": "private-transfers-benchmarks",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ private-transfers-benchmarks",
+    "precodegen": "tsx scripts/merge-schema.ts",
+    "codegen": "graph codegen ./configuration/subgraph.${NETWORK:-mainnet}.yaml",
+    "build": "graph build ./configuration/subgraph.${NETWORK:-mainnet}.yaml",
+    "deploy": "graph deploy private-transfers-${NETWORK:-mainnet}-benchmarks ./configuration/subgraph.${NETWORK:-mainnet}.yaml",
     "create-local": "graph create --node http://localhost:8020/ private-transfers-benchmarks",
     "remove-local": "graph remove --node http://localhost:8020/ private-transfers-benchmarks",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 private-transfers-benchmarks",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "assemblyscript": "0.19.23",
     "matchstick-as": "0.6.0",
+    "tsx": "^4.21.0",
     "wabt": "^1.0.39"
   }
 }

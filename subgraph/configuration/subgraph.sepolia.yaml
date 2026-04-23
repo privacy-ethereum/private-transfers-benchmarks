@@ -1,0 +1,27 @@
+specVersion: 1.3.0
+indexerHints:
+  prune: auto
+schema:
+  file: ../schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ConfidentialETH
+    network: sepolia
+    source:
+      address: "0xC132c8a82A24Fe1e491082932e3db4F70Ce95c93"
+      abi: ConfidentialETH
+      startBlock: 10622330
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - RedactShieldedNative
+      abis:
+        - name: ConfidentialETH
+          file: ../abis/redact/ConfidentialETH.json
+      eventHandlers:
+        - event: ShieldedNative(indexed address,indexed address,uint256)
+          handler: handleShieldedNative
+          receipt: true
+      file: ../src/redact/confidential-eth.ts

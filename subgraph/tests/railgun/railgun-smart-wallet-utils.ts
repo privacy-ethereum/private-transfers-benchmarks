@@ -1,7 +1,7 @@
 import { ethereum, BigInt, Address, Bytes } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as";
 
-import { Shield, Transact, Unshield } from "../generated/RailgunSmartWallet/RailgunSmartWallet";
+import { Shield, Transact, Unshield } from "../../generated/RailgunSmartWallet/RailgunSmartWallet";
 
 export function createShieldEvent(
   treeNumber: BigInt,
