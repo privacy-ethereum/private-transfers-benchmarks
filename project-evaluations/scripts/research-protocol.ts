@@ -107,6 +107,10 @@ async function evaluateWithCitations(
   researchSummary: string,
   context?: string,
 ): Promise<Property> {
+  // We need two things back from Claude: a typed answer (e.g. "UTXO-based state model") AND citations.
+  //   - tool_use blocks give us a typed answer with no string parsing, but can't carry citations.
+  //   - text blocks can carry citations (when `citations.enabled` is on), but are free-form prose.
+  // So we ask for both: prose for the evidence, tool call for the answer, then stitch them together.
   const tool: Anthropic.Tool = {
     name: "record_evaluation",
     description: "Record the final evaluation. Call exactly once after writing your prose answer.",
@@ -120,6 +124,9 @@ async function evaluateWithCitations(
     },
   };
 
+  // Single API call that asks for BOTH prose (with citations) and a tool_use block.
+  // `citations: { enabled: true }` is what makes the API attach citations to text blocks.
+  // `disable_parallel_tool_use` ensures at most one tool_use block in the response.
   const response = await client.messages.create({
     model: "claude-opus-4-7",
     max_tokens: 2048,
@@ -147,23 +154,22 @@ async function evaluateWithCitations(
     `cache: read=${usage.cache_read_input_tokens ?? 0} write=${usage.cache_creation_input_tokens ?? 0} miss=${usage.input_tokens}`,
   );
 
-  if (process.env.DEBUG_RESEARCH) {
-    console.log("=== raw response.content ===");
-    console.log(JSON.stringify(response.content, null, 2));
-    console.log("=== end raw response.content ===");
-  }
-
+  // Response is a list of blocks. Sort each into the right bucket:
+  //   tool_use block  -> structured value (the "answer")
+  //   text block      -> prose + citations (the "evidence")
   const textParts: string[] = [];
   const citations: NonNullable<Property["citations"]> = [];
   const seen = new Set<string>();
   let toolInput: { value?: string; insufficient_data: boolean } | null = null;
 
   for (const block of response.content) {
+    // Bucket 1: the structured answer Claude put into the tool "slot".
     if (block.type === "tool_use" && block.name === "record_evaluation") {
       if (toolInput) throw new Error("Model called record_evaluation more than once");
       toolInput = normalizeToolInput(block.input, propertyDefinition.options);
       continue;
     }
+    // Bucket 2: the prose, and any citations the API attached to it.
     if (block.type !== "text") continue;
     textParts.push(block.text);
     for (const citation of block.citations ?? []) {
@@ -184,6 +190,7 @@ async function evaluateWithCitations(
     return { name: propertyDefinition.name, value: "INSUFFICIENT_DATA" };
   }
 
+  // Stitch the two buckets into one record: value from tool_use, notes+citations from text.
   const notes = textParts.join("\n").replace(/\s+/g, " ").trim();
   const property: Property = { name: propertyDefinition.name, value: toolInput.value };
   if (notes) property.notes = notes;
