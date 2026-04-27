@@ -1,52 +1,144 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { useEvaluationsData } from "./data/utils.js";
-import AddModal from "./components/AddModal.js";
-import ProtocolDetail from "./components/ProtocolDetail.js";
-import Sidebar from "./components/Sidebar.js";
+import CategoryBrowser from "./components/CategoryBrowser.js";
+import ProfileView from "./components/ProfileView.js";
+import ScorecardView from "./components/ScorecardView.js";
+import TopBar from "./components/TopBar.js";
+import { evaluations } from "./data/evaluations/index.js";
+
+type ViewDirection = "score" | "category" | "profile";
+
+const DIRECTIONS: { id: ViewDirection; label: string }[] = [
+  { id: "score", label: "Scorecard & compare" },
+  { id: "category", label: "Category browser" },
+  { id: "profile", label: "Protocol profiles" },
+];
+
+function getStorageItemSafely(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function getSavedDir(): ViewDirection {
+  const saved = getStorageItemSafely("ptb_dir");
+
+  if (saved === "score" || saved === "category" || saved === "profile") {
+    return saved;
+  }
+
+  return "score";
+}
+
+function getSavedDark(): boolean {
+  const saved = getStorageItemSafely("ptb_dark");
+
+  if (saved === "true") {
+    return true;
+  }
+
+  if (saved === "false") {
+    return false;
+  }
+
+  try {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  } catch {
+    return false;
+  }
+}
 
 export default function App() {
-  const { evaluations, setEvaluations, selectedId, setSelectedId, addEvaluation } = useEvaluationsData();
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [dir, setDir] = useState<ViewDirection>(getSavedDir);
+  const [pinned, setPinned] = useState<string[]>(() => {
+    try {
+      const raw = localStorage.getItem("ptb_pinned");
+
+      if (raw === null) {
+        return [];
+      }
+
+      const parsed: unknown = JSON.parse(raw);
+
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+
+      const validIds = new Set(evaluations.map((p) => p.id));
+      return (parsed as string[]).filter((id) => validIds.has(id));
+    } catch {
+      // ignore
+    }
+    return [];
+  });
+  const [category, setCategory] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [dark, setDark] = useState<boolean>(getSavedDark);
+  const [profileSel, setProfileSel] = useState<string>(() => getStorageItemSafely("ptb_profile_sel") ?? "");
+
+  useEffect(() => {
+    localStorage.setItem("ptb_dir", dir);
+    localStorage.setItem("ptb_pinned", JSON.stringify(pinned));
+    localStorage.setItem("ptb_dark", dark ? "true" : "false");
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  }, [dir, pinned, dark]);
+
+  const goToProfile = (id: string) => {
+    setProfileSel(id);
+    localStorage.setItem("ptb_profile_sel", id);
+    setDir("profile");
+    window.scrollTo({ top: 0, behavior: "auto" });
+  };
 
   return (
-    <div className="h-full flex flex-col">
-      <header className="shrink-0 border-b border-gray-800 px-6 py-3 bg-gray-950">
-        <p className="text-xs text-gray-500">
-          Evaluating <span className="text-gray-300 font-medium">{evaluations.length}</span> protocol
-          {evaluations.length !== 1 ? "s" : ""}
-        </p>
-      </header>
+    <>
+      <TopBar
+        dark={dark}
+        onToggleDark={() => {
+          setDark(!dark);
+        }}
+      />
 
-      <div className="flex flex-1 min-h-0">
-        <Sidebar
-          evaluations={evaluations}
-          selectedId={selectedId}
-          onSelect={setSelectedId}
-          onAdd={() => {
-            setShowAddModal(true);
-          }}
-          setEvaluations={setEvaluations}
-          setSelectedId={setSelectedId}
-        />
-        <main className="flex-1 flex flex-col min-h-0 bg-gray-950">
-          <ProtocolDetail
-            evaluations={evaluations}
-            selectedId={selectedId}
-            setEvaluations={setEvaluations}
-            setSelectedId={setSelectedId}
-          />
-        </main>
-      </div>
+      <nav className="tabs" role="tablist" aria-label="Benchmark views">
+        {DIRECTIONS.map((d, i) => (
+          <button
+            key={d.id}
+            role="tab"
+            aria-selected={dir === d.id}
+            onClick={() => {
+              setDir(d.id);
+            }}
+          >
+            <span className="num" aria-hidden="true">
+              0{i + 1}
+            </span>{" "}
+            {d.label}
+          </button>
+        ))}
+      </nav>
 
-      {showAddModal && (
-        <AddModal
-          onClose={() => {
-            setShowAddModal(false);
-          }}
-          addEvaluation={addEvaluation}
+      {dir === "score" && (
+        <ScorecardView
+          pinned={pinned}
+          setPinned={setPinned}
+          category={category}
+          setCategory={setCategory}
+          search={search}
+          setSearch={setSearch}
         />
       )}
-    </div>
+      {dir === "category" && <CategoryBrowser onGoToProfile={goToProfile} />}
+      {dir === "profile" && (
+        <ProfileView
+          initialSel={profileSel}
+          onSelChange={(id) => {
+            setProfileSel(id);
+            localStorage.setItem("ptb_profile_sel", id);
+          }}
+        />
+      )}
+    </>
   );
 }
