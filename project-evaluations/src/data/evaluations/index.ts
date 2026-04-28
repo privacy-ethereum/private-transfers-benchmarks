@@ -11,6 +11,7 @@ import moneroData from "./monero.json" with { type: "json" };
 import redactData from "./redact.json" with { type: "json" };
 import hinkalData from "./hinkal.json" with { type: "json" };
 import zcashData from "./zcash.json" with { type: "json" };
+import curvyData from "./curvy.json" with { type: "json" };
 
 const rawEvaluations = [
   railgunData,
@@ -23,6 +24,7 @@ const rawEvaluations = [
   redactData,
   hinkalData,
   zcashData,
+  curvyData,
 ];
 
 export const evaluations: Evaluation[] = rawEvaluations.map((raw) => evaluationSchema.parse(raw));
