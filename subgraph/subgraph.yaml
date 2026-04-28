@@ -4,3 +4,6 @@ schema:
 dataSources:
   - kind: ethereum
     name: Test configuration file for Matchstick
+templates:
+  - kind: ethereum
+    name: TornadoInstance

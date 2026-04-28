@@ -164,3 +164,50 @@ type RedactShieldedNative @entity(immutable: true) {
   gasUsed: BigInt!
   gasPrice: BigInt!
 }
+
+type TornadoCashProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shield: TornadoCashOperationStats!
+  unshield: TornadoCashOperationStats!
+}
+
+type TornadoCashOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+}
+
+type TornadoCashInstance @entity(immutable: false) {
+  id: ID!
+  address: Bytes!
+  active: Boolean!
+}
+
+type TornadoCashDeposit @entity(immutable: true) {
+  id: ID!
+  amount: BigInt!
+  instance: TornadoCashInstance!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type TornadoCashWithdrawal @entity(immutable: true) {
+  id: ID!
+  fee: BigInt!
+  amount: BigInt!
+  instance: TornadoCashInstance!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}

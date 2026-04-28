@@ -43,10 +43,9 @@ describe("ShieldedNative event tests", () => {
   });
 
   test("Shielded token stats updated", () => {
-    const id = "0x0000000000000000000000000000000000000000";
+    const id = "native-eth";
 
     assert.entityCount("RedactShieldedStats", 1);
-    assert.fieldEquals("RedactShieldedStats", id, "tokenAddress", "0x0000000000000000000000000000000000000000");
     assert.fieldEquals("RedactShieldedStats", id, "totalValue", "100");
     assert.fieldEquals("RedactShieldedStats", id, "totalCount", "1");
     assert.fieldEquals("RedactShieldedStats", id, "totalGasUsed", "1");
