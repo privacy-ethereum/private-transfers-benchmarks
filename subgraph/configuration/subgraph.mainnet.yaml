@@ -1,8 +1,10 @@
 specVersion: 1.3.0
 indexerHints:
   prune: auto
+
 schema:
   file: ../schema.graphql
+
 dataSources:
   - kind: ethereum
     name: RailgunSmartWallet
@@ -33,3 +35,48 @@ dataSources:
           handler: handleTransact
           receipt: true
       file: ../src/railgun/railgun-smart-wallet.ts
+
+  - kind: ethereum
+    name: InstanceRegistry
+    network: mainnet
+    source:
+      address: "0xB20c66C4DE72433F3cE747b58B86830c459CA911"
+      abi: InstanceRegistry
+      startBlock: 14173395
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Instance
+      abis:
+        - name: InstanceRegistry
+          file: ../abis/tornado-cash/InstanceRegistry.json
+      eventHandlers:
+        - event: InstanceStateUpdated(indexed address,uint8)
+          handler: handleInstanceStateUpdated
+      file: ../src/tornado-cash/instance-registry.ts
+
+templates:
+  - kind: ethereum
+    name: TornadoInstance
+    network: mainnet
+    source:
+      abi: TornadoInstance
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Withdrawal
+      abis:
+        - name: TornadoInstance
+          file: ../abis/tornado-cash/TornadoInstance.json
+      eventHandlers:
+        - event: Deposit(indexed bytes32,uint32,uint256)
+          handler: handleDeposit
+          receipt: true
+        - event: Withdrawal(address,bytes32,indexed address,uint256)
+          handler: handleWithdrawal
+          receipt: true
+      file: ../src/tornado-cash/tornado-instance.ts

@@ -121,9 +121,11 @@ export function handleShield(event: ShieldEvent): void {
   shield.blockNumber = event.block.number;
   shield.timestamp = event.block.timestamp;
   shield.txHash = event.transaction.hash;
+
   if (event.receipt !== null) {
     shield.gasUsed = event.receipt!.gasUsed;
   }
+
   shield.gasPrice = event.transaction.gasPrice;
 
   for (let index = 0; index < event.params.commitments.length; index += 1) {

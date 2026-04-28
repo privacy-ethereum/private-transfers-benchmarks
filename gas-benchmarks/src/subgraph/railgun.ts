@@ -6,6 +6,7 @@ export const RailgunProtocolStatsFragment = graphql(/* GraphQL */ `
       id
       totalTxCount
       totalGasUsed
+
       shield {
         id
         totalCount
