@@ -29,3 +29,35 @@ jobs:
       - name: Build
         run: pnpm run build
         working-directory: project-evaluations
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: project-evaluations/dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+
+    permissions:
+      actions: write
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    needs: project-evaluations
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
