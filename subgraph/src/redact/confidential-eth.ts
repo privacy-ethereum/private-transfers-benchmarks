@@ -1,11 +1,16 @@
-import { BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
 
-import { ShieldedNative as ShieldedNativeEvent } from "../../generated/ConfidentialETH/ConfidentialETH";
+import {
+  ShieldedNative as ShieldedNativeEvent,
+  Unshielded as UnshieldedEvent,
+} from "../../generated/ConfidentialETH/ConfidentialETH";
 import {
   RedactShieldedStats,
+  RedactUnshieldedStats,
   RedactOperationStats,
   RedactProtocolStats,
   RedactShieldedNative,
+  RedactUnshielded,
 } from "../../generated/schema";
 
 function createOrLoadProtocolStats(): RedactProtocolStats {
@@ -18,16 +23,35 @@ function createOrLoadProtocolStats(): RedactProtocolStats {
     stats.totalGasUsed = BigInt.fromI32(0);
 
     const shieldedNativeStats = new RedactOperationStats(`${id}-shield-native`);
+    const unshieldedStats = new RedactOperationStats(`${id}-unshielded`);
 
     stats.shieldedNative = shieldedNativeStats.id;
+    stats.unshielded = unshieldedStats.id;
+
     shieldedNativeStats.totalCount = BigInt.fromI32(0);
     shieldedNativeStats.totalGasUsed = BigInt.fromI32(0);
 
+    unshieldedStats.totalCount = BigInt.fromI32(0);
+    unshieldedStats.totalGasUsed = BigInt.fromI32(0);
+
     stats.save();
     shieldedNativeStats.save();
+    unshieldedStats.save();
   }
 
   return stats;
+}
+
+function saveProtocolStats(event: ethereum.Event): void {
+  const stats = createOrLoadProtocolStats();
+
+  stats.totalTxCount = stats.totalTxCount.plus(BigInt.fromI32(1));
+
+  if (event.receipt !== null) {
+    stats.totalGasUsed = stats.totalGasUsed.plus(event.receipt!.gasUsed);
+  }
+
+  stats.save();
 }
 
 function createOrLoadShieldedStats(tokenAddress: Bytes | null, operationStatsId: string): RedactShieldedStats {
@@ -51,42 +75,55 @@ function createOrLoadShieldedStats(tokenAddress: Bytes | null, operationStatsId:
   return stats;
 }
 
+function createOrLoadUnshieldedStats(operationStatsId: string): RedactUnshieldedStats {
+  const id = "native-eth";
+  let stats = RedactUnshieldedStats.load(id);
+
+  if (stats == null) {
+    stats = new RedactUnshieldedStats(id);
+    stats.totalCount = BigInt.fromI32(0);
+    stats.totalGasUsed = BigInt.fromI32(0);
+    stats.totalValue = BigInt.fromI32(0);
+    stats.operationStats = operationStatsId;
+
+    stats.save();
+  }
+
+  return stats;
+}
+
+function saveOperationStats(operationId: string, event: ethereum.Event): void {
+  const operationStats = RedactOperationStats.load(operationId);
+
+  if (operationStats !== null) {
+    operationStats.totalCount = operationStats.totalCount.plus(BigInt.fromI32(1));
+
+    if (event.receipt !== null) {
+      operationStats.totalGasUsed = operationStats.totalGasUsed.plus(event.receipt!.gasUsed);
+    }
+
+    operationStats.save();
+  }
+}
+
 export function handleShieldedNative(event: ShieldedNativeEvent): void {
   const stats = createOrLoadProtocolStats();
+  const operationId = stats.shieldedNative;
 
-  stats.totalTxCount = stats.totalTxCount.plus(BigInt.fromI32(1));
+  saveProtocolStats(event);
+  saveOperationStats(operationId, event);
+
+  const shieldedStats = createOrLoadShieldedStats(null, operationId);
 
   if (event.receipt !== null) {
-    stats.totalGasUsed = stats.totalGasUsed.plus(event.receipt!.gasUsed);
+    shieldedStats.totalGasUsed = shieldedStats.totalGasUsed.plus(event.receipt!.gasUsed);
   }
 
-  const shieldOperationStats = RedactOperationStats.load(stats.shieldedNative);
+  shieldedStats.operationStats = operationId;
+  shieldedStats.totalCount = shieldedStats.totalCount.plus(BigInt.fromI32(1));
+  shieldedStats.totalValue = shieldedStats.totalValue.plus(event.params.value);
 
-  if (shieldOperationStats !== null) {
-    shieldOperationStats.totalCount = shieldOperationStats.totalCount.plus(BigInt.fromI32(1));
-
-    if (event.receipt !== null) {
-      shieldOperationStats.totalGasUsed = shieldOperationStats.totalGasUsed.plus(event.receipt!.gasUsed);
-    }
-
-    shieldOperationStats.save();
-  }
-
-  if (shieldOperationStats !== null) {
-    const shieldedStats = createOrLoadShieldedStats(null, shieldOperationStats.id);
-
-    if (event.receipt !== null) {
-      shieldedStats.totalGasUsed = shieldedStats.totalGasUsed.plus(event.receipt!.gasUsed);
-    }
-
-    shieldedStats.operationStats = shieldOperationStats.id;
-    shieldedStats.totalCount = shieldedStats.totalCount.plus(BigInt.fromI32(1));
-    shieldedStats.totalValue = shieldedStats.totalValue.plus(event.params.value);
-
-    shieldedStats.save();
-  }
-
-  stats.save();
+  shieldedStats.save();
 
   const id = `${event.transaction.hash.toHex()}-${event.logIndex.toString()}`;
   const shield = new RedactShieldedNative(id);
@@ -106,4 +143,42 @@ export function handleShieldedNative(event: ShieldedNativeEvent): void {
   shield.gasPrice = event.transaction.gasPrice;
 
   shield.save();
+}
+
+export function handleUnshielded(event: UnshieldedEvent): void {
+  const stats = createOrLoadProtocolStats();
+  saveProtocolStats(event);
+
+  const operationId = stats.unshielded;
+  saveOperationStats(operationId, event);
+
+  const unshieldedStats = createOrLoadUnshieldedStats(operationId);
+
+  if (event.receipt !== null) {
+    unshieldedStats.totalGasUsed = unshieldedStats.totalGasUsed.plus(event.receipt!.gasUsed);
+  }
+
+  unshieldedStats.operationStats = operationId;
+  unshieldedStats.totalCount = unshieldedStats.totalCount.plus(BigInt.fromI32(1));
+  // TODO: calculate unshieldedStats.totalValue for unshielded events using the Transfer() event
+
+  unshieldedStats.save();
+
+  const id = `${event.transaction.hash.toHex()}-${event.logIndex.toString()}`;
+  const unshield = new RedactUnshielded(id);
+
+  unshield.to = event.params.to;
+  unshield.amount = event.params.amount;
+
+  unshield.blockNumber = event.block.number;
+  unshield.timestamp = event.block.timestamp;
+  unshield.txHash = event.transaction.hash;
+
+  if (event.receipt !== null) {
+    unshield.gasUsed = event.receipt!.gasUsed;
+  }
+
+  unshield.gasPrice = event.transaction.gasPrice;
+
+  unshield.save();
 }

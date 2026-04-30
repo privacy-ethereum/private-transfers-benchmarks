@@ -3,7 +3,7 @@ import { assert, describe, test, clearStore, beforeAll, afterAll } from "matchst
 
 import { handleShieldedNative } from "../../src/redact/confidential-eth";
 
-import { createShieldedNativeEvent } from "./redact-confidential-eth-utils";
+import { createShieldedNativeEvent } from "./utils";
 
 describe("ShieldedNative event tests", () => {
   beforeAll(() => {
