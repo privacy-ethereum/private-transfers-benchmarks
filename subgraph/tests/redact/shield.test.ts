@@ -3,7 +3,7 @@ import { assert, describe, test, clearStore, beforeAll, afterAll } from "matchst
 
 import { handleShieldedNative } from "../../src/redact/confidential-eth";
 
-import { createShieldedNativeEvent } from "./redact-confidential-eth-utils";
+import { createShieldedNativeEvent } from "./utils";
 
 describe("ShieldedNative event tests", () => {
   beforeAll(() => {
@@ -43,7 +43,7 @@ describe("ShieldedNative event tests", () => {
   });
 
   test("Shielded token stats updated", () => {
-    const id = "native-eth";
+    const id = "redact-shield-native-eth";
 
     assert.entityCount("RedactShieldedStats", 1);
     assert.fieldEquals("RedactShieldedStats", id, "totalValue", "100");
