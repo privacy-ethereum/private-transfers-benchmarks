@@ -92,13 +92,6 @@ export const BLOCK_WINDOW_MONERO = 5;
 export const NATIVE_ETH_TRANSFER = 21_000;
 
 /**
- * Check how the gas cost calculation were performed:
- * https://claude.ai/share/c3cacf99-fd35-40b5-9e39-b6cb0220da04
- *
- * Shared among EF's Claude account
- */
-
-/**
  * Estimated gas cost of a WETH ERC20 token transfer in EVM
  */
 export const WETH_ERC20_TRANSFER = {
