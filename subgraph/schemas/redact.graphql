@@ -4,6 +4,16 @@ type RedactProtocolStats @entity(immutable: false) {
   totalGasUsed: BigInt!
 
   shieldedNative: RedactOperationStats!
+  unshielded: RedactOperationStats!
+}
+
+type RedactOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shieldedNativeStats: [RedactShieldedStats!]! @derivedFrom(field: "operationStats")
+  unshieldedStats: [RedactUnshieldedStats!]! @derivedFrom(field: "operationStats")
 }
 
 type RedactShieldedStats @entity(immutable: false) {
@@ -16,12 +26,13 @@ type RedactShieldedStats @entity(immutable: false) {
   operationStats: RedactOperationStats!
 }
 
-type RedactOperationStats @entity(immutable: false) {
+type RedactUnshieldedStats @entity(immutable: false) {
   id: ID!
   totalCount: BigInt!
   totalGasUsed: BigInt!
+  totalValue: BigInt!
 
-  shieldedNativeStats: [RedactShieldedStats!]! @derivedFrom(field: "operationStats")
+  operationStats: RedactOperationStats!
 }
 
 type RedactShieldedNative @entity(immutable: true) {
@@ -29,6 +40,18 @@ type RedactShieldedNative @entity(immutable: true) {
   from: Bytes!
   to: Bytes!
   value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type RedactUnshielded @entity(immutable: true) {
+  id: ID!
+  to: Bytes!
+  amount: Bytes!
 
   blockNumber: BigInt!
   timestamp: BigInt!
