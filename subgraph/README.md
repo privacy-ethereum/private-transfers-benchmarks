@@ -2,7 +2,9 @@
 
 Build the required subgraph to fetch metrics data for the benchmarks.
 
-# Build and deploy
+The current version of the deployed subgraph is `v0.0.8`.
+
+## Build and deploy
 
 ```bash
 # 0. merge the schema files into a single one
@@ -29,7 +31,7 @@ $env:NETWORK="<NETWORK_NAME>"; pnpm run <COMMAND>
 
 **Note**: A subgraph can only point to one network at the time. We need multiple subgraph.yaml files for each network. More info [here](https://thegraph.com/docs/en/subgraphs/developing/creating/subgraph-manifest/#subgraph-capabilities).
 
-# Test prerequisites
+## Test prerequisites
 
 `graph test` uses Matchstick. On Linux, the Matchstick binary depends on the PostgreSQL client shared library `libpq.so.5`.
 
@@ -41,7 +43,7 @@ sudo apt install postgresql
 sudo apt install libpq5
 ```
 
-## Running tests
+### Running tests
 
 Unit tests live in `tests/` and run against a minimal dummy `subgraph.yaml`.
 

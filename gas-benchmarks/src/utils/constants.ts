@@ -85,3 +85,39 @@ export const BLOCK_WINDOW_SCROLL_1_WEEK = 604_800n;
  * Using 5 for dev and rate limiting on remote node
  */
 export const BLOCK_WINDOW_MONERO = 5;
+
+/**
+ * Gas cost of a native ETH transfer in EVM
+ */
+export const NATIVE_ETH_TRANSFER = 21_000;
+
+/**
+ * Check how the gas cost calculation were performed:
+ * https://claude.ai/share/c3cacf99-fd35-40b5-9e39-b6cb0220da04
+ *
+ * Shared among EF's Claude account
+ */
+
+/**
+ * Estimated gas cost of a WETH ERC20 token transfer in EVM
+ */
+export const WETH_ERC20_TRANSFER = {
+  new: 50_900,
+  existing: 33_800,
+};
+
+/**
+ * Estimated gas cost of a USDT ERC20 token transfer in EVM
+ */
+export const USDT_ERC20_TRANSFER = {
+  new: 53_000,
+  existing: 36_000,
+};
+
+/**
+ * Estimated gas cost of a USDC ERC20 token transfer in EVM
+ */
+export const USDC_ERC20_TRANSFER = {
+  new: 62_000,
+  existing: 45_000,
+};

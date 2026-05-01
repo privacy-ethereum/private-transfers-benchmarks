@@ -18,10 +18,9 @@
   ],
   "author": "PSE",
   "license": "MIT",
-  "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": "24",
-    "pnpm": "10"
+    "pnpm": "11"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "6.3.1",
