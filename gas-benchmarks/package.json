@@ -7,7 +7,6 @@
   "scripts": {
     "prebenchmark": "pnpm run codegen",
     "benchmark": "tsx src/index.ts",
-    "fluidkey": "tsx src/fluidkey/new.ts",
     "pretest": "pnpm run codegen",
     "test": "vitest run",
     "codegen": "graphql-codegen-esm --config codegen.ts"
