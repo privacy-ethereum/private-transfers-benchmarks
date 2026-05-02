@@ -1,90 +1,53 @@
-import { mainnet } from "viem/chains";
-
 import type { FeeMetrics } from "../utils/types.js";
 
-import { BLOCK_WINDOW_ETHEREUM_5_WEEKS, BLOCK_WINDOW_ETHEREUM_10_MINUTES, MIN_SAMPLES } from "../utils/constants.js";
-import { getValidEthTransfers, getValidTransactions } from "../utils/rpc.js";
-import { getAverageMetrics } from "../utils/utils.js";
-
+import { subgraph } from "../subgraph/index.js";
 import {
-  FLUIDKEY_CONFIG,
-  FLUIDKEY_RELAYER_CONTRACT,
-  SHIELD_ERC20_EVENTS,
-  TRANSFER_ERC20_EVENTS,
-  TRANSFER_ETH_EVENTS,
-  USDC_ERC20_TOKEN_ADDRESS,
-} from "./constants.js";
+  NATIVE_ETH_TRANSFER,
+  USDC_ERC20_TRANSFER,
+  USDT_ERC20_TRANSFER,
+  WETH_ERC20_TRANSFER,
+} from "../utils/constants.js";
 
 export class Fluidkey {
-  readonly name = FLUIDKEY_CONFIG.name;
-
-  readonly version = FLUIDKEY_CONFIG.version;
+  readonly id = "fluidkey";
 
   async benchmark(): Promise<Record<string, FeeMetrics>> {
-    const [shieldEth, shieldErc20, transferEth, transferErc20] = await Promise.all([
-      this.benchmarkShieldETH(),
-      this.benchmarkShieldERC20(),
-      this.benchmarkTransferETH(),
-      this.benchmarkTransferERC20(),
-    ]);
+    const results = await subgraph.getResults();
+    const { fluidkeyProtocolStats } = results;
 
-    return { shieldEth, shieldErc20, transferEth, transferErc20 };
-  }
+    const stealthToPublic = fluidkeyProtocolStats?.stealthToPublic;
+    const totalGasUsed = stealthToPublic ? BigInt(stealthToPublic.totalGasUsed as string) : null;
+    const totalCount = stealthToPublic ? BigInt(stealthToPublic.totalCount as string) : null;
 
-  async benchmarkShieldETH(): Promise<FeeMetrics> {
-    const receipts = await getValidEthTransfers({
-      chain: mainnet,
-      blockWindow: BLOCK_WINDOW_ETHEREUM_10_MINUTES, // TODO: fetch native ETH txs using block window
-    });
+    const isThereData = totalGasUsed !== null && totalCount !== null && totalCount > 0;
 
-    if (receipts.length < MIN_SAMPLES) {
-      throw new Error(`${this.name} shield ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
-    }
+    const gasUsedAverage = isThereData ? totalGasUsed / totalCount : "no-data";
 
-    return getAverageMetrics(receipts);
-  }
-
-  async benchmarkShieldERC20(): Promise<FeeMetrics> {
-    const receipts = await getValidTransactions({
-      contractAddress: USDC_ERC20_TOKEN_ADDRESS,
-      events: SHIELD_ERC20_EVENTS,
-      chain: mainnet,
-      blockWindow: BLOCK_WINDOW_ETHEREUM_10_MINUTES, // there are a lot of ERC20 transfers so use a small block window to rate limit
-    });
-
-    if (receipts.length < MIN_SAMPLES) {
-      throw new Error(`${this.name} shield ERC20: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
-    }
-
-    return getAverageMetrics(receipts);
-  }
-
-  async benchmarkTransferETH(): Promise<FeeMetrics> {
-    const receipts = await getValidTransactions({
-      contractAddress: FLUIDKEY_RELAYER_CONTRACT,
-      events: TRANSFER_ETH_EVENTS,
-      chain: mainnet,
-      blockWindow: BLOCK_WINDOW_ETHEREUM_5_WEEKS,
-    });
-
-    if (receipts.length < MIN_SAMPLES) {
-      throw new Error(`${this.name} transfer ETH: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
-    }
-
-    return getAverageMetrics(receipts);
-  }
-
-  async benchmarkTransferERC20(): Promise<FeeMetrics> {
-    const receipts = await getValidTransactions({
-      contractAddress: FLUIDKEY_RELAYER_CONTRACT,
-      events: TRANSFER_ERC20_EVENTS,
-      chain: mainnet,
-    });
-
-    if (receipts.length < MIN_SAMPLES) {
-      throw new Error(`${this.name} transfer ERC20: receipts (${receipts.length}) < MIN_SAMPLES (${MIN_SAMPLES})`);
-    }
-
-    return getAverageMetrics(receipts);
+    return {
+      publicToStealthETH: {
+        averageGasUsed: NATIVE_ETH_TRANSFER,
+      },
+      stealthToPublicETH: {
+        averageGasUsed: gasUsedAverage,
+      },
+      publicToStealthWETH: {
+        averageGasUsed: WETH_ERC20_TRANSFER.new,
+      },
+      stealthToPublicWETH: {
+        averageGasUsed: gasUsedAverage,
+      },
+      publicToStealthUSDC: {
+        averageGasUsed: USDC_ERC20_TRANSFER.new,
+      },
+      stealthToPublicUSDC: {
+        averageGasUsed: gasUsedAverage,
+      },
+      publicToStealthUSDT: {
+        averageGasUsed: USDT_ERC20_TRANSFER.new,
+      },
+      stealthToPublicUSDT: {
+        averageGasUsed: gasUsedAverage,
+      },
+    };
   }
 }

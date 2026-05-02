@@ -19,10 +19,6 @@ await db.read();
 
 const start = Date.now();
 
-// const client = new GraphQLClient(SUBGRAPH_URL);
-// const result = await client.request<TRootQuery>(RootQuery);
-// console.log(result);
-
 const [
   railgunMetrics,
   tornadoCashMetrics,
@@ -83,12 +79,7 @@ await db.update((data) => {
   };
 
   // eslint-disable-next-line no-param-reassign
-  data[`${fluidkey.name}_${fluidkey.version}`] = {
-    shield_eth: fluidkeyMetrics.shieldEth,
-    shield_erc20: fluidkeyMetrics.shieldErc20,
-    transfer_eth: fluidkeyMetrics.transferEth,
-    transfer_erc20: fluidkeyMetrics.transferErc20,
-  };
+  data[fluidkey.id] = fluidkeyMetrics;
 });
 
 const end = Date.now();

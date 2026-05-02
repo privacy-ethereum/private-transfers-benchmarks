@@ -1,3 +1,76 @@
+type CurvyProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  stealthToPublic: CurvyOperationStats!
+}
+
+type CurvyOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  stealthToPublicStats: [CurvyStealthToPublicStats!]! @derivedFrom(field: "operationStats")
+}
+
+type CurvyStealthToPublicStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: CurvyOperationStats!
+}
+
+type CurvyWithdraw @entity(immutable: true) {
+  id: ID!
+  from: Bytes!
+  tokenAddress: Bytes!
+  to: Bytes!
+  amount: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type FluidkeyProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  stealthToPublic: FluidkeyOperationStats!
+}
+
+type FluidkeyOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  stealthToPublicStats: [FluidkeyStealthToPublicStats!]! @derivedFrom(field: "operationStats")
+}
+
+type FluidkeyStealthToPublicStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: FluidkeyOperationStats!
+}
+
+type FluidkeyOperationRelayed @entity(immutable: true) {
+  id: ID!
+  from: Bytes!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
 type RailgunProtocolStats @entity(immutable: false) {
   id: ID!
   totalTxCount: BigInt!
@@ -132,6 +205,16 @@ type RedactProtocolStats @entity(immutable: false) {
   totalGasUsed: BigInt!
 
   shieldedNative: RedactOperationStats!
+  unshielded: RedactOperationStats!
+}
+
+type RedactOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shieldedNativeStats: [RedactShieldedStats!]! @derivedFrom(field: "operationStats")
+  unshieldedStats: [RedactUnshieldedStats!]! @derivedFrom(field: "operationStats")
 }
 
 type RedactShieldedStats @entity(immutable: false) {
@@ -144,12 +227,13 @@ type RedactShieldedStats @entity(immutable: false) {
   operationStats: RedactOperationStats!
 }
 
-type RedactOperationStats @entity(immutable: false) {
+type RedactUnshieldedStats @entity(immutable: false) {
   id: ID!
   totalCount: BigInt!
   totalGasUsed: BigInt!
+  totalValue: BigInt!
 
-  shieldedNativeStats: [RedactShieldedStats!]! @derivedFrom(field: "operationStats")
+  operationStats: RedactOperationStats!
 }
 
 type RedactShieldedNative @entity(immutable: true) {
@@ -157,6 +241,18 @@ type RedactShieldedNative @entity(immutable: true) {
   from: Bytes!
   to: Bytes!
   value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type RedactUnshielded @entity(immutable: true) {
+  id: ID!
+  to: Bytes!
+  amount: Bytes!
 
   blockNumber: BigInt!
   timestamp: BigInt!

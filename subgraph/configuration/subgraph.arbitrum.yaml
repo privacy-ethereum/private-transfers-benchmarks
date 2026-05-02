@@ -1,0 +1,27 @@
+specVersion: 1.3.0
+indexerHints:
+  prune: auto
+schema:
+  file: ../schema.graphql
+dataSources:
+  - kind: ethereum
+    name: CurvyVaultV6
+    network: arbitrum
+    source:
+      address: "0xB4BA872fBa00Bc4268067D5DE4223240cEc4B6d5"
+      abi: CurvyVaultV6
+      startBlock: 396728892
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - CurvyWithdraw
+      abis:
+        - name: CurvyVaultV6
+          file: ../abis/curvy/CurvyVaultV6.json
+      eventHandlers:
+        - event: Withdraw(indexed address,indexed address,uint256)
+          handler: handleWithdraw
+          receipt: true
+      file: ../src/curvy/curvy-vault-v6.ts
