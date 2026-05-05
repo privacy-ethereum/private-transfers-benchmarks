@@ -57,6 +57,52 @@ dataSources:
           handler: handleInstanceStateUpdated
       file: ../src/tornado-cash/instance-registry.ts
 
+  - kind: ethereum
+    name: SmartAccountRelayer
+    network: mainnet
+    source:
+      address: "0x8090a9DB6Aca56fFA186C75Ca0787B18af1058a0"
+      abi: SmartAccountRelayer
+      startBlock: 23649119
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - FluidkeyOperationRelayed
+      abis:
+        - name: SmartAccountRelayer
+          file: ../abis/fluidkey/SmartAccountRelayer.json
+      eventHandlers:
+        - event: OperationRelayed(indexed uint256,indexed bool)
+          handler: handleOperationRelayed
+          receipt: true
+      file: ../src/fluidkey/smart-account-relayer.ts
+
+  - kind: ethereum
+    name: BETH
+    network: mainnet
+    source:
+      address: "0x5624344235607940d4d4ee76bf8817d403eb9cf8"
+      abi: BETH
+      startBlock: 24436025
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - WormProtocolStats
+        - WormOperationStats
+        - WormWithdraw
+      abis:
+        - name: BETH
+          file: ../abis/worm/BETH.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+          receipt: true
+      file: ../src/worm/beth.ts
+
 templates:
   - kind: ethereum
     name: TornadoInstance

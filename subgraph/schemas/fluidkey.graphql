@@ -1,0 +1,34 @@
+type FluidkeyProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  stealthToPublic: FluidkeyOperationStats!
+}
+
+type FluidkeyOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  stealthToPublicStats: [FluidkeyStealthToPublicStats!]! @derivedFrom(field: "operationStats")
+}
+
+type FluidkeyStealthToPublicStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: FluidkeyOperationStats!
+}
+
+type FluidkeyOperationRelayed @entity(immutable: true) {
+  id: ID!
+  from: Bytes!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}

@@ -17,11 +17,15 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - RedactShieldedNative
+        - RedactUnshielded
       abis:
         - name: ConfidentialETH
           file: ../abis/redact/ConfidentialETH.json
       eventHandlers:
         - event: ShieldedNative(indexed address,indexed address,uint256)
           handler: handleShieldedNative
+          receipt: true
+        - event: Unshielded(indexed address,indexed bytes32)
+          handler: handleUnshielded
           receipt: true
       file: ../src/redact/confidential-eth.ts
