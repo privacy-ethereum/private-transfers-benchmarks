@@ -18,9 +18,9 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - Shield
-        - Unshield
-        - Transact
+        - RailgunShield
+        - RailgunUnshield
+        - RailgunTransact
       abis:
         - name: RailgunSmartWallet
           file: ../abis/railgun/RailgunSmartWallet.json
@@ -48,7 +48,7 @@ dataSources:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - Instance
+        - TornadoCashInstance
       abis:
         - name: InstanceRegistry
           file: ../abis/tornado-cash/InstanceRegistry.json
@@ -56,6 +56,34 @@ dataSources:
         - event: InstanceStateUpdated(indexed address,uint8)
           handler: handleInstanceStateUpdated
       file: ../src/tornado-cash/instance-registry.ts
+
+  - kind: ethereum
+    name: HinkalPool
+    network: mainnet
+    source:
+      address: "0x25e5e82f5702A27C3466fE68f14abDbbAdFca826"
+      abi: HinkalPool
+      startBlock: 22798696
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - HinkalShield
+        - HinkalUnshield
+        - HinkalTransact
+        - HinkalTransaction
+      abis:
+        - name: HinkalPool
+          file: ../abis/hinkal/HinkalPool.json
+      eventHandlers:
+        - event: NewCommitment(uint256,int256,bytes)
+          handler: handleNewCommitment
+          receipt: true
+        - event: Nullified(uint256)
+          handler: handleNullified
+          receipt: true
+      file: ../src/hinkal/hinkal-pool.ts
 
 templates:
   - kind: ethereum
@@ -68,7 +96,8 @@ templates:
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
-        - Withdrawal
+        - TornadoCashDeposit
+        - TornadoCashWithdrawal
       abis:
         - name: TornadoInstance
           file: ../abis/tornado-cash/TornadoInstance.json

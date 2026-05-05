@@ -7,15 +7,12 @@ import {
 } from "../../generated/RailgunSmartWallet/RailgunSmartWallet";
 import {
   RailgunShield,
-  RailgunCommitment,
-  RailgunShieldCiphertext,
   RailgunProtocolStats,
   RailgunOperationStats,
   RailgunShieldTokenStats,
   RailgunUnshieldTokenStats,
   RailgunUnshield,
   RailgunTransact,
-  RailgunTransactCiphertext,
 } from "../../generated/schema";
 
 function createOrLoadProtocolStats(): RailgunProtocolStats {
@@ -53,7 +50,7 @@ function createOrLoadProtocolStats(): RailgunProtocolStats {
 }
 
 function createOrLoadShieldTokenStats(tokenAddress: Bytes, operationStatsId: string): RailgunShieldTokenStats {
-  const id = tokenAddress.toHex();
+  const id = `railgun-shield-${tokenAddress.toHex()}`;
   let stats = RailgunShieldTokenStats.load(id);
 
   if (stats == null) {
@@ -71,7 +68,7 @@ function createOrLoadShieldTokenStats(tokenAddress: Bytes, operationStatsId: str
 }
 
 function createOrLoadUnshieldTokenStats(tokenAddress: Bytes, operationStatsId: string): RailgunUnshieldTokenStats {
-  const id = tokenAddress.toHex();
+  const id = `railgun-unshield-${tokenAddress.toHex()}`;
   let stats = RailgunUnshieldTokenStats.load(id);
 
   if (stats == null) {
@@ -129,19 +126,7 @@ export function handleShield(event: ShieldEvent): void {
   shield.gasPrice = event.transaction.gasPrice;
 
   for (let index = 0; index < event.params.commitments.length; index += 1) {
-    const commitmentId = `${id}-c-${index.toString()}`;
     const eventCommitment = event.params.commitments[index];
-    const commitment = new RailgunCommitment(commitmentId);
-
-    commitment.shield = id;
-
-    commitment.npk = eventCommitment.npk;
-
-    commitment.tokenType = eventCommitment.token.tokenType;
-    commitment.tokenAddress = eventCommitment.token.tokenAddress;
-    commitment.tokenSubID = eventCommitment.token.tokenSubID;
-
-    commitment.value = eventCommitment.value;
 
     if (shieldStats !== null) {
       const tokenStats = createOrLoadShieldTokenStats(eventCommitment.token.tokenAddress, shieldStats.id);
@@ -157,26 +142,6 @@ export function handleShield(event: ShieldEvent): void {
 
       tokenStats.save();
     }
-
-    commitment.save();
-  }
-
-  const ciphertexts = event.params.shieldCiphertext;
-
-  for (let index = 0; index < ciphertexts.length; index += 1) {
-    const ctId = `${id}-ct-${index.toString()}`;
-    const cipher = new RailgunShieldCiphertext(ctId);
-
-    cipher.shield = id;
-
-    const bundle = ciphertexts[index].encryptedBundle;
-    cipher.encryptedBundle0 = bundle[0];
-    cipher.encryptedBundle1 = bundle[1];
-    cipher.encryptedBundle2 = bundle[2];
-
-    cipher.shieldKey = ciphertexts[index].shieldKey;
-
-    cipher.save();
   }
 
   shield.save();
@@ -283,28 +248,6 @@ export function handleTransact(event: TransactEvent): void {
   }
 
   transact.gasPrice = event.transaction.gasPrice;
-
-  const ciphertexts = event.params.ciphertext;
-
-  for (let index = 0; index < ciphertexts.length; index += 1) {
-    const ctId = `${id}-ct-${index.toString()}`;
-    const cipher = new RailgunTransactCiphertext(ctId);
-
-    cipher.transact = id;
-
-    const bundle = ciphertexts[index].ciphertext;
-    cipher.ciphertext0 = bundle[0];
-    cipher.ciphertext1 = bundle[1];
-    cipher.ciphertext2 = bundle[2];
-    cipher.ciphertext3 = bundle[3];
-
-    cipher.blindedReceiverViewingKey = ciphertexts[index].blindedReceiverViewingKey;
-    cipher.blindedSenderViewingKey = ciphertexts[index].blindedSenderViewingKey;
-    cipher.annotationData = ciphertexts[index].annotationData;
-    cipher.memo = ciphertexts[index].memo;
-
-    cipher.save();
-  }
 
   transact.save();
 }

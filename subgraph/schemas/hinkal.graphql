@@ -1,0 +1,130 @@
+type HinkalProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shieldNative: HinkalOperationStats!
+  unshieldNative: HinkalOperationStats!
+  shieldERC20: HinkalOperationStats!
+  unshieldERC20: HinkalOperationStats!
+  transact: HinkalOperationStats!
+}
+
+type HinkalShieldERC20TokenStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalUnshieldERC20TokenStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalShieldNativeTokenStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalUnshieldNativeTokenStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalTransactTokenStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shieldERC20TokenStats: [HinkalShieldERC20TokenStats!]! @derivedFrom(field: "operationStats")
+  unshieldERC20TokenStats: [HinkalUnshieldERC20TokenStats!]! @derivedFrom(field: "operationStats")
+  shieldNativeTokenStats: [HinkalShieldNativeTokenStats!]! @derivedFrom(field: "operationStats")
+  unshieldNativeTokenStats: [HinkalUnshieldNativeTokenStats!]! @derivedFrom(field: "operationStats")
+  transactTokenStats: [HinkalTransactTokenStats!]! @derivedFrom(field: "operationStats")
+}
+
+type HinkalTransferLog @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+  address: Bytes!
+}
+
+type HinkalShieldNative @entity(immutable: true) {
+  id: ID!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type HinkalTransact @entity(immutable: true) {
+  id: ID!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type HinkalShieldERC20 @entity(immutable: true) {
+  id: ID!
+  tokenAddress: Bytes!
+  value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type HinkalUnshieldNative @entity(immutable: true) {
+  id: ID!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type HinkalUnshieldERC20 @entity(immutable: true) {
+  id: ID!
+  tokenAddress: Bytes!
+  value: BigInt!
+  fee: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}

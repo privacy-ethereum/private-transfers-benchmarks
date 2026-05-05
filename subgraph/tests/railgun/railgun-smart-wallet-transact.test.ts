@@ -38,23 +38,6 @@ describe("Transact event tests", () => {
     assert.entityCount("RailgunTransact", 1);
   });
 
-  test("Ciphertext entity created", () => {
-    assert.entityCount("RailgunTransactCiphertext", 1);
-  });
-
-  test("Ciphertext fields stored correctly", () => {
-    const id = "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-ct-0";
-
-    assert.fieldEquals("RailgunTransactCiphertext", id, "ciphertext0", "0x01");
-    assert.fieldEquals("RailgunTransactCiphertext", id, "ciphertext1", "0x02");
-    assert.fieldEquals("RailgunTransactCiphertext", id, "ciphertext2", "0x03");
-    assert.fieldEquals("RailgunTransactCiphertext", id, "ciphertext3", "0x04");
-
-    assert.fieldEquals("RailgunTransactCiphertext", id, "blindedSenderViewingKey", "0x10");
-
-    assert.fieldEquals("RailgunTransactCiphertext", id, "blindedReceiverViewingKey", "0x20");
-  });
-
   test("Protocol stats updated", () => {
     assert.fieldEquals("RailgunProtocolStats", "railgun-protocol-stats", "totalTxCount", "1");
   });

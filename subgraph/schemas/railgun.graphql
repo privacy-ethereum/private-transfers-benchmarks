@@ -43,38 +43,11 @@ type RailgunShield @entity(immutable: true) {
   startPosition: BigInt!
   fees: [BigInt!]!
 
-  commitments: [RailgunCommitment!]! @derivedFrom(field: "shield")
-  ciphertexts: [RailgunShieldCiphertext!]! @derivedFrom(field: "shield")
-
   blockNumber: BigInt!
   timestamp: BigInt!
   txHash: Bytes!
   gasUsed: BigInt!
   gasPrice: BigInt!
-}
-
-type RailgunCommitment @entity(immutable: true) {
-  id: ID!
-  shield: RailgunShield!
-
-  npk: Bytes!
-
-  tokenType: Int!
-  tokenAddress: Bytes!
-  tokenSubID: BigInt!
-
-  value: BigInt!
-}
-
-type RailgunShieldCiphertext @entity(immutable: true) {
-  id: ID!
-  shield: RailgunShield!
-
-  encryptedBundle0: Bytes!
-  encryptedBundle1: Bytes!
-  encryptedBundle2: Bytes!
-
-  shieldKey: Bytes!
 }
 
 type RailgunUnshield @entity(immutable: true) {
@@ -101,27 +74,9 @@ type RailgunTransact @entity(immutable: true) {
   startPosition: BigInt!
   hash: [Bytes!]!
 
-  ciphertexts: [RailgunTransactCiphertext!]! @derivedFrom(field: "transact")
-
   blockNumber: BigInt!
   timestamp: BigInt!
   txHash: Bytes!
   gasUsed: BigInt!
   gasPrice: BigInt!
-}
-
-type RailgunTransactCiphertext @entity(immutable: true) {
-  id: ID!
-  transact: RailgunTransact!
-
-  ciphertext0: Bytes!
-  ciphertext1: Bytes!
-  ciphertext2: Bytes!
-  ciphertext3: Bytes!
-
-  blindedSenderViewingKey: Bytes!
-  blindedReceiverViewingKey: Bytes!
-
-  annotationData: Bytes!
-  memo: Bytes!
 }
