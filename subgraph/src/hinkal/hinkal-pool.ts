@@ -172,7 +172,7 @@ export function handleNewCommitment(event: NewCommitment): void {
 
   switch (operation) {
     case Operations.SHIELD_ERC20: {
-      const shield = new HinkalShieldERC20(event.transaction.hash.toHex());
+      const shield = new HinkalShieldERC20(`hinkal-shield-erc20-${event.transaction.hash.toHex()}`);
       const shieldStats = HinkalOperationStats.load(stats.shieldERC20);
       const transferLog = parseTransferEvent(event, logs[0], BigInt.fromI32(0));
 
@@ -206,7 +206,7 @@ export function handleNewCommitment(event: NewCommitment): void {
       break;
     }
     case Operations.INTERNAL_TRANSFER: {
-      const transact = new HinkalTransact(event.transaction.hash.toHex());
+      const transact = new HinkalTransact(`hinkal-internal-transfer-${event.transaction.hash.toHex()}`);
       const transactStats = HinkalOperationStats.load(stats.transact);
 
       // TODO: Not possible to get transaction value without decoding input manually
@@ -233,7 +233,7 @@ export function handleNewCommitment(event: NewCommitment): void {
       break;
     }
     case Operations.SHIELD_NATIVE: {
-      const shield = new HinkalShieldNative(event.transaction.hash.toHex());
+      const shield = new HinkalShieldNative(`hinkal-shield-native-${event.transaction.hash.toHex()}`);
       const shieldNativeStats = HinkalOperationStats.load(stats.shieldNative);
 
       // TODO: Not possible to get transaction value without decoding input manually
@@ -286,7 +286,7 @@ export function handleNullified(event: Nullified): void {
 
   switch (operation) {
     case Operations.UNSHIELD_ERC20: {
-      const unshield = new HinkalUnshieldERC20(event.transaction.hash.toHex());
+      const unshield = new HinkalUnshieldERC20(`hinkal-unshield-erc20-${event.transaction.hash.toHex()}`);
       const unshieldStats = HinkalOperationStats.load(stats.unshieldERC20);
       const feeLog = parseTransferEvent(event, logs[0], BigInt.fromI32(0));
       const transferLog = parseTransferEvent(event, logs[1], BigInt.fromI32(1));
@@ -322,7 +322,7 @@ export function handleNullified(event: Nullified): void {
       break;
     }
     case Operations.UNSHIELD_NATIVE: {
-      const unshield = new HinkalUnshieldNative(event.transaction.hash.toHex());
+      const unshield = new HinkalUnshieldNative(`hinkal-unshield-native-${event.transaction.hash.toHex()}`);
       const unshieldStats = HinkalOperationStats.load(stats.unshieldNative);
 
       // TODO: Not possible to get transaction value without decoding input manually
