@@ -1,9 +1,9 @@
 {
   "id": "intmax",
   "title": "Intmax",
-  "description": "A stateless zkRollup (L3) optimised for private payments, pushing most data off-chain so that on-chain costs are minimal while preserving user-side privacy through client-side proving.",
+  "description": "A stateless Plasma-inspired zkRollup optimised for private payments, pushing most data off-chain so that on-chain costs are minimal while preserving user-side privacy through client-side proving.",
   "documentation": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture",
-  "categories": ["L2s", "Validium", "zkWormholes"],
+  "categories": ["L2s", "Plasma", "Edge blockchain"],
   "properties": [
     {
       "name": "Confidentiality",
@@ -26,7 +26,7 @@
     {
       "name": "Plausible deniability",
       "value": "No",
-      "notes": "Deposits from Ethereum to Intmax are submitted as standard L1 transactions to the Intmax Rollup contract, making it publicly visible on-chain that a user is depositing into the Intmax L3. Internal private transfers could be plausible denied because only salted hashes of the transactions are submitted. No transaction details like sender, recipient, amount and transfer metadata get published on the network.",
+      "notes": "Deposits from Ethereum to Intmax are submitted as standard L1 transactions to the Intmax Rollup contract, making it publicly visible on-chain that a user is depositing into Intmax. Internal private transfers could be plausible denied because only salted hashes of the transactions are submitted. No transaction details like sender, recipient, amount and transfer metadata get published on the network.",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#l1--l2-deposit"
     },
     {
@@ -38,7 +38,7 @@
     {
       "name": "Time-to-finality",
       "value": "3300",
-      "notes": "Intmax is an L3 settling on Scroll (L2) which settles on Ethereum (L1). Funds are stored on Ethereum. Finality depends on how long it takes for validity proofs to be submitted and verified. Scroll's finality time (~43 minutes as of writing) is the primary bottleneck, as Intmax blocks are submitted to Scroll. TODO: verify current Intmax-specific finality time — it should be at least Scroll's finality, possibly longer if Intmax block builder submission adds delay",
+      "notes": "Intmax is an zkRollup (could be considered a L3) settling on Scroll (L2) which settles on Ethereum (L1). Funds are stored on Ethereum. Finality depends on how long it takes for validity proofs to be submitted and verified. Scroll's finality time (~43 minutes as of writing) is the primary bottleneck, as Intmax blocks are submitted to Scroll. TODO: verify current Intmax-specific finality time — it should be at least Scroll's finality, possibly longer if Intmax block builder submission adds delay",
       "url": "https://l2beat.com/scaling/projects/scroll#liveness"
     },
     {
