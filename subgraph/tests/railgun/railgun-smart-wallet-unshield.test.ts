@@ -28,7 +28,7 @@ describe("Unshield event tests", () => {
   });
 
   test("Unshield token stats updated", () => {
-    const expectedId = "0x0000000000000000000000000000000000000001";
+    const expectedId = "railgun-unshield-0x0000000000000000000000000000000000000001";
 
     assert.entityCount("RailgunUnshieldTokenStats", 1);
     assert.fieldEquals("RailgunUnshieldTokenStats", expectedId, "totalValue", "500");
@@ -60,11 +60,11 @@ describe("Unshield event tests", () => {
   });
 
   test("Unshield token stats updated", () => {
-    const tokenAddress = "0x0000000000000000000000000000000000000001";
+    const id = "railgun-unshield-0x0000000000000000000000000000000000000001";
 
     assert.entityCount("RailgunUnshieldTokenStats", 1);
-    assert.fieldEquals("RailgunUnshieldTokenStats", tokenAddress, "totalValue", "500");
-    assert.fieldEquals("RailgunUnshieldTokenStats", tokenAddress, "totalCount", "1");
-    assert.fieldEquals("RailgunUnshieldTokenStats", tokenAddress, "totalGasUsed", "1");
+    assert.fieldEquals("RailgunUnshieldTokenStats", id, "totalValue", "500");
+    assert.fieldEquals("RailgunUnshieldTokenStats", id, "totalCount", "1");
+    assert.fieldEquals("RailgunUnshieldTokenStats", id, "totalGasUsed", "1");
   });
 });

@@ -43,26 +43,17 @@ describe("Shield event tests", () => {
     assert.entityCount("RailgunShield", 1);
   });
 
-  test("Commitment created", () => {
-    assert.entityCount("RailgunCommitment", 1);
-    assert.fieldEquals("RailgunCommitment", "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-c-0", "value", "100");
-  });
-
-  test("Ciphertext created", () => {
-    assert.entityCount("RailgunShieldCiphertext", 1);
-  });
-
   test("Protocol stats updated", () => {
     assert.fieldEquals("RailgunProtocolStats", "railgun-protocol-stats", "totalTxCount", "1");
   });
 
   test("Shield token stats updated", () => {
-    const tokenAddress = "0x0000000000000000000000000000000000000001";
+    const id = "railgun-shield-0x0000000000000000000000000000000000000001";
 
     assert.entityCount("RailgunShieldTokenStats", 1);
-    assert.fieldEquals("RailgunShieldTokenStats", tokenAddress, "totalValue", "100");
-    assert.fieldEquals("RailgunShieldTokenStats", tokenAddress, "totalCount", "1");
-    assert.fieldEquals("RailgunShieldTokenStats", tokenAddress, "totalGasUsed", "1");
+    assert.fieldEquals("RailgunShieldTokenStats", id, "totalValue", "100");
+    assert.fieldEquals("RailgunShieldTokenStats", id, "totalCount", "1");
+    assert.fieldEquals("RailgunShieldTokenStats", id, "totalGasUsed", "1");
   });
 
   test("Operation stats updated (shield)", () => {

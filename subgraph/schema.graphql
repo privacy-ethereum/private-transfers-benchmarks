@@ -1,3 +1,134 @@
+type HinkalProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shieldNative: HinkalOperationStats!
+  unshieldNative: HinkalOperationStats!
+  shieldERC20: HinkalOperationStats!
+  unshieldERC20: HinkalOperationStats!
+  transact: HinkalOperationStats!
+}
+
+type HinkalShieldERC20TokenStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalUnshieldERC20TokenStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalShieldNativeTokenStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalUnshieldNativeTokenStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalTransactTokenStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: HinkalOperationStats!
+}
+
+type HinkalOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shieldERC20TokenStats: [HinkalShieldERC20TokenStats!]! @derivedFrom(field: "operationStats")
+  unshieldERC20TokenStats: [HinkalUnshieldERC20TokenStats!]! @derivedFrom(field: "operationStats")
+  shieldNativeTokenStats: [HinkalShieldNativeTokenStats!]! @derivedFrom(field: "operationStats")
+  unshieldNativeTokenStats: [HinkalUnshieldNativeTokenStats!]! @derivedFrom(field: "operationStats")
+  transactTokenStats: [HinkalTransactTokenStats!]! @derivedFrom(field: "operationStats")
+}
+
+type HinkalTransferLog @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+  address: Bytes!
+}
+
+type HinkalShieldNative @entity(immutable: true) {
+  id: ID!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type HinkalTransact @entity(immutable: true) {
+  id: ID!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type HinkalShieldERC20 @entity(immutable: true) {
+  id: ID!
+  tokenAddress: Bytes!
+  value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type HinkalUnshieldNative @entity(immutable: true) {
+  id: ID!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type HinkalUnshieldERC20 @entity(immutable: true) {
+  id: ID!
+  tokenAddress: Bytes!
+  value: BigInt!
+  fee: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
 type RailgunProtocolStats @entity(immutable: false) {
   id: ID!
   totalTxCount: BigInt!
@@ -43,38 +174,11 @@ type RailgunShield @entity(immutable: true) {
   startPosition: BigInt!
   fees: [BigInt!]!
 
-  commitments: [RailgunCommitment!]! @derivedFrom(field: "shield")
-  ciphertexts: [RailgunShieldCiphertext!]! @derivedFrom(field: "shield")
-
   blockNumber: BigInt!
   timestamp: BigInt!
   txHash: Bytes!
   gasUsed: BigInt!
   gasPrice: BigInt!
-}
-
-type RailgunCommitment @entity(immutable: true) {
-  id: ID!
-  shield: RailgunShield!
-
-  npk: Bytes!
-
-  tokenType: Int!
-  tokenAddress: Bytes!
-  tokenSubID: BigInt!
-
-  value: BigInt!
-}
-
-type RailgunShieldCiphertext @entity(immutable: true) {
-  id: ID!
-  shield: RailgunShield!
-
-  encryptedBundle0: Bytes!
-  encryptedBundle1: Bytes!
-  encryptedBundle2: Bytes!
-
-  shieldKey: Bytes!
 }
 
 type RailgunUnshield @entity(immutable: true) {
@@ -101,29 +205,11 @@ type RailgunTransact @entity(immutable: true) {
   startPosition: BigInt!
   hash: [Bytes!]!
 
-  ciphertexts: [RailgunTransactCiphertext!]! @derivedFrom(field: "transact")
-
   blockNumber: BigInt!
   timestamp: BigInt!
   txHash: Bytes!
   gasUsed: BigInt!
   gasPrice: BigInt!
-}
-
-type RailgunTransactCiphertext @entity(immutable: true) {
-  id: ID!
-  transact: RailgunTransact!
-
-  ciphertext0: Bytes!
-  ciphertext1: Bytes!
-  ciphertext2: Bytes!
-  ciphertext3: Bytes!
-
-  blindedSenderViewingKey: Bytes!
-  blindedReceiverViewingKey: Bytes!
-
-  annotationData: Bytes!
-  memo: Bytes!
 }
 
 type RedactProtocolStats @entity(immutable: false) {
