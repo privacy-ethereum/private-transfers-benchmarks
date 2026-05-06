@@ -30,7 +30,7 @@ export default function CompareBar({
       <div className="compare-bar__top">
         <div>
           <span className="eyebrow">Compare</span>
-          <div className="label">{pinned.length === 0 ? "Pin protocols →" : `${pinned.length} pinned`}</div>
+          <div className="label">{pinned.length === 0 ? "Pin protocols to compare" : `${pinned.length} pinned`}</div>
         </div>
         <div className="compare-bar__tools">
           <input

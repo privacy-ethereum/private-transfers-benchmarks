@@ -1,6 +1,3 @@
-import { evaluations } from "../data/evaluations/index.js";
-import { PROPERTY_DEFINITIONS } from "../data/schema.js";
-
 interface TopBarProps {
   dark: boolean;
   onToggleDark: () => void;
@@ -14,10 +11,6 @@ export default function TopBar({ dark, onToggleDark }: TopBarProps) {
         <h1>Private Transfers Benchmarks</h1>
       </div>
       <div className="meta">
-        <span>{__APP_VERSION__}</span>
-        <span>
-          {evaluations.length} protocols · {PROPERTY_DEFINITIONS.length} properties
-        </span>
         <button
           className="theme-toggle"
           onClick={onToggleDark}

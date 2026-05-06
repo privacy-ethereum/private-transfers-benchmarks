@@ -1,30 +1,30 @@
 export const CATEGORY_EXPLAINERS: Record<string, string | undefined> = {
   "Stealth addresses":
-    "A scheme where each payment goes to a fresh one-time address derived from the recipient's public keys, so outside observers can't link payments to a single account.",
+    "A scheme where each payment goes to a fresh one-time address derived from the recipient's public keys, so outside observers can't link payments to a single account. Recipient can claim the funds using his private keys.",
   zkWormholes:
-    "Use zero-knowledge proofs to let funds 'teleport' between unrelated addresses or chains without revealing a link between them.",
+    "Use zero-knowledge proofs to let funds 'teleport' between unrelated addresses without revealing a link between them. Recipient can mint funds to any address by privately providing a proof that the receiver address is a burn address.",
   Mixer:
     "A contract that pools deposits from many users and lets each withdraw to a new address, breaking the on-chain link between source and destination.",
   "Homomorphic encryption (FHE - HE)":
     "Computes on encrypted data directly, so balances and transfer amounts stay encrypted while still being validated by the protocol.",
   "Edge blockchain":
-    "Privacy is handled on a separate chain at the edge of the network, which then settles or anchors back to Ethereum.",
+    "A blockchain or L2 architecture where the globally replicated chain is minimized. Users, wallets, devices, clients, or local app nodes hold the data/state needed to validate their own assets or actions.",
   L2s: "Layer-2 rollups that add privacy features on top of Ethereum, inheriting its security while reducing cost.",
   "Garbled circuits":
     "A two-party MPC technique where a computation is turned into an encrypted circuit one party evaluates without learning the other's inputs.",
   TEEs: "Trusted Execution Environments (e.g. Intel SGX) run private logic inside hardware enclaves that outside software can't inspect.",
   "EVM Obfuscators":
-    "Tools that obfuscate or re-encode EVM calls and state to hide the semantics of what a transaction is doing.",
+    "Tools that obfuscate or re-encode EVM calls and state to hide the semantics of what a transaction is doing. Privacy is achieved by obscurity and not hard cryptographic guarantees.",
   Wallets:
     "Wallet-level privacy features — the wallet itself offers stealth flows, address rotation or shielded balances on top of existing protocols.",
   "Alternative L1":
     "Standalone Layer-1 chains designed from the ground up around private transactions, settling on their own consensus rather than Ethereum.",
   "Shielded pool":
-    "A smart-contract pool where assets are deposited into an encrypted UTXO set; transfers happen inside the pool and only deposits/withdrawals are visible.",
+    "A smart-contract pool where assets are deposited into an encrypted UTXO note-based set; transfers happen inside the pool and only deposits/withdrawals are visible.",
   Plasma:
-    "A scaling design where most activity lives off-chain with only compact commitments and exits posted on-chain.",
+    "A scaling design where most activity lives off-chain with only compact commitments and exits posted on-chain. Plasmas initially lacked validity proofs but newer designs are adding them.",
   Validium:
-    "A rollup variant where data is kept off-chain under a separate data-availability committee, while validity proofs are posted on-chain.",
+    "A rollup variant where data is kept off-chain under a separate data-availability layer, while validity proofs are posted on-chain.",
   "Cross-L1 CEX aggregator and mixer":
     "Routes value across L1s via centralized exchanges or similar off-chain hops to break on-chain linkability.",
   "Multi Party Computation (MPC)":

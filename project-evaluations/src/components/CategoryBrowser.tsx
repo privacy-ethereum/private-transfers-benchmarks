@@ -15,8 +15,9 @@ export default function CategoryBrowser({ onGoToProfile }: CategoryBrowserProps)
         <div>
           <h2>Category browser</h2>
           <p>
-            Categories taxonomising the space. Each card lists the protocols we&apos;ve evaluated in that category, plus
-            a short definition. Empty categories stay visible so the full taxonomy is legible.
+            Categories taxonomising the private transfers space. Each card lists the protocols we&apos;ve evaluated in
+            that category, plus a short definition. Empty categories (no protocols so far) stay visible so the full
+            taxonomy is legible.
           </p>
         </div>
       </div>
