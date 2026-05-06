@@ -72,7 +72,6 @@ dataSources:
         - HinkalShield
         - HinkalUnshield
         - HinkalTransact
-        - HinkalTransaction
       abis:
         - name: HinkalPool
           file: ../abis/hinkal/HinkalPool.json
@@ -84,6 +83,36 @@ dataSources:
           handler: handleNullified
           receipt: true
       file: ../src/hinkal/hinkal-pool.ts
+
+  - kind: ethereum
+    name: PrivacyPoolsEntrypointProxy
+    network: mainnet
+    source:
+      address: "0x6818809EefCe719E480a7526D76bD3e561526b46"
+      abi: PrivacyPoolsEntrypointProxy
+      startBlock: 22153715
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - PrivacyPoolsShield
+        - PrivacyPoolsUnshield
+      abis:
+        - name: PrivacyPoolsEntrypointProxy
+          file: ../abis/privacy-pools/PrivacyPoolsEntrypointProxy.json
+      eventHandlers:
+        - event: Deposited(indexed address,indexed address,uint256,uint256)
+          handler: handleDeposit
+          receipt: true
+        - event: WithdrawalRelayed(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleWithdrawal
+          receipt: true
+        - event: PoolRegistered(address,address,uint256)
+          handler: handlePoolRegistered
+        - event: PoolRemoved(address,address,uint256)
+          handler: handlePoolRemoved
+      file: ../src/privacy-pools/privacy-pools.ts
 
 templates:
   - kind: ethereum
