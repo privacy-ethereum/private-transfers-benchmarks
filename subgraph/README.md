@@ -2,7 +2,7 @@
 
 Build the required subgraph to fetch metrics data for the benchmarks.
 
-The current version of the deployed subgraph is `v0.0.8`.
+The current version of the deployed subgraph is `v0.0.10`.
 
 ## Build and deploy
 
@@ -12,11 +12,13 @@ The current version of the deployed subgraph is `v0.0.8`.
 # 1. generate the code types for the subgraph
 NETWORK=mainnet pnpm run codegen
 NETWORK=sepolia pnpm run codegen
+NETWORK=arbitrum pnpm run codegen
 
 
 # 2. build the subgraph
 NETWORK=mainnet pnpm run build
 NETWORK=sepolia pnpm run build
+NETWORK=arbitrum pnpm run build
 
 # 3. Authenticate graph CLI
 graph auth <DEPLOY_KEY_DIFFERENT_FROM_API_KEY>
@@ -24,6 +26,7 @@ graph auth <DEPLOY_KEY_DIFFERENT_FROM_API_KEY>
 # 4. deploy the subgraph to The Graph Studio
 NETWORK=mainnet pnpm run deploy
 NETWORK=sepolia pnpm run deploy
+NETWORK=arbitrum pnpm run deploy
 
 # On Windows use:
 $env:NETWORK="<NETWORK_NAME>"; pnpm run <COMMAND>

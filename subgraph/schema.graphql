@@ -1,3 +1,41 @@
+type CurvyProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  stealthToPublic: CurvyOperationStats!
+}
+
+type CurvyOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  stealthToPublicStats: [CurvyStealthToPublicStats!]! @derivedFrom(field: "operationStats")
+}
+
+type CurvyStealthToPublicStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  operationStats: CurvyOperationStats!
+}
+
+type CurvyWithdraw @entity(immutable: true) {
+  id: ID!
+  from: Bytes!
+  tokenAddress: Bytes!
+  to: Bytes!
+  amount: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
 type FluidkeyProtocolStats @entity(immutable: false) {
   id: ID!
   totalTxCount: BigInt!
