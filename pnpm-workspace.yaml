@@ -2,3 +2,6 @@ packages:
   - "gas-benchmarks"
   - "project-evaluations"
   - "subgraph"
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true

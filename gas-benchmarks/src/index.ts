@@ -23,23 +23,17 @@ const start = Date.now();
 // const result = await client.request<TRootQuery>(RootQuery);
 // console.log(result);
 
-const [
-  railgunMetrics,
-  tornadoCashMetrics,
-  privacyPoolsMetrics,
-  intmaxMetrics,
-  moneroMetrics,
-  hinkalMetrics,
-  fluidkeyMetrics,
-] = await Promise.all([
-  railgun.benchmark(),
-  tornadoCash.benchmark(),
-  privacyPools.benchmark(),
-  intmax.benchmark(),
-  monero.benchmark(),
-  hinkal.benchmark(),
-  fluidkey.benchmark(),
-]);
+const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, moneroMetrics, hinkalMetrics] =
+  await Promise.all([
+    railgun.benchmark(),
+    tornadoCash.benchmark(),
+    privacyPools.benchmark(),
+    intmax.benchmark(),
+    monero.benchmark(),
+    hinkal.benchmark(),
+  ]);
+
+const fluidkeyMetrics = fluidkey.benchmark();
 
 await db.update((data) => {
   // eslint-disable-next-line no-param-reassign
@@ -83,12 +77,7 @@ await db.update((data) => {
   };
 
   // eslint-disable-next-line no-param-reassign
-  data[`${fluidkey.name}_${fluidkey.version}`] = {
-    shield_eth: fluidkeyMetrics.shieldEth,
-    shield_erc20: fluidkeyMetrics.shieldErc20,
-    transfer_eth: fluidkeyMetrics.transferEth,
-    transfer_erc20: fluidkeyMetrics.transferErc20,
-  };
+  data[fluidkey.id] = fluidkeyMetrics;
 });
 
 const end = Date.now();
