@@ -1,0 +1,570 @@
+{
+  "id": "worm",
+  "title": "WORM",
+  "description": "WORM is a protocol that uses an ERC-20 token (BETH for Burned ETH) which is minted via the process of burning Ethereum (ETH) by sending it to unclaimable addresses. Users generate a proof-of-burn receipt which enables the minting of BETH. ETH transfers sent to an unclaimable address are indistinguishable from a regular ETH transfer to a fresh address. There is no way for an outside observer to detect whether a user is interacting with the WORM protocol. The protocol is based on EIP-7503, which standardizes Private Proof-of-Burn.",
+  "documentation": "https://github.com/worm-privacy/whitepaper",
+  "categories": ["zkWormholes"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "No",
+      "notes": "WORM and BETH are standard ERC-20 tokens with publicly visible balances and transfer amounts. The privacy mechanism only applies to the proof-of-burn process that breaks the link between burned ETH and minted tokens using zk-SNARKs. Once tokens are minted, all subsequent transfers, balances, and amounts are publicly visible on the Ethereum blockchain like any other ERC-20 token.",
+      "citations": [
+        {
+          "cited_text": "77 \nfollowers\n\nhttps://worm.cx \n\nX \n\n@EIP7503 \n\nhttps://discord.gg/EIP7503 \n\nhttps://t.me/WormPrivacy \n\n&#x6b;&#x65;&#x79;&#x76;&#x61;&#x6e;&#x6b;&#x61;&#x6d;&#x62;&#x61;&#x6b;&#x68;&#x73;&#x68;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d; \n\nREADME.md \n\n🪱 WORM: A Scarce Cryptoasset Rooted in Private ETH Destruction 🪱\n\nWORM is a cryptographically scarce ERC-20 token created through the destruction of Ethereum (ETH) in a privacy-preserving manner. ",
+          "source": "https://github.com/worm-privacy",
+          "start_char_index": 994,
+          "end_char_index": 1459
+        },
+        {
+          "cited_text": "It is minted by consuming BETH , a private proof-of-burn receipt, which is itself generated using zk-SNARKs. ",
+          "source": "https://github.com/worm-privacy",
+          "start_char_index": 1459,
+          "end_char_index": 1568
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#21-beth-the-proof-of-burn-receipt"
+    },
+    {
+      "name": "Anonymity",
+      "value": "Unlinkability",
+      "notes": "WORM achieves unlinkability between sender and receiver. The burn-address is derived from a Poseidon hash of the burnKey, revealAmount, and burnExtraCommitment, truncated to 160 bits to form an Ethereum address. A nullifier prevents reuse of the same burn address. The zk-SNARK proof allows minting BETH tokens to any receiver address without revealing which burn-address the ETH came from, breaking the on-chain link between the original sender and the final receiver.",
+      "citations": [
+        {
+          "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  ",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1708,
+          "end_char_index": 2047
+        },
+        {
+          "cited_text": "The burn-address hash, which is present in the Merkle-Patricia-Trie leaf key for which we provide a proof, is calculated using the following formula:\n`f₄(f₃(f₂(f₁(burnKey, receiverAddress, burnExtraCommitment))))`, where the inputs are all 254-bit numbers (finite-field elements), resulting in a 254 × 3 bit input space. ",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2655,
+          "end_char_index": 2976
+        },
+        {
+          "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 968,
+          "end_char_index": 1096
+        }
+      ],
+      "url": "https://github.com/worm-privacy/proof-of-burn#burn-key"
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "WORM is a two-token protocol consisting of BETH (an ERC-20 proof-of-burn receipt) and WORM (a scarce ERC-20 minted from BETH). BETH is minted when ETH is burned, with each unit representing 1 ETH provably destroyed, while WORM is minted at 50 tokens per 30-minute epoch through BETH redemption. Since both tokens are standard ERC-20s on Ethereum, observers can distinguish which asset (BETH or WORM) is being transferred in any transaction, meaning asset privacy is not provided.",
+      "url": "https://github.com/worm-privacy/whitepaper#2-architecture-and-design"
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "Yes",
+      "notes": "Deniability applies to the deposit side, which is a native ETH transfer to an address derived from Truncate160(Poseidon4(prefix, burnKey, revealAmount, burnExtraCommitment)) — indistinguishable on-chain from an ordinary transfer to a fresh EOA. A burner does not need to interact with any WORM contract to destroy the ETH, so the burner is never forced to reveal participation. The recipient's mint transaction to the BETH verifier is observable, so deniability covers entry only, not withdrawal.",
+      "citations": [
+        {
+          "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  ",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1708,
+          "end_char_index": 2047
+        },
+        {
+          "cited_text": "The burn-address hash, which is present in the Merkle-Patricia-Trie leaf key for which we provide a proof, is calculated using the following formula:\n`f₄(f₃(f₂(f₁(burnKey, receiverAddress, burnExtraCommitment))))`, where the inputs are all 254-bit numbers (finite-field elements), resulting in a 254 × 3 bit input space. The function `f₁` is Poseidon2 with a 254-bit output space. The output is then passed to `f₂(x)`, which selects the first 160 bits to produce an Ethereum address, yielding a 160-bit output space. ",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2655,
+          "end_char_index": 3172
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#3-privacy-and-plausible-deniability"
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "WORM is an ERC-20 token created through the destruction of Ethereum (ETH) in a privacy-preserving manner. As an application-layer smart contract protocol deployed on Ethereum mainnet, WORM inherits the finality characteristics of the underlying Ethereum mainnet network.",
+      "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "WORM requires users to store 1 secret: the burnKey, a randomly generated number that serves as the private key for the proof-of-burn protocol. The burn address is derived as the first 160 bits of Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment). The burnKey also derives the nullifier via Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey) and coin commitments via Poseidon3(POSEIDON_COIN_PREFIX, burnKey, amount). Valid burnKeys must satisfy a proof-of-work constraint where Keccak(burnKey | revealAmount | burnExtraCommitment | 'EIP-7503') < THRESHOLD to increase bit-security.",
+      "url": "https://github.com/worm-privacy/whitepaper#burn-address-derivation-and-constraints"
+    },
+    {
+      "name": "Deposit time",
+      "value": "12",
+      "notes": "WORM requires burning ETH to an unspendable address via a standard Ethereum transfer, then generating a zk-SNARK proof to mint BETH. The burn transaction itself is a regular EOA-to-EOA transfer that confirms in approximately 12 seconds (one Ethereum block). No additional deposit time delay is enforced by the protocol beyond standard Ethereum block confirmation time.",
+      "citations": [
+        {
+          "cited_text": "Run the tests\n    - `python -m tests.test`\n\nAfter running `make`, the `main.py` script will first initiate a transfer to a burn-address and will then generate an input file for the circuit. Then it will try to generate a witness file through the Circom-generated C program.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 5152,
+          "end_char_index": 5427
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#1-introduction"
+    },
+    {
+      "name": "Withdraw time",
+      "value": "N/A",
+      "notes": "WORM operates as an application-layer protocol on Ethereum mainnet where users burn ETH to a burn address and then generate a zero-knowledge proof to mint BETH tokens. The protocol does not impose any time lock or waiting period between proof submission and token minting.",
+      "url": "https://github.com/worm-privacy/whitepaper#1-introduction"
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "Yes",
+      "notes": "WORM allows users to burn ETH to derived one-time addresses, with ETH not held or controlled by any contract or intermediary. BETH is minted from a zk-SNARK proof, not a withdrawal action, and users interact directly with the deployed smart contracts on Ethereum mainnet to submit proofs and mint tokens. As an application-layer protocol on Ethereum, WORM inherits Ethereum's permissionless properties where any valid transaction can eventually be included by validators, with no relayers or intermediaries required for protocol interaction.",
+      "url": "https://github.com/worm-privacy/worm/blob/b34b507d4dfc4e57fcb2857c9816569e54526144/src/BETH.sol#L165"
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "WORM operates entirely on Ethereum mainnet using deployed smart contracts without relying on any external network. Burns occur through standard Ethereum transactions, zk-SNARK proofs are generated off-chain using external provers due to the computational cost, and verification happens on-chain via the WORM smart contracts. No external validators, relayers, or separate consensus mechanisms are required beyond Ethereum itself.",
+      "url": "https://github.com/worm-privacy/whitepaper"
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "notes": "WORM and BETH are ERC-20 tokens on Ethereum mainnet. Users can transfer these tokens using standard Ethereum transactions that rely only on Ethereum's consensus and cryptography, so in theory users can move their assets instantly. In practice the BETH/ETH DEX pools can have low liquidity and leave the user holding BETH waiting to swap it to ETH. At the current moment BETH and WORM utility depends on the WORM protocol working correctly. If the protocol shuts down, users will be holding tokens with limited utility until they swap it for native ETH",
+      "citations": [
+        {
+          "cited_text": "77 \nfollowers\n\nhttps://worm.cx \n\nX \n\n@EIP7503 \n\nhttps://discord.gg/EIP7503 \n\nhttps://t.me/WormPrivacy \n\n&#x6b;&#x65;&#x79;&#x76;&#x61;&#x6e;&#x6b;&#x61;&#x6d;&#x62;&#x61;&#x6b;&#x68;&#x73;&#x68;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d; \n\nREADME.md \n\n🪱 WORM: A Scarce Cryptoasset Rooted in Private ETH Destruction 🪱\n\nWORM is a cryptographically scarce ERC-20 token created through the destruction of Ethereum (ETH) in a privacy-preserving manner. ",
+          "source": "https://github.com/worm-privacy",
+          "start_char_index": 994,
+          "end_char_index": 1459
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#2-architecture-and-design"
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Immutable",
+      "notes": "The BETH and WORM contracts deployed on Ethereum mainnet have no proxy pattern, admin controls, or governance system. Issuance rules (50 WORM per 30-minute epoch) and proof verification logic are encoded in the contracts and Circom circuits, with no on-chain mechanism to change them post-deployment.",
+      "url": "https://github.com/worm-privacy/worm/tree/main/src"
+    },
+    {
+      "name": "Client-side proving",
+      "value": "No",
+      "notes": "WORM circuits are zkSNARKs written in Circom for performance. The Ethereum Merkle Patricia Trie proofs to show a burn address received ETH require high computational resources, so WORM relies on off-chain proof generation using external provers. Therefore the protocol does not use client-side proof generation or browser-based proving. Users concerned about privacy compromise can setup their own provers in powerful-enough servers to generate their private proof-of-burn proofs.",
+      "url": "https://github.com/worm-privacy/worm-privacy.github.io/blob/82fad075f12b3340410aee7f494fe0954c4302f3/src/app/tools/burn-eth/mint-beth.tsx#L361"
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "The UI uses external provers for generating private proof-of-burn proofs. The external provers can inspect the inputs and leak private information to third parties. Users worried about this can run their own prover in a powerful server to generate their proofs. This is only recommended for advanced technical users due to complexity",
+      "url": "https://github.com/worm-privacy/worm-privacy.github.io/blob/82fad075f12b3340410aee7f494fe0954c4302f3/src/app/tools/burn-eth/mint-beth.tsx#L361"
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "BETH and WORM contracts were deployed on Ethereum mainnet in February 2026 (BETH ~Feb 12, WORM ~Feb 21), giving the protocol about two months of production history at the time of evaluation.",
+      "url": "https://etherscan.io/tx/0x681f4debcc8ceb6c905e7f831cbcf48e79a6d09e6df93d1caa57ba68be6a8516"
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "WORM is not post-quantum secure. The protocol uses Groth16 zk-SNARKs for proof-of-burn verification, which rely on elliptic curve pairings over the BN254 curve. These pairing-based constructions depend on the discrete logarithm problem, which Shor's algorithm can solve efficiently on a sufficiently large quantum computer. While the protocol's hash functions (Poseidon2 and Poseidon4) have some resistance to quantum attacks as symmetric primitives, the core cryptographic proof system that validates ETH burns and enables BETH/WORM minting is vulnerable to quantum adversaries.",
+      "url": "https://github.com/worm-privacy/whitepaper#21-beth-the-proof-of-burn-receipt"
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "WORM has no compliance enforcement. The smart contracts (BETH.sol and WORM.sol) and zk-SNARK circuits only enforce protocol correctness — burn address inclusion in Ethereum state, nullifier uniqueness, and per-epoch issuance caps — not any compliance policy such as blocklists, sanctions screening, or identity checks.",
+      "url": "https://github.com/worm-privacy/worm/tree/main/src"
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "No entity can blocklist addresses, freeze transfers, or modify protocol parameters. The contracts have no admin keys, governance tokens, or upgrade mechanisms, and the protocol operates permissionlessly without any DAO or third-party compliance provider.",
+      "url": "https://github.com/worm-privacy/worm/tree/main/src"
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"None\"]",
+      "notes": "No identity verification, transaction screening, proof-of-innocence requirement, selective disclosure, or programmatic policy is enforced. The burn-and-mint flow using Groth16 zk-SNARKs provides privacy through cryptographic proofs but imposes no compliance checks.",
+      "url": "https://github.com/worm-privacy/worm/tree/main/src"
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"None\"]",
+      "notes": "No compliance is enforced at deposit, transfer, or withdrawal. The burn, mint, and ERC-20 transfer paths validate only cryptographic and protocol invariants (proof validity, nullifier uniqueness, per-epoch issuance caps), not any compliance policy.",
+      "url": "https://github.com/worm-privacy/worm/tree/main/src"
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"User\"]",
+      "notes": "The privacy model relies on unlinkability between burn addresses and minted BETH/WORM tokens through zk proofs, not on encrypted transaction data with optional disclosure. Users could voluntarily disclose their burnKey to reveal the burn address and burn amount after they have mint the desired tokens. Anyone with the burnKey is able to see the transaction history and also mint pending tokens. The burnKey can be considered a spending key until the tokens are minted and a viewing key for historical data. User would need to use a different burnKey in the future to avoid unauthorized spending.",
+      "citations": [
+        {
+          "cited_text": "- `coin`: An encrypted value `Poseidon2(burnKey, amount)` representing the burned amount for selective disclosure or partial spending.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
+          "start_char_index": 9069,
+          "end_char_index": 9204
+        },
+        {
+          "cited_text": "- `nullifier`: A one-time-use commitment derived as `Poseidon2(burnKey, 1)` to prevent reuse.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
+          "start_char_index": 8975,
+          "end_char_index": 9069
+        },
+        {
+          "cited_text": "- `commitment`: A combined hash representing the burn event and receiver address, used to authorize minting BETH or WORM.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
+          "start_char_index": 9204,
+          "end_char_index": 9327
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#24-circom-circuits-verifying-the-proof-of-burn"
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "None",
+      "notes": "No formal selective disclosure mechanism exists. The user could share his burnKey after minting the tokens to allow a third party access to historical burn data. It is worth pointing out that sharing the burnKey is similar to sharing a private key so the user will have to use a different burnKey in the future to avoid unathorized spending.",
+      "citations": [
+        {
+          "cited_text": "- `coin`: An encrypted value `Poseidon2(burnKey, amount)` representing the burned amount for selective disclosure or partial spending.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
+          "start_char_index": 9069,
+          "end_char_index": 9204
+        },
+        {
+          "cited_text": "- `nullifier`: A one-time-use commitment derived as `Poseidon2(burnKey, 1)` to prevent reuse.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
+          "start_char_index": 8975,
+          "end_char_index": 9069
+        },
+        {
+          "cited_text": "- `commitment`: A combined hash representing the burn event and receiver address, used to authorize minting BETH or WORM.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
+          "start_char_index": 9204,
+          "end_char_index": 9327
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#24-circom-circuits-verifying-the-proof-of-burn"
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "WORM uses zk-SNARK circuits to cryptographically verify that users burned ETH to a specific address without revealing which address, by proving Merkle-Patricia-Trie inclusion of the burn address in Ethereum's state root and checking that the hash of each trie layer is contained in the next layer. The burn address is derived from a burn-key using Poseidon hashing, with an additional Keccak256 proof-of-work constraint requiring the hash to begin with two zero bytes, and a nullifier prevents reuse of the same burn-key.",
+      "citations": [
+        {
+          "cited_text": "[X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EIP7503)](https://x.com/EIP7503)\n\n***(The circuits are audited by yAudit: https://reports.yaudit.dev/2025-11-Worm)***\n\nThe circuit calculates the account-rlp of a burn address and then generate the leaf-trie-node accordingly.\n\nIt will then iterate through trie nodes and check whether `keccak(layer[i])` is within `keccak(layer[i+1])`.\n\nAs a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 320,
+          "end_char_index": 965
+        },
+        {
+          "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 968,
+          "end_char_index": 1096
+        },
+        {
+          "cited_text": "An encrypted representation of the remaining balance: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, intendedBalance - revealAmount)`.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1099,
+          "end_char_index": 1229
+        },
+        {
+          "cited_text": "A `revealAmount`: an amount from the minted balance that is directly revealed upon submission of the proof.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1232,
+          "end_char_index": 1340
+        },
+        {
+          "cited_text": "A `burnExtraCommitment`: commits to the way the revealed amount should be distributed by the contract.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1343,
+          "end_char_index": 1446
+        },
+        {
+          "cited_text": "A `_proofExtraCommitment`: to glue information to the proof that aren't necessarily processed in the circuit.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1449,
+          "end_char_index": 1560
+        },
+        {
+          "cited_text": "As a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 725,
+          "end_char_index": 965
+        },
+        {
+          "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  ",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1708,
+          "end_char_index": 2047
+        },
+        {
+          "cited_text": "- PoW: `Keccak(burnKey | revealAmount | burnExtraCommitment | 'EIP-7503') < THRESHOLD`\n    Only burn-keys which fit in the equation can be used. ",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2174,
+          "end_char_index": 2319
+        },
+        {
+          "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2382,
+          "end_char_index": 2500
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#21-beth-the-proof-of-burn-receipt"
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The proof-of-burn circuits repository is licensed under the MIT License. The Keccak hash function implementation within the circuits is a refactored version of keccak256-circom licensed under GNU GPL v3. The Solidity contracts repository is licensed under the MIT License. All identified components use recognized open source licenses (MIT and GPL v3), making the source code publicly available under proper open source licensing.",
+      "citations": [
+        {
+          "cited_text": "## License\n\nThis project is licensed under the MIT License.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 5427,
+          "end_char_index": 5488
+        }
+      ],
+      "url": "https://github.com/worm-privacy/proof-of-burn/tree/main#license"
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Infinity grow",
+      "notes": "WORM uses nullifiers computed as Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey) to prevent reuse of burn keys, and these nullifiers are exposed as public inputs in the circuit commitment. The protocol requires on-chain storage of nullifiers to prevent double-spending of burn proofs, and there is no mechanism described for pruning or rotating this nullifier set. Since each proof-of-burn submission adds a new nullifier that must be stored permanently to maintain security, the nullifier set grows indefinitely with protocol usage.",
+      "citations": [
+        {
+          "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 968,
+          "end_char_index": 1096
+        },
+        {
+          "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2382,
+          "end_char_index": 2500
+        },
+        {
+          "cited_text": "As a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. ",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 725,
+          "end_char_index": 871
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#23-privacy-preservation"
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No scanning",
+      "notes": "WORM ERC20 tokens (BETH and WORM) have balances tracked on-chain through the Ethereum state so there is no need for client-side scanning. When users want to mint BETH through private proof-of-burn proofs, they generate the zk-proof on the UI using their recovery file containing their burnKey and receiver address. These process has to be performed per burn transaction. There is no mechanism to show privately burn balances on the WORM UI so there is no client-side indexing or scanning. Users have to keep track of their burn transaction data on their own.",
+      "citations": [
+        {
+          "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  - A `burnExtraCommitment` which commits on the way the minted amount should be distributed by the contract after being minted.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1708,
+          "end_char_index": 2174
+        },
+        {
+          "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n- Coin: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, amount)`\n    A \"coin\" is an encrypted amount which can be partially withdrawn, resulting in a new coin.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2382,
+          "end_char_index": 2655
+        },
+        {
+          "cited_text": "[X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EIP7503)](https://x.com/EIP7503)\n\n***(The circuits are audited by yAudit: https://reports.yaudit.dev/2025-11-Worm)***\n\nThe circuit calculates the account-rlp of a burn address and then generate the leaf-trie-node accordingly.\n\nIt will then iterate through trie nodes and check whether `keccak(layer[i])` is within `keccak(layer[i+1])`.\n\nAs a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 320,
+          "end_char_index": 965
+        }
+      ],
+      "url": "https://worm.cx/wormhole"
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based",
+      "notes": "WORM uses a UTXO-based state model. The protocol manages private state through balance commitments called \"coins,\" which are Poseidon3 hashes of a burn key and amount that can be partially withdrawn to create new coins. The system tracks nullifiers (Poseidon2 hashes of burn keys) to prevent double-spending and replay attacks. Each transaction involves proving ownership of a private proof-of-burn and inserting a new nullifier into the on-chain state. This process is similar to standard UTXO models with the caveat that the \"coins\" are only mintable and their spending does not generate new UTXO outputs.",
+      "citations": [
+        {
+          "cited_text": "An encrypted representation of the remaining balance: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, intendedBalance - revealAmount)`.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1099,
+          "end_char_index": 1229
+        },
+        {
+          "cited_text": "- Coin: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, amount)`\n    A \"coin\" is an encrypted amount which can be partially withdrawn, resulting in a new coin.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2500,
+          "end_char_index": 2655
+        },
+        {
+          "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 968,
+          "end_char_index": 1096
+        },
+        {
+          "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2382,
+          "end_char_index": 2500
+        },
+        {
+          "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  - A `burnExtraCommitment` which commits on the way the minted amount should be distributed by the contract after being minted.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1708,
+          "end_char_index": 2174
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#public-inputs-and-circuit-outputs"
+    },
+    {
+      "name": "Private Data Storage",
+      "value": "Smart contracts",
+      "notes": "WORM state is stored in the different smart contracts related to the protocol. The WORM and BETH token data is stored in smart contracts as any other ERC20 token. The nullifier data is stored inside the BETH contract so it is easily accesible when calling the mint function. The burn address and its received funds are stored in Ethereum state, therefore does not directly affect the protocol data storage. The burn key itself, which serves as the user's private key to the protocol, remains off-chain and is never revealed.",
+      "citations": [
+        {
+          "cited_text": "As a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 725,
+          "end_char_index": 965
+        },
+        {
+          "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 968,
+          "end_char_index": 1096
+        },
+        {
+          "cited_text": "An encrypted representation of the remaining balance: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, intendedBalance - revealAmount)`.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1099,
+          "end_char_index": 1229
+        },
+        {
+          "cited_text": "A `revealAmount`: an amount from the minted balance that is directly revealed upon submission of the proof.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1232,
+          "end_char_index": 1340
+        },
+        {
+          "cited_text": "A `burnExtraCommitment`: commits to the way the revealed amount should be distributed by the contract.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1343,
+          "end_char_index": 1446
+        },
+        {
+          "cited_text": "A `_proofExtraCommitment`: to glue information to the proof that aren't necessarily processed in the circuit.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1449,
+          "end_char_index": 1560
+        },
+        {
+          "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2382,
+          "end_char_index": 2500
+        },
+        {
+          "cited_text": "## Burn-key\n\nBurn-key is a number you generate in order to start the burn/mint process. It somehow is your \"private-key\" to the world of EIP-7503.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1560,
+          "end_char_index": 1708
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Unlimited access to DeFi applications",
+      "notes": "WORM and BETH are both standard ERC-20 tokens deployed on Ethereum mainnet. They can be integrated with any DeFi application that supports ERC-20 tokens, including DEXs, lending protocols, and liquidity pools, without requiring any protocol changes. This provides full composability with the Ethereum DeFi ecosystem. It is worth pointing out that the token utility depends solely on the correct functioning of the WORM protocol. If the protocol experiences a critical failure or vulnerability, the value of WORM and BETH could be severely impacted, which would in turn affect their usability in DeFi applications.",
+      "citations": [
+        {
+          "cited_text": "77 \nfollowers\n\nhttps://worm.cx \n\nX \n\n@EIP7503 \n\nhttps://discord.gg/EIP7503 \n\nhttps://t.me/WormPrivacy \n\n&#x6b;&#x65;&#x79;&#x76;&#x61;&#x6e;&#x6b;&#x61;&#x6d;&#x62;&#x61;&#x6b;&#x68;&#x73;&#x68;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d; \n\nREADME.md \n\n🪱 WORM: A Scarce Cryptoasset Rooted in Private ETH Destruction 🪱\n\nWORM is a cryptographically scarce ERC-20 token created through the destruction of Ethereum (ETH) in a privacy-preserving manner. ",
+          "source": "https://github.com/worm-privacy",
+          "start_char_index": 994,
+          "end_char_index": 1459
+        },
+        {
+          "cited_text": "WORM is designed to be usable, composable, and private—fueling a new generation of decentralized finance, payments, and speculative applications.\n\n",
+          "source": "https://github.com/worm-privacy",
+          "start_char_index": 2057,
+          "end_char_index": 2204
+        },
+        {
+          "cited_text": "It is minted by consuming BETH , a private proof-of-burn receipt, which is itself generated using zk-SNARKs. ",
+          "source": "https://github.com/worm-privacy",
+          "start_char_index": 1459,
+          "end_char_index": 1568
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#5-economic-model"
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "WORM's programmability is limited to its core proof-of-burn operations: burning ETH to a derived address, proving the burn via zk-SNARK to mint BETH, and spending BETH with partial withdrawal support through encrypted coin commitments. The circuit enforces a fixed set of constraints around state root verification, nullifier generation, encrypted balance commitments, reveal amounts, and burn-extra commitments for distribution logic. The protocol does not support arbitrary private smart contract logic or custom private computations beyond these predefined burn/mint/spend flows.",
+      "citations": [
+        {
+          "cited_text": "[X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EIP7503)](https://x.com/EIP7503)\n\n***(The circuits are audited by yAudit: https://reports.yaudit.dev/2025-11-Worm)***\n\nThe circuit calculates the account-rlp of a burn address and then generate the leaf-trie-node accordingly.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 320,
+          "end_char_index": 615
+        },
+        {
+          "cited_text": "## Burn-key\n\nBurn-key is a number you generate in order to start the burn/mint process. It somehow is your \"private-key\" to the world of EIP-7503.\n\n- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  - A `burnExtraCommitment` which commits on the way the minted amount should be distributed by the contract after being minted.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1560,
+          "end_char_index": 2174
+        },
+        {
+          "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n- Coin: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, amount)`\n    A \"coin\" is an encrypted amount which can be partially withdrawn, resulting in a new coin.\n\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 2382,
+          "end_char_index": 2655
+        },
+        {
+          "cited_text": "As a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 725,
+          "end_char_index": 965
+        },
+        {
+          "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 968,
+          "end_char_index": 1096
+        },
+        {
+          "cited_text": "An encrypted representation of the remaining balance: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, intendedBalance - revealAmount)`.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1099,
+          "end_char_index": 1229
+        },
+        {
+          "cited_text": "A `revealAmount`: an amount from the minted balance that is directly revealed upon submission of the proof.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1232,
+          "end_char_index": 1340
+        },
+        {
+          "cited_text": "A `burnExtraCommitment`: commits to the way the revealed amount should be distributed by the contract.\n",
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
+          "start_char_index": 1343,
+          "end_char_index": 1446
+        }
+      ],
+      "url": "https://github.com/worm-privacy/whitepaper#24-circom-circuits-verifying-the-proof-of-burn"
+    }
+  ]
+}
