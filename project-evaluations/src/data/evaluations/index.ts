@@ -12,6 +12,7 @@ import redactData from "./redact.json" with { type: "json" };
 import hinkalData from "./hinkal.json" with { type: "json" };
 import zcashData from "./zcash.json" with { type: "json" };
 import curvyData from "./curvy.json" with { type: "json" };
+import wormData from "./worm.json" with { type: "json" };
 
 const rawEvaluations = [
   railgunData,
@@ -25,6 +26,7 @@ const rawEvaluations = [
   hinkalData,
   zcashData,
   curvyData,
+  wormData,
 ];
 
 export const evaluations: Evaluation[] = rawEvaluations.map((raw) => evaluationSchema.parse(raw));
