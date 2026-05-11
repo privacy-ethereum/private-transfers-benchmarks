@@ -13,25 +13,25 @@
       "name": "Confidentiality",
       "value": "No",
       "notes": "zERC20 is a fully ERC-20 compliant token, so per-address balances and transfer amounts are publicly readable from the token contract. The protocol hides the link between a burn-address deposit and a later withdraw via a zk proof, not the amounts or balances themselves. The deposit to the burn address and the subsequent mint to the withdrawal address are both visible ERC-20 events with cleartext amounts.",
-      "needsResearchReview": true
+      "url": "https://zerc20.gitbook.io/zerc20/for-developers/architecture#id-4.-private-transfer"
     },
     {
       "name": "Anonymity",
       "value": "Unlinkability",
-      "notes": "zERC20 uses zero-knowledge proofs and Proof of Burn to conceal the relationship between sender and recipient. The sender burns tokens to a random address calculated from the recipient's public address and a secret value, then the recipient proves knowledge of the secret via zero-knowledge proof to mint equivalent zERC20 tokens to a new address. This makes the connection between sender and receiver invisible to third parties, as the transaction appears on-chain indistinguishable from a standard ERC-20 transfer. This achieves anonymity where no transaction links are ever disclosed.",
-      "needsResearchReview": true
+      "notes": "zERC20 uses zero-knowledge proofs and Private Proof of Burn to conceal the relationship between sender and recipient. The sender burns tokens to a random address calculated from the recipient's public address and a secret value, then the recipient proves knowledge of the secret via zero-knowledge proof to mint equivalent zERC20 tokens to a new address. This makes the connection between sender and receiver invisible to third parties, as the transaction appears on-chain indistinguishable from a standard ERC-20 transfer. This achieves anonymity where no transaction links between sender and receiver are ever disclosed.",
+      "url": "https://zerc20.gitbook.io/zerc20/overview/how-it-works#id-1.-sender-recipient-unlinkability"
     },
     {
       "name": "Asset privacy",
       "value": "No",
-      "notes": "zERC20 does not hide the specific asset being transferred. zERC20 is an ERC-20 token, meaning each deployment represents a distinct wrapped asset (e.g., zETH, zUSDC, zBNB). When a transfer occurs, observers can identify which specific zERC20 token contract is being used, revealing the asset type. The protocol's privacy features—using zk-Wormhole's proof-of-burn mechanism—hide sender-recipient relationships and transaction amounts through zero-knowledge proofs, but the asset identity remains visible on-chain through the contract address being interacted with.",
-      "needsResearchReview": true
+      "notes": "zERC20 does not hide the specific asset being transferred. zERC20 is an ERC-20 token, meaning each deployment represents a distinct wrapped asset (e.g., zETH, zUSDC, zBNB). When a transfer occurs, observers can identify which specific zERC20 token contract is being used, revealing the asset type. The protocol's privacy features—using zk-Wormhole's proof-of-burn mechanism—hide sender-recipient relationships and transaction amounts through zero-knowledge proofs, but the asset identity remains visible on-chain through the interactions with the contract address.",
+      "url": "https://zerc20.gitbook.io/zerc20/for-developers/architecture#on-chain-contracts"
     },
     {
       "name": "Plausible deniability",
-      "value": "Yes",
-      "notes": "Deniability applies to the deposit side: a sender emits a standard ERC-20 transfer to a burn address computed as trim160(poseidon(recipient, secret)), which is on-chain indistinguishable from an ordinary ERC-20 transfer to a fresh address. No interaction with any privacy-specific contract is needed to deposit. The recipient's later withdraw is a visible mint from the Verifier and does reveal participation, so deniability covers entry only.",
-      "needsResearchReview": true
+      "value": "No",
+      "notes": "Even though Private Proof of Burn can provide plausible deniability for the sender, zERC20 requires users to wrap their tokens (native ETH or some pre-defined ERC20 token) through their smart contract. This interaction is on-chain and visible to any observer, therefore plausible deniability is not achieved. The concept of an \"internal private transfer\" does not exist in zERC20 because the Private Send feature available in the UI is just a withdraw/teleport action. Senders need to interact with the zERC20 smart contract to send tokens to a burn address and the receivers need to interact with the zERC20 smart contract to mint/withdraw tokens.",
+      "url": "https://zerc20.gitbook.io/zerc20/for-developers/architecture#id-4.-private-transfer"
     },
     {
       "name": "On-chain gas cost: deposit",
