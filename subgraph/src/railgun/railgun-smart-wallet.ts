@@ -19,7 +19,7 @@ function createOrLoadProtocolStats(): RailgunProtocolStats {
   const id = "railgun-protocol-stats";
   let stats = RailgunProtocolStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new RailgunProtocolStats(id);
     stats.totalTxCount = BigInt.fromI32(0);
     stats.totalGasUsed = BigInt.fromI32(0);
@@ -53,7 +53,7 @@ function createOrLoadShieldTokenStats(tokenAddress: Bytes, operationStatsId: str
   const id = `railgun-shield-${tokenAddress.toHex()}`;
   let stats = RailgunShieldTokenStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new RailgunShieldTokenStats(id);
     stats.operationStats = operationStatsId;
     stats.tokenAddress = tokenAddress;
@@ -71,7 +71,7 @@ function createOrLoadUnshieldTokenStats(tokenAddress: Bytes, operationStatsId: s
   const id = `railgun-unshield-${tokenAddress.toHex()}`;
   let stats = RailgunUnshieldTokenStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new RailgunUnshieldTokenStats(id);
     stats.operationStats = operationStatsId;
     stats.tokenAddress = tokenAddress;

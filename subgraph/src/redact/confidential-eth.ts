@@ -17,7 +17,7 @@ function createOrLoadProtocolStats(): RedactProtocolStats {
   const id = "redact-protocol-stats";
   let stats = RedactProtocolStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new RedactProtocolStats(id);
     stats.totalTxCount = BigInt.fromI32(0);
     stats.totalGasUsed = BigInt.fromI32(0);
@@ -58,7 +58,7 @@ function createOrLoadShieldedStats(tokenAddress: Bytes | null, operationStatsId:
   const id = tokenAddress === null ? "redact-shield-native-eth" : tokenAddress.toHex();
   let stats = RedactShieldedStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new RedactShieldedStats(id);
     stats.totalCount = BigInt.fromI32(0);
     stats.totalGasUsed = BigInt.fromI32(0);
@@ -79,7 +79,7 @@ function createOrLoadUnshieldedStats(operationStatsId: string): RedactUnshielded
   const id = "redact-unshield-native-eth";
   let stats = RedactUnshieldedStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new RedactUnshieldedStats(id);
     stats.totalCount = BigInt.fromI32(0);
     stats.totalGasUsed = BigInt.fromI32(0);

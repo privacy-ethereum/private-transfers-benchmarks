@@ -12,7 +12,7 @@ function createOrLoadProtocolStats(): FluidkeyProtocolStats {
   const id = "fluidkey-protocol-stats";
   let stats = FluidkeyProtocolStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new FluidkeyProtocolStats(id);
     stats.totalTxCount = BigInt.fromI32(0);
     stats.totalGasUsed = BigInt.fromI32(0);
@@ -34,7 +34,7 @@ function createOrLoadStealthToPublicStats(operationStatsId: string): FluidkeySte
   const id = operationStatsId;
   let stats = FluidkeyStealthToPublicStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new FluidkeyStealthToPublicStats(id);
     stats.operationStats = operationStatsId;
     stats.totalCount = BigInt.fromI32(0);

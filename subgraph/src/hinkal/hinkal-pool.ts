@@ -22,7 +22,7 @@ function createOrLoadProtocolStats(): HinkalProtocolStats {
   const id = "hinkal-protocol-stats";
   let stats = HinkalProtocolStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new HinkalProtocolStats(id);
 
     stats.totalTxCount = BigInt.zero();
@@ -70,7 +70,7 @@ function createOrLoadShieldERC20TokenStats(tokenAddress: Bytes, operationStatsId
   const id = `hinkal-shield-${tokenAddress.toHex()}`;
   let stats = HinkalShieldERC20TokenStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new HinkalShieldERC20TokenStats(id);
     stats.operationStats = operationStatsId;
     stats.tokenAddress = tokenAddress;
@@ -88,7 +88,7 @@ function createOrLoadShieldNativeTokenStats(operationStatsId: string): HinkalShi
   const id = "hinkal-protocol-stats-shield-native-stats";
   let stats = HinkalShieldNativeTokenStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new HinkalShieldNativeTokenStats(id);
     stats.operationStats = operationStatsId;
     stats.totalCount = BigInt.fromI32(0);
@@ -104,7 +104,7 @@ function createOrLoadTransactTokenStats(operationStatsId: string): HinkalTransac
   const id = "hinkal-protocol-stats-transact-stats";
   let stats = HinkalTransactTokenStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new HinkalTransactTokenStats(id);
     stats.operationStats = operationStatsId;
     stats.totalCount = BigInt.fromI32(0);
@@ -123,7 +123,7 @@ function createOrLoadUnshieldERC20TokenStats(
   const id = `hinkal-unshield-${tokenAddress.toHex()}`;
   let stats = HinkalUnshieldERC20TokenStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new HinkalUnshieldERC20TokenStats(id);
     stats.operationStats = operationStatsId;
     stats.tokenAddress = tokenAddress;
@@ -141,7 +141,7 @@ function createOrLoadUnshieldNativeTokenStats(operationStatsId: string): HinkalU
   const id = "hinkal-protocol-stats-unshield-native-stats";
   let stats = HinkalUnshieldNativeTokenStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new HinkalUnshieldNativeTokenStats(id);
     stats.operationStats = operationStatsId;
     stats.totalCount = BigInt.fromI32(0);

@@ -12,7 +12,7 @@ export function handleInstanceStateUpdated(event: InstanceStateUpdated): void {
   let entity = TornadoCashInstance.load(id);
 
   if (state === ENABLED) {
-    if (entity == null) {
+    if (entity === null) {
       entity = new TornadoCashInstance(id);
       entity.address = address;
       entity.active = true;

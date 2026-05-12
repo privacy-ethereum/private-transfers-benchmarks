@@ -2,7 +2,7 @@
 
 Build the required subgraph to fetch metrics data for the benchmarks.
 
-The current version of the deployed subgraph is `v0.0.10`.
+The current version of the deployed subgraph is `v0.0.13`.
 
 ## Build and deploy
 
