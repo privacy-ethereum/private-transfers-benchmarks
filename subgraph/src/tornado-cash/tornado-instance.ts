@@ -13,7 +13,7 @@ function createOrLoadTornadoStats(): TornadoCashProtocolStats {
   const id = "tornado-protocol-stats";
   let stats = TornadoCashProtocolStats.load(id);
 
-  if (stats == null) {
+  if (stats === null) {
     stats = new TornadoCashProtocolStats(id);
 
     stats.totalTxCount = BigInt.fromI32(0);
@@ -48,7 +48,7 @@ export function handleDeposit(event: Deposit): void {
   const instanceId = event.address.toHex();
   const instance = TornadoCashInstance.load(instanceId);
 
-  if (instance == null) {
+  if (instance === null) {
     return;
   }
 
@@ -81,7 +81,7 @@ export function handleDeposit(event: Deposit): void {
 
   const shieldedStats = TornadoCashOperationStats.load(stats.shield);
 
-  if (shieldedStats != null) {
+  if (shieldedStats !== null) {
     shieldedStats.totalCount = shieldedStats.totalCount.plus(BigInt.fromI32(1));
     shieldedStats.totalValue = shieldedStats.totalValue.plus(event.transaction.value);
 
@@ -99,7 +99,7 @@ export function handleWithdrawal(event: Withdrawal): void {
   const instanceId = event.address.toHex();
   const instance = TornadoCashInstance.load(instanceId);
 
-  if (instance == null) {
+  if (instance === null) {
     return;
   }
 
@@ -137,7 +137,7 @@ export function handleWithdrawal(event: Withdrawal): void {
 
   const unshieldedStats = TornadoCashOperationStats.load(stats.unshield);
 
-  if (unshieldedStats != null) {
+  if (unshieldedStats !== null) {
     unshieldedStats.totalCount = unshieldedStats.totalCount.plus(BigInt.fromI32(1));
     unshieldedStats.totalValue = unshieldedStats.totalValue.plus(event.transaction.value);
 

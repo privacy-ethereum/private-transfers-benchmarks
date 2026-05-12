@@ -16,6 +16,15 @@ export function createTransferLog(token: Address, from: Address, to: Address, am
   return log;
 }
 
+export function createNullifiedLog(contractAddress: Address): ethereum.Log {
+  const nullifiedLog = changetype<ethereum.Log>(newMockEvent());
+  nullifiedLog.address = contractAddress;
+  nullifiedLog.topics = [NULLIFIED_TOPIC];
+  nullifiedLog.data = Bytes.empty();
+
+  return nullifiedLog;
+}
+
 function addressToTopic(address: Address): Bytes {
   const padded = new Uint8Array(32);
   const bytes = address as Bytes;
@@ -27,7 +36,7 @@ function addressToTopic(address: Address): Bytes {
   return Bytes.fromUint8Array(padded);
 }
 
-export function createNewCommitmentEvent(transferLog: ethereum.Log): NewCommitment {
+export function createNewCommitmentEvent(log: ethereum.Log): NewCommitment {
   const event = changetype<NewCommitment>(newMockEvent());
 
   const commitmentLog = changetype<ethereum.Log>(newMockEvent());
@@ -35,7 +44,7 @@ export function createNewCommitmentEvent(transferLog: ethereum.Log): NewCommitme
   commitmentLog.data = Bytes.empty();
 
   const receipt = changetype<ethereum.TransactionReceipt>(newMockEvent());
-  receipt.logs = [transferLog, commitmentLog];
+  receipt.logs = [log, commitmentLog];
   receipt.gasUsed = BigInt.fromI32(1);
 
   event.receipt = receipt;
@@ -46,9 +55,7 @@ export function createNewCommitmentEvent(transferLog: ethereum.Log): NewCommitme
 export function createNullifiedEvent(logs: ethereum.Log[]): Nullified {
   const event = changetype<Nullified>(newMockEvent());
 
-  const nullifiedLog = changetype<ethereum.Log>(newMockEvent());
-  nullifiedLog.topics = [NULLIFIED_TOPIC];
-  nullifiedLog.data = Bytes.empty();
+  const nullifiedLog = createNullifiedLog(event.address);
 
   const receipt = changetype<ethereum.TransactionReceipt>(newMockEvent());
   receipt.logs = [logs[0], logs[1], nullifiedLog];

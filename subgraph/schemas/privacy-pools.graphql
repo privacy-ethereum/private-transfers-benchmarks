@@ -1,0 +1,69 @@
+type PrivacyPoolsProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  shield: PrivacyPoolsOperationStats!
+  unshield: PrivacyPoolsOperationStats!
+}
+
+type PrivacyPoolsPool @entity(immutable: true) {
+  id: ID!
+  pool: Bytes!
+  asset: Bytes!
+}
+
+type PrivacyPoolsOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  shieldTokenStats: [PrivacyPoolsShieldStats!]! @derivedFrom(field: "operationStats")
+  unshieldTokenStats: [PrivacyPoolsUnshieldStats!]! @derivedFrom(field: "operationStats")
+}
+
+type PrivacyPoolsShieldStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: PrivacyPoolsOperationStats!
+}
+
+type PrivacyPoolsUnshieldStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: PrivacyPoolsOperationStats!
+}
+
+type PrivacyPoolsDeposit @entity(immutable: true) {
+  id: ID!
+  tokenAddress: Bytes!
+  amount: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type PrivacyPoolsWithdrawal @entity(immutable: true) {
+  id: ID!
+  tokenAddress: Bytes!
+  fee: BigInt!
+  amount: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
