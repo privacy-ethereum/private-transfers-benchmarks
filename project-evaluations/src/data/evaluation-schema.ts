@@ -4,6 +4,7 @@ import { CATEGORIES, PROPERTY_DEFINITIONS } from "./schema";
 const propertyNames = PROPERTY_DEFINITIONS.map((d) => d.name) as [string, ...string[]];
 const propertyNameEnum = z.enum(propertyNames);
 const categoryEnum = z.enum(CATEGORIES);
+const evaluationStatusEnum = z.enum(["complete", "pending"]);
 
 export const propertySchema = z.object({
   name: propertyNameEnum,
@@ -27,6 +28,7 @@ export const evaluationSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
+  status: evaluationStatusEnum.default("complete"),
   documentation: z.string(),
   categories: z.array(categoryEnum).min(1),
   properties: z.array(propertySchema),

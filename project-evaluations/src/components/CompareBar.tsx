@@ -3,6 +3,7 @@ import { type Evaluation } from "../types";
 import { CATEGORY_EXPLAINERS } from "../data/explainers";
 import { LONG_TITLE_LEN } from "../constants";
 import { evaluations } from "../data/evaluations";
+import { isPendingEvaluation } from "../utils";
 
 interface CompareBarProps {
   pinned: string[];
@@ -25,6 +26,8 @@ export default function CompareBar({
   protosByCategory,
   selectAllInCat,
 }: CompareBarProps) {
+  const analyzedEvaluations = evaluations.filter((p) => !isPendingEvaluation(p));
+
   return (
     <div className="compare-bar">
       <div className="compare-bar__top">
@@ -54,10 +57,10 @@ export default function CompareBar({
           <button
             className="chip on"
             onClick={() => {
-              setPinned(evaluations.map((p) => p.id));
+              setPinned(analyzedEvaluations.map((p) => p.id));
             }}
           >
-            Pin all ({evaluations.length})
+            Pin all ({analyzedEvaluations.length})
           </button>
         </div>
       </div>

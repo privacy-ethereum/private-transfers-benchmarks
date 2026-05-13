@@ -1,0 +1,10 @@
+{
+  "id": "merces",
+  "title": "Merces",
+  "description": "Confidential stablecoins",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["Multi Party Computation (MPC)"],
+  "properties": [],
+  "sourceUrls": []
+}
