@@ -4,6 +4,7 @@ import { Intmax } from "./intmax/index.js";
 import { Monero } from "./monero/index.js";
 import { PrivacyPools } from "./privacy-pools/index.js";
 import { Railgun } from "./railgun/index.js";
+// import { SubgraphService } from "./subgraph/index.js";
 import { TornadoCash } from "./tornado-cash/index.js";
 import { db } from "./utils/db.js";
 
@@ -19,8 +20,9 @@ await db.read();
 
 const start = Date.now();
 
-// const client = new GraphQLClient(SUBGRAPH_URL);
-// const result = await client.request<TRootQuery>(RootQuery);
+// const subgraphService = await SubgraphService.getInstance();
+// const result = await subgraphService.fetchRootQueryWithCache();
+// eslint-disable-next-line no-console
 // console.log(result);
 
 const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, moneroMetrics, hinkalMetrics] =
