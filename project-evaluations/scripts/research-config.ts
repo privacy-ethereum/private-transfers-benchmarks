@@ -106,7 +106,7 @@ export const configs: Record<string, ProtocolConfig> = {
     description:
       "Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains privacy by routing each swap through two independent off-chain CEX partners and three separate blockchains, so no single counterparty sees the full path from source to destination. It is not a mixer: liquidity is not pooled and no zero-knowledge proofs are used; privacy comes from partitioning knowledge across routing hops. The service aggregates DEXes and bridges across 100+ chains and curates CEX partners that run industry-standard AML programmes.",
     documentation: "https://docs.houdiniswap.com/",
-    categories: ["Cross-L1 CEX aggregator and mixer"],
+    categories: ["Cross-chain swap aggregator"],
     sourceUrls: [
       "https://docs.houdiniswap.com/overview/getting-started/what-is-houdini",
       "https://docs.houdiniswap.com/overview/getting-started/core-swap-concepts",

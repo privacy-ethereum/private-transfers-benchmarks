@@ -83,7 +83,7 @@
     },
     {
       "name": "Client-side proving",
-      "value": "Not applicable",
+      "value": "N/A",
       "notes": "Redact executes FHE computation via an off-chain coprocessor network, no client-side proving is needed. All cryptographic operations are processed by the external CoFHE network and do not involve proof generation on the user's device.",
       "url": "https://docs.redact.money/technical-walkthrough#encrypted-transfer"
     },

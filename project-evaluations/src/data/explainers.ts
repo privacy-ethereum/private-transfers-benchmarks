@@ -25,7 +25,7 @@ export const CATEGORY_EXPLAINERS: Record<string, string | undefined> = {
     "A scaling design where most activity lives off-chain with only compact commitments and exits posted on-chain. Plasmas initially lacked validity proofs but newer designs are adding them.",
   Validium:
     "A rollup variant where data is kept off-chain under a separate data-availability layer, while validity proofs are posted on-chain.",
-  "Cross-L1 CEX aggregator and mixer":
+  "Cross-chain swap aggregator":
     "Routes value across L1s via centralized exchanges or similar off-chain hops to break on-chain linkability.",
   "Multi Party Computation (MPC)":
     "A committee of nodes jointly computes on secret-shared inputs; no single node sees the cleartext.",

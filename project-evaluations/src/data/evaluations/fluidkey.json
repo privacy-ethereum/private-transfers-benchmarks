@@ -61,7 +61,7 @@
     },
     {
       "name": "Client-side proving",
-      "value": "Not applicable",
+      "value": "N/A",
       "notes": "Fluidkey does not use zero-knowledge proofs. The stealth address derivation relies entirely on elliptic curve Diffie-Hellman (ECDH) and BIP-32 key derivation, both of which are lightweight cryptographic operations feasible on any device including mobile.",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-1.-background-reading"
     },
