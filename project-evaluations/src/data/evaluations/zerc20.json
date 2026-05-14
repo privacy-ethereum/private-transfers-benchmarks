@@ -1,7 +1,7 @@
 {
   "id": "zerc20",
   "title": "zERC20",
-  "description": "zERC20 is a fully ERC-20 compliant crosschain private transfer token. Users can perform private transfers directly from standard wallets like MetaMask—no special software required. From an external observer's perspective, private transfers are indistinguishable from regular transfers.ERC-20 Compatible: Works with any wallet, DEX, or DeFi protocol that supports standard ERC-20 tokens. Private Transfers: Send tokens without revealing the link between sender and recipient addresses Crosschain Support: Transfer privately across multiple blockchains via LayerZero. No Special Wallet Required: Use MetaMask or any standard Ethereum wallet. It works by A temporary \"burn address\" is cryptographically generated. The sender transfers zERC20 to this burn address (the tokens are effectively burned). The recipient withdraws the same amount to any address using a zero-knowledge proof. The link between the burn address and the withdrawal address is never revealed on-chain.",
+  "description": "zERC20 is a fully ERC-20-compliant token with a private-transfer mechanism, usable from a standard wallet. A private transfer sends zERC20 to a cryptographically derived burn address. The recipient later withdraws the same amount to any address by submitting a zero-knowledge proof proving they know the burn secret, so the link between the two addresses is never revealed on-chain. Wrapper tokens are backed 1:1 by underlying assets such as ETH, USDC, and BNB, and cross-chain private transfers are supported via LayerZero. The token draws from the design of zk-Wormhole / EIP-7503 private proof-of-burn.",
   "documentation": "https://zerc20.gitbook.io/zerc20",
   "categories": ["zkWormholes"],
   "properties": [
@@ -12,26 +12,84 @@
     {
       "name": "Confidentiality",
       "value": "No",
-      "notes": "zERC20 is a fully ERC-20 compliant token, so per-address balances and transfer amounts are publicly readable from the token contract. The protocol hides the link between a burn-address deposit and a later withdraw via a zk proof, not the amounts or balances themselves. The deposit to the burn address and the subsequent mint to the withdrawal address are both visible ERC-20 events with cleartext amounts.",
-      "url": "https://zerc20.gitbook.io/zerc20/for-developers/architecture#id-4.-private-transfer"
+      "notes": "As a standard ERC-20 token, per-address balances and transfer amounts are publicly visible on every chain it deploys on. The privacy mechanism hides only the link between a burn-address deposit and the recipient's later mint, not the value transferred. Both the burn transfer and the verifier's mint emit cleartext amounts. Unique or unusual amounts can therefore be used to correlate deposit and withdrawal even without the linkage being on-chain.",
+      "citations": [
+        {
+          "cited_text": "**zERC20** is a privacy-preserving ERC-20 token that integrates zk-Wormhole’s proof-of-burn mechanism. It works seamlessly with standard Web3 wallets, enabling private transfers through the familiar ERC-20 interface.\n\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 211,
+          "end_char_index": 429
+        },
+        {
+          "cited_text": "The Verifier mints the same amount of zERC20 tokens to B. To prevent double withdrawals, the contract tracks the cumulative withdrawn amount per destination and only allows minting the difference between _received_ and _already withdrawn_.\n\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 1613,
+          "end_char_index": 1854
+        }
+      ]
     },
     {
       "name": "Anonymity",
       "value": "Unlinkability",
-      "notes": "zERC20 uses zero-knowledge proofs and Private Proof of Burn to conceal the relationship between sender and recipient. The sender burns tokens to a random address calculated from the recipient's public address and a secret value, then the recipient proves knowledge of the secret via zero-knowledge proof to mint equivalent zERC20 tokens to a new address. This makes the connection between sender and receiver invisible to third parties, as the transaction appears on-chain indistinguishable from a standard ERC-20 transfer. This achieves anonymity where no transaction links between sender and receiver are ever disclosed.",
-      "url": "https://zerc20.gitbook.io/zerc20/overview/how-it-works#id-1.-sender-recipient-unlinkability"
+      "notes": "Sender and recipient addresses both appear in observable on-chain transactions, but the link between them is broken by the burn-address construction. The burn transaction sending the zERC20 token is publicly visible, but observers cannot tell which withdrawal address the burn address is linked to. Neither party is anonymous in isolation — only the deposit-withdrawal linkage is hidden.",
+      "citations": [
+        {
+          "cited_text": "Sender-Recipient Unlinkability\n\nThe relationship between the sender&#x27;s address and the recipient&#x27;s withdrawal address is never published on-chain . This is similar to how Tornado Cash hides the link between deposits and withdrawals.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/overview/how-it-works",
+          "start_char_index": 1563,
+          "end_char_index": 1806
+        },
+        {
+          "cited_text": "Burn Address Visibility\n\nThe transaction sending zERC20 to a burn address is publicly visible . However, observers cannot determine which withdrawal address the burn address is linked to.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/overview/how-it-works",
+          "start_char_index": 1819,
+          "end_char_index": 2008
+        }
+      ]
     },
     {
       "name": "Asset privacy",
       "value": "No",
-      "notes": "zERC20 does not hide the specific asset being transferred. zERC20 is an ERC-20 token, meaning each deployment represents a distinct wrapped asset (e.g., zETH, zUSDC, zBNB). When a transfer occurs, observers can identify which specific zERC20 token contract is being used, revealing the asset type. The protocol's privacy features—using zk-Wormhole's proof-of-burn mechanism—hide sender-recipient relationships and transaction amounts through zero-knowledge proofs, but the asset identity remains visible on-chain through the interactions with the contract address.",
-      "url": "https://zerc20.gitbook.io/zerc20/for-developers/architecture#on-chain-contracts"
+      "notes": "zERC20 deploys a separate ERC-20 contract per wrapped asset (zETH, zUSDC, zBNB), so every transfer is associated with a specific token contract that identifies the underlying asset. No shielded-pool or confidential-asset mechanism hides the token type at the transfer layer.",
+      "citations": [
+        {
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
+        },
+        {
+          "cited_text": "Amount Privacy Considerations\n\nTransfer and withdrawal amounts are visible on-chain . Unique or unusual amounts (e.g., 123.456789 zUSDC) could potentially be used to correlate transactions.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/overview/how-it-works",
+          "start_char_index": 2834,
+          "end_char_index": 3025
+        }
+      ]
     },
     {
       "name": "Plausible deniability",
       "value": "No",
-      "notes": "Even though Private Proof of Burn can provide plausible deniability for the sender, zERC20 requires users to wrap their tokens (native ETH or some pre-defined ERC20 token) through their smart contract. This interaction is on-chain and visible to any observer, therefore plausible deniability is not achieved. The concept of an \"internal private transfer\" does not exist in zERC20 because the Private Send feature available in the UI is just a withdraw/teleport action. Senders need to interact with the zERC20 smart contract to send tokens to a burn address and the receivers need to interact with the zERC20 smart contract to mint/withdraw tokens.",
-      "url": "https://zerc20.gitbook.io/zerc20/for-developers/architecture#id-4.-private-transfer"
+      "notes": "Even though Proof of Burn mechanisms can provide plausible deniability for the sender, zERC20 requires users to wrap their tokens (native ETH or some pre-defined ERC20 token) through their smart contract. This interaction is on-chain and visible to any observer, therefore plausible deniability is not achieved. The concept of an \"internal private transfer\" does not exist in zERC20 because the Private Send feature available in the UI is just a withdraw/teleport action. Senders need to interact with the zERC20 smart contract to send tokens to a burn address and the receivers need to interact with the zERC20 smart contract to mint/withdraw tokens.",
+      "citations": [
+        {
+          "cited_text": "In short, zERC20 functions similarly to Tornado Cash, but differs in that **no special deposit function or UI is required**—private transactions are possible using only standard ERC-20 transfer operations.\n\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 2686,
+          "end_char_index": 2893
+        },
+        {
+          "cited_text": "When B withdraws, they submit a zero-knowledge proof (ZKP) to the **Verifier** contract proving that:\n\n1. a zERC20 transfer was made to the corresponding `burnAddress`; and\n2. they know the secret used to form that `burnAddress`.\n\nThe Verifier mints the same amount of zERC20 tokens to B. ",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 1382,
+          "end_char_index": 1671
+        },
+        {
+          "cited_text": "By contrast, zERC20 is an ERC-20 token. Transfers to unused addresses can sometimes be distinguished from ordinary transfers. ",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 2097,
+          "end_char_index": 2223
+        }
+      ]
     },
     {
       "name": "On-chain gas cost: deposit",
@@ -48,38 +106,32 @@
     {
       "name": "Time-to-finality",
       "value": "N/A",
-      "notes": "zERC20 is an ERC-20 token protocol deployed on multiple EVM-compatible blockchains with crosschain support via LayerZero. Finality is inherited from the underlying chains where zERC20 is deployed, which include networks supporting USDC, ETH, and BNB as underlying assets. The protocol does not introduce its own settlement layer or finality mechanism beyond the base chains.",
+      "notes": "zERC20 is an application-layer token, so finality is inherited from each underlying chain rather than introduced by the protocol itself. Per-chain transaction finality is determined by Ethereum, Arbitrum, Base, and BNB Chain respectively. Cross-chain transfers add LayerZero-relayed root aggregation on top, but the local finality of any single chain transaction is the host chain's.",
       "citations": [
         {
-          "cited_text": "Introduction | zERC20 docs \n\nbars \nzERC20 docs\n\nsearch \ncircle-xmark \n\n⌘ Ctrl k \n\ncopy Copy chevron-down \n\nIntroduction\n\nhashtag \n\nIntroduction\n\nzERC20 is a fully ERC-20 compliant crosschain private transfer token. ",
-          "source": "https://zerc20.gitbook.io/zerc20",
-          "start_char_index": 0,
-          "end_char_index": 215
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
         },
         {
-          "cited_text": "hashtag \n\nKey Features\n\nERC-20 Compatible : Works with any wallet, DEX, or DeFi protocol that supports standard ERC-20 tokens\n\nPrivate Transfers : Send tokens without revealing the link between sender and recipient addresses\n\nCrosschain Support : Transfer privately across multiple blockchains via LayerZero\n\nNo Special Wallet Required : Use MetaMask or any standard Ethereum wallet\n\nhashtag \n\nHow It Works\n\nA temporary \"burn address\" is cryptographically generated\n\nThe sender transfers zERC20 to this burn address (the tokens are effectively burned)\n\nThe recipient withdraws the same amount to any address using a zero-knowledge proof\n\nThe link between the burn address and the withdrawal address is never revealed on-chain \n\nhashtag \n\nGetting zERC20\n\nzERC20 tokens are wrapper tokens backed 1:1 by underlying assets (USDC, ETH, BNB, etc.). ",
-          "source": "https://zerc20.gitbook.io/zerc20",
-          "start_char_index": 437,
-          "end_char_index": 1280
+          "cited_text": "hashtag \n\nCrosschain Transfers\n\nzERC20 supports private transfers across different blockchains:\n\nSend zERC20 to a burn address on any supported chain \n\nWithdraw to any other supported chain \n\nCross-chain messaging is handled by LayerZero, with a global Merkle tree aggregating all transfer roots across chains.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/overview/how-it-works",
+          "start_char_index": 3358,
+          "end_char_index": 3670
         }
       ]
     },
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "zERC20 requires one secret per transaction. When sending, the sender generates a random secret and computes burnAddress = trim160(poseidon(recipient, secret)) using Poseidon hash. The recipient must know this secret to withdraw by submitting a zero-knowledge proof. The protocol uses standard Ethereum wallet keys for signing transactions, so no additional cryptographic keys need to be derived or backed up beyond the wallet's existing private key.",
+      "notes": "Persistently, the user holds only their standard Ethereum wallet private key. zERC20 derives no keys of its own. Each transfer additionally uses a one-time random value the sender samples and shares with the recipient, but this per-transfer value stays ephemeral, never becoming a backed-up key.",
       "citations": [
         {
           "cited_text": "[https://ethereum-magicians.org/t/eip-7503-zero-knowledge-wormholes-private-proof-of-burn-ppob/15456](https://ethereum-magicians.org/t/eip-7503-zero-knowledge-wormholes-private-proof-of-burn-ppob/15456)\n\nWhen user A sends tokens to user B, A generates a random secret and computes:\n\n```text\nburnAddress = trim160(poseidon(recipient, secret))\n```\n\nA then sends zERC20 tokens to this `burnAddress`. ",
           "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
           "start_char_index": 788,
           "end_char_index": 1185
-        },
-        {
-          "cited_text": "When B withdraws, they submit a zero-knowledge proof (ZKP) to the **Verifier** contract proving that:\n\n1. a zERC20 transfer was made to the corresponding `burnAddress`; and\n2. they know the secret used to form that `burnAddress`.\n\n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 1382,
-          "end_char_index": 1613
         },
         {
           "cited_text": "It works seamlessly with standard Web3 wallets, enabling private transfers through the familiar ERC-20 interface.\n\n",
@@ -92,26 +144,77 @@
     {
       "name": "Deposit time",
       "value": "0",
-      "notes": "zERC20 allows users to deposit underlying tokens through the frontend or CLI to obtain wrapper tokens. The documentation does not specify any waiting period or delay required before deposits can be made. Users can perform private transfers directly from standard wallets with no special software required, suggesting immediate availability after deposit.",
+      "notes": "Wrapping into zERC20 is a standard on-chain transaction with no protocol-imposed delay: tokens are obtained by depositing the underlying asset through the frontend or CLI, or by purchasing on a decentralized exchange like Uniswap, all of which complete in a single host-chain transaction. There is no queue, challenge window, or time-lock gating the deposit step.",
       "citations": [
         {
-          "cited_text": "hashtag \n\nKey Features\n\nERC-20 Compatible : Works with any wallet, DEX, or DeFi protocol that supports standard ERC-20 tokens\n\nPrivate Transfers : Send tokens without revealing the link between sender and recipient addresses\n\nCrosschain Support : Transfer privately across multiple blockchains via LayerZero\n\nNo Special Wallet Required : Use MetaMask or any standard Ethereum wallet\n\nhashtag \n\nHow It Works\n\nA temporary \"burn address\" is cryptographically generated\n\nThe sender transfers zERC20 to this burn address (the tokens are effectively burned)\n\nThe recipient withdraws the same amount to any address using a zero-knowledge proof\n\nThe link between the burn address and the withdrawal address is never revealed on-chain \n\nhashtag \n\nGetting zERC20\n\nzERC20 tokens are wrapper tokens backed 1:1 by underlying assets (USDC, ETH, BNB, etc.). You can obtain them by:\n\nDepositing the underlying token through the Frontend arrow-up-right or CLI\n\nPurchasing on decentralized exchanges like Uniswap\n\nhashtag \n\nNext Steps\n\nHow zERC20 Works — Understand the technical details\n\nUsing Frontend — Get started with the web app\n\nUsing the CLI — Get started with the command line\n\nNext How zERC20 Works chevron-right \n\nLast updated 2 months ago \n\nIntroduction \n\nKey Features \n\nHow It Works \n\nGetting zERC20 \n\nNext Steps",
+          "cited_text": "hashtag \n\nKey Features\n\nERC-20 Compatible : Works with any wallet, DEX, or DeFi protocol that supports standard ERC-20 tokens\n\nPrivate Transfers : Send tokens without revealing the link between sender and recipient addresses\n\nCrosschain Support : Transfer privately across multiple blockchains via LayerZero\n\nNo Special Wallet Required : Use MetaMask or any standard Ethereum wallet \n\nhashtag \n\nHow It Works\n\nA temporary \"burn address\" is cryptographically generated\n\nThe sender transfers zERC20 to this burn address (the tokens are effectively burned)\n\nThe recipient withdraws the same amount to any address using a zero-knowledge proof\n\nThe link between the burn address and the withdrawal address is never revealed on-chain\n\nhashtag \n\nGetting zERC20\n\nzERC20 tokens are wrapper tokens backed 1:1 by underlying assets (USDC, ETH, BNB, etc.). You can obtain them by:\n\nDepositing the underlying token through the Frontend arrow-up-right or CLI\n\nPurchasing on decentralized exchanges like Uniswap\n\nhashtag \n\nNext Steps\n\nHow zERC20 Works — Understand the technical details\n\nUsing Frontend — Get started with the web app\n\nUsing the CLI — Get started with the command line\n\nNext How zERC20 Works chevron-right \n\nLast updated 12 days ago \n\nWas this helpful?\n\n",
           "source": "https://zerc20.gitbook.io/zerc20",
-          "start_char_index": 437,
-          "end_char_index": 1744
-        },
-        {
-          "cited_text": "Users can perform private transfers directly from standard wallets like MetaMask—no special software required. ",
-          "source": "https://zerc20.gitbook.io/zerc20",
-          "start_char_index": 215,
-          "end_char_index": 326
+          "start_char_index": 515,
+          "end_char_index": 1768
         }
       ]
     },
     {
       "name": "Withdraw time",
-      "value": "N/A",
-      "notes": "zERC20 is an L1 privacy protocol where withdrawals occur immediately upon proof verification. When users submit a zero-knowledge proof to the Verifier contract, it verifies the proof and mints tokens in the same transaction with no delay. The protocol does not implement a withdrawal time lock or waiting period.",
+      "value": "0",
+      "notes": "Withdrawals execute in a single host-chain transaction with no protocol-imposed delay: once a valid proof is submitted, the verifier mints the same amount of zERC20 tokens to the recipient. The recipient generates a zero-knowledge proof and calls the verifier contract, which verifies it and mints to the recipient atomically, so the only latency is host-chain block inclusion. No timelock, challenge period, or waiting window applies between proof submission and minting.",
+      "citations": [
+        {
+          "cited_text": "The Verifier mints the same amount of zERC20 tokens to B. ",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 1613,
+          "end_char_index": 1671
+        },
+        {
+          "cited_text": "Copy \nzERC20._update() → emits IndexedTransfer → updates hashChain \n\nCopy \nSender → zERC20 transfer to burn address → Recipient scans ICP storage → \nGenerates ZKP → Verifier.teleport() → zERC20 mints to recipient \n\nCopy \nRecipient → signs fee authorization / ERC-2612 permit → \nRelay Node → Verifier.(single)Teleport(...) ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 4483,
+          "end_char_index": 4805
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "The zERC20 token contract enforces an OFAC blocklist against a shared per-chain OFAC sanctions registry. Withdrawals submit a zero-knowledge proof directly to the verifier contract, so the relay node is optional rather than required.",
+      "citations": [
+        {
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
+        },
+        {
+          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 3333,
+          "end_char_index": 4120
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissionless",
+      "notes": "Cross-chain private transfers depend on LayerZero for messaging: a hub aggregates transfer roots across chains into a Poseidon tree and broadcasts the global root to per-chain verifiers, adding the messaging network's verifier and executor sets as trust assumptions beyond the underlying chain. An adaptor provides cross-chain exit via Stargate when liquidity is more favourable on another chain. Same-chain transfers do not require this external network.",
+      "citations": [
+        {
+          "cited_text": "hashtag \n\nCrosschain Transfers\n\nzERC20 supports private transfers across different blockchains:\n\nSend zERC20 to a burn address on any supported chain \n\nWithdraw to any other supported chain \n\nCross-chain messaging is handled by LayerZero, with a global Merkle tree aggregating all transfer roots across chains.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/overview/how-it-works",
+          "start_char_index": 3358,
+          "end_char_index": 3670
+        },
+        {
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "notes": "Withdrawals execute through direct submission of a zero-knowledge proof to the verifier contract from a standard wallet, with no challenge window, bonded operator, or required relayer in the trust path — the relay node is an optional gasless convenience. Two caveats apply: the zERC20 token contract enforces an OFAC blocklist, and the contract owner can upgrade contracts and rotate verifiers, so the verifier is not immutable even though the exit path functions today using only host-chain consensus and proof soundness.",
       "citations": [
         {
           "cited_text": "When B withdraws, they submit a zero-knowledge proof (ZKP) to the **Verifier** contract proving that:\n\n1. a zERC20 transfer was made to the corresponding `burnAddress`; and\n2. they know the secret used to form that `burnAddress`.\n\nThe Verifier mints the same amount of zERC20 tokens to B. ",
@@ -120,191 +223,288 @@
           "end_char_index": 1671
         },
         {
-          "cited_text": "The Verifier contract records `totalWithdrawn[recipient]`, the cumulative withdrawn amount per `recipient`. \nWithdrawals proceed as follows:\n1. Receive the components of `recipient = trim246(keccak256(recipient_chain_id, recipient_address, tweak))` as arguments and verify that `recipient_chain_id == block.chainid`.\n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 7055,
-          "end_char_index": 7372
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
         },
         {
-          "cited_text": "Verify the **Withdraw Nova** and ensure `proof.recipient` matches the `recipient` from step 1. \n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 7375,
-          "end_char_index": 7471
-        },
-        {
-          "cited_text": "Compute `delta = proof.current_total_value − totalWithdrawn[recipient]` and, only if `delta > 0`, withdraw (mint) exactly `delta`.\n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 7474,
-          "end_char_index": 7605
-        }
-      ]
-    },
-    {
-      "name": "Censorship resistance",
-      "value": "Yes",
-      "notes": "zERC20 is censorship resistant. The protocol operates on permissionless blockchains where users can submit transactions directly to the underlying smart contracts. Private transfers use standard ERC-20 transfer operations that interact with on-chain verifier contracts, meaning users can execute transactions without relying on intermediaries. While the protocol may include relay nodes for convenience, these are optional — users can bypass relayers and submit withdrawal proofs directly to the verifier contract. Cross-chain messaging uses LayerZero, which operates permissionlessly and cannot prevent valid transactions from being included.",
-      "needsResearchReview": true
-    },
-    {
-      "name": "External network dependence",
-      "value": "Yes, permissionless",
-      "notes": "zERC20 uses LayerZero for crosschain private transfers. LayerZero is a permissionless messaging protocol that relies on independent relayers and oracles to verify cross-chain messages, introducing additional crypto-economic assumptions beyond the base chains. While zERC20's core privacy mechanism operates on individual chains, the crosschain functionality depends on LayerZero's external network infrastructure for message passing and verification.",
-      "citations": [
-        {
-          "cited_text": "hashtag \n\nKey Features\n\nERC-20 Compatible : Works with any wallet, DEX, or DeFi protocol that supports standard ERC-20 tokens\n\nPrivate Transfers : Send tokens without revealing the link between sender and recipient addresses\n\nCrosschain Support : Transfer privately across multiple blockchains via LayerZero\n\nNo Special Wallet Required : Use MetaMask or any standard Ethereum wallet\n\nhashtag \n\nHow It Works\n\nA temporary \"burn address\" is cryptographically generated\n\nThe sender transfers zERC20 to this burn address (the tokens are effectively burned)\n\nThe recipient withdraws the same amount to any address using a zero-knowledge proof\n\nThe link between the burn address and the withdrawal address is never revealed on-chain \n\nhashtag \n\nGetting zERC20\n\nzERC20 tokens are wrapper tokens backed 1:1 by underlying assets (USDC, ETH, BNB, etc.). ",
-          "source": "https://zerc20.gitbook.io/zerc20",
-          "start_char_index": 437,
-          "end_char_index": 1280
-        }
-      ]
-    },
-    {
-      "name": "Escape hatch",
-      "value": "Instantly",
-      "notes": "zERC20 uses a withdrawal mechanism where recipients withdraw funds to any address using a zero-knowledge proof, with the link between burn and withdrawal addresses never revealed on-chain. This withdrawal process relies on the underlying blockchain's consensus to verify the zero-knowledge proof and execute the withdrawal transaction. Users can perform withdrawals directly from standard wallets like MetaMask, suggesting the withdrawal mechanism is accessible through standard blockchain interactions without additional trust assumptions beyond consensus and cryptographic soundness.",
-      "citations": [
-        {
-          "cited_text": "hashtag \n\nKey Features\n\nERC-20 Compatible : Works with any wallet, DEX, or DeFi protocol that supports standard ERC-20 tokens\n\nPrivate Transfers : Send tokens without revealing the link between sender and recipient addresses\n\nCrosschain Support : Transfer privately across multiple blockchains via LayerZero\n\nNo Special Wallet Required : Use MetaMask or any standard Ethereum wallet\n\nhashtag \n\nHow It Works\n\nA temporary \"burn address\" is cryptographically generated\n\nThe sender transfers zERC20 to this burn address (the tokens are effectively burned)\n\nThe recipient withdraws the same amount to any address using a zero-knowledge proof\n\nThe link between the burn address and the withdrawal address is never revealed on-chain \n\nhashtag \n\nGetting zERC20\n\nzERC20 tokens are wrapper tokens backed 1:1 by underlying assets (USDC, ETH, BNB, etc.). ",
-          "source": "https://zerc20.gitbook.io/zerc20",
-          "start_char_index": 437,
-          "end_char_index": 1280
-        },
-        {
-          "cited_text": "Users can perform private transfers directly from standard wallets like MetaMask—no special software required. ",
-          "source": "https://zerc20.gitbook.io/zerc20",
-          "start_char_index": 215,
-          "end_char_index": 326
+          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 3333,
+          "end_char_index": 4120
         }
       ]
     },
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "notes": "The zERC20 token, Verifier, LiquidityManager, and Hub contracts are deployed behind proxies with dedicated upgrade scripts (ZERC20BlocklistUpgrade, VerifierUpgrade) invoking upgradeToAndCall. Ownership is held by single-account roles (TOKEN_OWNER, VERIFIER_DELEGATE, HUB_DELEGATE, LIQUIDITY_OWNER, BLOCKLIST_OWNER) which default to the deployer wallet, with no multi-sig, DAO, or timelock described in the deployment configuration.",
+      "notes": "Upgrades are controlled by a contract owner role that can replace contract logic and rotate the proof verifiers, with no on-chain governance or timelock described. The blocklist contract itself is non-upgradeable. The zERC20 token, verifier, hub, and liquidity manager are owner-upgradeable.",
+      "citations": [
+        {
+          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 3333,
+          "end_char_index": 4120
+        },
+        {
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. Non-upgradeable. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1147
+        }
+      ],
       "needsResearchReview": true
     },
     {
       "name": "Client-side proving",
       "value": "Yes",
-      "notes": "zERC20 generates proofs on the client device. Benchmarks measured on a MacBook Pro with M4 chip show single withdrawal proof generation takes ~105 ms, root transition IVC steps take ~242 ms per step, and batch withdrawal IVC steps take ~142 ms per step. The decider generation (which converts Nova IVC proofs to EVM-friendly proofs) takes ~30-32 seconds and is also performed client-side before submitting the final proof to the verifier contract.",
-      "needsResearchReview": true
+      "notes": "Withdrawal proofs are generated on the user's device. For single withdrawals the client produces a lightweight Groth16 proof, benchmarked at around 105 ms. For batch withdrawals the client folds the Nova IVC steps locally and a Decider Prover HTTP worker finalises the Nova proof for on-chain verification. The burn secret remains a private witness to the circuit rather than being handed to the decider. The IVC stack is built on Sonobe by PSE.",
+      "citations": [
+        {
+          "cited_text": "If you change `tweak` for every receipt, each withdrawal can be done as a **single** withdrawal, enabling a lightweight **Groth16** proof instead. This is attractive when Nova’s decider proof (a heavier operation that can take ~30 seconds on a MacBook) is undesirable. ",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 7982,
+          "end_char_index": 8251
+        },
+        {
+          "cited_text": "## Gas Costs & ZKP Benchmarks\n\n_(ZKP measured on a MacBook Pro with an M4 chip)_\n\n|Operation|Gas / Time|\n|---|---|\n|zERC20 transfer|47,834 gas (standard ERC-20 `transfer`: ~35,016 gas)|\n|Batch withdrawal contract execution|913,922 gas|\n|Single withdrawal contract execution|302,033 gas|\n|Single withdrawal proof generation|~105 ms|\n|Root transition IVC step|~242 ms / step|\n|Root transition decider generation|~32.0 s|\n|Batch withdrawal IVC step|~142 ms / step|\n|Batch withdrawal decider generation|~30.1 s|\n\n# Related Works\n[Tornado cash](https://tornado-cash-ipfs-eth.github.io/)\n[EIP-7503: zk-Wormholes](https://ethereum-magicians.org/t/eip-7503-zero-knowledge-wormholes-private-proof-of-burn-ppob/15456)\n[EIP-1724: zkERC20](https://github.com/ethereum/EIPs/issues/1724)\n[erc721-extension-for-zk-snarks(stealth address)](https://ethresear.ch/t/erc721-extension-for-zk-snarks/13237)\n[My previous work for root transition nova](https://github.com/TornadoOpt/tornado-opt-backend)\n[confidential-wrapped-ethereum](https://ethresear.ch/t/confidential-wrapped-ethereum/22622)\n[removing-pairing-bulletproofs](https://ethresear.ch/t/removing-pairing-bulletproofs-or-zkp-from-range-proof-of-pedersen-commitment/23175)\n[ERC8065: ZWToken](https://ethereum-magicians.org/t/erc-8065-zero-knowledge-token-wrapper/26006)\n\n&times; \n\nSign in\n\nEmail \n\nPassword \n\nForgot password \n\nor \n\nSign in via Google\n\nSign in via Google\n\n-->\n\nSign in via Facebook\n\nSign in via X(Twitter)\n\nSign in via GitHub\n\nSign in via Dropbox\n\nSign in with Wallet\n\nWallet\n(\n\n)\n\nConnect another wallet\n\nContinue with a different method\n\nNew to HackMD? ",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 9910,
+          "end_char_index": 11519
+        },
+        {
+          "cited_text": "Syncs on-chain events, maintains Merkle trees, generates root proofs\n\nDecider Prover \n\nHTTP worker that finalizes Nova proofs for on-chain verification\n\nCross-chain Job \n\nRelays transfer roots to Hub and triggers broadcasts\n\nRelay Node \n\nHTTP service that can submit gasless redeem transactions on behalf of users and swap zERC20 into native gas tokens\n\nhashtag \n\nICP Stealth Storage\n\nComponent\n\nPurpose\n\nKey Manager Canister \n\nVetKD-backed IBE key derivation per EVM address\n\nStorage Canister \n\nStores encrypted announcements and signed invoices\n\nhashtag \n\nData Flow\n\nhashtag \n\n1. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 1863,
+          "end_char_index": 2445
+        }
+      ]
     },
     {
       "name": "Third-party inspectability",
       "value": "Yes",
-      "notes": "zERC20 uses a separate decider-prover service that generates zero-knowledge proofs for private transfers. The decider-prover requires its own PostgreSQL instance and runs as a standalone server, operating as external infrastructure alongside the indexer and relay node. The decider-prover must run directly on the host machine rather than in a container, indicating it handles sensitive proof generation operations. This architecture means third-party operators running the decider-prover service have access to the private information needed to generate proofs for user transfers.",
-      "needsResearchReview": true
+      "notes": "The off-chain indexer is positioned to link sender activity to recipients. Per the trust model, the indexer operator observes the sender, the burn address, and the value, and learns the recipient on query. A relay node submits gasless redeem transactions on behalf of users and swaps zERC20 into native gas tokens, exposing recipient fee authorisations to that operator. The protocol acknowledges this exposure and advises users to run their own indexer instance to avoid sender-recipient linkage leaks.",
+      "citations": [
+        {
+          "cited_text": "Referenced by all zERC20 tokens on the same chain as an immutable\n\nVerifier \n\nLayerZero OApp that verifies Nova/Groth16 proofs, tracks teleported amounts per recipient, and relays roots to Hub\n\nHub \n\nAggregates transfer roots from all chains into a Poseidon tree, broadcasts global root to all Verifiers\n\nLiquidityManager \n\nManages liquidity policy, handles wrap/unwrap of underlying assets\n\nAdaptor \n\nCross-chain exit via Stargate when liquidity is more favorable on another chain\n\nSwapHelper \n\nPer-chain helper contract that atomically executes permit + transferFrom + native payout for relayer-managed token-to-native swaps\n\nhashtag \n\nOff-Chain Services\n\nService\n\nPurpose\n\nIndexer \n\nActix HTTP server + Postgres. Syncs on-chain events, maintains Merkle trees, generates root proofs\n\nDecider Prover \n\nHTTP worker that finalizes Nova proofs for on-chain verification\n\nCross-chain Job \n\nRelays transfer roots to Hub and triggers broadcasts\n\nRelay Node \n\nHTTP service that can submit gasless redeem transactions on behalf of users and swap zERC20 into native gas tokens\n\nhashtag \n\nICP Stealth Storage\n\nComponent\n\nPurpose\n\nKey Manager Canister \n\nVetKD-backed IBE key derivation per EVM address\n\nStorage Canister \n\nStores encrypted announcements and signed invoices\n\nhashtag \n\nData Flow\n\nhashtag \n\n1. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 1147,
+          "end_char_index": 2445
+        },
+        {
+          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 3333,
+          "end_char_index": 4120
+        }
+      ]
     },
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
-      "notes": "zERC20 launched on mainnet in February 2026 across Ethereum, BNB, Base, and Arbitrum chains. The protocol was first unveiled in a testnet version at the end of 2025. As of the current date in 2026, zERC20 has been deployed on mainnet for approximately 2-3 months, placing it firmly in the category of mainnet deployment for less than one year with limited production history.",
+      "notes": "Mainnet deployments exist on Ethereum, Arbitrum, Base, and BNB Chain with wrapped tokens zETH, zUSDC, and zBNB.",
+      "citations": [
+        {
+          "cited_text": "hashtag \n\nCrosschain Transfers\n\nzERC20 supports private transfers across different blockchains:\n\nSend zERC20 to a burn address on any supported chain \n\nWithdraw to any other supported chain \n\nCross-chain messaging is handled by LayerZero, with a global Merkle tree aggregating all transfer roots across chains.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/overview/how-it-works",
+          "start_char_index": 3358,
+          "end_char_index": 3670
+        }
+      ],
       "needsResearchReview": true
     },
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "zERC20 uses zero-knowledge proof systems (Nova and Groth16) for its private transfer mechanism. These proof systems rely on elliptic curve pairings, which are vulnerable to quantum attacks via Shor's algorithm. No post-quantum cryptographic primitives such as lattice-based or hash-based schemes are described.",
+      "notes": "The protocol uses Poseidon hashing over the BN254 scalar field with Nova folding and Groth16 for withdrawal proofs, SHA-256 for hash chain commitments, and identity-based encryption for stealth messaging. Pairing-based Groth16 on BN254 rests on elliptic-curve discrete-log and pairing assumptions that Shor's algorithm breaks, and no lattice- or hash-based proof system is used. Wallet-level authorisation remains standard ECDSA, so none of the primitives in use are quantum-resistant.",
       "citations": [
         {
-          "cited_text": "hashtag \n\nKey Features\n\nERC-20 Compatible : Works with any wallet, DEX, or DeFi protocol that supports standard ERC-20 tokens\n\nPrivate Transfers : Send tokens without revealing the link between sender and recipient addresses\n\nCrosschain Support : Transfer privately across multiple blockchains via LayerZero\n\nNo Special Wallet Required : Use MetaMask or any standard Ethereum wallet\n\nhashtag \n\nHow It Works\n\nA temporary \"burn address\" is cryptographically generated\n\nThe sender transfers zERC20 to this burn address (the tokens are effectively burned)\n\nThe recipient withdraws the same amount to any address using a zero-knowledge proof\n\nThe link between the burn address and the withdrawal address is never revealed on-chain \n\nhashtag \n\nGetting zERC20\n\nzERC20 tokens are wrapper tokens backed 1:1 by underlying assets (USDC, ETH, BNB, etc.). ",
-          "source": "https://zerc20.gitbook.io/zerc20",
-          "start_char_index": 437,
-          "end_char_index": 1280
+          "cited_text": "[zk-wormhole](https://hackmd.io/_uploads/SkJUJ0K1We.png)\n\n## Technical Details\n\n### Notation\n\n- **Fr**: the scalar field of **bn254**. \n- `poseidon(a, b): Fr × Fr -> Fr` denotes the 2-in-1-out Poseidon hash.\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 2894,
+          "end_char_index": 3102
+        },
+        {
+          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 3333,
+          "end_char_index": 4120
         }
       ]
     },
     {
       "name": "Layer of enforcement",
       "value": "Asset",
-      "notes": "Compliance is enforced at the asset layer by the zERC20 token itself. On every balance update the token consults an OFAC-style Blocklist contract for both sender and recipient, so blocked addresses cannot send or receive zERC20 at all. The verifier contract additionally enforces protocol correctness (ZKP validity, per-recipient cumulative withdrawal accounting), but that is separate from compliance.",
+      "notes": "Compliance lives in the zERC20 token contract, which is described as enforcing an OFAC blocklist against a shared per-chain OFAC sanctions registry referenced by all zERC20 tokens on the same chain. Enforcement is therefore at the asset (token) layer rather than at an application contract or the chain consensus, with the host chains remaining permissionless.",
       "citations": [
         {
-          "cited_text": "The Verifier contract queries `(index, hashChain)` from zERC20 and references them together with the already-proven `transferRoot` and index as public inputs to the Root Transition Nova. If the proof verifies, it stores `newTransferRoot` and `newIndex`. These are later used as public inputs for the withdrawal proof.\n\n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 4820,
-          "end_char_index": 5139
-        },
-        {
-          "cited_text": "The Verifier contract records `totalWithdrawn[recipient]`, the cumulative withdrawn amount per `recipient`. \nWithdrawals proceed as follows:\n1. Receive the components of `recipient = trim246(keccak256(recipient_chain_id, recipient_address, tweak))` as arguments and verify that `recipient_chain_id == block.chainid`.\n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 7055,
-          "end_char_index": 7372
-        },
-        {
-          "cited_text": "Verify the **Withdraw Nova** and ensure `proof.recipient` matches the `recipient` from step 1. \n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 7375,
-          "end_char_index": 7471
-        },
-        {
-          "cited_text": "Compute `delta = proof.current_total_value − totalWithdrawn[recipient]` and, only if `delta > 0`, withdraw (mint) exactly `delta`.\n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 7474,
-          "end_char_index": 7605
-        },
-        {
-          "cited_text": "**zERC20** is a privacy-preserving ERC-20 token that integrates zk-Wormhole’s proof-of-burn mechanism. It works seamlessly with standard Web3 wallets, enabling private transfers through the familiar ERC-20 interface.\n\n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 211,
-          "end_char_index": 429
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. Non-upgradeable. Referenced by all zERC20 tokens on the same chain as an immutable\n\nVerifier \n\nLayerZero OApp that verifies Nova/Groth16 proofs, tracks teleported amounts per recipient, and relays roots to Hub\n\nHub \n\nAggregates transfer roots from all chains into a Poseidon tree, broadcasts global root to all Verifiers\n\nLiquidityManager \n\nManages liquidity policy, handles wrap/unwrap of underlying assets\n\nAdaptor \n\nCross-chain exit via Stargate when liquidity is more favorable on another chain\n\nSwapHelper \n\nPer-chain helper contract that atomically executes permit + transferFrom + native payout for relayer-managed token-to-native swaps\n\nhashtag \n\nOff-Chain Services\n\nService\n\nPurpose\n\nIndexer \n\nActix HTTP server + Postgres. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1863
         }
       ]
     },
     {
       "name": "Enforcement entities",
       "value": "Admin",
-      "notes": "The Blocklist contract is managed by a designated multisig owner that adds or removes addresses matching the OFAC sanctions list. The multisig is the protocol team's own signing set, not an external compliance provider. The block / unblock functions are gated to this multisig.",
+      "notes": "Compliance enforcement is handled by a designated administrative role rather than a governance process or an external compliance vendor. The trust model assigns a blocklist owner who can add or remove sanctioned addresses on a shared per-chain OFAC registry.",
+      "citations": [
+        {
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
+        },
+        {
+          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 3333,
+          "end_char_index": 4120
+        }
+      ],
       "needsResearchReview": true
     },
     {
       "name": "Type of compliance",
       "value": "[\"Proof of innocence (POI) / ASP\"]",
-      "notes": "zERC20 enforces an on-chain proof-of-innocence check against a centralised blocklist: on every balance update, the token contract calls Blocklist.isBlocked() for both sender and recipient and reverts with AddressIsBlocked if either is on the list. The blocklist mirrors the OFAC SDN list and is shared across all zERC20 tokens on a chain, maintained by a multisig owner. No KYC/KYB, selective disclosure, or risk-scoring features exist.",
-      "needsResearchReview": true
+      "notes": "The zERC20 token contract enforces an OFAC blocklist against a shared per-chain OFAC sanctions registry that is non-upgradeable and referenced by all zERC20 tokens on the same chain. This is a curated disallowed-set check enforced on-chain at the token contract. No identity verification, viewing-key disclosure, off-chain attestation oracle, or risk-scoring service is described.",
+      "citations": [
+        {
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
+        }
+      ]
     },
     {
       "name": "Point of enforcement",
       "value": "[\"Deposit\",\"Transfer\",\"Withdrawal\"]",
-      "notes": "The blocklist check runs on every zERC20 balance change. Blocked addresses cannot wrap (deposit underlying), send, receive, unwrap, or teleport across chains — each of those paths reverts on sanctioned addresses. Enforcement therefore covers the full deposit/transfer/withdrawal lifecycle.",
+      "notes": "The zERC20 token contract is described as enforcing an OFAC blocklist while also emitting IndexedTransfer events for transfers and exposing a teleport endpoint for verifier-driven mints, so both the transfer leg and the withdrawal-side mint route through the same enforcing contract. The LiquidityManager contract handles wrap and unwrap of underlying assets, which move zERC20 in and out of user balances.",
+      "citations": [
+        {
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
+        },
+        {
+          "cited_text": "Referenced by all zERC20 tokens on the same chain as an immutable\n\nVerifier \n\nLayerZero OApp that verifies Nova/Groth16 proofs, tracks teleported amounts per recipient, and relays roots to Hub\n\nHub \n\nAggregates transfer roots from all chains into a Poseidon tree, broadcasts global root to all Verifiers\n\nLiquidityManager \n\nManages liquidity policy, handles wrap/unwrap of underlying assets\n\nAdaptor \n\nCross-chain exit via Stargate when liquidity is more favorable on another chain\n\nSwapHelper \n\nPer-chain helper contract that atomically executes permit + transferFrom + native payout for relayer-managed token-to-native swaps\n\nhashtag \n\nOff-Chain Services\n\nService\n\nPurpose\n\nIndexer \n\nActix HTTP server + Postgres. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 1147,
+          "end_char_index": 1863
+        }
+      ],
       "needsResearchReview": true
     },
     {
       "name": "Selective disclosure: viewing entity",
       "value": "[\"None\"]",
-      "notes": "zERC20 does not implement any selective disclosure mechanisms. The protocol uses a burn-and-mint architecture where users send tokens to cryptographically-derived burn addresses and recipients prove knowledge of the secret to withdraw, but there are no viewing keys, audit keys, or any mechanism for users to share transaction visibility with third parties. Users cannot query their own balance or transaction history through the protocol itself, as privacy is achieved by breaking transaction linkability rather than through encrypted data with controlled access rights.",
-      "needsResearchReview": true
+      "notes": "No protocol-defined viewer is documented: only Contract Owner, Blocklist Owner, Indexer Operator, and ICP Canisters appear, none of which grant a key-gated read interface to user transaction history. The indexer operator already observes the sender, the burn address, and the value, and learns the recipient on query. The Internet Computer canisters store encrypted data that they cannot decrypt without the recipient's key.",
+      "citations": [
+        {
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
+        },
+        {
+          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 3333,
+          "end_char_index": 4120
+        }
+      ]
     },
     {
       "name": "Selective disclosure: viewing control",
       "value": "None",
-      "notes": "zERC20 uses a burn-and-withdraw model where senders transfer tokens to cryptographically generated temporary addresses and recipients withdraw using zero-knowledge proofs. The protocol does not implement viewing keys or any mechanism for granting third parties access to transaction details. Without viewing keys or programmable disclosure features, there is no viewing control capability.",
+      "notes": "No viewing-key mechanism or permissioned disclosure channel is described. Recipients receive funds via burn-address scanning and a zero-knowledge proof submitted to the verifier, which mints to a destination address — neither flow exposes a handle through which read access could be granted, revoked, or updated. The ICP canisters store encrypted data they cannot decrypt without the recipient's key.",
       "citations": [
         {
-          "cited_text": "hashtag \n\nKey Features\n\nERC-20 Compatible : Works with any wallet, DEX, or DeFi protocol that supports standard ERC-20 tokens\n\nPrivate Transfers : Send tokens without revealing the link between sender and recipient addresses\n\nCrosschain Support : Transfer privately across multiple blockchains via LayerZero\n\nNo Special Wallet Required : Use MetaMask or any standard Ethereum wallet\n\nhashtag \n\nHow It Works\n\nA temporary \"burn address\" is cryptographically generated\n\nThe sender transfers zERC20 to this burn address (the tokens are effectively burned)\n\nThe recipient withdraws the same amount to any address using a zero-knowledge proof\n\nThe link between the burn address and the withdrawal address is never revealed on-chain \n\nhashtag \n\nGetting zERC20\n\nzERC20 tokens are wrapper tokens backed 1:1 by underlying assets (USDC, ETH, BNB, etc.). ",
-          "source": "https://zerc20.gitbook.io/zerc20",
-          "start_char_index": 437,
-          "end_char_index": 1280
+          "cited_text": "When B withdraws, they submit a zero-knowledge proof (ZKP) to the **Verifier** contract proving that:\n\n1. a zERC20 transfer was made to the corresponding `burnAddress`; and\n2. they know the secret used to form that `burnAddress`.\n\nThe Verifier mints the same amount of zERC20 tokens to B. To prevent double withdrawals, the contract tracks the cumulative withdrawn amount per destination and only allows minting the difference between _received_ and _already withdrawn_.\n\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 1382,
+          "end_char_index": 1854
+        },
+        {
+          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 3333,
+          "end_char_index": 4120
         }
       ]
     },
     {
       "name": "Cryptographic verifiability",
       "value": "Yes",
-      "notes": "zERC20 uses zero-knowledge proofs to cryptographically verify transaction correctness, where users submit ZKPs to the Verifier contract proving they know the secret used to form a burn address and that a transfer was made to that address, after which the Verifier mints tokens. The protocol employs Nova IVC to build Root Transition proofs that verify the integrity of the off-chain transfer Merkle tree, with the Verifier contract validating these proofs and storing the resulting transfer root for use in withdrawal proofs. Withdrawals use a Withdraw Nova circuit that proves ownership of burn addresses through Poseidon hash verification and Merkle proofs. zERC20 is an application-layer ERC-20 token on Ethereum and other EVM chains (not its own L1), so the value is plain Yes — host-chain consensus governs block ordering but is captured under Time-to-finality, not this property.",
-      "needsResearchReview": true
+      "notes": "Withdrawals are gated by zero-knowledge proofs verified on-chain: the recipient submits a proof that a zERC20 transfer was made to the corresponding burn address and that they know the secret used to form it, and the verifier mints tokens. Batch withdrawals are folded via Nova IVC, single withdrawals use Groth16, with Merkle membership over a Poseidon tree on BN254. Correctness rests on these proofs rather than attestations or voting, but the verifier is an upgradeable contract — the proving system is swappable by the contract owner.",
+      "citations": [
+        {
+          "cited_text": "The Verifier mints the same amount of zERC20 tokens to B. To prevent double withdrawals, the contract tracks the cumulative withdrawn amount per destination and only allows minting the difference between _received_ and _already withdrawn_.\n\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 1613,
+          "end_char_index": 1854
+        },
+        {
+          "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 371,
+          "end_char_index": 1130
+        }
+      ]
     },
     {
       "name": "Open source",
       "value": "No",
-      "notes": "The repository is published under the Business Source License 1.1, which is not an OSI-approved open source license and restricts production use until the stated Change Date (2030-04-08), after which it converts to GPL v2.0+. Source-available with BSL 1.1 does not qualify as open source under the schema's definition.",
-      "needsResearchReview": true
+      "notes": "The repository is published under Business Source License 1.1, with a Change Date of 2030-04-08 and a Change License of GNU General Public License v2.0 or later, which is source-available rather than an OSI-approved license. The Business Source License is explicitly not an Open Source license, and this single license covers the Solidity contracts, the off-chain services, and the CLI in the monorepo. The GPLv2-or-later change does not take effect until the 2030 Change Date, so the codebase is not open source under the OSI definition today.",
+      "citations": [
+        {
+          "cited_text": "-----------------------------------------------------------------------------\n\nParameters\n\nLicensor: zERC20\n\nLicensed Work: zERC20\n\nThe Licensed Work is (c) 2025-2026 zERC20\n\nAdditional Use Grant: None\n\nChange Date: 2030-04-08\n\nChange License: GNU General Public License v2.0 or later\n\n-----------------------------------------------------------------------------\n\nTerms\n\nThe Licensor hereby grants you the right to copy, modify, create derivative\n\nworks, redistribute, and make non-production use of the Licensed Work. ",
+          "source": "https://github.com/zerc20io/zERC20/blob/main/LICENSE",
+          "start_char_index": 1986,
+          "end_char_index": 2506
+        },
+        {
+          "cited_text": "-----------------------------------------------------------------------------\n\nNotice\n\nThe Business Source License (this document, or the \"License\") is not an Open\n\nSource license. ",
+          "source": "https://github.com/zerc20io/zERC20/blob/main/LICENSE",
+          "start_char_index": 5681,
+          "end_char_index": 5862
+        }
+      ]
     },
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
-      "notes": "The on-chain hash chain grows unboundedly — every transfer extends the chain with a new commitment, and the per-recipient totalWithdrawn counter persists forever. The off-chain Poseidon Merkle tree reconstructed from emitted events also grows per transfer; there is no pruning or epoch-based reset.",
-      "needsResearchReview": true
+      "notes": "Protocol-specific data accumulates without bound across several structures. Every transfer appends to the on-chain SHA-256 hash chain, and the indexer maintains a Poseidon Merkle tree it periodically proves on-chain via IVC. Both extend per transfer with no documented pruning. The verifier also persists a per-recipient running total of the amount already withdrawn, keyed forever by recipient. Cross-chain operation also use a Merkle tree — each chain's verifier sends its local root to a hub that builds a global Merkle tree.",
+      "citations": [
+        {
+          "cited_text": "Transfer Emission\n\nEvery transfer (mint/transfer/burn) appends to the SHA-256 hash chain and emits an indexed event.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 2445,
+          "end_char_index": 2563
+        },
+        {
+          "cited_text": "Root Proving\n\nMerkle Tree and Hash Chain \n\nThe indexer maintains Poseidon Merkle trees and periodically proves new transfer roots on-chain using IVC proofs.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 2576,
+          "end_char_index": 2734
+        },
+        {
+          "cited_text": "The Verifier contract records `totalWithdrawn[recipient]`, the cumulative withdrawn amount per `recipient`. \nWithdrawals proceed as follows:\n1. Receive the components of `recipient = trim246(keccak256(recipient_chain_id, recipient_address, tweak))` as arguments and verify that `recipient_chain_id == block.chainid`.\n2. Verify the **Withdraw Nova** and ensure `proof.recipient` matches the `recipient` from step 1. \n3. Compute `delta = proof.current_total_value − totalWithdrawn[recipient]` and, only if `delta > 0`, withdraw (mint) exactly `delta`.\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 7055,
+          "end_char_index": 7605
+        },
+        {
+          "cited_text": "## Cross-Chain Transfers\n\nVerifier contracts on each chain transmit their local transfer tree roots to a Hub contract via a cross-chain messaging protocol (e.g., LayerZero). The Hub contract builds a global Merkle tree from these roots and relays the resulting global transfer root back to each chain.\n\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 8931,
+          "end_char_index": 9234
+        }
+      ]
     },
     {
       "name": "Client-side indexing",
@@ -328,45 +528,59 @@
     {
       "name": "Private state model",
       "value": "Account-based state model",
-      "notes": "zERC20 is an ERC-20 token that enables private transfers from ordinary wallets via the standard ERC-20 flow. On-chain, the protocol uses a gas-efficient commitment (a hash chain) and reconstructs an off-chain Merkle tree using Poseidon. The Verifier contract records totalWithdrawn[recipient], the cumulative withdrawn amount per recipient, and computes delta = proof.current_total_value − totalWithdrawn[recipient] to mint exactly delta. This account-based approach tracks cumulative balances per recipient rather than managing discrete unspent outputs.",
-      "needsResearchReview": true
+      "notes": "On the base token layer zERC20 is a standard ERC-20 with per-address balances, and the privacy layer tracks the cumulative amount withdrawn per recipient, minting only the difference between the amount received at that recipient and the amount already withdrawn rather than consuming discrete spend-once notes. Burn-address transfers add recipient-and-value leaves to a Poseidon Merkle tree, but redemption is governed by that running per-recipient total rather than by nullifying individual note commitments.",
+      "citations": [
+        {
+          "cited_text": "The Verifier contract records `totalWithdrawn[recipient]`, the cumulative withdrawn amount per `recipient`. \n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 7055,
+          "end_char_index": 7164
+        },
+        {
+          "cited_text": "To prevent double withdrawals, the contract tracks the cumulative withdrawn amount per destination and only allows minting the difference between _received_ and _already withdrawn_.\n\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 1671,
+          "end_char_index": 1854
+        }
+      ]
     },
     {
       "name": "Private Data Storage",
-      "value": "Off-chain storage with on-chain commitment",
-      "notes": "zERC20 uses off-chain storage with on-chain commitment for private transaction data. On-chain, the protocol maintains a gas-efficient hash chain commitment, while the full Poseidon-based Merkle tree is reconstructed off-chain. This design avoids the expensive on-chain Merkle tree updates (~900k gas) used by protocols like Tornado Cash, achieving lightweight ZK proofs and low on-chain gas costs. The withdrawal ZKP proves a transfer to a given burn address using a Merkle proof over the off-chain Poseidon-hash tree.",
+      "value": "[\"Smart contracts\",\"Off-chain storage with on-chain commitment\"]",
+      "notes": "Transfer events emit an on-chain SHA-256 hash chain that commits to the per-transfer leaves needed for withdrawal proofs. The Poseidon Merkle tree consumed by proofs is reconstructed off-chain from those events rather than stored on-chain — the hash chain is the gas-efficient commitment, the Merkle tree lives off-chain. A separate stealth-messaging layer on the Internet Computer holds encrypted announcements protected by identity-based encryption for recipient burn-secret discovery.",
       "citations": [
         {
-          "cited_text": "Therefore, on-chain we use a **gas-efficient commitment** (a hash chain) and reconstruct an off-chain Merkle tree using Poseidon. This simultaneously lowers on-chain gas and the ZKP cost at withdrawal.\n\n",
+          "cited_text": "Transfer Emission\n\nEvery transfer (mint/transfer/burn) appends to the SHA-256 hash chain and emits an indexed event.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 2445,
+          "end_char_index": 2563
+        },
+        {
+          "cited_text": "Therefore, on-chain we use a **gas-efficient commitment** (a hash chain) and reconstruct an off-chain Merkle tree using Poseidon. ",
           "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
           "start_char_index": 3692,
-          "end_char_index": 3895
+          "end_char_index": 3822
         },
         {
-          "cited_text": "However, updating a Merkle tree **on-chain** (as in Tornado Cash) is expensive (~900k gas), which is unacceptable if we update on every transfer like zERC20.\n\n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 3533,
-          "end_char_index": 3692
-        },
-        {
-          "cited_text": "By using Nova IVC to build the off-chain transfer Merkle tree and to support batch withdrawals, zERC20 achieves lightweight ZK proofs and low on-chain gas costs. ",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 429,
-          "end_char_index": 591
-        },
-        {
-          "cited_text": "## Reducing On-Chain Gas via Off-Chain Merkle Tree Construction\n\nThe withdrawal ZKP must prove a transfer to a given burn address. A Merkle proof over a Poseidon-hash tree is efficient for this. ",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 3338,
-          "end_char_index": 3533
+          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture",
+          "start_char_index": 3333,
+          "end_char_index": 4120
         }
       ]
     },
     {
       "name": "Access to DeFi",
       "value": "Unlimited access to DeFi applications",
-      "notes": "zERC20 tokens are fully ERC-20 compliant and can be held, traded, or supplied to any existing DEX, lending protocol, or bridge that accepts ERC-20s without protocol-specific changes. The privacy layer is only engaged on burn-address transfers; holding and DeFi use follow the standard ERC-20 flow.",
-      "needsResearchReview": true
+      "notes": "zERC20's wrapper tokens are standard ERC-20s, so they are held, traded, lent, or bridged by any wallet, DEX, or lending protocol that already accepts ERC-20s. The design emphasises wallet compatibility through the standard ERC-20 flow, easy dApp integration via existing DEXes and lending protocols, and cross-chain movement via zk-Wormhole. The privacy mechanism activates only when tokens are sent to a burn address, so ordinary holding, trading, and lending behave like any other ERC-20.",
+      "citations": [
+        {
+          "cited_text": "Even so, applying zk-Wormholes to ERC-20 offers several advantages:\n- **Wallet compatibility:** Private transfers from ordinary wallets via the standard ERC-20 flow.\n- **Easy dApp integration:** Naturally handled by existing DEXes, lending protocols, and bridges.\n- **Cross-chain support:** Leverages the zk-Wormhole design to move funds privately across multiple chains.\n\n",
+          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
+          "start_char_index": 2313,
+          "end_char_index": 2686
+        }
+      ]
     },
     {
       "name": "Programmability / Generality",
@@ -390,12 +604,6 @@
           "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
           "start_char_index": 2686,
           "end_char_index": 2893
-        },
-        {
-          "cited_text": "- **Cross-chain support:** Leverages the zk-Wormhole design to move funds privately across multiple chains.\n\n",
-          "source": "https://hackmd.io/@nunocloth/rk7rbw9Clg",
-          "start_char_index": 2577,
-          "end_char_index": 2686
         }
       ]
     }
