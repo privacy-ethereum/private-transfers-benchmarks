@@ -15,7 +15,7 @@ export const CATEGORIES = [
   "Shielded pool",
   "Plasma",
   "Validium",
-  "Cross-L1 CEX aggregator and mixer",
+  "Cross-chain swap aggregator",
   "Multi Party Computation (MPC)",
   "VPN (Private Intents)",
   "Zero Knowledge Proofs (ZKPs)",
@@ -172,9 +172,9 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Client-side proving",
     group: "Decentralization & Security",
     description: "Whether the protocol generates proofs on the client device or depends on an external service",
-    metric: "Yes / No / Not applicable",
+    metric: "Yes / No / N/A",
     inputType: "select",
-    options: ["Yes", "No", "Not applicable"],
+    options: ["Yes", "No", "N/A"],
   },
   {
     name: "Third-party inspectability",
@@ -322,10 +322,11 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Private Data Storage",
     group: "State",
-    description: "Where private transaction data is stored",
-    metric: "Protocol state / Off-chain with on-chain commitment / Smart contracts",
+    description:
+      "Where private transaction data is stored. Use N/A for protocols that do not maintain private transaction data (e.g. off-chain routing aggregators with no privacy contracts).",
+    metric: "Protocol state / Off-chain with on-chain commitment / Smart contracts / N/A",
     inputType: "select",
-    options: ["Protocol state", "Off-chain storage with on-chain commitment", "Smart contracts"],
+    options: ["Protocol state", "Off-chain storage with on-chain commitment", "Smart contracts", "N/A"],
   },
 
   // ── Composability ────────────────────────────────────────────────────────
