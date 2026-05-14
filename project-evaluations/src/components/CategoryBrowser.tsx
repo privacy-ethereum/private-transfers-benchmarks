@@ -2,6 +2,7 @@ import { LONG_TITLE_LEN } from "../constants.js";
 import { evaluations } from "../data/evaluations/index.js";
 import { CATEGORY_EXPLAINERS } from "../data/explainers.js";
 import { CATEGORIES } from "../data/schema.js";
+import { isPendingEvaluation } from "../utils.js";
 
 interface CategoryBrowserProps {
   onGoToProfile: (id: string) => void;
@@ -46,6 +47,7 @@ export default function CategoryBrowser({ onGoToProfile }: CategoryBrowserProps)
                       title={`Open ${p.title} profile →`}
                     >
                       {p.title}
+                      {isPendingEvaluation(p) && <span className="pending-badge">Pending</span>}
                       <span className="proto-link__arrow" aria-hidden="true">
                         ↗
                       </span>

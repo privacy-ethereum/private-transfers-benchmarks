@@ -1,6 +1,7 @@
 import type { Evaluation } from "./types.js";
 
 const NUMBER_OF_SECRETS_REGEX = /number of secrets/i;
+const PROJECT_README_PATH_REGEX = /subgraph\/src\/([^/]+)\/README\.md$/;
 
 interface IValueForParams {
   evaluations: Evaluation;
@@ -79,4 +80,30 @@ export function cellTone({ value, propertyName }: ICellToneParams): CellTone {
   }
 
   return "";
+}
+
+/** Identifies evaluations that are placeholders waiting for full analysis */
+export function isPendingEvaluation(evaluation: Evaluation): boolean {
+  return evaluation.status === "pending";
+}
+
+/**
+ *  Gets the project ID from the path of the README file
+ * @param path of the README file
+ * @returns the project ID or an empty string if it cannot be determined
+ */
+export function convertPathToProjectId(path: string): string | null {
+  const match = PROJECT_README_PATH_REGEX.exec(path);
+
+  if (!match) {
+    return null;
+  }
+
+  const projectId = match[1];
+
+  if (projectId === "") {
+    return null;
+  }
+
+  return projectId;
 }

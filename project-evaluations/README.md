@@ -19,3 +19,28 @@ cd project-evaluations
 # 4. Start the web server to view the dashboard and data
 pnpm run dev
 ```
+
+# Adding Placeholder Projects
+
+The dashboard auto-loads every JSON file inside `src/data/evaluations/`.
+
+To showcase a project that is not fully analyzed yet, add a file like `src/data/evaluations/PROJECT_NAME.json` with `status` set to `pending`.
+
+```json
+{
+  "id": "project-name",
+  "title": "Project Name",
+  "description": "Short description of the protocol and why it is listed.",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["Shielded pool"],
+  "properties": [],
+  "sourceUrls": []
+}
+```
+
+Behavior:
+
+- Pending projects are visible in Category Browser and Protocol Profiles.
+- Pending projects are excluded from Scorecard comparisons until analyzed.
+- Once analysis is ready, change `status` to `complete` (or remove it, defaults to `complete`) and populate `properties`.

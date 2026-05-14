@@ -3,7 +3,9 @@ import { useState } from "react";
 import { evaluations } from "../data/evaluations/index.js";
 import { GROUP_EXPLAINERS } from "../data/explainers.js";
 import { PROPERTY_DEFINITIONS, PROPERTY_GROUPS } from "../data/schema.js";
-import { valueFor } from "../utils.js";
+import { readmes } from "../data/readmes.js";
+import { isPendingEvaluation, valueFor } from "../utils.js";
+import MarkdownView from "./MarkdownView.js";
 import Tag from "./Tag.js";
 import LinkifiedText from "./LinkifiedText.js";
 
@@ -32,6 +34,7 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
           (p) => p.title.toLowerCase().includes(q) || p.categories.some((c) => c.toLowerCase().includes(q)),
         )
       : evaluations;
+  const subgraphReadmeMarkdown = proto !== undefined ? (readmes[proto.id] ?? "") : "";
 
   return (
     <div className="direction">
@@ -86,7 +89,12 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
               >
                 <div>
                   <div className="name">{p.title}</div>
-                  <div className="cats">{p.categories.join(", ")}</div>
+                  <div className="cats">
+                    {p.categories.join(", ")}
+                    {isPendingEvaluation(p) && (
+                      <span className="pending-badge pending-badge--inline">Pending analysis</span>
+                    )}
+                  </div>
                 </div>
                 <span className="arrow">→</span>
               </button>
@@ -98,6 +106,11 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
           <div className="main">
             <div className="eyebrow">Protocol profile</div>
             <h2>{proto.title}</h2>
+            {isPendingEvaluation(proto) && (
+              <div className="pending-banner">
+                This project is listed as pending analysis. Values below are placeholders until research is completed.
+              </div>
+            )}
             <p className="desc">{proto.description}</p>
             <div className="profile-tags">
               {proto.categories.map((c) => (
@@ -112,7 +125,6 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
                 </a>
               </div>
             )}
-
             <div className="groups">
               {PROPERTY_GROUPS.map((g) => (
                 <details key={g} className="group-card" open>
@@ -150,6 +162,15 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
                   </div>
                 </details>
               ))}
+              {subgraphReadmeMarkdown !== "" && (
+                <details className="group-card">
+                  <summary>
+                    <span>Benchmarks README</span>
+                    <span className="g-desc">How are we gathering benchmark data for the protocol</span>
+                  </summary>
+                  <MarkdownView markdown={subgraphReadmeMarkdown} />
+                </details>
+              )}
             </div>
           </div>
         )}
