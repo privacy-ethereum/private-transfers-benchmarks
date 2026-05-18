@@ -1,0 +1,10 @@
+{
+  "id": "blanksquare",
+  "title": "Blanksquare",
+  "description": "Blanksquare is the composable privacy stack for wallets and DeFi apps. We deliver plug-and-play privacy infrastructure (Shielder SDK, Shielded Accounts, Relayer Network, Anonymity Revoking mechanisms) that can be integrated directly into EVM-compatible wallets.",
+  "status": "pending",
+  "documentation": "https://docs.blanksquare.io/",
+  "categories": ["Privacy Stack/Layer/Middleware", "Shielded pool"],
+  "properties": [],
+  "sourceUrls": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "zk-token-wrapper",
+  "title": "ZK Token Wrapper (ERC-8065)",
+  "description": "",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["zkWormholes", "Zero Knowledge Proofs (ZKPs)"],
+  "properties": [],
+  "sourceUrls": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "inco",
+  "title": "INCO",
+  "description": "",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["L2s", "TEEs"],
+  "properties": [],
+  "sourceUrls": []
+}

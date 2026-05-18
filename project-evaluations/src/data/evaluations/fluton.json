@@ -1,0 +1,10 @@
+{
+  "id": "fluton",
+  "title": "Fluton",
+  "description": "Fluton is a universal confidential execution layer for blockchains that uses homomorphic encryption under the hood. Its intent-based nature abstracts privacy implementation away from individual protocols and chains. Instead treats privacy as a shared execution primitive.",
+  "status": "pending",
+  "documentation": "https://docs.fluton.io/introduction",
+  "categories": ["Privacy Stack/Layer/Middleware", "Homomorphic encryption (FHE - HE)"],
+  "properties": [],
+  "sourceUrls": []
+}

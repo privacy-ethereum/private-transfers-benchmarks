@@ -1,0 +1,10 @@
+{
+  "id": "zama",
+  "title": "Zama",
+  "description": "An open-source cryptography company developing fully homomorphic encryption (FHE) technology, including the ERC-7984 confidential token standard that keeps token balances and transfer amounts encrypted on-chain without sacrificing auditability. Zama is the FHE co-processor and they have a confidential token implementation.",
+  "status": "pending",
+  "documentation": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained",
+  "categories": ["Homomorphic encryption (FHE - HE)"],
+  "properties": [],
+  "sourceUrls": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "fairblock",
+  "title": "Fairblock",
+  "description": "Fairblock is a dynamic, decentralized cryptographic computer with its own execution layer purpose-built for confidential computing. Confidential apps (cApps) run on Fairblock's native chain, FairyRing, and are accessible from major ecosystems so users can seamlessly use them without bridging any funds or switching wallets.",
+  "status": "pending",
+  "documentation": "https://docs.fairblock.network/docs/welcome/vision",
+  "categories": [
+    "Homomorphic encryption (FHE - HE)",
+    "Multi Party Computation (MPC)",
+    "Privacy Stack/Layer/Middleware",
+    "TEEs",
+    "Zero Knowledge Proofs (ZKPs)"
+  ],
+  "properties": [],
+  "sourceUrls": []
+}

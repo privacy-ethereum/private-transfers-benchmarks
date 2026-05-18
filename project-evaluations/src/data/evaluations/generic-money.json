@@ -1,0 +1,10 @@
+{
+  "id": "generic-money",
+  "title": "Generic Money",
+  "description": "The Generic Protocol is the underlying infrastructure that powers GUSD (confidential stablecoin token) and other whitelabeled tokens. It provides a multi-chain yield aggregation system where users deposit stablecoin collateral and receive GenericUnit tokens, which can be wrapped into branded tokens like GUSD. The protocol deploys collateral into vetted DeFi strategies and distributes earned yield across participating chains and dapps.",
+  "status": "pending",
+  "documentation": "https://docs.generic.money/protocol/overview",
+  "categories": ["Homomorphic encryption (FHE - HE)"],
+  "properties": [],
+  "sourceUrls": []
+}

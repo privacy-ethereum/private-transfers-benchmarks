@@ -1,0 +1,10 @@
+{
+  "id": "mirage",
+  "title": "Mirage",
+  "description": "",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["EVM Obfuscators"],
+  "properties": [],
+  "sourceUrls": []
+}

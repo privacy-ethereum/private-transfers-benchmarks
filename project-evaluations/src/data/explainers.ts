@@ -31,6 +31,16 @@ export const CATEGORY_EXPLAINERS: Record<string, string | undefined> = {
     "A committee of nodes jointly computes on secret-shared inputs; no single node sees the cleartext.",
   "VPN (Private Intents)":
     "An intent layer where users broadcast desired outcomes privately and a solver network executes without revealing the originator.",
+  "Zero Knowledge Proofs (ZKPs)":
+    "Cryptographic proofs that verify a computation or statement without revealing the underlying data. Enables verification of private transactions while keeping amounts, participants, and assets hidden.",
+  "Private Bridge":
+    "A cross-chain bridge protocol that adds privacy to asset transfers between different blockchains, hiding the source, destination, and amount of bridged assets.",
+  "Privacy Stack/Layer/Middleware":
+    "A software stack or middleware layer that adds privacy features on top of existing blockchain infrastructure without requiring protocol-level changes.",
+  coSNARKs:
+    "Collaborative SNARK schemes where multiple parties jointly compute zero-knowledge proofs, combining privacy with distributed and decentralized proof generation.",
+  "Private L3":
+    "A Layer-3 solution built on top of a Layer-2 with privacy features, adding an additional scaling and privacy layer.",
 };
 
 export const GROUP_EXPLAINERS: Record<string, string | undefined> = {

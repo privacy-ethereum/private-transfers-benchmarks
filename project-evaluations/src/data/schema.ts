@@ -18,6 +18,11 @@ export const CATEGORIES = [
   "Cross-L1 CEX aggregator and mixer",
   "Multi Party Computation (MPC)",
   "VPN (Private Intents)",
+  "Zero Knowledge Proofs (ZKPs)",
+  "Private Bridge",
+  "Privacy Stack/Layer/Middleware",
+  "coSNARKs",
+  "Private L3",
 ] as const;
 
 /** Group definitions ordered for display */

@@ -1,0 +1,10 @@
+{
+  "id": "voidify",
+  "title": "Voidify (Solana)",
+  "description": "Voidify is a decentralized, non-custodial protocol built on the Solana blockchain. It enables users to deposit and later withdraw crypto assets using zero-knowledge proofs, creating unlinkable transactions between wallets — without relying on any intermediary. Voidify leverages Solana’s performance with modern zero-knowledge cryptography to support efficient, shielded value transfer. ",
+  "status": "pending",
+  "documentation": "https://voidifycto.gitbook.io/whitepaper",
+  "categories": ["Mixer", "Shielded pool"],
+  "properties": [],
+  "sourceUrls": []
+}

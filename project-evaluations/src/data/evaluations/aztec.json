@@ -1,0 +1,10 @@
+{
+  "id": "aztec",
+  "title": "Aztec",
+  "description": "A privacy-first zkRollup Layer 2 on Ethereum where private functions execute locally and generate zero-knowledge proofs verified on-chain, enabling confidential smart contracts with both private and public state coexisting in a single rollup.",
+  "status": "pending",
+  "documentation": "https://docs.aztec.network/networks",
+  "categories": ["Edge blockchain", "L2s", "Zero Knowledge Proofs (ZKPs)"],
+  "properties": [],
+  "sourceUrls": []
+}

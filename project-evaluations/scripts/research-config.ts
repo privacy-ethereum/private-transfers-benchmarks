@@ -13,6 +13,7 @@ export const configs: Record<string, ProtocolConfig> = {
     description:
       "A privacy-focused cryptocurrency using zk-SNARKs to enable fully shielded transactions" +
       " where sender, receiver, and amount are all encrypted on its own proof-of-work blockchain.",
+    status: "complete",
     documentation: "https://zcash.readthedocs.io/en/latest/",
     categories: ["Alternative L1"],
     sourceUrls: [
@@ -27,6 +28,7 @@ export const configs: Record<string, ProtocolConfig> = {
     title: "WORM",
     description:
       "The WORM is an ERC-20 token which is minted via the process of burning Ethereum (ETH) by sending it to unclaimable addresses. Users generate a proof-of-burn receipt which enables the minting of WORM. ETH transfers sent to an unclaimable address are indistinguishable from a regular ETH transfer to a fresh address. There is no way for an outside observer to detect whether a user is interacting with the WORM protocol. The protocol is based on EIP-7503, which standardizes Private Proof-of-Burn. The protocol introduces per-block emission limits to cap WORM token inflation.",
+    status: "complete",
     documentation: "https://github.com/worm-privacy/whitepaper",
     categories: ["zkWormholes"],
     sourceUrls: [
@@ -56,6 +58,7 @@ export const configs: Record<string, ProtocolConfig> = {
     title: "zERC20",
     description:
       'zERC20 is a fully ERC-20 compliant crosschain private transfer token. Users can perform private transfers directly from standard wallets like MetaMask—no special software required. From an external observer\'s perspective, private transfers are indistinguishable from regular transfers.ERC-20 Compatible: Works with any wallet, DEX, or DeFi protocol that supports standard ERC-20 tokens. Private Transfers: Send tokens without revealing the link between sender and recipient addresses Crosschain Support: Transfer privately across multiple blockchains via LayerZero. No Special Wallet Required: Use MetaMask or any standard Ethereum wallet. It works by A temporary "burn address" is cryptographically generated. The sender transfers zERC20 to this burn address (the tokens are effectively burned). The recipient withdraws the same amount to any address using a zero-knowledge proof. The link between the burn address and the withdrawal address is never revealed on-chain.',
+    status: "pending",
     documentation: "https://zerc20.gitbook.io/zerc20",
     categories: ["zkWormholes"],
     sourceUrls: ["https://zerc20.gitbook.io/zerc20"],
@@ -65,6 +68,7 @@ export const configs: Record<string, ProtocolConfig> = {
     title: "Curvy",
     description:
       "Curvy is a privacy-preserving cross-chain payment protocol with compliance features. It combines stealth addressses with ZK-SNARKs",
+    status: "complete",
     documentation: "https://docs.curvy.box/",
     categories: ["Stealth addresses"],
     sourceUrls: [
@@ -85,6 +89,7 @@ export const configs: Record<string, ProtocolConfig> = {
     title: "Nullmask",
     description:
       "Nullmask is a privacy layer that sits between an ordinary wallet (e.g. MetaMask) and a chain via a custom RPC proxy. Users sign a single authorization message to derive viewing, nullifying and encryption keys; the proxy converts a user's normal transactions into shielded UTXO-style 'Notes' and produces UltraHonk zk-SNARK proofs (~2s) for deposits, transfers and withdrawals. Shielded state is represented as encrypted notes on-chain alongside a key registry; users trial-decrypt notes to find their own. Retroactive compliance allows flagged deposits to be revoked.",
+    status: "pending",
     documentation: "https://nmskdiagram.vercel.app/",
     categories: ["VPN (Private Intents)"],
     sourceUrls: [
@@ -97,6 +102,7 @@ export const configs: Record<string, ProtocolConfig> = {
   houdiniswap: {
     id: "houdiniswap",
     title: "Houdini Swap",
+    status: "pending",
     description:
       "Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains privacy by routing each swap through two independent off-chain CEX partners and three separate blockchains, so no single counterparty sees the full path from source to destination. It is not a mixer: liquidity is not pooled and no zero-knowledge proofs are used; privacy comes from partitioning knowledge across routing hops. The service aggregates DEXes and bridges across 100+ chains and curates CEX partners that run industry-standard AML programmes.",
     documentation: "https://docs.houdiniswap.com/",
@@ -120,6 +126,7 @@ export const configs: Record<string, ProtocolConfig> = {
     title: "Mirage",
     description:
       "Mirage is a privacy layer for stablecoin transfers on Ethereum L1 that makes private transactions indistinguishable from ordinary onchain activity. It avoids shared pools by using per-transaction escrow contracts whose EVM bytecode is obfuscated by Azoth, an open-source Rust obfuscator that produces many deterministic variants of the same contract logic. Execution is carried out by a decentralised set of Nomad operator nodes that post bonds into the escrow and earn rewards for settling transfers. The protocol is currently in closed alpha with a public test environment in preparation.",
+    status: "pending",
     documentation: "https://docs.mirageprivacy.com/",
     categories: ["EVM Obfuscators"],
     sourceUrls: [

@@ -1,0 +1,10 @@
+{
+  "id": "coti",
+  "title": "Coti",
+  "description": "COTI is a blockchain network designed to enable computation on encrypted data through the use of Garbled Circuits. COTI can be used under the hood to build private ERC20 tokens and deploy it on any EVM-compatible chain.",
+  "status": "pending",
+  "documentation": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20",
+  "categories": ["Garbled circuits", "Multi Party Computation (MPC)", "L2s", "Validium"],
+  "properties": [],
+  "sourceUrls": []
+}
