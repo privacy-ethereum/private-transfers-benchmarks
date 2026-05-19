@@ -125,7 +125,7 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "The user holds only their standard Ethereum wallet private key. zERC20 derives no keys of its own. Each transfer additionally uses a one-time random value the sender samples and shares with the recipient, but this per-transfer value stays ephemeral, never becoming a backed-up key.",
+      "notes": "The user holds only their standard Ethereum wallet private key. zERC20 derives no keys of its own. Each transfer additionally uses a one-time random value the sender samples and shares with the recipient, but this per-transfer value stays ephemeral, never becoming a backed-up key. Users can download this secret data if they want to. The secret burn data allows the owner to check the burn address and also withdraw funds if they have not been withdrawn yet.",
       "citations": [
         {
           "cited_text": "[https://ethereum-magicians.org/t/eip-7503-zero-knowledge-wormholes-private-proof-of-burn-ppob/15456](https://ethereum-magicians.org/t/eip-7503-zero-knowledge-wormholes-private-proof-of-burn-ppob/15456)\n\nWhen user A sends tokens to user B, A generates a random secret and computes:\n\n```text\nburnAddress = trim160(poseidon(recipient, secret))\n```\n\nA then sends zERC20 tokens to this `burnAddress`. ",
