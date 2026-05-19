@@ -125,7 +125,7 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "Persistently, the user holds only their standard Ethereum wallet private key. zERC20 derives no keys of its own. Each transfer additionally uses a one-time random value the sender samples and shares with the recipient, but this per-transfer value stays ephemeral, never becoming a backed-up key.",
+      "notes": "The user holds only their standard Ethereum wallet private key. zERC20 derives no keys of its own. Each transfer additionally uses a one-time random value the sender samples and shares with the recipient, but this per-transfer value stays ephemeral, never becoming a backed-up key.",
       "citations": [
         {
           "cited_text": "[https://ethereum-magicians.org/t/eip-7503-zero-knowledge-wormholes-private-proof-of-burn-ppob/15456](https://ethereum-magicians.org/t/eip-7503-zero-knowledge-wormholes-private-proof-of-burn-ppob/15456)\n\nWhen user A sends tokens to user B, A generates a random secret and computes:\n\n```text\nburnAddress = trim160(poseidon(recipient, secret))\n```\n\nA then sends zERC20 tokens to this `burnAddress`. ",
@@ -157,7 +157,7 @@
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "Withdrawals execute in a single host-chain transaction with no protocol-imposed delay: once a valid proof is submitted, the verifier mints the same amount of zERC20 tokens to the recipient. The recipient generates a zero-knowledge proof and calls the verifier contract, which verifies it and mints to the recipient atomically, so the only latency is host-chain block inclusion. No timelock, challenge period, or waiting window applies between proof submission and minting.",
+      "notes": "Withdrawals can happen in the same chain or in a cross-chain manner. In both cases, the withdrawal process is the same: the recipient submits a zero-knowledge proof to the verifier contract proving they know the burn secret and that a burn transaction was made to the corresponding burn address. According to the FAQ section, private transfers (withdrawals) can take an average time of 30 minutes to 1 hour due to LayerZero messages propagation.",
       "citations": [
         {
           "cited_text": "The Verifier mints the same amount of zERC20 tokens to B. ",
@@ -176,7 +176,7 @@
     {
       "name": "Censorship resistance",
       "value": "No",
-      "notes": "The zERC20 token contract enforces an OFAC blocklist against a shared per-chain OFAC sanctions registry. Withdrawals submit a zero-knowledge proof directly to the verifier contract, so the relay node is optional rather than required.",
+      "notes": "The zERC20 token contract enforces an OFAC blocklist against a shared per-chain OFAC sanctions registry. This compliance feature prevents blocked addresses from sending, receiving, wrapping, unwrapping and teleporting any zERC20 tokens. Withdrawals submit a zero-knowledge proof directly to the verifier contract, so the relay node is optional rather than required.",
       "citations": [
         {
           "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
@@ -213,8 +213,8 @@
     },
     {
       "name": "Escape hatch",
-      "value": "Instantly",
-      "notes": "Withdrawals execute through direct submission of a zero-knowledge proof to the verifier contract from a standard wallet, with no challenge window, bonded operator, or required relayer in the trust path — the relay node is an optional gasless convenience. Two caveats apply: the zERC20 token contract enforces an OFAC blocklist, and the contract owner can upgrade contracts and rotate verifiers, so the verifier is not immutable even though the exit path functions today using only host-chain consensus and proof soundness.",
+      "value": "No",
+      "notes": "The zERC20 token contract enforces an OFAC blocklist, and the contract owner can upgrade contracts and rotate verifiers. The blocklist feature prevent blocked addresses from sending, receiving, wrapping, unwrapping and teleporting any zERC20 tokens. There is no escape hatch or ragequit functionality for blocked addresses.",
       "citations": [
         {
           "cited_text": "When B withdraws, they submit a zero-knowledge proof (ZKP) to the **Verifier** contract proving that:\n\n1. a zERC20 transfer was made to the corresponding `burnAddress`; and\n2. they know the secret used to form that `burnAddress`.\n\nThe Verifier mints the same amount of zERC20 tokens to B. ",
@@ -259,7 +259,7 @@
     {
       "name": "Client-side proving",
       "value": "Yes",
-      "notes": "Withdrawal proofs are generated on the user's device. For single withdrawals the client produces a lightweight Groth16 proof, benchmarked at around 105 ms. For batch withdrawals the client folds the Nova IVC steps locally and a Decider Prover HTTP worker finalises the Nova proof for on-chain verification. The burn secret remains a private witness to the circuit rather than being handed to the decider. The IVC stack is built on Sonobe by PSE.",
+      "notes": "Withdrawal proofs are generated on the user's device. For single withdrawals the client produces a lightweight Groth16 proof, benchmarked at around 105 ms. For batch withdrawals the client folds the Nova IVC steps locally and a Decider Prover HTTP worker finalises the Nova proof for on-chain verification. The burn secret remains a private witness to the circuit rather than being handed to the decider. The IVC stack is built on Sonobe.",
       "citations": [
         {
           "cited_text": "If you change `tweak` for every receipt, each withdrawal can be done as a **single** withdrawal, enabling a lightweight **Groth16** proof instead. This is attractive when Nova’s decider proof (a heavier operation that can take ~30 seconds on a MacBook) is undesirable. ",
@@ -284,7 +284,7 @@
     {
       "name": "Third-party inspectability",
       "value": "Yes",
-      "notes": "The off-chain indexer is positioned to link sender activity to recipients. Per the trust model, the indexer operator observes the sender, the burn address, and the value, and learns the recipient on query. A relay node submits gasless redeem transactions on behalf of users and swaps zERC20 into native gas tokens, exposing recipient fee authorisations to that operator. The protocol acknowledges this exposure and advises users to run their own indexer instance to avoid sender-recipient linkage leaks.",
+      "notes": "The off-chain indexer is positioned to link sender activity to recipients. The indexer operator observes the sender, the burn address, and the value, and learns the recipient on query. A relay node submits gasless redeem transactions on behalf of users and swaps zERC20 into native gas tokens, exposing recipient fee authorisations to that operator. The protocol acknowledges this exposure and advises users to run their own indexer instance to avoid sender-recipient linkage leaks.",
       "citations": [
         {
           "cited_text": "Referenced by all zERC20 tokens on the same chain as an immutable\n\nVerifier \n\nLayerZero OApp that verifies Nova/Groth16 proofs, tracks teleported amounts per recipient, and relays roots to Hub\n\nHub \n\nAggregates transfer roots from all chains into a Poseidon tree, broadcasts global root to all Verifiers\n\nLiquidityManager \n\nManages liquidity policy, handles wrap/unwrap of underlying assets\n\nAdaptor \n\nCross-chain exit via Stargate when liquidity is more favorable on another chain\n\nSwapHelper \n\nPer-chain helper contract that atomically executes permit + transferFrom + native payout for relayer-managed token-to-native swaps\n\nhashtag \n\nOff-Chain Services\n\nService\n\nPurpose\n\nIndexer \n\nActix HTTP server + Postgres. Syncs on-chain events, maintains Merkle trees, generates root proofs\n\nDecider Prover \n\nHTTP worker that finalizes Nova proofs for on-chain verification\n\nCross-chain Job \n\nRelays transfer roots to Hub and triggers broadcasts\n\nRelay Node \n\nHTTP service that can submit gasless redeem transactions on behalf of users and swap zERC20 into native gas tokens\n\nhashtag \n\nICP Stealth Storage\n\nComponent\n\nPurpose\n\nKey Manager Canister \n\nVetKD-backed IBE key derivation per EVM address\n\nStorage Canister \n\nStores encrypted announcements and signed invoices\n\nhashtag \n\nData Flow\n\nhashtag \n\n1. ",
@@ -303,16 +303,8 @@
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
-      "notes": "Mainnet deployments exist on Ethereum, Arbitrum, Base, and BNB Chain with wrapped tokens zETH, zUSDC, and zBNB.",
-      "citations": [
-        {
-          "cited_text": "hashtag \n\nCrosschain Transfers\n\nzERC20 supports private transfers across different blockchains:\n\nSend zERC20 to a burn address on any supported chain \n\nWithdraw to any other supported chain \n\nCross-chain messaging is handled by LayerZero, with a global Merkle tree aggregating all transfer roots across chains.\n\n",
-          "source": "https://zerc20.gitbook.io/zerc20/overview/how-it-works",
-          "start_char_index": 3358,
-          "end_char_index": 3670
-        }
-      ],
-      "needsResearchReview": true
+      "notes": "Mainnet deployments exist on Ethereum, Arbitrum, Base, and BNB Chain with wrapped tokens zETH, zUSDC, and zBNB. The mainnet zETH contact was deployed on February 4th 2026.",
+      "url": "https://zerc20.gitbook.io/zerc20/reference/addresses"
     },
     {
       "name": "Post-quantum secure",
@@ -349,7 +341,7 @@
     {
       "name": "Enforcement entities",
       "value": "Admin",
-      "notes": "Compliance enforcement is handled by a designated administrative role rather than a governance process or an external compliance vendor. The trust model assigns a blocklist owner who can add or remove sanctioned addresses on a shared per-chain OFAC registry.",
+      "notes": "Compliance enforcement is handled by a designated administrative role rather than a governance process or an external compliance vendor. The trust model assigns a blocklist multi signature owner who can add or remove sanctioned addresses on a shared per-chain OFAC registry.",
       "citations": [
         {
           "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
@@ -369,7 +361,7 @@
     {
       "name": "Type of compliance",
       "value": "[\"Proof of innocence (POI) / ASP\"]",
-      "notes": "The zERC20 token contract enforces an OFAC blocklist against a shared per-chain OFAC sanctions registry that is non-upgradeable and referenced by all zERC20 tokens on the same chain. This is a curated disallowed-set check enforced on-chain at the token contract. No identity verification, viewing-key disclosure, off-chain attestation oracle, or risk-scoring service is described.",
+      "notes": "The zERC20 token contract enforces an OFAC blocklist against a shared per-chain OFAC sanctions registry that is non-upgradeable and referenced by all zERC20 tokens on the same chain. This is a curated disallowed-set check enforced on-chain at the token contract. There is an additional Proof of Innocence (POI) mechanism that allow users to prove their received funds did not originate from sanctioned addresses without revealing transaction details. No identity verification, viewing-key disclosure, off-chain attestation oracle, or risk-scoring service is described.",
       "citations": [
         {
           "cited_text": "Privacy-preserving transfers : Senders burn zERC20 to stealth addresses; recipients mint on the same or another chain without linkable on-chain metadata\n\nERC-20 compatibility : Standard token interface works with existing wallets, DEXes, and DeFi protocols\n\nProvable integrity : Every mint relies on zero-knowledge proofs (Nova/Groth16)\n\nScalability : Poseidon Merkle trees and IVC batch thousands of transfers into one proof\n\nCross-chain : LayerZero-based hub aggregates roots across all chains\n\nhashtag \n\nOn-Chain Contracts\n\nContract\n\nPurpose\n\nzERC20 \n\nUpgradeable ERC-20 that emits IndexedTransfer events, maintains SHA-256 hash chain, exposes teleport for verified mints, and enforces OFAC blocklist\n\nBlocklist \n\nShared per-chain OFAC sanctions registry. ",
