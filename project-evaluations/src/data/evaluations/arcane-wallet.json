@@ -1,0 +1,10 @@
+{
+  "id": "arcane-wallet",
+  "title": "Arcane wallet (0x0.ai)",
+  "description": "The Arcane Wallet leverages advanced cryptographic techniques, such as stealth addresses and elliptic curve Diffie-Hellman (ECDH) key exchanges, to obscure transaction details and protect user privacy.",
+  "status": "pending",
+  "documentation": "https://docs.0x0.ai/0x0-ecosystem/arcane-privacy-wallet",
+  "categories": ["Stealth addresses"],
+  "properties": [],
+  "sourceUrls": []
+}

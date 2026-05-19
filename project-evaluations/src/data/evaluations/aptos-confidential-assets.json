@@ -1,0 +1,10 @@
+{
+  "id": "aptos-confidential-assets",
+  "title": "Aptos confidential assets",
+  "description": "The Confidential Asset Standard (also known as “Confidential Asset” or “CA”) is a privacy-focused protocol for managing Fungible Assets (FA). It allows users to perform transactions with hidden FA amounts using homomorphic encryption while keeping sender and recipient addresses publicly visible.",
+  "status": "pending",
+  "documentation": "https://aptos.dev/build/smart-contracts/confidential-asset",
+  "categories": ["Homomorphic encryption (FHE - HE)", "Alternative L1"],
+  "properties": [],
+  "sourceUrls": []
+}

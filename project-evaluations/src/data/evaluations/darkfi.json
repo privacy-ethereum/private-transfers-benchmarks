@@ -1,0 +1,10 @@
+{
+  "id": "darkfi",
+  "title": "DarkFi",
+  "description": "DarkFi is a new Layer 1 blockchain, designed with anonymity at the forefront using zero knowledge cryptography. It offers flexible private primitives that can be wielded to create any kind of application.",
+  "status": "pending",
+  "documentation": "https://dark.fi/book/",
+  "categories": ["Alternative L1"],
+  "properties": [],
+  "sourceUrls": []
+}

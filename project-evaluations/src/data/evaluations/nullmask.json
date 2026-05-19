@@ -1,0 +1,10 @@
+{
+  "id": "nullmask",
+  "title": "Nullmask",
+  "description": "A private VPN-layer for crypto that makes token and stablecoin transactions invisible and untraceable across any chain and wallet in a single click.",
+  "status": "pending",
+  "documentation": "https://app.nullmask.io/",
+  "categories": ["VPN (Private Intents)"],
+  "properties": [],
+  "sourceUrls": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "cloak",
+  "title": "Cloak (Scroll)",
+  "description": "Cloak is a reusable technology stack, built using Scroll's battle-tested rollup technology. As an L3 validium appchain, Cloak proves every transaction using Scroll's zkEVM technology, ensuring that state can only be updated according to the protocol rules. It achieves confidentiality via fine-grained access control. This allows only chain operators and regulators to access the data. Users can freely access their own accounts, but they cannot query other users' data.",
+  "status": "pending",
+  "documentation": "https://scroll-tech.github.io/cloak-documentation/",
+  "categories": ["L2s", "Private L3", "Validium"],
+  "properties": [],
+  "sourceUrls": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "encifher",
+  "title": "Encifher (now encrypt.trade)",
+  "description": "Encifher uses these off-chain Privacy Enhancing Technology Co-processors to represent smart contracts state as encrypted. Users encrypted their inputs and send them to the co-processors for computation.",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["Homomorphic encryption (FHE - HE)", "Private Bridge"],
+  "properties": [],
+  "sourceUrls": []
+}

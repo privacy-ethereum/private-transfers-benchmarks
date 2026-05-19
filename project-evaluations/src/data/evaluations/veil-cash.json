@@ -1,0 +1,10 @@
+{
+  "id": "veil-cash",
+  "title": "Veil Cash",
+  "description": "Veil Cash is a privacy-preserving protocol on Base L2 for arbitrary-amount ETH and USDC deposits, transfers, and withdrawals. It uses a UTXO model with Groth16 zero-knowledge proofs and Poseidon hashing.",
+  "status": "pending",
+  "documentation": "https://docs.veil.cash/",
+  "categories": ["Mixer", "Shielded pool"],
+  "properties": [],
+  "sourceUrls": []
+}

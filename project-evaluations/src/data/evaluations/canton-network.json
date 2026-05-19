@@ -1,0 +1,10 @@
+{
+  "id": "canton-network",
+  "title": "Canton Network",
+  "description": "A privacy-preserving enterprise blockchain network of networks for financial institutions, where smart contract data is distributed only to parties with a legitimate need to see it, combining the decentralization of public blockchains with the confidentiality required for financial markets.",
+  "status": "pending",
+  "documentation": "https://docs.digitalasset.com/overview/3.4/index.html",
+  "categories": ["Alternative L1"],
+  "properties": [],
+  "sourceUrls": []
+}

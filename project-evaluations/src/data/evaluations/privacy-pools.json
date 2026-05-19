@@ -3,7 +3,7 @@
   "title": "Privacy Pools",
   "description": "A privacy protocol that extends Tornado Cash unlinkability concept with association set providers (ASPs), allowing users to prove membership in compliant subsets without revealing their identity.",
   "documentation": "https://docs.privacypools.com/",
-  "categories": ["Mixer"],
+  "categories": ["Mixer", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [
     {
       "name": "Confidentiality",

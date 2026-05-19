@@ -1,0 +1,10 @@
+{
+  "id": "horizen",
+  "title": "Horizen",
+  "description": "Horizen is an EVM-native blockchain and privacy app ecosystem that rolls up to Base, designed to enable regulatory-compliant private onchain applications for businesses and privacy-minded retail users.",
+  "status": "pending",
+  "documentation": "https://docs.horizen.io/overview/architecture/",
+  "categories": ["Private L3"],
+  "properties": [],
+  "sourceUrls": []
+}

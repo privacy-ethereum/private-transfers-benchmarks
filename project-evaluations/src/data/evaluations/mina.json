@@ -1,0 +1,10 @@
+{
+  "id": "mina",
+  "title": "Mina",
+  "description": "Mina offers an elegant solution: replacing the blockchain with an easily verifiable, consistent-sized cryptographic proof. Mina dramatically reduces the amount of data each user needs to download. Instead of verifying the entire chain from the beginning of time, participants fully verify the network and transactions using recursive zero knowledge proofs (or zk-SNARKs). Nodes can then store the small proof, as opposed to the entire chain. Because it’s a consistent size, Mina stays accessible even as it scales to many users and accumulates years of transaction data.",
+  "status": "pending",
+  "documentation": "https://docs.minaprotocol.com/",
+  "categories": ["Edge blockchain", "Alternative L1"],
+  "properties": [],
+  "sourceUrls": []
+}

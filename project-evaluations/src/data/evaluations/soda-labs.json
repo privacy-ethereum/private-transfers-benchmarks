@@ -1,0 +1,10 @@
+{
+  "id": "soda-labs",
+  "title": "Bubble by Soda Labs",
+  "description": "The Bubble network consists of several interconnected entities that collaborate to enable secure multi-party computation (MPC) over encrypted data while maintaining on-chain verifiability. It integrates Garbled Circuits to encrypt and decrypt data",
+  "status": "pending",
+  "documentation": "https://soda-labs.gitbook.io/the-confidential-blockchain-protocol",
+  "categories": ["Garbled circuits", "Multi Party Computation (MPC)"],
+  "properties": [],
+  "sourceUrls": []
+}
