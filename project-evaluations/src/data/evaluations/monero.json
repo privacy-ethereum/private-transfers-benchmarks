@@ -115,19 +115,19 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Selective disclosure\"]",
+      "value": ["Selective disclosure"],
       "notes": "Viewing keys allow a user to share read-only access to incoming transactions for that address. However, outgoing transactions cannot be reliability viewed via the viewing key, so a third party can be certain of funds arriving, but not funds being spent. This means the apparent balance (sum of incoming) is not fully reliable.",
       "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"None\"]",
+      "value": ["None"],
       "notes": "There is no compliance enforcement at any point in Monero's transaction lifecycle. As an aside, some centralized exchanges or bridges to other L1s refuse to list or accept Monero due to government regulations or internal policies, but this is external to the protocol.",
       "url": "https://www.getmonero.org/get-started/what-is-monero/"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "value": ["User", "Voluntary third-party disclosure"],
       "notes": "Users can view their own transaction history via their viewing key. They can also voluntarily share this viewing key with a third party for compliance or tax purposes, granting read-only access to incoming transaction details. The third party cannot authorize or send transactions using the viewing key.",
       "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
     },
@@ -169,7 +169,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Protocol state",
+      "value": ["Protocol state"],
       "notes": "All data is stored on Monero blockchain itself. There is no concept of smart contracts. All private data (key images, ring signatures, stealth addresses) is stored directly in the protocol state on-chain.",
       "url": "https://www.getmonero.org/resources/moneropedia/blockchain.html"
     },

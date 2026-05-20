@@ -123,20 +123,20 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Programmatic policies\",\"Selective disclosure\"]",
+      "value": ["Programmatic policies", "Selective disclosure"],
       "notes": "Hinkal enforces programmable per-transaction policies via Chainalysis compliance components integrated into the smart contracts; the chain-analytics signal is a data input to the policy layer (not a separate compliance category). Screening applies at deposit and withdrawal, where public addresses are visible. Private transfers within the shielded pool are note-to-note and do not expose public addresses to the compliance layer. Users can also voluntarily share their viewing key with third parties for selective disclosure.",
       "needsResearchReview": "Compliance mechanisms require citation",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\",\"Withdrawal\"]",
+      "value": ["Deposit", "Withdrawal"],
       "notes": "Compliance checks are applied when assets enter the shielded pool (deposit) and when they leave (withdrawal), blocking flagged addresses at either boundary. Private transfers within the pool are note-to-note operations between stealth addresses and do not pass through the Chainalysis compliance contract directly.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "value": ["User", "Voluntary third-party disclosure"],
       "notes": "Users can view their own transaction history via their viewing key (self-view). They can also voluntarily share this viewing key with third parties such as regulators, auditors, or wallet managers, granting read-only access to their shielded transaction history.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/key-derivation-and-stealth-addresses"
     },
@@ -178,7 +178,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Smart contracts",
+      "value": ["Smart contracts"],
       "notes": "All UTXO commitments, nullifiers, and Merkle tree roots are stored directly in the Hinkal smart contracts deployed on supported EVM chains. The commitment creation or nullifier addition (nullified) actions are notified using events. This requires the wallet provider or integrator to have a RPC event scanning mechanism to keep the user shielded balance up to date in real-time.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/smart-contracts/hinkalbase"
     },

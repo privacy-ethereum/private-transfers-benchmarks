@@ -123,19 +123,19 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Programmatic policies\",\"Selective disclosure\"]",
+      "value": ["Programmatic policies", "Selective disclosure"],
       "notes": "All compliance features are optional and configured per-instance at deployment. The global auditor enables selective disclosure of encrypted balances and transfer amounts. Advanced features include range compliance (transfer amounts below a threshold), velocity limits (cumulative amounts within bounds), and whitelist compliance (authorized recipient addresses). These are programmatic policies proven via zero-knowledge proofs without revealing amounts.",
       "url": "https://docs.tongo.cash/protocol/auditor.html#regulatory-compliance"
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\",\"Transfer\",\"Withdrawal\"]",
+      "value": ["Deposit", "Transfer", "Withdrawal"],
       "notes": "If configured, the auditor can examine balances or amounts at all stages of the transaction lifecycle: deposits (funding), internal transfers, and withdrawals. The other advance compliance features (range compliance, velocity limits and whitelist compliance) can be implemented at any step of the lifecycle.",
       "url": "https://docs.tongo.cash/protocol/auditor.html#real-time-monitoring"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"Involuntary third-party disclosure\",\"User\"]",
+      "value": ["Involuntary third-party disclosure", "User"],
       "notes": "If an auditor is configured, it can view transaction details without user consent (involuntary third-party disclosure). Users can also voluntarily disclose transaction details to any third party via ex-post proving, which creates a new encryption of the transfer amount for the third party's public key with a ZK proof of correctness. The auditor is optional and instance-specific.",
       "url": "https://docs.tongo.cash/protocol/auditor.html?highlight=view%20keys#ex-post-proving--viewing-keys"
     },
@@ -177,7 +177,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Smart contracts",
+      "value": ["Smart contracts"],
       "notes": "All private state—including encrypted account balances (current and pending) and auditor configuration—is stored directly in the Tongo smart contract on Starknet.",
       "url": "https://docs.tongo.cash/protocol/storage.html"
     },

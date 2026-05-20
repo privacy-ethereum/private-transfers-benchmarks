@@ -117,20 +117,20 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Programmatic policies\",\"Proof of innocence (POI) / ASP\"]",
+      "value": ["Programmatic policies", "Proof of innocence (POI) / ASP"],
       "notes": "Intmax gates incoming deposits via Predicate AVS — a programmable per-deposit policy framework that returns a cryptographic attestation of compliance against rule sets sourcing from blockchain-analytics vendors. Predicate is the canonical example of programmatic policies. Users additionally demonstrate via a Proof of Innocence model that their funds are not associated with sanctioned or illicit activity before being accepted into the network.",
       "needsResearchReview": "Compliance mechanisms require citation",
       "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#aml-rules"
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\"]",
+      "value": ["Deposit"],
       "notes": "AML and compliance checks are applied exclusively at the deposit stage when users bridge assets from Ethereum L1 into the Intmax network. Once funds are inside the network, subsequent transfers are not subject to additional compliance screening. Withdrawals are assumed to be clean if no bad actor has deposited into the network.",
       "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#aml-rules"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"None\"]",
+      "value": ["None"],
       "notes": "Intmax has no viewing key or protocol-level selective disclosure mechanism. Users can manually share individual transaction details, ZK proofs, and on-chain references with third parties, but there is no systematic viewing access.",
       "url": "https://docs.network.intmax.io/user-guides/check-transaction-history"
     },
@@ -174,7 +174,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Off-chain storage with on-chain commitment",
+      "value": ["Off-chain storage with on-chain commitment"],
       "notes": "Intmax minimises on-chain footprint by storing only block roots and validity proofs on Ethereum L1. All transaction and balance data is self-custodied by users, who must maintain balance proofs received from aggregators during deposits and transfers. On-chain commitments serve as the source of truth for finality.",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#minimal-on-chain-data"
     },

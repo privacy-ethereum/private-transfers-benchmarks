@@ -360,7 +360,7 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Proof of innocence (POI) / ASP\"]",
+      "value": ["Proof of innocence (POI) / ASP"],
       "notes": "The zERC20 token contract enforces an OFAC blocklist against a shared per-chain OFAC sanctions registry that is non-upgradeable and referenced by all zERC20 tokens on the same chain. This is a curated disallowed-set check enforced on-chain at the token contract. There is an additional Proof of Innocence (POI) mechanism that allow users to prove their received funds did not originate from sanctioned addresses without revealing transaction details. No identity verification, viewing-key disclosure, off-chain attestation oracle, or risk-scoring service is described.",
       "citations": [
         {
@@ -373,7 +373,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\",\"Transfer\",\"Withdrawal\"]",
+      "value": ["Deposit", "Transfer", "Withdrawal"],
       "notes": "The zERC20 token contract is described as enforcing an OFAC blocklist while also emitting IndexedTransfer events for transfers and exposing a teleport endpoint for verifier-driven mints, so both the transfer leg and the withdrawal-side mint route through the same enforcing contract. The LiquidityManager contract handles wrap and unwrap of underlying assets, which move zERC20 in and out of user balances.",
       "citations": [
         {
@@ -393,7 +393,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"None\"]",
+      "value": ["None"],
       "notes": "No protocol-defined viewer is documented: only Contract Owner, Blocklist Owner, Indexer Operator, and ICP Canisters appear, none of which grant a key-gated read interface to user transaction history. The indexer operator already observes the sender, the burn address, and the value, and learns the recipient on query. The Internet Computer canisters store encrypted data that they cannot decrypt without the recipient's key.",
       "citations": [
         {
@@ -538,7 +538,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "[\"Smart contracts\",\"Off-chain storage with on-chain commitment\"]",
+      "value": ["Smart contracts", "Off-chain storage with on-chain commitment"],
       "notes": "Transfer events emit an on-chain SHA-256 hash chain that commits to the per-transfer leaves needed for withdrawal proofs. The Poseidon Merkle tree consumed by proofs is reconstructed off-chain from those events rather than stored on-chain — the hash chain is the gas-efficient commitment, the Merkle tree lives off-chain. A separate stealth-messaging layer on the Internet Computer holds encrypted announcements protected by identity-based encryption for recipient burn-secret discovery.",
       "citations": [
         {

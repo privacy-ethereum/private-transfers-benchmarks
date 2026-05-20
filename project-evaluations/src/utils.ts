@@ -22,19 +22,7 @@ export function valueFor({ evaluations, propertyName }: IValueForParams): IValue
     return { value: "—", notes: "", url: "" };
   }
 
-  let value = property.value;
-
-  if (value.startsWith("[")) {
-    try {
-      const parsed: unknown = JSON.parse(value);
-
-      if (Array.isArray(parsed)) {
-        value = (parsed as string[]).join(", ");
-      }
-    } catch {
-      // ignore JSON parse errors for multi-select values
-    }
-  }
+  const value = Array.isArray(property.value) ? property.value.join(", ") : property.value;
 
   return { value: value || "—", notes: property.notes ?? "", url: property.url ?? "" };
 }

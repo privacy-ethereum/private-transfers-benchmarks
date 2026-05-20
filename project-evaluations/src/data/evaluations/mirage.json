@@ -370,7 +370,7 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Programmatic policies\"]",
+      "value": ["Programmatic policies"],
       "notes": "Compliance is enforced at escrow deployment via a wallet-screening check run by a third-party compliance partner — wallet screening, risk scoring, and analysis of the origin of funds. The check happens at the Mirage web application layer rather than on-chain. The API logic can be modified to work with new policies.",
       "citations": [
         {
@@ -389,7 +389,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\"]",
+      "value": ["Deposit"],
       "notes": "The wallet-screening check running at escrow deployment through a third-party compliance partner triggered when connecting a wallet to the Mirage web application. This executes wallet screening, risk scoring, and origin-of-funds analysis. The rest of the transfer lifecycle has no compliance step.",
       "citations": [
         {
@@ -414,7 +414,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\",\"Third party\"]",
+      "value": ["User"],
       "notes": "There is no viewing key-like mechanism, however, the sender of a transfer can reconstruct their own activity because they can download receipts from the website that include transaction flow, timestamps, metadata, and transaction hashes, held locally in the user environment. The third party screening partner can run checks but only with access to the users wallet address.",
       "citations": [
         {
@@ -541,7 +541,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "N/A",
+      "value": ["N/A"],
       "notes": "Mirage stores no private transaction data of its own. The encrypted signal is broadcast transiently over an off-chain libp2p gossip layer and discarded once a Nomad decrypts it inside an SGX enclave to execute the transfer. On-chain there is only the per-transfer escrow contract holding public funds (deposit amount and bond mechanics) plus the public payout transfer — no commitments, encrypted blobs, or off-chain stores anchored by on-chain hashes. The property does not apply because the protocol has no private data to store anywhere.",
       "citations": [
         {

@@ -382,7 +382,7 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Programmatic policies\"]",
+      "value": ["Programmatic policies"],
       "notes": "Compliance operates as programmatic per-transaction policies enforced at the partner-exchange layer, with real-time AML/AFT screening using tools like Chainalysis to check incoming deposits against sanctioned wallets and prevent transactions from OFAC-listed entities and jurisdictions. Partner onboarding uses a KYB-style risk assessment — partners must pass \"Know Your Business\" due diligence proving active AML/OFAC compliance.",
       "citations": [
         {
@@ -413,7 +413,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\",\"Withdrawal\"]",
+      "value": ["Deposit", "Withdrawal"],
       "notes": "Enforcement occurs at both the deposit and withdrawal legs, handled by the non-custodial exchange partners that bracket the swap. Partner exchanges employ real-time, risk-based transaction-monitoring systems to detect suspicious activity, and block OFAC-sanctioned senders, which applies symmetrically to refusing payout destinations on the exit leg.",
       "citations": [
         {
@@ -432,7 +432,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"Involuntary third-party disclosure\"]",
+      "value": ["Involuntary third-party disclosure"],
       "notes": "Selective disclosure occurs via law-enforcement requests directed at exchange partners, with no user-facing viewing mechanism. When approached by law enforcement, Houdini adheres to a legally compliant process, responding to valid requests while safeguarding user privacy. No cryptographic viewing key, self-view portal, or voluntary delegation mechanism exists — disclosure happens off-chain through legal process against the CEX legs.",
       "citations": [
         {
@@ -547,7 +547,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "N/A",
+      "value": ["N/A"],
       "notes": "Houdini Swap does not maintain any private transaction data of its own — there are no on-chain privacy commitments, shielded notes, or off-chain encrypted state tied to a chain commitment. Each leg is an ordinary on-chain transfer; per-leg transaction records reside inside each partner exchange's internal systems for regulatory purposes, while the routing engine keeps order metadata off-chain to orchestrate legs. The property does not apply to an off-chain routing service.",
       "citations": [
         {

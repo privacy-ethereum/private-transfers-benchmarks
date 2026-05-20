@@ -199,20 +199,20 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"None\"]",
+      "value": ["None"],
       "notes": "No identity verification, transaction screening, proof-of-innocence requirement, selective disclosure, or programmatic policy is enforced. The burn-and-mint flow using Groth16 zk-SNARKs provides privacy through cryptographic proofs but imposes no compliance checks.",
       "url": "https://github.com/worm-privacy/worm/tree/main/src",
       "needsResearchReview": "Not verified — no-compliance claim needs a source"
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"None\"]",
+      "value": ["None"],
       "notes": "No compliance is enforced at deposit, transfer, or withdrawal. The burn, mint, and ERC-20 transfer paths validate only cryptographic and protocol invariants (proof validity, nullifier uniqueness, per-epoch issuance caps), not any compliance policy.",
       "url": "https://github.com/worm-privacy/worm/tree/main/src"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\"]",
+      "value": ["User"],
       "notes": "The privacy model relies on unlinkability between burn addresses and minted BETH/WORM tokens through zk proofs, not on encrypted transaction data with optional disclosure. Users could voluntarily disclose their burnKey to reveal the burn address and burn amount after they have mint the desired tokens. Anyone with the burnKey is able to see the transaction history and also mint pending tokens. The burnKey can be considered a spending key until the tokens are minted and a viewing key for historical data. User would need to use a different burnKey in the future to avoid unauthorized spending.",
       "citations": [
         {
@@ -398,7 +398,7 @@
     },
     {
       "name": "Private state model",
-      "value": "UTXO-based",
+      "value": "UTXO-based state model",
       "notes": "WORM uses a UTXO-based state model. The protocol manages private state through balance commitments called \"coins,\" which are Poseidon3 hashes of a burn key and amount that can be partially withdrawn to create new coins. The system tracks nullifiers (Poseidon2 hashes of burn keys) to prevent double-spending and replay attacks. Each transaction involves proving ownership of a private proof-of-burn and inserting a new nullifier into the on-chain state. This process is similar to standard UTXO models with the caveat that the \"coins\" are only mintable and their spending does not generate new UTXO outputs.",
       "citations": [
         {
@@ -436,7 +436,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Smart contracts",
+      "value": ["Smart contracts"],
       "notes": "WORM state is stored in the different smart contracts related to the protocol. The WORM and BETH token data is stored in smart contracts as any other ERC20 token. The nullifier data is stored inside the BETH contract so it is easily accesible when calling the mint function. The burn address and its received funds are stored in Ethereum state, therefore does not directly affect the protocol data storage. The burn key itself, which serves as the user's private key to the protocol, remains off-chain and is never revealed.",
       "citations": [
         {

@@ -35,7 +35,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Smart contracts",
+      "value": ["Smart contracts"],
       "notes": "All UTXO commitments, nullifiers, and Merkle tree roots are stored in Railgun's on-chain smart contracts on Ethereum and supported chains. Encrypted note data is emitted as events and persisted on-chain, allowing wallets to reconstruct private balances by scanning and decrypting commitment leaves.",
       "url": "https://docs.railgun.org/wiki/learn/shielding-tokens#private-pools-and-merkle-trees"
     },
@@ -65,7 +65,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\"]",
+      "value": ["Deposit"],
       "notes": "Private Proofs of Innocence checks begin when tokens enter the RAILGUN privacy system after a shield interaction.",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#how-it-works"
     },
@@ -96,7 +96,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "value": ["User", "Voluntary third-party disclosure"],
       "notes": "Viewing Keys enable the holder to decrypt encoded interaction information but not send interactions. They scan the RAILGUN smart contract events to reveal what has been sent to users and what interactions users have sent. Users can share viewing keys with third parties for auditability.",
       "url": "https://docs.railgun.org/wiki/learn/wallets-and-keys#viewing-keys"
     },
@@ -108,7 +108,7 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Proof of innocence (POI) / ASP\"]",
+      "value": ["Proof of innocence (POI) / ASP"],
       "notes": "Railgun implements Private Proofs of Innocence (POI), where users generate a recursive zk-SNARK proving their shielded tokens are not associated with addresses on blocklists maintained by list providers. Proofs are generated locally by the user after the initial shield and carried forward for every subsequent transaction.",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#transaction-level-checks"
     },

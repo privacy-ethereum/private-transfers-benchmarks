@@ -97,19 +97,19 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Selective disclosure\"]",
+      "value": ["Selective disclosure"],
       "notes": "Fluidkey supports selective disclosure through its transaction export feature, which allows users to voluntarily reveal their full transaction history to third parties such as tax authorities or auditors.",
       "url": "https://docs.fluidkey.com/readme/exporting-transactions"
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"None\"]",
+      "value": ["None"],
       "notes": "There are no mandatory compliance enforcement points in Fluidkey. Any sender can send funds freely to a Fluidkey stealth account address and any receiver can use those funds with the Fluidkey interface or by running their own setup using community tools.",
       "url": "https://docs.fluidkey.com/readme/receiving-funds"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "value": ["User", "Voluntary third-party disclosure"],
       "notes": "Only the user can disclose their transaction history by sharing their viewing key. Although Fluidkey has read access to incoming balances via the shared viewing key node, all voluntary disclosures to third parties (excluding Fluidkey) are initiated and controlled by the user.",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
     },
@@ -151,7 +151,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Smart contracts",
+      "value": ["Smart contracts"],
       "notes": "Each stealth account is a Safe smart account deployed on-chain that holds user's funds. Contracts are deployed lazily (counterfactual instantiation), it is only deployed on-chain when the user wishes to move funds out.",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
     },

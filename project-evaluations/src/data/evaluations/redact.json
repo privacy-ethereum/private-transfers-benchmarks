@@ -121,19 +121,19 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Selective disclosure\"]",
+      "value": ["Selective disclosure"],
       "notes": "No enforced compliance mechanism exists. Users can issue Fhenix Permits, which are signed EIP-712 messages that authorize off-chain decrypt and seal operations on encrypted balances. Permits come in three types (self, sharing, and recipient), are network-specific, expire after 24 hours by default, and require signature verification. This enables voluntary selective disclosure to authorized parties. Selective disclosure of transaction history and DeFi actions will be possible in the future.",
       "url": "https://docs.redact.money/faq#q-what-are-permits"
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"None\"]",
+      "value": ["None"],
       "notes": "There is no compliance enforcement at any point in the transfer lifecycle. Anyone can encrypt, transfer, and decrypt tokens without restriction.",
       "url": "https://docs.redact.money/#core-functionalities"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "value": ["User", "Voluntary third-party disclosure"],
       "notes": "Users can issue EIP-712 permits that grant temporary, scoped read access to their encrypted balances. These permits allow the user to voluntarily disclose their confidential balance to any authorized smart contract or third party.",
       "url": "https://docs.redact.money/faq#q-what-are-permits"
     },
@@ -178,7 +178,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Smart contracts",
+      "value": ["Smart contracts"],
       "notes": "Ciphertext handles (128-bit pointers) are stored in the Redact smart contract state as account balance mappings. Full ciphertexts are too large for on-chain storage and are kept on an off-chain data availability (DA) layer.",
       "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances"
     },

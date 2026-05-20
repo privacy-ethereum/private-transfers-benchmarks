@@ -384,7 +384,7 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Programmatic policies\",\"Selective disclosure\"]",
+      "value": ["Programmatic policies", "Selective disclosure"],
       "notes": "Curvy implements programmable per-deposit policies through trusted analytics vendors that provide security and compliance scores for addresses; the Curvy-operated Portal Broadcaster uses these scores to determine whether a portal can be deployed and assets shielded, aiming to prevent known malicious addresses from shielding funds. Retroactive compliance checks, currently in development, would enable a trusted entity to taint malicious users even after funds are shielded — not yet live and therefore excluded from the value. Custom enterprise deployments support KYC checks that must pass prior to Curvy ID registration, but the canonical protocol does not feature this and KYC/KYB is therefore also excluded. Curvy IDs expose a viewing public key, enabling user-initiated selective disclosure via the viewing private key.",
       "needsResearchReview": "Compliance mechanisms require citation",
       "citations": [
@@ -410,7 +410,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\", \"Withdrawal\"]",
+      "value": ["Deposit", "Withdrawal"],
       "notes": "Pre-emptive compliance checks are performed by the Portal Broadcaster, which uses a security and compliance score from analytics vendors to determine whether a Portal can be deployed and assets shielded, enforcing compliance at the deposit step. Retroactive compliance checks enable tainting of malicious users after they have deposited and shielded funds, restricting them to unshield only to the exact same address from which funds were shielded, which enforces compliance at the withdrawal step. Both mechanisms are part of Curvy's two-sided compliance model, though retroactive compliance checks are not yet publicly available.",
       "citations": [
         {
@@ -441,7 +441,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\", \"Voluntary third-party disclosure\"]",
+      "value": ["User", "Voluntary third-party disclosure"],
       "notes": "The viewing private key can be shared by the user with a third party to gain access to their private transaction history that would otherwise be completely hidden, envisioned for proving transactional activity without giving control over funds. The viewing public key is necessary to construct proper stealth addresses and notes for the user. The user holds the viewing private key and can query their own transaction history, and voluntary delegation to trusted parties such as auditors is supported through key sharing. No involuntary third-party access or protocol-level disclosure mechanisms are documented.",
       "citations": [
         {
@@ -606,7 +606,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Smart contracts",
+      "value": ["Smart contracts"],
       "notes": "The privacy aggregator stores the Sparse Merkle Tree roots for notes and nullifiers in contract state, and emits each new note and nullifier as an EVM event so the data is persisted on-chain in the transaction logs. The Note Registry is an off-chain index of those events for ease of querying, but it is not the authoritative source — clients can rebuild the SMTs from chain history alone.",
       "citations": [
         {

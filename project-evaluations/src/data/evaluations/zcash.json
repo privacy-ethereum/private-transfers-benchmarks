@@ -381,7 +381,7 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Selective disclosure\"]",
+      "value": ["Selective disclosure"],
       "notes": "ZCash supports selective disclosure as its primary compliance mechanism. The owner of a z-address can share transaction details with trusted third parties via a viewing key, which grants read access but not spend authority, enabling selective disclosure where transactions are auditable but disclosure is under the participant's control, allowing compliance with payment auditing, tax regulations, or anti-money laundering rules. The protocol does not enforce KYC/KYB, KYT, or programmatic policies at the consensus level—these remain optional tools available to users and service providers who choose to implement them.",
       "citations": [
         {
@@ -394,7 +394,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"None\"]",
+      "value": ["None"],
       "notes": "Zcash has no protocol-level compliance enforcement at any stage. The protocol supports both transparent and shielded addresses with optional privacy, allowing users to freely move funds between pools through shielding and deshielding transactions. All transactions are validated by consensus rules using zero-knowledge proofs for shielded transfers, but there is no active restriction or filtering mechanism enforced by the protocol.",
       "citations": [
         {
@@ -407,7 +407,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\"]",
+      "value": ["User"],
       "notes": "Zcash supports selective disclosure controlled by the user. The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for selective disclosure where transactions are auditable but disclosure is under the participant's control. The user decides whether and with whom to share viewing keys, enabling voluntary disclosure for compliance, auditing, or tax purposes without protocol-level enforcement.",
       "citations": [
         {
@@ -527,7 +527,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Protocol state",
+      "value": ["Protocol state"],
       "notes": "Zcash stores private transaction data in the protocol state through encrypted commitments and nullifiers. The blockchain stores a cryptographic commitment to the note, it does not store the note itself. Each time that a note is created, its commitment is added to the commitment tree — a Merkle tree — containing every note commitment ever created on the network. The network maintains a nullifier set, that is, a collection of every nullifier ever published. These commitments and nullifiers are stored as part of the blockchain's state, with nodes maintaining the commitment tree and nullifier set as core protocol data structures.",
       "citations": [
         {
