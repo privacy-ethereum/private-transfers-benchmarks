@@ -1,7 +1,7 @@
 {
   "id": "arcium",
   "title": "Arcium (Solana MPC provider)",
-  "description": "Arcium delivers scalable, secure confidentiality solutions for Web2 or Web3 projects, powered via decentralized networks and Multi Party Computation (MPC).",
+  "description": "Arcium provides confidential computation for Web2 and Web3 projects using Multi Party Computation (MPC).",
   "status": "pending",
   "documentation": "https://docs.arcium.com/",
   "categories": ["Multi Party Computation (MPC)"],

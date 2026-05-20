@@ -8,7 +8,7 @@ export default function TopBar({ dark, onToggleDark }: TopBarProps) {
     <header className="topbar">
       <div className="brand">
         <div className="brand-mark" aria-hidden="true" />
-        <h1>Private Transfers Benchmarks</h1>
+        <h1>Private Transfers Analysis</h1>
       </div>
       <div className="meta">
         <button

@@ -1,7 +1,7 @@
 {
   "id": "platus",
   "title": "Platus",
-  "description": "A composable onchain privacy protocol with post-quantum security for EVM chains, implementing a shielded pool that works with any dApp while providing institutional-grade cryptographic guarantees.",
+  "description": "An onchain privacy protocol with post-quantum security for EVM chains. It implements a shielded pool that works with any dApp.",
   "status": "pending",
   "documentation": "https://docs.platus.xyz/",
   "categories": ["Shielded pool"],
