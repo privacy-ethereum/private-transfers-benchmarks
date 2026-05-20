@@ -21,7 +21,7 @@ export const propertySchema = z.object({
       }),
     )
     .optional(),
-  needsResearchReview: z.boolean().optional(),
+  needsResearchReview: z.string().min(1).optional(),
 });
 
 export const evaluationSchema = z.object({

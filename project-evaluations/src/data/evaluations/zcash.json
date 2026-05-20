@@ -163,7 +163,7 @@
       "name": "Deposit time",
       "value": "N/A",
       "notes": "Zcash is a Layer 1 blockchain where ZEC exists natively on the chain. There is no distinct deposit mechanism—users can transact immediately upon receiving ZEC. Shielding transactions that move ZEC from transparent to shielded addresses are standard on-chain transactions, not deposits into a separate protocol layer.",
-      "needsResearchReview": true
+      "needsResearchReview": "Deposit-time rationale requires citation"
     },
     {
       "name": "Withdraw time",
@@ -377,7 +377,7 @@
       "name": "Enforcement entities",
       "value": "None",
       "notes": "Zcash operates as a permissionless, decentralized blockchain with no entity enforcing compliance restrictions at the protocol level. The network uses proof-of-work consensus where miners validate transactions according to protocol rules, but cannot selectively restrict or filter transactions based on compliance criteria. No centralized party, DAO, or governance body has the ability to enforce transaction-level compliance — any valid transaction can be included by any miner regardless of sender, recipient, or amount.",
-      "needsResearchReview": true
+      "needsResearchReview": "No-enforcement claim requires citation"
     },
     {
       "name": "Type of compliance",
@@ -435,7 +435,7 @@
       "name": "Cryptographic verifiability",
       "value": "Yes, with L1 consensus",
       "notes": "Zcash is an L1 blockchain whose individual transaction correctness is enforced by zk-SNARK verification (Halo2 / Orchard, Groth16 for legacy Sapling), while block ordering and inclusion are decided by majority-based PoW consensus. Shielded transactions are fully encrypted on-chain yet still verifiable as valid under the network's consensus rules. Per the rule, L1 protocols with cryptographic transaction correctness plus consensus-based ordering take \"Yes, with L1 consensus\".",
-      "needsResearchReview": true,
+      "needsResearchReview": "Proving system requires citation",
       "citations": [
         {
           "cited_text": "The acronym zk-SNARK stands for Zero-Knowledge Succinct Non-Interactive Argument of Knowledge and refers to a proof construction where one can prove possession of certain information, e.g., a secret key, without revealing that information, and without any interaction between the prover and verifier.\n\n",
@@ -523,8 +523,7 @@
     {
       "name": "Private state model",
       "value": "UTXO-based state model",
-      "notes": "Zcash transactions between transparent addresses work just like Bitcoin, which uses a UTXO model. Shielded transactions (z-to-z) encrypt the sender and receiver addresses and transaction amount, but operate within the same underlying UTXO framework where transactions consume inputs and create outputs. The protocol manages both transparent UTXOs that are publicly visible and shielded notes that are encrypted UTXOs verified through zk-SNARKs.",
-      "needsResearchReview": true
+      "notes": "Zcash transactions between transparent addresses work just like Bitcoin, which uses a UTXO model. Shielded transactions (z-to-z) encrypt the sender and receiver addresses and transaction amount, but operate within the same underlying UTXO framework where transactions consume inputs and create outputs. The protocol manages both transparent UTXOs that are publicly visible and shielded notes that are encrypted UTXOs verified through zk-SNARKs."
     },
     {
       "name": "Private Data Storage",
@@ -555,13 +554,13 @@
       "name": "Access to DeFi",
       "value": "No access to DeFi",
       "notes": "Zcash does not support smart contracts or programmable logic on its Layer 1 blockchain. There is no native DeFi ecosystem for shielded or transparent assets. While wrapped ZEC exists on external chains like Ethereum, this requires bridging off the Zcash network entirely and does not constitute native DeFi access.",
-      "needsResearchReview": true
+      "needsResearchReview": "No-DeFi claim requires citation"
     },
     {
       "name": "Programmability / Generality",
       "value": "Only payments",
       "notes": "Zcash supports only payment transactions and does not provide smart contract functionality or programmable logic beyond basic value transfers. The protocol implements shielded transfers using zk-SNARKs across transparent and shielded pools (Sprout, Sapling, Orchard), but lacks the ability to execute arbitrary computation or maintain programmable state. While transparent addresses inherit Bitcoin's UTXO scripting model, shielded addresses are restricted to private payments without programmable logic. No smart contract layer or general computation framework exists on the Zcash mainnet protocol. While research initiatives have explored smart contract integration, none have been deployed on the main protocol.",
-      "needsResearchReview": true
+      "needsResearchReview": "Payments-only claim requires citation"
     }
   ]
 }

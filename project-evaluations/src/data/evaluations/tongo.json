@@ -42,8 +42,9 @@
     {
       "name": "Time-to-finality",
       "value": "N/A",
-      "notes": "Tongo is deployed on the Starknet L2, a ZK-rollup on Ethereum. Finality is inherited from the underlying chain. Starknet's time to L1 finality at the time of writing is around 29 minutes. Finality is dependent on the sequencer submitting proofs to the L1. After proof submissions, SHARP (StarkWare's proof aggregator) consolidates all proofs into a single STARK proof that gets posted and verified on Ethereum L1. TODO: Verify all of this is true",
-      "url": "https://l2beat.com/scaling/projects/starknet#liveness"
+      "notes": "Tongo is deployed on the Starknet L2, a ZK-rollup on Ethereum. Finality is inherited from the underlying chain. Starknet's time to L1 finality at the time of writing is around 29 minutes. Finality is dependent on the sequencer submitting proofs to the L1. After proof submissions, SHARP (StarkWare's proof aggregator) consolidates all proofs into a single STARK proof that gets posted and verified on Ethereum L1.",
+      "url": "https://l2beat.com/scaling/projects/starknet#liveness",
+      "needsResearchReview": "Finality figure requires citation"
     },
     {
       "name": "Deposit time",
@@ -60,8 +61,9 @@
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "notes": "Tongo supports multiple optional compliance models configured at deployment: a global auditor for real-time transaction monitoring, selective disclosure via viewing keys, ex-post proving for retroactive investigations, range compliance (transfer amount thresholds), velocity limits (cumulative amount bounds), and whitelist compliance (authorized recipient addresses). The auditor can examine but not censor transactions. TODO: verify which compliance features are enabled on the mainnet instances - if whitelist compliance is active, specific instances may be censorship-susceptible.",
-      "url": "https://docs.tongo.cash/protocol/auditor.html#advanced-features"
+      "notes": "Tongo supports multiple optional compliance models configured at deployment: a global auditor for real-time transaction monitoring, selective disclosure via viewing keys, ex-post proving for retroactive investigations, range compliance (transfer amount thresholds), velocity limits (cumulative amount bounds), and whitelist compliance (authorized recipient addresses). The auditor can examine but not censor transactions.",
+      "url": "https://docs.tongo.cash/protocol/auditor.html#advanced-features",
+      "needsResearchReview": "Not verified — mainnet compliance config unchecked"
     },
     {
       "name": "External network dependence",
@@ -78,8 +80,9 @@
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "notes": "The deployed contracts show OpenZeppelin Cairo access control functions (is_upgrade_governor, has_role, get_role_admin), indicating the contracts use Starknet's native upgradeability via the replace_class syscall with role-based access control. The contract owner can also rotate the auditor public key. TODO: verify on-chain who holds the upgrade governor role.",
-      "url": "https://docs.tongo.cash/protocol/contracts.html"
+      "notes": "The deployed contracts show OpenZeppelin Cairo access control functions (is_upgrade_governor, has_role, get_role_admin), indicating the contracts use Starknet's native upgradeability via the replace_class syscall with role-based access control. The contract owner can also rotate the auditor public key.",
+      "url": "https://docs.tongo.cash/protocol/contracts.html",
+      "needsResearchReview": "Not verified — admin role needs verifying on-chain"
     },
     {
       "name": "Client-side proving",
@@ -96,8 +99,9 @@
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
-      "notes": "Tongo has 7 mainnet instances deployed on Starknet (STRK, ETH, wBTC, USDC.e, USDC, USDT, DAI). TODO: verify Tongo mainnet deployment date.",
-      "url": "https://docs.tongo.cash/protocol/contracts.html"
+      "notes": "Tongo has 7 mainnet instances deployed on Starknet (STRK, ETH, wBTC, USDC.e, USDC, USDT, DAI).",
+      "url": "https://docs.tongo.cash/protocol/contracts.html",
+      "needsResearchReview": "Not verified — launch date needs a dated source"
     },
     {
       "name": "Post-quantum secure",

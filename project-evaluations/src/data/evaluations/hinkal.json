@@ -79,25 +79,29 @@
       "name": "Upgradeability",
       "value": "Multi-sig",
       "notes": "Hinkal does not have a governance token at the moment but there are plans to launch a token in the near future. At the moment any upgrades to the protocol would be done by Hinkal internal team which likely uses a multi-signature wallet to introduce new changes on-chain. TODO: is this true, it looks like the answer is uncertain and source doesn't prove it either way",
-      "url": "https://hinkal-team.gitbook.io/hinkal/faq#q-does-hinkal-have-a-token"
+      "url": "https://hinkal-team.gitbook.io/hinkal/faq#q-does-hinkal-have-a-token",
+      "needsResearchReview": "Not verified — admin role needs verifying on-chain"
     },
     {
       "name": "Client-side proving",
       "value": "Yes",
       "notes": "ZK proofs for deposits and withdrawals are generated on the user's device. Simple private transfer transaction ZK proofs can also be generated locally but more complex ones (involving smart contract interactions, multiple tokens, etc) could take longer. Therefore Hinkal implements an external proof generation mechanism using AWS Nitro enclave. There is an option to turn on \"Extra Security\" and generate the ZK proofs inside the user's browser at a slower speed. TODO: Source doesn't mention AWS. Need to verify",
-      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle"
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle",
+      "needsResearchReview": "Not verified — TEE platform not named in source"
     },
     {
       "name": "Third-party inspectability",
       "value": "No",
       "notes": "If the \"Extra Security\" option is turned off, all private inputs for the ZK proofs (token address, amount, stealth address, etc.) are sent in plaintext to the AWS Nitro enclave. We can assume that the enclave (TEE) will not leak data to any third party but it is important to mention that there are known vulnerabilities around TEE that might allow an attacker to see the inside data. An alternative way to solve this issue is to turn on \"Extra Security\" and generate the proof locally. TODO: Source doesn't mention AWS. Need to verify",
-      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle"
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle",
+      "needsResearchReview": "Not verified — TEE platform not named in source"
     },
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
       "notes": "The Hinkal shielded-pool contract was first deployed on Ethereum mainnet in June 27, 2025. The protocol has been live on mainnet for less than one year at time of evaluation.",
-      "url": "https://etherscan.io/tx/0xefd3d917087ff47c76fa503e61504699bdfef943c46dd3be110d7e9318e84bec"
+      "url": "https://etherscan.io/tx/0xefd3d917087ff47c76fa503e61504699bdfef943c46dd3be110d7e9318e84bec",
+      "needsResearchReview": "Not verified — launch date needs a dated source"
     },
     {
       "name": "Post-quantum secure",
@@ -121,7 +125,7 @@
       "name": "Type of compliance",
       "value": "[\"Programmatic policies\",\"Selective disclosure\"]",
       "notes": "Hinkal enforces programmable per-transaction policies via Chainalysis compliance components integrated into the smart contracts; the chain-analytics signal is a data input to the policy layer (not a separate compliance category). Screening applies at deposit and withdrawal, where public addresses are visible. Private transfers within the shielded pool are note-to-note and do not expose public addresses to the compliance layer. Users can also voluntarily share their viewing key with third parties for selective disclosure.",
-      "needsResearchReview": true,
+      "needsResearchReview": "Compliance mechanisms require citation",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
     },
     {

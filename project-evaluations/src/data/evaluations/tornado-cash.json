@@ -99,7 +99,8 @@
       "name": "Implementation maturity",
       "value": "5 : Mainnet for more than 2 years",
       "notes": "Tornado Cash Classic pool contracts have been live on Ethereum mainnet since December 2019. The Router contract was deployed in February 2022 as an additional entrypoint, but the core protocol has been operational for over five years.",
-      "url": "https://etherscan.io/tx/0x51baa3dbb7e8756d52ba1b863f41e7af38373d0bb9943b9585d7f0db2d419e6e"
+      "url": "https://etherscan.io/tx/0x51baa3dbb7e8756d52ba1b863f41e7af38373d0bb9943b9585d7f0db2d419e6e",
+      "needsResearchReview": "Not verified — launch date needs a dated source"
     },
     {
       "name": "Post-quantum secure",

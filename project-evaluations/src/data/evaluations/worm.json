@@ -155,7 +155,8 @@
       "name": "Upgradeability",
       "value": "Immutable",
       "notes": "The BETH and WORM contracts deployed on Ethereum mainnet have no proxy pattern, admin controls, or governance system. Issuance rules (50 WORM per 30-minute epoch) and proof verification logic are encoded in the contracts and Circom circuits, with no on-chain mechanism to change them post-deployment.",
-      "url": "https://github.com/worm-privacy/worm/tree/main/src"
+      "url": "https://github.com/worm-privacy/worm/tree/main/src",
+      "needsResearchReview": "Not verified"
     },
     {
       "name": "Client-side proving",
@@ -167,7 +168,8 @@
       "name": "Third-party inspectability",
       "value": "Yes",
       "notes": "The UI uses external provers for generating private proof-of-burn proofs. The external provers can inspect the inputs and leak private information to third parties. Users worried about this can run their own prover in a powerful server to generate their proofs. This is only recommended for advanced technical users due to complexity",
-      "url": "https://github.com/worm-privacy/worm-privacy.github.io/blob/82fad075f12b3340410aee7f494fe0954c4302f3/src/app/tools/burn-eth/mint-beth.tsx#L361"
+      "url": "https://github.com/worm-privacy/worm-privacy.github.io/blob/82fad075f12b3340410aee7f494fe0954c4302f3/src/app/tools/burn-eth/mint-beth.tsx#L361",
+      "needsResearchReview": "Not verified — prover details need a source"
     },
     {
       "name": "Implementation maturity",
@@ -185,19 +187,22 @@
       "name": "Layer of enforcement",
       "value": "None",
       "notes": "WORM has no compliance enforcement. The smart contracts (BETH.sol and WORM.sol) and zk-SNARK circuits only enforce protocol correctness — burn address inclusion in Ethereum state, nullifier uniqueness, and per-epoch issuance caps — not any compliance policy such as blocklists, sanctions screening, or identity checks.",
-      "url": "https://github.com/worm-privacy/worm/tree/main/src"
+      "url": "https://github.com/worm-privacy/worm/tree/main/src",
+      "needsResearchReview": "Not verified — no-compliance claim needs a source"
     },
     {
       "name": "Enforcement entities",
       "value": "None",
       "notes": "No entity can blocklist addresses, freeze transfers, or modify protocol parameters. The contracts have no admin keys, governance tokens, or upgrade mechanisms, and the protocol operates permissionlessly without any DAO or third-party compliance provider.",
-      "url": "https://github.com/worm-privacy/worm/tree/main/src"
+      "url": "https://github.com/worm-privacy/worm/tree/main/src",
+      "needsResearchReview": "Not verified — no-entity claim needs a source"
     },
     {
       "name": "Type of compliance",
       "value": "[\"None\"]",
       "notes": "No identity verification, transaction screening, proof-of-innocence requirement, selective disclosure, or programmatic policy is enforced. The burn-and-mint flow using Groth16 zk-SNARKs provides privacy through cryptographic proofs but imposes no compliance checks.",
-      "url": "https://github.com/worm-privacy/worm/tree/main/src"
+      "url": "https://github.com/worm-privacy/worm/tree/main/src",
+      "needsResearchReview": "Not verified — no-compliance claim needs a source"
     },
     {
       "name": "Point of enforcement",
