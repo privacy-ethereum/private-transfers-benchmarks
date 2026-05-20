@@ -272,6 +272,37 @@ body {
 }
 
 /* =========================================================
+   Report banner
+   ========================================================= */
+.report-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-8);
+  background: var(--primary);
+  color: var(--background);
+  font-size: 0.95rem;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.report-banner__text {
+  font-weight: 500;
+}
+
+.report-banner__link {
+  color: var(--background);
+  text-decoration: underline;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.report-banner__link:hover {
+  opacity: 0.85;
+}
+
+/* =========================================================
    Tabs
    ========================================================= */
 .tabs {
