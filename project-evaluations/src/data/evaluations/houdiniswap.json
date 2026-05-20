@@ -232,7 +232,7 @@
     {
       "name": "Escape hatch",
       "value": "N/A",
-      "notes": "The escape hatch property does not apply here because there is no protocol-controlled pool or shielded balance to exit from. The routing is non-custodial and executed through exchange protocols rather than a Houdini Swap contract, and each swap passes through two separate non-custodial exchanges with a temporary intermediary asset acting as a buffer between legs. If a partner exchange fails to deliver during the brief window between legs, recovery is a customer-service matter with that venue, not an on-chain withdrawal path.",
+      "notes": "The escape hatch property does not apply here because there is no protocol-controlled pool or shielded balance to exit from. The routing is non-custodial and executed through exchange protocols rather than a Houdini Swap contract, and each swap passes through two separate non-custodial exchanges with a temporary intermediary asset acting as a buffer between legs. If a partner exchange fails to deliver during the brief window between legs, recovery is a customer-service matter with that venue, not an on-chain withdrawal path. According to the docs, Houdini Swap offers a 24/7 human support portal on Telegram.",
       "citations": [
         {
           "cited_text": "Non-Custodial: Houdini never takes possession of your funds; the process is entirely automated via exchange protocols.\n\n",
@@ -245,6 +245,10 @@
           "source": "https://docs.houdiniswap.com/overview/swaps-and-transfers/private-swaps",
           "start_char_index": 1940,
           "end_char_index": 2516
+        },
+        {
+          "cited_text": "Both will direct you to a 24/7 human support portal on Telegram.",
+          "source": "https://docs.houdiniswap.com/guides/how-to/contact-support"
         }
       ]
     },
@@ -448,7 +452,7 @@
     {
       "name": "Selective disclosure: viewing control",
       "value": "None",
-      "notes": "Houdini Swap has no viewing-key or selective-disclosure mechanism at all, so there is no permission object to fix at transfer time or to update later — \"None\" applies because there is nothing to control. Off-chain disclosure happens through legally compliant responses to law-enforcement data requests and through CEX partners' per-leg internal records, but neither path involves a user-facing or cryptographic viewing primitive.",
+      "notes": "Houdini Swap has no viewing-key or selective-disclosure mechanism at all. Off-chain disclosure happens through legally compliant responses to law-enforcement data requests and through CEX partners' per-leg internal records, but neither path involves a user-facing or cryptographic viewing primitive.",
       "citations": [
         {
           "cited_text": "​\n\nInformation Sharing with Law Enforcement \n\n‘When approached by law enforcement for data, we adhere to a legally compliant process, ensuring data sharing is within legal confines and in response to valid requests while safeguarding user privacy. \n\n",
