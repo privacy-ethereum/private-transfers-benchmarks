@@ -74,8 +74,9 @@
     {
       "name": "Upgradeability",
       "value": "Multi-sig",
-      "notes": "The Privaye Pools Entrypoint contract uses the UUPS (Universal Upgradeable Proxy Standard) pattern with OpenZeppelin AccessControl. The owner role controls pool registration, configuration, and contract upgrades. TODO: verify if admin is EOA, multisig, or DAO",
-      "url": "https://docs.privacypools.com/layers/contracts/entrypoint"
+      "notes": "The Privaye Pools Entrypoint contract uses the UUPS (Universal Upgradeable Proxy Standard) pattern with OpenZeppelin AccessControl. The owner role controls pool registration, configuration, and contract upgrades.",
+      "url": "https://docs.privacypools.com/layers/contracts/entrypoint",
+      "needsResearchReview": "Not verified — admin role needs verifying on-chain"
     },
     {
       "name": "Client-side proving",
@@ -93,7 +94,8 @@
       "name": "Implementation maturity",
       "value": "4 : Mainnet for more than 1 year",
       "notes": "The Privacy Pools deposit contract was deployed on March 29th 2025",
-      "url": "https://etherscan.io/tx/0x4987385c58c49c9e3117244180094c5b7c5a0566c8547d13880df5e19076776c"
+      "url": "https://etherscan.io/tx/0x4987385c58c49c9e3117244180094c5b7c5a0566c8547d13880df5e19076776c",
+      "needsResearchReview": "Not verified — launch date needs a dated source"
     },
     {
       "name": "Post-quantum secure",
@@ -146,8 +148,9 @@
     {
       "name": "Open source",
       "value": "Yes",
-      "notes": "The core contracts (privacy-pools-core) are licensed under Apache 2.0. Website repos use other licenses. The ASP code, which controls deposit vetting and withdrawal eligibility, is not publicly available in the 0xbow GitHub organization. TODO: verify if ASP code is published elsewhere or intentionally closed-source — if critical component is not open source, value should be No.",
-      "url": "https://github.com/orgs/0xbow-io/repositories"
+      "notes": "The core contracts (privacy-pools-core) are licensed under Apache 2.0. Website repos use other licenses. The ASP code, which controls deposit vetting and withdrawal eligibility, is not publicly available in the 0xbow GitHub organization.",
+      "url": "https://github.com/orgs/0xbow-io/repositories",
+      "needsResearchReview": "Not verified — ASP code publication unconfirmed"
     },
     {
       "name": "Private State Scalability",

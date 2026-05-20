@@ -78,8 +78,9 @@
     {
       "name": "Upgradeability",
       "value": "Network upgrade (hard/soft fork)",
-      "notes": "The fhERC20 smart contracts do not document on-chain upgradeability. However, the CoFHE coprocessor network (threshold network, fheOS, DA layer) is separately managed by Fhenix and can be upgraded independently, making the system as a whole upgradeable even if the on-chain contracts are immutable. TODO: verify on-chain whether Redact contracts use a proxy pattern. TODO: add a schema option for upgradeable external/decentralised networks without forks.",
-      "url": "https://docs.redact.money/architecture/fherc20-token-standard"
+      "notes": "The fhERC20 smart contracts do not document on-chain upgradeability. However, the CoFHE coprocessor network (threshold network, fheOS, DA layer) is separately managed by Fhenix and can be upgraded independently, making the system as a whole upgradeable even if the on-chain contracts are immutable.",
+      "url": "https://docs.redact.money/architecture/fherc20-token-standard",
+      "needsResearchReview": "Not verified — proxy pattern needs checking on-chain. add a schema option for upgradeable external/decentralised networks without forks"
     },
     {
       "name": "Client-side proving",
@@ -102,8 +103,9 @@
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "The TFHE encryption layer uses lattice-based cryptography (LWE problem), which is believed to be post-quantum secure. However, the underlying Ethereum transactions use ECDSA signatures, and the threshold network and DA layer likely use classical cryptographic primitives that are not post-quantum resistant. The system as a whole is not post-quantum secure. TODO: verify post-quantum status of threshold MPC scheme and DA layer primitives. ",
-      "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network#decryption-process"
+      "notes": "The TFHE encryption layer uses lattice-based cryptography (LWE problem), which is believed to be post-quantum secure. However, the underlying Ethereum transactions use ECDSA signatures, and the threshold network and DA layer likely use classical cryptographic primitives that are not post-quantum resistant. The system as a whole is not post-quantum secure.",
+      "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network#decryption-process",
+      "needsResearchReview": "Post-quantum status requires citation"
     },
     {
       "name": "Layer of enforcement",
@@ -144,22 +146,23 @@
     {
       "name": "Cryptographic verifiability",
       "value": "No",
-      "notes": "Correctness rests on a permissioned threshold-decryption network (an economic / multi-party trust mechanism), so the value is No per the rule that excludes economic mechanisms from cryptographic verifiability. The CoFHE architecture claims to use zero-knowledge proofs of knowledge (ZKPoK) alongside TFHE, but even if ZKPoK is implemented, decryption itself depends on threshold-network honesty rather than pure math. TODO: verify whether ZKPoK verification is implemented (this would not flip the value but would tighten the description).",
-      "needsResearchReview": true,
+      "notes": "Correctness rests on a permissioned threshold-decryption network (an economic / multi-party trust mechanism), so the value is No per the rule that excludes economic mechanisms from cryptographic verifiability. The CoFHE architecture claims to use zero-knowledge proofs of knowledge (ZKPoK) alongside TFHE, but even if ZKPoK is implemented, decryption itself depends on threshold-network honesty rather than pure math.",
+      "needsResearchReview": "Not verified — CoFHE ZKPoK support unconfirmed",
       "url": "https://docs.redact.money/architecture/cofhe-overview#security-and-privacy-measures"
     },
     {
       "name": "Open source",
       "value": "No",
-      "notes": "The Redact repository and cofhe-contracts are licensed under MIT. However, the fheOS computation engine, threshold network node code, and DA layer do not appear in the FhenixProtocol GitHub organization. These are critical infrastructure components. TODO: confirm whether core Fhenix infrastructure (fheOS server, threshold network, DA layer) licenses are published",
-      "url": "https://github.com/FhenixProtocol/redact"
+      "notes": "The Redact repository and cofhe-contracts are licensed under MIT. However, the fheOS computation engine, threshold network node code, and DA layer do not appear in the FhenixProtocol GitHub organization. These are critical infrastructure components.",
+      "url": "https://github.com/FhenixProtocol/redact",
+      "needsResearchReview": "Not verified — Fhenix infrastructure license unconfirmed"
     },
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
       "notes": "Redact uses an account-based model where each user's encrypted balance handle is stored as a mapping within the smart contract storage. On-chain state grows proportionally to the number of accounts. Full ciphertexts grow on the off-chain DA layer proportionally to the number of operations — every transfer emits a new ciphertext that must be retained for balance reconstruction.",
       "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances",
-      "needsResearchReview": true
+      "needsResearchReview": "State-growth model requires citation"
     },
     {
       "name": "Client-side indexing",

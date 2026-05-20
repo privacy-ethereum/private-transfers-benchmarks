@@ -38,8 +38,9 @@
     {
       "name": "Time-to-finality",
       "value": "3300",
-      "notes": "Intmax is an zkRollup (could be considered a L3) settling on Scroll (L2) which settles on Ethereum (L1). Funds are stored on Ethereum. Finality depends on how long it takes for validity proofs to be submitted and verified. Scroll's finality time (~43 minutes as of writing) is the primary bottleneck, as Intmax blocks are submitted to Scroll. TODO: verify current Intmax-specific finality time — it should be at least Scroll's finality, possibly longer if Intmax block builder submission adds delay",
-      "url": "https://l2beat.com/scaling/projects/scroll#liveness"
+      "notes": "Intmax is an zkRollup (could be considered a L3) settling on Scroll (L2) which settles on Ethereum (L1). Funds are stored on Ethereum. Finality depends on how long it takes for validity proofs to be submitted and verified. Scroll's finality time (~43 minutes as of writing) is the primary bottleneck, as Intmax blocks are submitted to Scroll.",
+      "url": "https://l2beat.com/scaling/projects/scroll#liveness",
+      "needsResearchReview": "Not verified — Intmax block-builder delay unknown"
     },
     {
       "name": "Deposit time",
@@ -93,7 +94,8 @@
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
       "notes": "Intmax launched on Ethereum mainnet in June 2025",
-      "url": "https://etherscan.io/tx/0xbb35cae7bb4711e7e2db56c10d3f09f1c2d482bb00912b6593577d4dd744a86e"
+      "url": "https://etherscan.io/tx/0xbb35cae7bb4711e7e2db56c10d3f09f1c2d482bb00912b6593577d4dd744a86e",
+      "needsResearchReview": "Not verified — launch date needs a dated source"
     },
     {
       "name": "Post-quantum secure",
@@ -117,7 +119,7 @@
       "name": "Type of compliance",
       "value": "[\"Programmatic policies\",\"Proof of innocence (POI) / ASP\"]",
       "notes": "Intmax gates incoming deposits via Predicate AVS — a programmable per-deposit policy framework that returns a cryptographic attestation of compliance against rule sets sourcing from blockchain-analytics vendors. Predicate is the canonical example of programmatic policies. Users additionally demonstrate via a Proof of Innocence model that their funds are not associated with sanctioned or illicit activity before being accepted into the network.",
-      "needsResearchReview": true,
+      "needsResearchReview": "Compliance mechanisms require citation",
       "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#aml-rules"
     },
     {
@@ -142,14 +144,15 @@
       "name": "Cryptographic verifiability",
       "value": "Yes",
       "notes": "State transitions within Intmax are cryptographically verified using Plonky2 ZK proofs with FRI commitments and BN254 curve operations — an external observer can re-check the proofs against the published verifier. Additional trust concerns (contracts upgradable by a 2/4 multisig, Predicate AVS deposit gating, self-custodied balance data) are captured separately by Upgradeability and Censorship resistance rather than this property. The system settles through Scroll (L2) to Ethereum (L1), inheriting their consensus models for ordering.",
-      "needsResearchReview": true,
+      "needsResearchReview": "Proving system requires citation",
       "url": "https://docs.network.intmax.io/developers-hub/security-and-privacy/architecture-principles"
     },
     {
       "name": "Open source",
       "value": "Yes",
-      "notes": "The Intmax smart contracts, node software, and related tooling are publicly available on GitHub under the InternetMaximalism organization. TODO: verify license type — no LICENSE file found in the main repositories as of April 2026",
-      "url": "https://docs.network.intmax.io/developers-hub/code-repository"
+      "notes": "The Intmax smart contracts, node software, and related tooling are publicly available on GitHub under the InternetMaximalism organization.",
+      "url": "https://docs.network.intmax.io/developers-hub/code-repository",
+      "needsResearchReview": "Not verified — no LICENSE file found in the repos"
     },
     {
       "name": "Private State Scalability",

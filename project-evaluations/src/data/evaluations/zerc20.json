@@ -254,7 +254,7 @@
           "end_char_index": 1147
         }
       ],
-      "needsResearchReview": true
+      "needsResearchReview": "Not verified — admin role needs verifying on-chain"
     },
     {
       "name": "Client-side proving",
@@ -356,7 +356,7 @@
           "end_char_index": 4120
         }
       ],
-      "needsResearchReview": true
+      "needsResearchReview": "Not verified — blocklist owner needs verifying on-chain"
     },
     {
       "name": "Type of compliance",
@@ -389,7 +389,7 @@
           "end_char_index": 1863
         }
       ],
-      "needsResearchReview": true
+      "needsResearchReview": "Not verified — which calls the blocklist gates is unclear"
     },
     {
       "name": "Selective disclosure: viewing entity",

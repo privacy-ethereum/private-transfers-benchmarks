@@ -93,7 +93,8 @@
       "name": "Implementation maturity",
       "value": "5 : Mainnet for more than 2 years",
       "notes": "Monero was launched in April 2014. It was a fair, pre-announced launch of the CryptoNote reference code and has been continuously upgraded through community proposals.",
-      "url": "https://www.getmonero.org/resources/about/"
+      "url": "https://www.getmonero.org/resources/about/",
+      "needsResearchReview": "Not verified — launch date needs a dated source"
     },
     {
       "name": "Post-quantum secure",

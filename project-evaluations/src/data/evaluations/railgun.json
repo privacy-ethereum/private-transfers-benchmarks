@@ -85,7 +85,8 @@
       "name": "Implementation maturity",
       "value": "5 : Mainnet for more than 2 years",
       "notes": "Railgun deployed on Ethereum mainnet in July 2021, making it operational for over 4 years. It has since expanded to BSC, Polygon, and Arbitrum.",
-      "url": "https://etherscan.io/tx/0x13954e0d1af4c619efbd502299e78e116d1309b2b85c15ac6fe09838bb8622aa"
+      "url": "https://etherscan.io/tx/0x13954e0d1af4c619efbd502299e78e116d1309b2b85c15ac6fe09838bb8622aa",
+      "needsResearchReview": "Not verified — launch date needs a dated source"
     },
     {
       "name": "Post-quantum secure",
@@ -150,13 +151,14 @@
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Unshielding (withdrawing) is available as soon as the user constructs the required ZK proof to withdraw. There is no standby wait period because the withdraw transaction only checks that the Private Proof of Innocence (PPOI) proofs of that transaction are valid. TODO: needs more info and research",
-      "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#transaction-level-checks"
+      "notes": "No mandatory withdrawal waiting period enforced by the protocol. Unshielding (withdrawing) is available as soon as the user constructs the required ZK proof to withdraw. There is no standby wait period because the withdraw transaction only checks that the Private Proof of Innocence (PPOI) proofs of that transaction are valid.",
+      "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#transaction-level-checks",
+      "needsResearchReview": "Not verified — withdrawal/PPOI interaction unclear"
     },
     {
       "name": "Deposit time",
       "value": "3600",
-      "notes": "Users depositing funds (shielding funds) into the Railgun smart contracts have to wait a time period for List Providers to check that the transaction origin is clean. According to the Railgun documentation, the time period could take around an hour for most users. In this standby period the user could withdraw their funds to the depositing address at any time. TODO: needs more info and research",
+      "notes": "Users depositing funds (shielding funds) into the Railgun smart contracts have to wait a time period for List Providers to check that the transaction origin is clean. According to the Railgun documentation, the time period could take around an hour for most users. In this standby period the user could withdraw their funds to the depositing address at any time.",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#unshield-only-standby-period"
     },
     {

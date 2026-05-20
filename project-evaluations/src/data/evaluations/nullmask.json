@@ -238,7 +238,7 @@
           "end_char_index": 2478
         }
       ],
-      "needsResearchReview": true
+      "needsResearchReview": "Not verified — admin role needs verifying on-chain"
     },
     {
       "name": "Client-side proving",
@@ -284,7 +284,7 @@
           "end_char_index": 1075
         }
       ],
-      "needsResearchReview": true
+      "needsResearchReview": "Not verified — launch date needs a dated source"
     },
     {
       "name": "Post-quantum secure",
