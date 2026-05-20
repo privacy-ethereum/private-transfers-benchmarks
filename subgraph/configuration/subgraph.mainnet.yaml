@@ -162,6 +162,61 @@ dataSources:
           receipt: true
       file: ../src/worm/weth.ts
 
+  - kind: ethereum
+    name: LiquidityManager
+    network: mainnet
+    source:
+      address: "0xcC10b7098FEf1aB2f0FF3bE91d2A7B3230b90CF0"
+      abi: LiquidityManager
+      startBlock: 24383794
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - ZERC20ProtocolStats
+        - ZERC20OperationStats
+        - ZERC20WrappedStats
+        - ZERC20UnwrappedStats
+        - ZERC20Wrap
+        - ZERC20Unwrap
+      abis:
+        - name: LiquidityManager
+          file: ../abis/zerc20/LiquidityManager.json
+      eventHandlers:
+        - event: Wrapped(indexed address,indexed address,uint256,uint256)
+          handler: handleWrapped
+          receipt: true
+        - event: Unwrapped(indexed address,indexed address,uint256,uint256)
+          handler: handleUnwrapped
+          receipt: true
+      file: ../src/zerc20/liquidity-manager.ts
+
+  - kind: ethereum
+    name: zERC20
+    network: mainnet
+    source:
+      address: "0x410056c6f0a9abd8c42b9eef3bb451966fb0d924"
+      abi: zERC20
+      startBlock: 24383714
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - ZERC20ProtocolStats
+        - ZERC20OperationStats
+        - ZERC20TeleportStats
+        - ZERC20Teleport
+      abis:
+        - name: zERC20
+          file: ../abis/zerc20/zERC20.json
+      eventHandlers:
+        - event: Teleport(indexed address,uint256)
+          handler: handleTeleport
+          receipt: true
+      file: ../src/zerc20/zerc20.ts
+
 templates:
   - kind: ethereum
     name: TornadoInstance
