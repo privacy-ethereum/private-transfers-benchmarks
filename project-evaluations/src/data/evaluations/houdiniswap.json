@@ -451,8 +451,8 @@
     },
     {
       "name": "Selective disclosure: viewing control",
-      "value": "None",
-      "notes": "Houdini Swap has no viewing-key or selective-disclosure mechanism at all. Off-chain disclosure happens through legally compliant responses to law-enforcement data requests and through CEX partners' per-leg internal records, but neither path involves a user-facing or cryptographic viewing primitive.",
+      "value": "Pre-defined",
+      "notes": "Houdini Swap has no dedicated viewing-key or selective-disclosure mechanism. Off-chain disclosure happens through legally compliant responses to law-enforcement data requests and through CEX internal records. The viewing control is pre-defined by the CEX partners because they can view transaction details at any step of the process.",
       "citations": [
         {
           "cited_text": "​\n\nInformation Sharing with Law Enforcement \n\n‘When approached by law enforcement for data, we adhere to a legally compliant process, ensuring data sharing is within legal confines and in response to valid requests while safeguarding user privacy. \n\n",
