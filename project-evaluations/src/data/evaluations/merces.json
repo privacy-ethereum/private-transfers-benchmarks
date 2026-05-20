@@ -1,7 +1,7 @@
 {
   "id": "merces",
   "title": "Merces",
-  "description": "Merces by TACEO is the first implementation of Private Shared State (PSS) that demonstrates a confidential stablecoin transfer system. It is currently deployed on Base and Arc testnet, with more networks on the way.",
+  "description": "Merces by TACEO is an implementation of Private Shared State (PSS), providing a confidential stablecoin transfer system. It is deployed on Base and the Arc testnet.",
   "status": "pending",
   "documentation": "https://merces-dashboard.taceo.io/base/introduction/overview",
   "categories": ["Multi Party Computation (MPC)"],

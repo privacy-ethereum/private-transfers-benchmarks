@@ -1,7 +1,7 @@
 {
   "id": "umbra",
   "title": "Umbra Privacy (Solana)",
-  "description": "Umbra Privacy provides the cryptographic infrastructure necessary to execute confidential transactions, allowing users and applications to protect their financial data on-chain. The protocol is designed to enable anonymous, unlinkable, and auditable token transfers and interactions. It functions as a shared-state system built for capital efficiency, providing robust privacy guarantees without the high per-user costs typically associated with on-chain privacy solutions.",
+  "description": "Umbra Privacy provides cryptographic infrastructure for confidential transactions, letting users and applications keep financial data private on-chain. It enables anonymous, unlinkable, and auditable token transfers and interactions, using a shared-state model to reduce the per-user cost of on-chain privacy.",
   "status": "pending",
   "documentation": "https://docs.umbraprivacy.com/docs/introduction",
   "categories": ["Multi Party Computation (MPC)"],

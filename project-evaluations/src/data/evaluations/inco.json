@@ -1,7 +1,7 @@
 {
   "id": "inco",
   "title": "INCO",
-  "description": "Inco is a confidentiality layer for blockchains that enables privacy-preserving smart contracts without modifying the underlying blockchain. Unlike monolithic privacy solutions, Inco follows a modular approach similar to how SSL/TLS provides security for internet protocols.",
+  "description": "Inco is a confidentiality layer for blockchains that enables privacy-preserving smart contracts without modifying the underlying blockchain. It takes a modular approach, comparable to how SSL/TLS adds security to internet protocols.",
   "status": "pending",
   "documentation": "https://docs.inco.org/home",
   "categories": ["L2s", "TEEs"],
