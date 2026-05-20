@@ -1,7 +1,7 @@
 {
   "id": "nullmask",
   "title": "Nullmask",
-  "description": "Nullmask is a privacy layer that sits between an ordinary wallet (e.g. MetaMask) and a chain via a custom RPC proxy. Users sign a single authorization message to derive viewing, nullifying and encryption keys. The proxy converts a user's normal transactions into shielded notes and produces UltraHonk zk-SNARK proofs for deposits, transfers and withdrawals. Shielded state is represented as encrypted notes on-chain alongside a key registry. Users trial-decrypt notes to find their own. Retroactive compliance allows flagged deposits to be revoked.",
+  "description": "Nullmask is a privacy layer that sits between an ordinary wallet (e.g. MetaMask) and a chain via a custom RPC proxy. Users sign a single authorization message to derive viewing, nullifying and encryption keys. The proxy converts a user's normal transactions into shielded notes and produces UltraHonk zk-SNARK proofs for deposits, transfers and withdrawals. All shielded transactions processed by the RPC proxy are sent to the Nullmask contract to be executed and registered. Shielded state is represented as encrypted notes on-chain alongside a key registry. Users trial-decrypt notes to find their own. Retroactive compliance allows flagged deposits to be revoked.",
   "documentation": "https://docs.nullmask.io/",
   "categories": ["VPN (Private Intents)"],
   "properties": [
@@ -131,14 +131,18 @@
     },
     {
       "name": "Deposit time",
-      "value": "0",
-      "notes": "Deposits execute as a single on-chain call with no protocol-imposed waiting period before submission. When the user makes a deposit, the funds are held by the contract and a pending event is emitted. A guard service then screens the depositor address and either accepts or rejects it. This screening gates acceptance into the Merkle tree.",
+      "value": "15-30 seconds",
+      "notes": "When the user makes a deposit, the funds are held by the contract and a pending event is emitted. A guard service then screens the depositor address and either accepts or rejects it. This screening gates acceptance into the Merkle tree. It usually takes 15-30 seconds but it depends on the guard service.",
       "citations": [
         {
           "cited_text": "## Deposit Flow\n\n```mermaid\nstateDiagram-v2\n[*] --> Pending: User calls deposit()\nPending --> Approved: Guard approves\nPending --> Rejected: Guard rejects\nPending --> Reverted: Depositor withdraws\n\nApproved --> [*]: Note added to Merkle tree\nRejected --> [*]: Funds refunded to depositor\nReverted --> [*]: Funds refunded to depositor\n```\n\n1. User calls `deposit()` → funds are held by the contract\n2. `DepositPending` event is emitted with deposit details\n3. Guard service monitors for pending deposits\n4. Guard screens the depositor address\n5. Guard calls `approveDeposit()` or `rejectDeposit()`\n\n## Guard Operations\n\n### `approveDeposit(...)`\n\n```solidity\nfunction approveDeposit(\nuint256 index,\naddress recipient,\naddress token,\nuint256 amount,\naddress depositor,\nuint256 gasEscrow,\nuint256 revocationPublicKeyX,\nuint256 revocationPublicKeyY,\nuint256 revocationPublicKeyHash\n) external nonReentrant\n```\n\nOnly callable by the guard. ",
           "source": "https://docs.nullmask.io/smart-contract-reference/deposit.md",
           "start_char_index": 1264,
           "end_char_index": 2199
+        },
+        {
+          "cited_text": "The deposit appears in your shielded balance (typically within 15-30 seconds)",
+          "source": "https://docs.nullmask.io/user-guide/depositing#what-happens"
         }
       ]
     },
@@ -215,13 +219,17 @@
           "source": "https://docs.nullmask.io/security/on-chain-guarantees.md",
           "start_char_index": 2474,
           "end_char_index": 2930
+        },
+        {
+          "cited_text": "Users can withdraw pending deposits at any time before guard action: Call withdrawPendingDeposit() on the contract",
+          "source": "https://docs.nullmask.io/compliance/compliance#user-initiated-withdrawal"
         }
       ]
     },
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "notes": "The main contract is upgradeable, and the upgrade permission mechanism itself is upgradeable. The current upgrade controller is held by a single admin (the deployer), with that same authority gating verifier swaps and other privileged setters. Migration to a timelock, multisig, or DAO is described as a future possibility rather than a live arrangement. The on-chain admin address has not been independently verified to confirm whether the deployer key is an EOA or a multisig wrapper.",
+      "notes": "The main contract is a UUPS upgradeable contract, and the upgrade permission mechanism itself is upgradeable. The current upgrade controller is held by a single admin (the deployer), with that same authority gating verifier swaps and other privileged setters. Migration to a timelock, multisig, or DAO is described as a future possibility rather than a live arrangement. The on-chain admin address has not been independently verified to confirm whether the deployer key is an EOA or a multisig wrapper.",
       "citations": [
         {
           "cited_text": "### State.sol\n\nAbstract contract defining the storage layout:\n\n* `_noteTree` — Merkle tree for note commitments\n* `_keyRegistryTree` — Merkle tree for receiving key hashes\n* `pendingDepositHashes` — Hash of pending deposit data\n* `noteNullifiers` — Mapping of spent note nullifiers\n* `txNullifiers` — Mapping of spent transaction nullifiers\n* `tokenWhitelist` — Token type registry\n* `guard` — Deposit guard address\n* `upgradeController` — Upgrade authorization address\n* `__gap[45]` — Reserved storage for future upgrades\n\n### Enums\n\n```solidity\nenum DepositStatus {\nREJECTED,\nPENDING,\nACTION_REQUIRED,\nAPPROVED,\nREVERTED\n}\n\nenum TokenType {\nNOT_ALLOWED,\nNATIVE_TOKEN,\nERC20,\nERC20_FEE_ON_TRANSFER\n}\n```\n\n### ReceivingKey Struct\n\n```solidity\nstruct ReceivingKey {\nbytes32 pkX; // Public key x-coordinate\nbytes32 pkY; // Public key y-coordinate\nbytes32 keyData; // Ethereum address (20 bytes) + 9 zero bytes + 3 padding\nbytes32 pnk; // Public nullifying key hash\nbytes32 ekX; // Encryption key x-coordinate\nbytes32 ekY; // Encryption key y-coordinate\n}\n```\n\n## Immutables\n\nSet in the constructor (vary per deployment):\n\n| Immutable | Description |\n| ------------------- | --------------------------------------- |\n| `VIRTUAL_CHAIN_ID` | Virtual chain ID for this deployment |\n| `UNISWAP_V2_ROUTER` | Uniswap V2 Router address on this chain |\n\n## UUPS Upgradeability\n\nThe upgrade permission mechanism is itself upgradeable via `setUpgradeController()`:\n\n1. **Current**: `AdminUpgradeController` — single admin (deployer)\n2. ",
@@ -267,7 +275,7 @@
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
-      "notes": "Nullmask is deployed on Ethereum Mainnet plus several other production chains (MegaETH, Arbitrum One, Base, BSC) alongside a Sepolia testnet, with a public web app. The mainnet deployment date has not been verified against block-explorer first-transaction evidence.",
+      "notes": "Nullmask is deployed on Ethereum Mainnet plus several other production chains (MegaETH, Arbitrum One, Base, BSC) alongside a Sepolia testnet, with a public web app. The mainnet deployment date The mainnet deployment date is February 3rd 2026.",
       "citations": [
         {
           "cited_text": "# Supported Networks\n\n## Deployments\n\n| Network | Virtual Chain ID | Contract (Proxy) | App URL |\n| --------------------------- | ---------------- | -------------------------------------------- | ---------------------------------------------------- |\n| Ethereum Sepolia (testnet) | 43611 | `0x8D7E5c312eFeb54124C4966005F923D3A3b0E04D` | [sepolia.nullmask.io](https://sepolia.nullmask.io) |\n| Hardhat (local development) | 43613 | `0xF9884b1ceF2AadFcFec536191679ee4240a8C6c9` | localhost |\n| Ethereum Mainnet | 43615 | `0x88888888Eb71E1D68aD0C471C6893EdEEa00B026` | [app.nullmask.io](https://app.nullmask.io) |\n| MegaETH | 43616 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [megaeth.nullmask.io](https://megaeth.nullmask.io) |\n| Arbitrum One | 43617 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [arbitrum.nullmask.io](https://arbitrum.nullmask.io) |\n| Base | 43618 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [base.nullmask.io](https://base.nullmask.io) |\n| BSC | 43619 | `0x8888888838DFf5A522118E461a2B926bB8Bfb4A2` | [bsc.nullmask.io](https://bsc.nullmask.io) |",
@@ -458,6 +466,10 @@
           "source": "https://docs.nullmask.io/",
           "start_char_index": 702,
           "end_char_index": 2236
+        },
+        {
+          "cited_text": "Popular repositories",
+          "source": "https://github.com/nullmask-io"
         }
       ]
     },
