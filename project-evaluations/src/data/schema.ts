@@ -315,9 +315,9 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Private state model",
     group: "State",
     description: "What model does the protocol use for managing private state",
-    metric: "UTXO-based / Account-based / Private shared state",
+    metric: "UTXO-based / Account-based / Private shared state / N/A",
     inputType: "select",
-    options: ["UTXO-based state model", "Account-based state model", "Private shared state model"],
+    options: ["UTXO-based state model", "Account-based state model", "Private shared state model", "N/A"],
   },
   {
     name: "Private Data Storage",
@@ -325,7 +325,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     description:
       "Where private transaction data is stored. Use N/A for protocols that do not maintain private transaction data (e.g. off-chain routing aggregators with no privacy contracts).",
     metric: "Protocol state / Off-chain with on-chain commitment / Smart contracts / N/A",
-    inputType: "select",
+    inputType: "multi-select",
     options: ["Protocol state", "Off-chain storage with on-chain commitment", "Smart contracts", "N/A"],
   },
 
@@ -350,7 +350,8 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     group: "Composability",
     description:
       "Range and expressiveness of private logic: from simple payment flows to rich private smart-contract ecosystems",
-    metric: "Only payments / Partial programmability / Full programmability / TBD: to be delivered",
+    metric:
+      "Only payments / Transfers and DeFi operations / Partial programmability / Full programmability with public and private state / TBD: to be delivered",
     inputType: "select",
     options: [
       "Only payments",

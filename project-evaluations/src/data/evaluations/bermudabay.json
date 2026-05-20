@@ -358,7 +358,7 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Proof of innocence (POI) / ASP\",\"Programmatic policies\"]",
+      "value": ["Proof of innocence (POI) / ASP", "Programmatic policies"],
       "notes": "Bermuda enforces compliance through two mechanisms. At deposit, depositor addresses are screened against the active policy through a Predicate attestation flow, and failing addresses are rejected. At withdrawal, a private proof of innocence proves via zero-knowledge that the withdrawn funds exclude blacklisted deposit_id lineage under the current blacklist state, with the client proving exclusion against the blacklist root and the pool verifying that proof on-chain. The curated blacklist maps flagged addresses to deposit_id values, with an updated root published for withdrawal proofs.",
       "citations": [
         {
@@ -389,7 +389,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\",\"Withdrawal\"]",
+      "value": ["Deposit", "Withdrawal"],
       "notes": "Compliance is enforced at deposit and withdrawal. Before public assets enter the pool, the depositing address is screened and the deposit is authorized through attestations together with deposit-time compliance data. At exit, the withdrawal is checked against the current blacklist state, with compliant funds retaining a private withdrawal path through a proof of innocence while blacklisted lineage is forced onto the public path. Retroactive flagging operates between these two endpoints but ultimately fires at the withdrawal gate.",
       "citations": [
         {
@@ -408,7 +408,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "value": ["User", "Voluntary third-party disclosure"],
       "notes": "A Bermuda account is a shielded account with a spending key pair and an encryption key pair, both held by the user. The pool verifies withdrawals on-chain without revealing the user's identity, balance, or full transaction history. A withdrawal proof can also be shared voluntarily with a third party — documented counterparties include centralized exchanges accepting withdrawals without additional KYC, recipients verifying untainted funds, and regulators auditing the withdrawal check without accessing user data. The third-party path is opt-in and triggered by the user sharing the proof, fitting voluntary disclosure rather than an involuntary or protocol-mandated viewing channel.",
       "citations": [
         {
@@ -559,7 +559,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "[\"Smart contracts\"]",
+      "value": ["Smart contracts"],
       "notes": "The shielded pool contract is the authoritative store. The on-chain pool holds all shielded funds and manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. Encrypted UTXO ciphertexts are the unit of private state and are emitted through the contract layer so recipients can trial-decrypt them. UTXOs use ephemeral Curve25519 key pairs with the public key placed in the authenticated plaintext portion of the AEAD envelope, eliminating the need for any public key registries — any off-chain index is a derived mirror of contract history rather than authoritative storage.",
       "citations": [
         {

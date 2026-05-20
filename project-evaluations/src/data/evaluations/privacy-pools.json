@@ -117,19 +117,19 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Proof of innocence (POI) / ASP\"]",
+      "value": ["Proof of innocence (POI) / ASP"],
       "notes": "The ASP vets deposits by checking the source of funds against illicit activity before adding them to the approved association set. This functions as a proof-of-innocence mechanism where only vetted deposits can be privately withdrawn. Depending on the ASP, there could be multiple compliance mechanisms used in order to valid if a transaction is safe or not. For example one ASP might check the transaction and funds history (Know Your Transaction KYT), another ASP might verify that the interacting address does not belong to a sanctioned list (Proof of Innocence).",
       "url": "https://docs.privacypools.com/layers/asp"
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Withdrawal\"]",
+      "value": ["Withdrawal"],
       "notes": "Withdrawals to new or unrelated addresses require a valid ASP root in the zk proof. Users need to generate this proof locally and the smart contract verifies it against the on-chain ASP root. If the proof cannot demonstrate label inclusion using the latest root, a user can use the ragequit mechanism to withdraw funds to the original depositing address, rather than an unlinked address.",
       "url": "https://docs.privacypools.com/layers/asp#set-validation"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\"]",
+      "value": ["User"],
       "notes": "Privacy Pools does not provide a mechanism for selective disclosure, compliance is handled by the association set provider mechanism. In theory, users could generate data that links deposit and withdraw actions. There is no tool or feature at the UI to create such a report, but it is technically possible.",
       "url": "https://docs.privacypools.com/layers/asp"
     },
@@ -172,7 +172,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Smart contracts",
+      "value": ["Smart contracts"],
       "notes": "Each commitment (deposit receipt) is saved in an on-chain Lean Incremental Merkle tree (LeanIMT). The specific merkle tree was chosen due to its dynamic updates, storage and hashing optimizations.",
       "url": "https://docs.privacypools.com/layers/contracts#state-management-basics"
     },

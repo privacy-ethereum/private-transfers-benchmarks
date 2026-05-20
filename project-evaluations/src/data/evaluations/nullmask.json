@@ -351,7 +351,7 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Programmatic policies\",\"Proof of innocence (POI) / ASP\"]",
+      "value": ["Programmatic policies", "Proof of innocence (POI) / ASP"],
       "notes": "Nullmask enforces two mechanisms. First, a guard service performs analytics-based screening on every deposit — each must be verified before the deposited funds become available as shielded notes, with the guard evaluating links to illicit activity, sanctioned entities, and money-laundering signatures. Second, a retrospective exclusion set mechanism uses revocation keys: the guard publishes a revocation key with each approved deposit, and if a deposit is later flagged the secret key is released so any participant can prove whether their notes are tainted.",
       "citations": [
         {
@@ -376,7 +376,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"Deposit\"]",
+      "value": ["Deposit"],
       "notes": "Compliance is enforced at the deposit boundary. Every deposit must be verified and approved by the Guard service before the deposited funds become available as shielded notes, with rejection resulting in a refund. Once a note is in the pool, internal shielded transfers, withdrawals, and shielded swaps carry no compliance step. A retrospective revocation-key mechanism allows participants to derive a proof of disassociation if a deposit is later flagged, but this is a user-side opt-in rather than a protocol gate fired at any specific step.",
       "citations": [
         {
@@ -395,7 +395,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "value": ["User", "Voluntary third-party disclosure"],
       "notes": "Users hold a viewing-key tuple — a public key, nullifying key, incoming viewing key, and outgoing viewing key — where the incoming viewing key decrypts incoming notes and the outgoing viewing key decrypts receipts of sent notes, giving self-view of balance and transaction history. Voluntary delegation is possible because the viewing key grants view access to the account's transaction history and can be shared with a third party such as an auditor, who would then be able to decrypt notes without any spending capability.",
       "citations": [
         {
@@ -532,7 +532,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "[\"Smart contracts\"]",
+      "value": ["Smart contracts"],
       "notes": "Authoritative private transaction data lives on-chain in the protocol's own contracts. Contract storage holds the note-commitment Merkle tree, the receiving-key registry tree, the spent note nullifier mapping, and the transaction nullifier mapping, while encrypted note ciphertexts are emitted in the NoteAdded event as a fixed-size encrypted payload, making the full encrypted payload part of chain history rather than any off-chain store. The RPC proxy maintains a per-user local cache of decrypted notes, keys, and a synced Merkle tree for performance and UX, but that is a derivative store of on-chain data, not the source of truth.",
       "citations": [
         {

@@ -122,19 +122,19 @@
     },
     {
       "name": "Type of compliance",
-      "value": "[\"Selective disclosure\"]",
+      "value": ["Selective disclosure"],
       "notes": "There is no enforced compliance, but users can generate selective disclosure reports linking deposit and withdrawal to show to a regulator.",
       "url": "https://docs.tornadocash.eth.limo/general/resources/compliance-tool.html"
     },
     {
       "name": "Point of enforcement",
-      "value": "[\"None\"]",
+      "value": ["None"],
       "notes": "There is no compliance enforcement in Tornado Cash itself. External dApps or web apps (e.g. centralized exchanges) can apply their own enforcement rules to any address that have interacted with the protocol.",
       "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": "[\"User\"]",
+      "value": ["User"],
       "notes": "Users can generate their own reports linking deposit and withdraw in order to share it with other third parties. This feature allows for easier tax reporting and even in authorities involved investigations.",
       "url": "https://docs.tornadocash.eth.limo/general/resources/compliance-tool.html"
     },
@@ -176,7 +176,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": "Smart contracts",
+      "value": ["Smart contracts"],
       "notes": "The Tornado Cash smart contracts store all required data for the protocol to work. Every commitment is saved in a Merkle tree within the specific pool contract for that denomination. Nullifier hashes are also stored on-chain to prevent double-spending. Encrypted deposit data is stored in the smart contracts when using the Note Account feature.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
