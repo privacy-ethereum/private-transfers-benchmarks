@@ -1,5 +1,6 @@
 import { Fluidkey } from "./fluidkey/index.js";
 import { Hinkal } from "./hinkal/index.js";
+import { Houdiniswap } from "./houdiniswap/index.js";
 import { Intmax } from "./intmax/index.js";
 import { Monero } from "./monero/index.js";
 import { PrivacyPools } from "./privacy-pools/index.js";
@@ -15,6 +16,7 @@ const intmax = new Intmax();
 const monero = new Monero();
 const hinkal = new Hinkal();
 const fluidkey = new Fluidkey();
+const houdiniswap = new Houdiniswap();
 
 await db.read();
 
@@ -39,6 +41,7 @@ const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, m
   ]);
 
 const fluidkeyMetrics = fluidkey.benchmark();
+const houdiniswapMetrics = houdiniswap.benchmark();
 
 await db.update((data) => {
   // eslint-disable-next-line no-param-reassign
@@ -83,6 +86,9 @@ await db.update((data) => {
 
   // eslint-disable-next-line no-param-reassign
   data[fluidkey.id] = fluidkeyMetrics;
+
+  // eslint-disable-next-line no-param-reassign
+  data[houdiniswap.id] = houdiniswapMetrics;
 });
 
 const end = Date.now();
