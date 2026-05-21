@@ -1,0 +1,642 @@
+{
+  "id": "bermudabay",
+  "title": "Bermuda",
+  "description": "Bermuda is a privacy protocol built for EVM chains that acts as a privacy layer between applications and the underlying chain. The protocol gives existing EVM applications shielded accounts, stealth-address payments, with built-in compliance features without requiring smart contract changes. It combines zero-knowledge proofs with programmable compliance (deposit screening, retroactive flagging, withdrawal proofs). Bermuda supports private, compliant, and gasless transactions and is advertised as enterprise grade",
+  "documentation": "https://docs.bermudabay.xyz",
+  "categories": [
+    "Shielded pool",
+    "Stealth addresses",
+    "Zero Knowledge Proofs (ZKPs)",
+    "Privacy Stack/Layer/Middleware"
+  ],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Shielded balances and transfer amounts are held inside encrypted note commitments. The shielded pool holds all shielded funds and manages deposits, transfers, and withdrawals by verifying ZK proofs. Every UTXO is encrypted with X25519-XChaCha20-Poly1305 — note values and the resulting user balances are hidden to outside observers.",
+      "citations": [
+        {
+          "cited_text": "Bermuda Pool — The core smart contract that holds all shielded funds. Manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. ",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 1897,
+          "end_char_index": 2068
+        },
+        {
+          "cited_text": "Encryption Scheme | Bermuda \n\nEncryption Scheme\n\nEvery UTXO is encrypted with an authenticated encryption algorithm, particularly X25519-XChaCha20-Poly1305 which is ECDH over Curve25519 paired with the extended nonce variant of the ChaCha20-Poly1305 AEAD.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/encryption-scheme",
+          "start_char_index": 0,
+          "end_char_index": 257
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "The shielded pool architecture means that private transfers do not reveal the sender or recipient. Like many other privacy protocols, operations are run through a relayer that submits shielded transactions on behalf of users, decoupling the sender's account from the on-chain transaction. Withdrawal proofs let the pool verify the withdrawal on-chain without revealing the user's identity, balance, or full transaction history. Proof generation and spending keys stay client-side, transaction details never leave the user's device.",
+      "citations": [
+        {
+          "cited_text": "Bermuda Relayer — Submits shielded transactions on behalf of users, decoupling the sender&#x27;s identity from the on-chain transaction origin. This is what makes transfers and withdrawals anonymous at the network level.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 1086,
+          "end_char_index": 1308
+        },
+        {
+          "cited_text": "The exit remains private — The pool can verify the withdrawal on-chain without revealing the user&#x27;s identity, balance, or full transaction history.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/withdrawal-proof",
+          "start_char_index": 744,
+          "end_char_index": 898
+        },
+        {
+          "cited_text": "All ZK proof generation happens client-side inside the embedded Prover — spending keys and transaction details never leave the user&#x27;s device.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 732,
+          "end_char_index": 880
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "Bermuda routes deposits, transfers, and withdrawals through a single shielded pool contract that holds multiple ERC-20 tokens.",
+      "citations": [
+        {
+          "cited_text": "*/\nasync getTokenBalance (tokenAddress) {\nconst token = tokenAddress.toLowerCase()\nconst utxos = await this._bermuda.findUtxos({ keypair: this._bermudaKeyPair, tokens: [token] })\nreturn this._bermuda.sumAmounts(utxos[token] ?",
+          "source": "https://raw.githubusercontent.com/bermudabay/wdk-wallet-bermuda/main/src/wallet-account-bermuda.js",
+          "start_char_index": 4312,
+          "end_char_index": 4537
+        },
+        {
+          "cited_text": "if (\nthis._bermuda.config.WXPL &&\nparams.token.toLowerCase() ===\nthis._bermuda.config.wrappedNativeToken.toLowerCase()\n) {\nconst total = BigInt(params.amount)\nconst pool = await this._bermuda.config.pool.getAddress()\nconst tokenContract = new Contract(\nthis._bermuda.config.wrappedNativeToken,\nthis._bermuda.ERC20_ABI,\n{ provider: this._bermuda.config.provider }\n)\nconst allowance = await tokenContract.allowance(\nthis._ethereumWallet.address,\npool\n)\nif (allowance r.to === selfAdrs)) {\nopts.topup = this._bermudaKeyPair\n}\n\nconst payload = await this._bermuda.deposit(params, opts)\nconst value =\nparams.token.toLowerCase() ===\nthis._bermuda.config.wrappedNativeToken.toLowerCase()\n? ",
+          "source": "https://raw.githubusercontent.com/bermudabay/wdk-wallet-bermuda/main/src/wallet-account-bermuda.js",
+          "start_char_index": 5529,
+          "end_char_index": 6212
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Bermuda transactions are distinguishable from ordinary transfers because operations route through protocol-specific contracts. The shielded pool is the core smart contract that holds all shielded funds and manages deposits, transfers, and withdrawals, so any deposit is an observable call to a known privacy contract.",
+      "citations": [
+        {
+          "cited_text": "Bermuda Pool — The core smart contract that holds all shielded funds. Manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. ",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 1897,
+          "end_char_index": 2068
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "Bermuda is an application-layer protocol deployed on host EVM chains, so transaction finality is inherited from the underlying network rather than imposed by Bermuda itself.",
+      "citations": [
+        {
+          "cited_text": "# @bermuda/wdk-wallet-bermuda\n\n\n**Note**: This package is currently in beta. Only supported network is Plasma testnet,\n\nA simple and secure package to manage Bermuda accounts for EVM-compatible blockchains.\n\n",
+          "source": "https://raw.githubusercontent.com/bermudabay/wdk-wallet-bermuda/main/README.md",
+          "start_char_index": 0,
+          "end_char_index": 208
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "Each Bermuda account is controlled by a spending and an encryption key pair, both deterministically derived from a single random seed. Using the user's wallet private key as seed inherits the host wallet's recovery setup, so no new secret beyond the existing wallet key is required. It is also possible to generate keys by using a signature over a fixed message as a seed. This path is not recommended because signature-based key generation introduces phishing attack vectors.",
+      "citations": [
+        {
+          "cited_text": "Key Generation | Bermuda \n\nOn this page \n\nKey Generation\n\nEach Bermuda account is controlled by a twofold key pair consisting of a spending and an encryption key pair. The former operates over Curve25519 while the later uses Grumpkin.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/key-generation",
+          "start_char_index": 0,
+          "end_char_index": 236
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Deposits are ordinary on-chain transactions: the SDK exposes a single deposit call that funds a Bermuda account with any ERC-20 token, with no queue, challenge window, or time-lock beyond host-chain block inclusion. Pre-shield screening runs through Predicate as part of the same transaction, so attestation latency does not delay the deposit itself. If Predicate compliance engine flags the address, the deposit transaction gets rejected immediately.",
+      "citations": [
+        {
+          "cited_text": "Deposit ​ \n\nFund a/multiple Bermuda account/s with any ERC-20 token:\n\nlet payload = await bermuda . deposit ( { \nsigner , \ntoken : bermuda . ",
+          "source": "https://docs.bermudabay.xyz/sdk/core-ops",
+          "start_char_index": 353,
+          "end_char_index": 494
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Withdrawals are single on-chain transactions: the SDK exposes a withdraw call that sends any shielded ERC-20 token to a public Ethereum account, gated only by ZK proof verification with no queue, exit window, or time-lock beyond host-chain block inclusion. Blacklist root checks run inline with the withdrawal proof and do not add a protocol-imposed wait.",
+      "citations": [
+        {
+          "cited_text": "USDC , \nto : &#x27;0x...&#x27; \namount : 42_000_000n , \nnote : &#x27;halloc&#x27; \n} ) \n\nAlso supports multiple recipients \n\nnote is an optional message, usable as payment identifier or else \n\nCan also be set inside the recipients array\n\nWithdraw ​ \n\nWithdraw any shielded ERC-20 token to a public Ethereum account:\n\nlet payload = await bermuda . withdraw ( { \nspender : bobAccount , \ntoken : bermuda . ",
+          "source": "https://docs.bermudabay.xyz/sdk/core-ops",
+          "start_char_index": 820,
+          "end_char_index": 1223
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Bermuda enforces compliance through two on-chain gates that can block valid transfers. At deposit, the depositor address is screened against the active policy through a Predicate-based attestation flow, and a failing address has its deposit rejected before funds enter the pool. At withdrawal, the pool checks the withdrawal against the current blacklist root maintained by the compliance gateway, forcing blacklisted funds to become public and removing the private exit.",
+      "citations": [
+        {
+          "cited_text": "How It Works ​ \n\nBermuda applies compliance across three connected stages, each serving a different role in the lifecycle of shielded funds:\n\nDeposit authorization — Before public assets enter the pool, the depositing address is screened and the deposit is authorized through Predicate -backed attestations together with deposit-time compliance data. ",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/how-compliance-works",
+          "start_char_index": 707,
+          "end_char_index": 1058
+        },
+        {
+          "cited_text": "Withdrawal enforcement — At exit, Bermuda checks the withdrawal against the current blacklist state. Compliant funds retain the private withdrawal path through a Proof of Innocence (POI), while blacklisted lineage is forced onto the public path.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/how-compliance-works",
+          "start_char_index": 1425,
+          "end_char_index": 1672
+        },
+        {
+          "cited_text": "Compliance Gateway — The on-chain enforcement layer that governs fund flow. It checks deposits against the blacklist maintained by the Compliance Engine and verifies that withdrawals meet the compliance policies configured by each partner. ",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 2320,
+          "end_char_index": 2560
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Bermuda depends on Predicate, an external attestation service, for pre-shield screening. Without a valid Predicate-backed attestation, deposits are rejected before funds enter the pool.",
+      "citations": [
+        {
+          "cited_text": "The depositor address is screened — The request is checked against the active policy through Predicate -backed attestation flow. ",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/pre-shield-check",
+          "start_char_index": 390,
+          "end_char_index": 519
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "notes": "Bermuda's pool and verifier contracts are immutable, and withdrawals are not blocked by compliance. If a deposit lineage is retroactively flagged, the user can still withdraw — funds exit but they lose privacy.",
+      "citations": [
+        {
+          "cited_text": "Withdrawal paths change accordingly — Funds associated with that blacklisted lineage can lose the private withdrawal path and be forced onto the public path instead.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/retroactive-flagging",
+          "start_char_index": 1049,
+          "end_char_index": 1216
+        },
+        {
+          "cited_text": "These verifiers as well as our pool are fully immutable contracts.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/contracts",
+          "start_char_index": 662,
+          "end_char_index": 730
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Immutable",
+      "notes": "The pool and its associated verifier contracts are fully immutable, and the pool itself is a standard Solidity smart contract without any privileged admin functions, so no central party can alter pool or verifier behaviour after deployment. The compliance gateway blacklist root is updated by an off-chain compliance engine each time the curated list changes, making that one part of state mutable. It is worth pointing out that the deployed contract is not verified and the smart contracts code is not open source, so we could not validate the inmutability claim.",
+      "citations": [
+        {
+          "cited_text": "These verifiers as well as our pool are fully immutable contracts.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/contracts",
+          "start_char_index": 662,
+          "end_char_index": 730
+        },
+        {
+          "cited_text": "It is a standard Solidity smart contract without any privileged admin functions. ",
+          "source": "https://docs.bermudabay.xyz/tech/contracts",
+          "start_char_index": 106,
+          "end_char_index": 187
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Proof generation runs entirely on the user's device. All ZK proof generation happens client-side inside the prover. Spending keys and transaction details never leave the user's device. The circuits are written in Noir with the Barretenberg backend, and the design targets universal client-side proving on standard consumer hardware, with further proving-pipeline optimisations under evaluation.",
+      "citations": [
+        {
+          "cited_text": "All ZK proof generation happens client-side inside the embedded Prover — spending keys and transaction details never leave the user&#x27;s device.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 732,
+          "end_char_index": 880
+        },
+        {
+          "cited_text": "Aiming for universal client-side proving on standard consumer hardware, we consider today&#x27;s state-of-the-art as okay but nowhere near the endgame. ",
+          "source": "https://docs.bermudabay.xyz/tech/proof-system",
+          "start_char_index": 269,
+          "end_char_index": 421
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Proof generation runs locally, so ZK proof generation happens client-side inside the embedded prover, and spending keys and transaction details never leave the user's device. The relayer and bundler dispatch transactions but, by design, are off-chain services that facilitate on-chain execution without having access to private transaction data. Withdrawal verification preserves confidentiality as well, since the pool can verify the withdrawal on-chain without revealing the user's identity, balance, or full transaction history.",
+      "citations": [
+        {
+          "cited_text": "All ZK proof generation happens client-side inside the embedded Prover — spending keys and transaction details never leave the user&#x27;s device.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 732,
+          "end_char_index": 880
+        },
+        {
+          "cited_text": "Infra ​ \n\nThe infrastructure layer handles transaction dispatch and compliance screening. These are off-chain services that facilitate on-chain execution without having access to private transaction data.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 880,
+          "end_char_index": 1086
+        },
+        {
+          "cited_text": "The exit remains private — The pool can verify the withdrawal on-chain without revealing the user&#x27;s identity, balance, or full transaction history.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/withdrawal-proof",
+          "start_char_index": 744,
+          "end_char_index": 898
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "2 : Public testnet",
+      "notes": "The Bermuda wallet package is in beta deployed on Base Sepolia testnet as the only supported network, and the SDK is available to partners only by direct outreach. Bermuda is not deployed to mainnet.",
+      "citations": [
+        {
+          "cited_text": "# @bermuda/wdk-wallet-bermuda\n\n\n**Note**: This package is currently in beta. Only supported network is Plasma testnet,\n\nA simple and secure package to manage Bermuda accounts for EVM-compatible blockchains.\n\n",
+          "source": "https://raw.githubusercontent.com/bermudabay/wdk-wallet-bermuda/main/README.md",
+          "start_char_index": 0,
+          "end_char_index": 208
+        },
+        {
+          "cited_text": "Install | Bermuda \n\nInstall\n\nThe Bermuda SDK is currently available to partners only. If you&#x27;re interested in integrating, reach out to us at gm@bermudabay.xyz and we&#x27;ll get you set up.\n\n",
+          "source": "https://docs.bermudabay.xyz/sdk/install",
+          "start_char_index": 0,
+          "end_char_index": 197
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Spending key pairs produce Schnorr signatures and operate over the Grumpkin curve, an elliptic-curve construction whose discrete-log hardness is broken by Shor's algorithm. UTXO encryption uses X25519-XChaCha20-Poly1305, ECDH over Curve25519 paired with XChaCha20-Poly1305, and the ECDH component is likewise vulnerable to a cryptographically relevant quantum adversary.",
+      "citations": [
+        {
+          "cited_text": "Signing Scheme | Bermuda \n\nOn this page \n\nSigning Scheme\n\nOur spending key pairs produce Schnorr signatures and operate over the Grumpkin curve. ",
+          "source": "https://docs.bermudabay.xyz/tech/signing-scheme",
+          "start_char_index": 0,
+          "end_char_index": 145
+        },
+        {
+          "cited_text": "Encryption Scheme | Bermuda \n\nEncryption Scheme\n\nEvery UTXO is encrypted with an authenticated encryption algorithm, particularly X25519-XChaCha20-Poly1305 which is ECDH over Curve25519 paired with the extended nonce variant of the ChaCha20-Poly1305 AEAD.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/encryption-scheme",
+          "start_char_index": 0,
+          "end_char_index": 257
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "Protocol/chain",
+      "notes": "Compliance is enforced at the protocol's own contract layer through the on-chain compliance gateway, which governs fund flow by checking deposits against the blacklist and verifying that withdrawals meet configured policies. The pool contract itself manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. Policies are configurable per integrator.",
+      "citations": [
+        {
+          "cited_text": "Compliance Gateway — The on-chain enforcement layer that governs fund flow. It checks deposits against the blacklist maintained by the Compliance Engine and verifies that withdrawals meet the compliance policies configured by each partner. ",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 2320,
+          "end_char_index": 2560
+        },
+        {
+          "cited_text": "Bermuda Pool — The core smart contract that holds all shielded funds. Manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. ",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 1897,
+          "end_char_index": 2068
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Third party",
+      "notes": "Bermuda's compliance decisions are sourced externally: deposit screening runs through a Predicate  attestation flow that checks the request against the active policy, and retroactive blacklisting is driven by external intelligence feeds such as sanctions lists (OFAC, EU, UN), law enforcement investigations, and on-chain forensic analysis. The compliance engine maps flagged addresses to deposit_id lineage and publishes a blacklist root, but the dispositive verdict originates from the external attestor and listed sources. Integrator configurability is limited to picking which feeds and update frequencies to consume.",
+      "citations": [
+        {
+          "cited_text": "The depositor address is screened — The request is checked against the active policy through Predicate -backed attestation flow. ",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/pre-shield-check",
+          "start_char_index": 390,
+          "end_char_index": 519
+        },
+        {
+          "cited_text": "That matters because an address that appears acceptable at deposit time may later be flagged through:\n\nUpdated sanctions lists (OFAC, EU, UN)\n\nLaw enforcement investigations\n\nNew on-chain forensic analysis\n\nCross-chain intelligence sharing\n\nOther changes in policy inputs\n\nBermuda can respond to those later decisions without turning the entire shielded pool into a public surveillance system.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/retroactive-flagging",
+          "start_char_index": 1401,
+          "end_char_index": 1796
+        },
+        {
+          "cited_text": "Configurable — Integrators define which intelligence feeds and update frequencies to use.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/retroactive-flagging",
+          "start_char_index": 2182,
+          "end_char_index": 2273
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"Proof of innocence (POI) / ASP\",\"Programmatic policies\"]",
+      "notes": "Bermuda enforces compliance through two mechanisms. At deposit, depositor addresses are screened against the active policy through a Predicate attestation flow, and failing addresses are rejected. At withdrawal, a private proof of innocence proves via zero-knowledge that the withdrawn funds exclude blacklisted deposit_id lineage under the current blacklist state, with the client proving exclusion against the blacklist root and the pool verifying that proof on-chain. The curated blacklist maps flagged addresses to deposit_id values, with an updated root published for withdrawal proofs.",
+      "citations": [
+        {
+          "cited_text": "The depositor address is screened — The request is checked against the active policy through Predicate -backed attestation flow. If the address fails screening, the deposit is rejected.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/pre-shield-check",
+          "start_char_index": 390,
+          "end_char_index": 577
+        },
+        {
+          "cited_text": "For compliant funds, Bermuda implements these checks through a private Proof of Innocence (POI) : a zero-knowledge proof that the withdrawn funds exclude blacklisted deposit_id lineage under the current blacklist state.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/withdrawal-proof",
+          "start_char_index": 153,
+          "end_char_index": 374
+        },
+        {
+          "cited_text": "Technical Details ​ \n\nIn Bermuda, the private withdrawal path is implemented as an exclusion proof against the current blacklist root: the client proves that the withdrawal excludes blacklisted deposit_id lineage, and the pool verifies that proof on-chain.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/withdrawal-proof",
+          "start_char_index": 1060,
+          "end_char_index": 1318
+        },
+        {
+          "cited_text": "Flagged addresses are mapped to deposit_id values — Because deposit-time metadata records which depositor address was associated with each deposit_id , the system can identify which deposit_id lineage must be added to blacklist state and later constrained at withdrawal.\n\nBlacklist state is updated — The compliance engine rebuilds or extends the blacklist state and publishes the updated blacklist root used by withdrawal proofs.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/retroactive-flagging",
+          "start_char_index": 617,
+          "end_char_index": 1049
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"Deposit\",\"Withdrawal\"]",
+      "notes": "Compliance is enforced at deposit and withdrawal. Before public assets enter the pool, the depositing address is screened and the deposit is authorized through attestations together with deposit-time compliance data. At exit, the withdrawal is checked against the current blacklist state, with compliant funds retaining a private withdrawal path through a proof of innocence while blacklisted lineage is forced onto the public path. Retroactive flagging operates between these two endpoints but ultimately fires at the withdrawal gate.",
+      "citations": [
+        {
+          "cited_text": "How It Works ​ \n\nBermuda applies compliance across three connected stages, each serving a different role in the lifecycle of shielded funds:\n\nDeposit authorization — Before public assets enter the pool, the depositing address is screened and the deposit is authorized through Predicate -backed attestations together with deposit-time compliance data. ",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/how-compliance-works",
+          "start_char_index": 707,
+          "end_char_index": 1058
+        },
+        {
+          "cited_text": "Withdrawal enforcement — At exit, Bermuda checks the withdrawal against the current blacklist state. Compliant funds retain the private withdrawal path through a Proof of Innocence (POI), while blacklisted lineage is forced onto the public path.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/how-compliance-works",
+          "start_char_index": 1425,
+          "end_char_index": 1672
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "notes": "A Bermuda account is a shielded account with a spending key pair and an encryption key pair, both held by the user. The pool verifies withdrawals on-chain without revealing the user's identity, balance, or full transaction history. A withdrawal proof can also be shared voluntarily with a third party — documented counterparties include centralized exchanges accepting withdrawals without additional KYC, recipients verifying untainted funds, and regulators auditing the withdrawal check without accessing user data. The third-party path is opt-in and triggered by the user sharing the proof, fitting voluntary disclosure rather than an involuntary or protocol-mandated viewing channel.",
+      "citations": [
+        {
+          "cited_text": "The exit remains private — The pool can verify the withdrawal on-chain without revealing the user&#x27;s identity, balance, or full transaction history.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/withdrawal-proof",
+          "start_char_index": 744,
+          "end_char_index": 898
+        },
+        {
+          "cited_text": "Withdrawal Checks in Practice ​ \n\nScenario How withdrawal checks help \n\nWithdrawing to a centralized exchange The exchange can verify the withdrawal check to accept the deposit without additional KYC friction \n\nReceiving a private payment The recipient can confirm the funds are not tainted \n\nRegulatory audit Compliance teams can verify withdrawal checks without accessing user data \n\nCross-chain transfers Destination chains or bridges can run withdrawal checks before accepting funds \n\nHow It Works \n\nTechnical Details \n\nWithdrawal Checks in Practice \n\nPowered by Bermuda",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/withdrawal-proof",
+          "start_char_index": 1647,
+          "end_char_index": 2221
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "Disclosure happens through a per-withdrawal proof of innocence that the user may share with a counterparty (exchange, recipient, regulator) to verify the withdrawal check. The proof is bound to that single withdrawal at proving time, so the disclosure scope is fixed when the proof is issued — the user controls whether to share, but the granularity is per-withdrawal.",
+      "citations": [
+        {
+          "cited_text": "For compliant funds, Bermuda implements these checks through a private Proof of Innocence (POI) : a zero-knowledge proof that the withdrawn funds exclude blacklisted deposit_id lineage under the current blacklist state.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/withdrawal-proof",
+          "start_char_index": 153,
+          "end_char_index": 374
+        },
+        {
+          "cited_text": "The exit remains private — The pool can verify the withdrawal on-chain without revealing the user&#x27;s identity, balance, or full transaction history.\n\n",
+          "source": "https://docs.bermudabay.xyz/compliance-solution/withdrawal-proof",
+          "start_char_index": 744,
+          "end_char_index": 898
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Transaction correctness on Bermuda rests on zk-SNARK verification performed by on-chain contracts. The pool contract holds shielded funds and manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. Circuits are written in Noir and use the Barretenberg backend. Verifier contracts perform ZK-SNARK proof verification, with multiple verifier instances covering different UTXO topologies and spending scenarios, so verifier selection is per-circuit rather than majority-based.",
+      "citations": [
+        {
+          "cited_text": "Bermuda Pool — The core smart contract that holds all shielded funds. Manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. ",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 1897,
+          "end_char_index": 2068
+        },
+        {
+          "cited_text": "Proof System | Bermuda \n\nProof System\n\nAll circuits are written in Noir and are using the official Barretenberg backend.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/proof-system",
+          "start_char_index": 0,
+          "end_char_index": 122
+        },
+        {
+          "cited_text": "Verifiers — Satellite contracts that perform ZK-SNARK proof verification. Multiple verifier instances handle different UTXO topologies and spending scenarios. ",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 2096,
+          "end_char_index": 2255
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "The wallet SDK repository wdk-wallet-bermuda is published under Apache License 2.0, an open source licence. The public organisation listing shows Apache-2.0 on wdk-wallet-bermuda and the schnorr fork, with other repositories under GPL-3.0, MIT, or no declared licence. The circuits and contracts are not publicly inspectable from the github organisation.",
+      "citations": [
+        {
+          "cited_text": "Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. ",
+          "source": "https://github.com/bermudabay/wdk-wallet-bermuda/blob/main/LICENSE",
+          "start_char_index": 0,
+          "end_char_index": 196
+        },
+        {
+          "cited_text": "BermudaBay/wdk-wallet-bermuda’s past year of commit activity \n\nJavaScript \n\n0\n\nApache-2.0\n\n0\n\n0 \n\n1 \n\nUpdated May 7, 2026 \n\nschnorr \n\nPublic\n\nForked from\nnoir-lang/schnorr \n\nUh oh!\n\n",
+          "source": "https://github.com/bermudabay",
+          "start_char_index": 5733,
+          "end_char_index": 5915
+        },
+        {
+          "cited_text": "BermudaBay/schnorr’s past year of commit activity \n\nNoir \n\n2 \n\nApache-2.0\n\n3 \n\n0 \n\n0 \n\nUpdated Apr 23, 2026 \n\nbin \n\nPublic\n\nUh oh!\n\n",
+          "source": "https://github.com/bermudabay",
+          "start_char_index": 5976,
+          "end_char_index": 6108
+        },
+        {
+          "cited_text": "BermudaBay/x402’s past year of commit activity \n\nTypeScript \n\n0\n\nApache-2.0\n\n1,683 \n\n0 \n\n0 \n\nUpdated Mar 25, 2026 \n\nmock-aa-environment \n\nPublic\n\nForked from\npimlicolabs/mock-aa-environment \n\ndocker containers to hold mock verifying paymaster + helpers to setup local AA environment\n\nUh oh!\n\n",
+          "source": "https://github.com/bermudabay",
+          "start_char_index": 6939,
+          "end_char_index": 7231
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Infinity grow",
+      "notes": "Bermuda's shielded pool stores encrypted UTXOs on-chain, and the pool contract holds all shielded funds across deposits, transfers, and withdrawals. Each spend adds new commitments and consumes nullifiers held by the pool. There is no mention of a pruning mechanism.",
+      "citations": [
+        {
+          "cited_text": "Encryption Scheme | Bermuda \n\nEncryption Scheme\n\nEvery UTXO is encrypted with an authenticated encryption algorithm, particularly X25519-XChaCha20-Poly1305 which is ECDH over Curve25519 paired with the extended nonce variant of the ChaCha20-Poly1305 AEAD.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/encryption-scheme",
+          "start_char_index": 0,
+          "end_char_index": 257
+        },
+        {
+          "cited_text": "Bermuda Pool — The core smart contract that holds all shielded funds. Manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. ",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 1897,
+          "end_char_index": 2068
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No scanning",
+      "notes": "A separate chain-state service periodically downloads the most recent chain state via scheduled GitHub Actions, producing pre-indexed snapshots that the SDK ingests. The client SDK runs a single bootstrap synchronization step that loads this snapshot before performing ZK proving, rather than scanning every block itself. The indexing work is performed by the chain-state crawler service so the end user devices do not need to be constantly scanning on-chain events.",
+      "citations": [
+        {
+          "cited_text": "import sdk from &#x27;@bermuda/sdk&#x27; \n\nlet bermuda = sdk ( &#x27;base-sepolia&#x27; ) \n\ninfo\n\nYou need to await bermuda._.initBbSync() before performing essential operations like ZK proving. ",
+          "source": "https://docs.bermudabay.xyz/sdk/prelude",
+          "start_char_index": 94,
+          "end_char_index": 289
+        },
+        {
+          "cited_text": "# Chain State\n\nPeriodically downloads the most recent chain state via [GitHub Actions](https://github.com/features/actions).\n\n",
+          "source": "https://raw.githubusercontent.com/bermudabay/chain-state/main/README.md",
+          "start_char_index": 0,
+          "end_char_index": 126
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Bermuda uses a UTXO-based shielded pool: state is organised as discrete encrypted outputs rather than per-account ciphertext balances. Each spend produces new commitments and consumes nullifiers held by the pool contract.",
+      "citations": [
+        {
+          "cited_text": "Encryption Scheme | Bermuda \n\nEncryption Scheme\n\nEvery UTXO is encrypted with an authenticated encryption algorithm, particularly X25519-XChaCha20-Poly1305 which is ECDH over Curve25519 paired with the extended nonce variant of the ChaCha20-Poly1305 AEAD.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/encryption-scheme",
+          "start_char_index": 0,
+          "end_char_index": 257
+        },
+        {
+          "cited_text": "UTXOs are always encrypted with ephemeral Curve25519 key pairs, and the corresponding public key being set in the authenticated but plaintext part of the AEAD envelope. This eliminates the need for any public key registries while guaranteeing authenticity and confidentiality of the UTXO contents.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/encryption-scheme",
+          "start_char_index": 257,
+          "end_char_index": 556
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": "[\"Smart contracts\"]",
+      "notes": "The shielded pool contract is the authoritative store. The on-chain pool holds all shielded funds and manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. Encrypted UTXO ciphertexts are the unit of private state and are emitted through the contract layer so recipients can trial-decrypt them. UTXOs use ephemeral Curve25519 key pairs with the public key placed in the authenticated plaintext portion of the AEAD envelope, eliminating the need for any public key registries — any off-chain index is a derived mirror of contract history rather than authoritative storage.",
+      "citations": [
+        {
+          "cited_text": "Bermuda Pool — The core smart contract that holds all shielded funds. Manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. ",
+          "source": "https://docs.bermudabay.xyz/tech/architecture",
+          "start_char_index": 1897,
+          "end_char_index": 2068
+        },
+        {
+          "cited_text": "UTXOs are always encrypted with ephemeral Curve25519 key pairs, and the corresponding public key being set in the authenticated but plaintext part of the AEAD envelope. This eliminates the need for any public key registries while guaranteeing authenticity and confidentiality of the UTXO contents.\n\n",
+          "source": "https://docs.bermudabay.xyz/tech/encryption-scheme",
+          "start_char_index": 257,
+          "end_char_index": 556
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Unlimited access to DeFi applications",
+      "notes": "Bermuda routes external DeFi calls through burner EIP-7702 smart accounts that can target any external EVM smart contract. The SDK documents both stateless interactions (swapping on Uniswap) and stateful ones (supplying or withdrawing liquidity to an Aave pool), with ERC-4626 tokenized vaults supported out-of-the-box by passing the vault's share token address as the token parameter. The burner-account pattern is generic across external contracts rather than a curated allowlist, so composition is mediated by the unshield/reshield flow but the destination set is open.",
+      "citations": [
+        {
+          "cited_text": "DeFi | Bermuda \n\nOn this page \n\nDeFi\n\nTo interact with DeFi protocols utilizing shielded funds, actual smart contract calls targeting external smart contracts are routed through burner EIP-7702 smart accounts for maximum compatibilty and frictionlessness.\n\n",
+          "source": "https://docs.bermudabay.xyz/sdk/defi",
+          "start_char_index": 0,
+          "end_char_index": 257
+        },
+        {
+          "cited_text": "As common interactions with DeFi protocols can be either of stateless , e.g. swapping on Uniswap, or stateful , e.g.supplying/withdrawing liquidity to/from an Aave pool the SDK provides means to accomodate both scenarios.\n\n",
+          "source": "https://docs.bermudabay.xyz/sdk/defi",
+          "start_char_index": 257,
+          "end_char_index": 480
+        },
+        {
+          "cited_text": "sendTransaction ( payload ) \n\nVaults ​ \n\nSince ERC-4626 tokenized vaults expose shares that are ERC-20 tokens they are supported in Bermuda out-of-the-box. Just provide the vault&#x27;s share token address anywhere in the SDK as token parameter.\n\n",
+          "source": "https://docs.bermudabay.xyz/sdk/defi",
+          "start_char_index": 2251,
+          "end_char_index": 2498
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Transfers and DeFi operations",
+      "notes": "Bermuda's shielded layer exposes deposit, transfer, and withdraw operations over ERC-20 tokens, with no native private smart-contract execution environment. For richer logic, interactions with DeFi protocols utilizing shielded funds are routed through burner EIP-7702 smart accounts that call external contracts, supporting both stateless interactions like swapping on Uniswap and stateful ones like supplying or withdrawing liquidity from an Aave pool. ERC-4626 vault shares are handled as ordinary shielded ERC-20s. Programmability is thus bounded to payments plus unshield/reshield-wrapped calls into external public protocols, not arbitrary private state.",
+      "citations": [
+        {
+          "cited_text": "Deposit ​ \n\nFund a/multiple Bermuda account/s with any ERC-20 token:\n\nlet payload = await bermuda . ",
+          "source": "https://docs.bermudabay.xyz/sdk/core-ops",
+          "start_char_index": 353,
+          "end_char_index": 453
+        },
+        {
+          "cited_text": "USDC , \nrecipients : [ \n{ to : &#x27;0x...&#x27; , amount : 100_000_000n } , \n{ to : &#x27;0x...&#x27; , amount : 42_000_000n } \n] \n} ) \n\nTransfer ​ \n\nTransfer any shielded ERC-20 token to a/multiple Bermuda account/s:\n\nlet payload = await bermuda . ",
+          "source": "https://docs.bermudabay.xyz/sdk/core-ops",
+          "start_char_index": 503,
+          "end_char_index": 753
+        },
+        {
+          "cited_text": "USDC , \nto : &#x27;0x...&#x27; \namount : 42_000_000n , \nnote : &#x27;halloc&#x27; \n} ) \n\nAlso supports multiple recipients \n\nnote is an optional message, usable as payment identifier or else \n\nCan also be set inside the recipients array\n\nWithdraw ​ \n\nWithdraw any shielded ERC-20 token to a public Ethereum account:\n\nlet payload = await bermuda . ",
+          "source": "https://docs.bermudabay.xyz/sdk/core-ops",
+          "start_char_index": 820,
+          "end_char_index": 1167
+        },
+        {
+          "cited_text": "DeFi | Bermuda \n\nOn this page \n\nDeFi\n\nTo interact with DeFi protocols utilizing shielded funds, actual smart contract calls targeting external smart contracts are routed through burner EIP-7702 smart accounts for maximum compatibilty and frictionlessness.\n\n",
+          "source": "https://docs.bermudabay.xyz/sdk/defi",
+          "start_char_index": 0,
+          "end_char_index": 257
+        },
+        {
+          "cited_text": "As common interactions with DeFi protocols can be either of stateless , e.g. swapping on Uniswap, or stateful , e.g.supplying/withdrawing liquidity to/from an Aave pool the SDK provides means to accomodate both scenarios.\n\n",
+          "source": "https://docs.bermudabay.xyz/sdk/defi",
+          "start_char_index": 257,
+          "end_char_index": 480
+        }
+      ]
+    }
+  ]
+}
