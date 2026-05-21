@@ -488,3 +488,92 @@ type WormWithdraw @entity(immutable: true) {
   gasUsed: BigInt!
   gasPrice: BigInt!
 }
+
+type ZERC20ProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  wrap: ZERC20OperationStats!
+  unwrap: ZERC20OperationStats!
+  teleport: ZERC20OperationStats!
+}
+
+type ZERC20OperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  wrappedStats: [ZERC20WrappedStats!]! @derivedFrom(field: "operationStats")
+  unwrappedStats: [ZERC20UnwrappedStats!]! @derivedFrom(field: "operationStats")
+  teleportedStats: [ZERC20TeleportStats!]! @derivedFrom(field: "operationStats")
+}
+
+type ZERC20WrappedStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: ZERC20OperationStats!
+}
+
+type ZERC20UnwrappedStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: ZERC20OperationStats!
+}
+
+type ZERC20TeleportStats @entity(immutable: false) {
+  id: ID!
+  tokenAddress: Bytes
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: ZERC20OperationStats!
+}
+
+type ZERC20Wrap @entity(immutable: true) {
+  id: ID!
+
+  value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type ZERC20Unwrap @entity(immutable: true) {
+  id: ID!
+
+  value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type ZERC20Teleport @entity(immutable: true) {
+  id: ID!
+
+  from: Bytes!
+  to: Bytes!
+  value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
