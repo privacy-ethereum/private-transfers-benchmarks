@@ -134,8 +134,8 @@ export default function App() {
       {dir === "category" && <CategoryBrowser onGoToProfile={goToProfile} />}
       {dir === "profile" && (
         <ProfileView
-          initialSel={profileSel}
-          onSelChange={(id) => {
+          initialSelected={profileSel}
+          onSelectedChange={(id) => {
             setProfileSel(id);
             localStorage.setItem("ptb_profile_sel", id);
           }}

@@ -30,31 +30,35 @@ function notMeasuredNoteFor(propertyName: string, protocolId: string): string | 
 }
 
 interface ProfileViewProps {
-  initialSel: string;
-  onSelChange: (id: string) => void;
+  initialSelected: string;
+  onSelectedChange: (id: string) => void;
 }
 
-export default function ProfileView({ initialSel, onSelChange }: ProfileViewProps) {
+export default function ProfileView({ initialSelected, onSelectedChange }: ProfileViewProps) {
   const firstId = evaluations[0]?.id ?? "";
-  const validSel = initialSel !== "" && evaluations.some((p) => p.id === initialSel) ? initialSel : firstId;
+  const validSelected =
+    initialSelected !== "" && evaluations.some((p) => p.id === initialSelected) ? initialSelected : firstId;
 
-  const [sel, setSelRaw] = useState(validSel);
-  const [protoSearch, setProtoSearch] = useState("");
+  const [selectedId, setSelectedId] = useState(validSelected);
+  const [searchQuery, setSearchQuery] = useState("");
   const [hidePending, setHidePending] = useState(false);
 
-  const setSel = (id: string) => {
-    setSelRaw(id);
-    onSelChange(id);
+  const setSelected = (id: string) => {
+    setSelectedId(id);
+    onSelectedChange(id);
   };
 
-  const proto = evaluations.find((p) => p.id === sel);
-  const q = protoSearch.trim().toLowerCase();
-  const filteredProtos = evaluations.filter((p) => {
-    if (hidePending && isPendingEvaluation(p)) return false;
-    if (q === "") return true;
-    return p.title.toLowerCase().includes(q) || p.categories.some((c) => c.toLowerCase().includes(q));
+  const protocol = evaluations.find((project) => project.id === selectedId);
+  const searchQuote = searchQuery.trim().toLowerCase();
+  const filteredProtos = evaluations.filter((project) => {
+    if (hidePending && isPendingEvaluation(project)) return false;
+    if (searchQuote === "") return true;
+    return (
+      project.title.toLowerCase().includes(searchQuote) ||
+      project.categories.some((category) => category.toLowerCase().includes(searchQuote))
+    );
   });
-  const subgraphReadmeMarkdown = proto !== undefined ? (readmes[proto.id] ?? "") : "";
+  const subgraphReadmeMarkdown = protocol !== undefined ? (readmes[protocol.id] ?? "") : "";
 
   return (
     <div className="direction">
@@ -76,18 +80,18 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
               className="search"
               type="search"
               placeholder="Search protocols…"
-              value={protoSearch}
+              value={searchQuery}
               onChange={(e) => {
-                setProtoSearch(e.target.value);
+                setSearchQuery(e.target.value);
               }}
               aria-label="Search protocols"
             />
-            {protoSearch !== "" && (
+            {searchQuery !== "" && (
               <button
                 type="button"
                 className="sidebar-search__clear"
                 onClick={() => {
-                  setProtoSearch("");
+                  setSearchQuery("");
                 }}
                 aria-label="Clear search"
               >
@@ -106,15 +110,15 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
             {hidePending ? "Show all protocols" : "Hide pending analysis"}
           </button>
           {filteredProtos.length === 0 ? (
-            <div className="sidebar-empty">No protocol matches &ldquo;{protoSearch}&rdquo;</div>
+            <div className="sidebar-empty">No protocol matches &ldquo;{searchQuery}&rdquo;</div>
           ) : (
             filteredProtos.map((p) => (
               <button
                 key={p.id}
                 type="button"
-                className={`proto${p.id === sel ? " active" : ""}`}
+                className={`protocol${p.id === selectedId ? " active" : ""}`}
                 onClick={() => {
-                  setSel(p.id);
+                  setSelected(p.id);
                 }}
               >
                 <div>
@@ -132,26 +136,26 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
           )}
         </aside>
 
-        {proto !== undefined && (
+        {protocol !== undefined && (
           <div className="main">
             <div className="eyebrow">Protocol profile</div>
-            <h2>{proto.title}</h2>
-            {isPendingEvaluation(proto) && (
+            <h2>{protocol.title}</h2>
+            {isPendingEvaluation(protocol) && (
               <div className="pending-banner">
                 This project is listed as pending analysis. Values below are placeholders until research is completed.
               </div>
             )}
-            <p className="desc">{proto.description}</p>
+            <p className="desc">{protocol.description}</p>
             <div className="profile-tags">
-              {proto.categories.map((c) => (
+              {protocol.categories.map((c) => (
                 <Tag key={c} cat={c} />
               ))}
             </div>
-            {proto.documentation !== "" && (
+            {protocol.documentation !== "" && (
               <div className="profile-docs">
                 docs →{" "}
-                <a href={proto.documentation} target="_blank" rel="noreferrer" className="ext-link">
-                  {proto.documentation}
+                <a href={protocol.documentation} target="_blank" rel="noreferrer" className="ext-link">
+                  {protocol.documentation}
                 </a>
               </div>
             )}
@@ -164,9 +168,9 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
                   </summary>
                   <div className="body">
                     {PROPERTY_DEFINITIONS.filter((p) => p.group === g).map((prop) => {
-                      const { value, notes, url } = valueFor({ evaluations: proto, propertyName: prop.name });
-                      const placeholderNote = value === "—" ? notMeasuredNoteFor(prop.name, proto.id) : undefined;
-                      const dimmed = BENCHMARKED_PROPERTIES.has(prop.name) && !BENCHMARKED_PROJECT_IDS.has(proto.id);
+                      const { value, notes, url } = valueFor({ evaluations: protocol, propertyName: prop.name });
+                      const placeholderNote = value === "—" ? notMeasuredNoteFor(prop.name, protocol.id) : undefined;
+                      const dimmed = BENCHMARKED_PROPERTIES.has(prop.name) && !BENCHMARKED_PROJECT_IDS.has(protocol.id);
                       return (
                         <div key={prop.name} className={`prop-row${dimmed ? " prop-row--dimmed" : ""}`}>
                           <div className="pname">
