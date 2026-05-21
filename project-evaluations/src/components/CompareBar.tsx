@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react";
 import { type Evaluation } from "../types";
 import { CATEGORY_EXPLAINERS } from "../data/explainers";
 import { LONG_TITLE_LEN } from "../constants";
@@ -27,9 +27,19 @@ export default function CompareBar({
   selectAllInCat,
 }: CompareBarProps) {
   const analyzedEvaluations = evaluations.filter((p) => !isPendingEvaluation(p));
+  const [collapsed, setCollapsed] = useState(pinned.length > 0);
+  const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (pinned.length === 0) {
+      setCollapsed(false);
+    }
+  }, [pinned.length]);
+
+  const isCollapsed = collapsed && pinned.length > 0;
 
   return (
-    <div className="compare-bar">
+    <div className="compare-bar" ref={barRef}>
       <div className="compare-bar__top">
         <div>
           <span className="eyebrow">Compare</span>
@@ -62,53 +72,78 @@ export default function CompareBar({
           >
             Pin all ({analyzedEvaluations.length})
           </button>
+          {isCollapsed && (
+            <button
+              className="chip"
+              onClick={() => {
+                setCollapsed(false);
+              }}
+            >
+              Edit pins
+            </button>
+          )}
+          {pinned.length > 0 && (
+            <button
+              className="chip on"
+              onClick={() => {
+                setCollapsed(true);
+                requestAnimationFrame(() => {
+                  barRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                });
+              }}
+            >
+              View comparison ↓
+            </button>
+          )}
         </div>
       </div>
 
-      <div className="cat-groups">
-        {Object.entries(protosByCategory).map(([cat, protos]) => {
-          const ids = protos.map((p) => p.id);
-          const allIn = ids.every((id) => pinned.includes(id));
-          const desc = CATEGORY_EXPLAINERS[cat];
-          return (
-            <div key={cat} className={`cat-group${category === cat ? " focused" : ""}`}>
-              <div className="cat-group__head">
-                <button
-                  className="cat-name pop-trigger"
-                  onClick={() => {
-                    setCategory(category === cat ? "" : cat);
-                  }}
-                >
-                  {cat} <span className="count">({protos.length})</span>
-                  {desc !== undefined && <span className="pop">{desc}</span>}
-                </button>
-                <button
-                  className={`mini-chip${allIn ? " on" : ""}`}
-                  onClick={() => {
-                    selectAllInCat(cat);
-                  }}
-                >
-                  {allIn ? "✓ All pinned" : "+ Pin all"}
-                </button>
-              </div>
-              <div className="cat-group__protos">
-                {protos.map((p) => (
+      {!isCollapsed && (
+        <div className="cat-groups">
+          {Object.entries(protosByCategory).map(([cat, protos]) => {
+            const ids = protos.map((p) => p.id);
+            const allIn = ids.length > 0 && ids.every((id) => pinned.includes(id));
+            const desc = CATEGORY_EXPLAINERS[cat];
+            return (
+              <div key={cat} className={`cat-group${category === cat ? " focused" : ""}`}>
+                <div className="cat-group__head">
                   <button
-                    key={p.id}
-                    className={`chip${pinned.includes(p.id) ? " on" : ""}${p.title.length > LONG_TITLE_LEN ? " long" : ""}`}
+                    className="cat-name pop-trigger"
                     onClick={() => {
-                      setPinned(pinned.includes(p.id) ? pinned.filter((id) => id !== p.id) : [...pinned, p.id]);
+                      setCategory(category === cat ? "" : cat);
                     }}
                   >
-                    {pinned.includes(p.id) ? "✓ " : "+ "}
-                    {p.title}
+                    {cat} <span className="count">({protos.length})</span>
+                    {desc !== undefined && <span className="pop">{desc}</span>}
                   </button>
-                ))}
+                  <button
+                    className={`mini-chip${allIn ? " on" : ""}`}
+                    onClick={() => {
+                      selectAllInCat(cat);
+                    }}
+                  >
+                    {allIn ? "✓ All pinned" : "+ Pin all"}
+                  </button>
+                </div>
+                <div className="cat-group__protos">
+                  {protos.map((p) => (
+                    <button
+                      key={p.id}
+                      className={`chip${pinned.includes(p.id) ? " on" : ""}${p.title.length > LONG_TITLE_LEN ? " long" : ""}`}
+                      onClick={() => {
+                        setPinned(pinned.includes(p.id) ? pinned.filter((id) => id !== p.id) : [...pinned, p.id]);
+                      }}
+                    >
+                      {pinned.includes(p.id) ? "✓ " : "+ "}
+                      {p.title}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

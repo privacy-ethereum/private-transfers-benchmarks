@@ -53,11 +53,7 @@ export default function ScorecardView({
   const protosByCategory = useMemo<Record<string, Evaluation[]>>(() => {
     const out: Record<string, Evaluation[]> = {};
     for (const cat of CATEGORIES) {
-      const list = analyzedEvaluations.filter((protocol) => protocol.categories.includes(cat));
-
-      if (list.length > 0) {
-        out[cat] = list;
-      }
+      out[cat] = analyzedEvaluations.filter((protocol) => protocol.categories.includes(cat));
     }
     return out;
   }, [analyzedEvaluations]);
