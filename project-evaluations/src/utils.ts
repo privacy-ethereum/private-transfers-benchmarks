@@ -3,6 +3,9 @@ import type { Evaluation } from "./types.js";
 const NUMBER_OF_SECRETS_REGEX = /number of secrets/i;
 const PROJECT_README_PATH_REGEX = /subgraph\/src\/([^/]+)\/README\.md$/;
 
+/** Properties shown without a yes/no colour — the answer is contextual, not better or worse. */
+const NEUTRAL_TONE_PROPERTIES = new Set(["Plausible deniability"]);
+
 interface IValueForParams {
   evaluations: Evaluation;
   propertyName: string;
@@ -39,6 +42,10 @@ type CellTone = "yes" | "no" | "warn" | "";
  * @dev it is currently used to mark as yellow if number of secrets is 2 or greater
  */
 export function cellTone({ value, propertyName }: ICellToneParams): CellTone {
+  if (NEUTRAL_TONE_PROPERTIES.has(propertyName)) {
+    return "";
+  }
+
   const secretValue = value.toLowerCase().trim();
 
   if (NUMBER_OF_SECRETS_REGEX.test(propertyName)) {

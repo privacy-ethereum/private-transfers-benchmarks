@@ -11,6 +11,14 @@ export default function TopBar({ dark, onToggleDark }: TopBarProps) {
         <h1>Private Transfers Analysis</h1>
       </div>
       <div className="meta">
+        <a
+          className="gh-link"
+          href="https://github.com/privacy-ethereum/private-transfers-benchmarks"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub ↗
+        </a>
         <button
           className="theme-toggle"
           onClick={onToggleDark}
