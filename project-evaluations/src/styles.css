@@ -515,6 +515,7 @@ body {
   border-radius: var(--radius-lg);
   padding: var(--space-5) var(--space-6);
   margin-bottom: var(--space-6);
+  scroll-margin-top: calc(var(--topbar-h) + var(--tabbar-h) + var(--space-4));
 }
 
 .compare-bar__top {
@@ -523,7 +524,6 @@ body {
   justify-content: space-between;
   gap: var(--space-4);
   flex-wrap: wrap;
-  margin-bottom: var(--space-5);
 }
 
 .compare-bar__top .eyebrow {
@@ -626,15 +626,16 @@ body {
 /* Category pin groups */
 .cat-groups {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--space-3) var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-2) var(--space-3);
+  margin-top: var(--space-5);
 }
 
 .cat-group {
   border: 1px solid var(--border);
   background: var(--background);
   border-radius: var(--radius-md);
-  padding: var(--space-3);
+  padding: var(--space-2);
   transition:
     border-color 120ms,
     box-shadow 120ms;
@@ -689,8 +690,8 @@ body {
 }
 
 .cat-group__protos .chip {
-  font-size: 11.5px;
-  padding: 4px 10px;
+  font-size: 11px;
+  padding: 3px 8px;
 }
 
 /* Search input */
@@ -994,8 +995,6 @@ body {
   white-space: nowrap;
 }
 
-/* No margin: the pill's left edge lines up with the category text above it
-   (both flex-start in the column .cats); vertical spacing comes from the gap. */
 .pending-badge--inline {
   margin: 0;
 }
