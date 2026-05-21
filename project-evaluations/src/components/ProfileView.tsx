@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { BENCHMARKED_PROJECT_IDS } from "../data/benchmarked-projects.js";
 import { evaluations } from "../data/evaluations/index.js";
 import { GROUP_EXPLAINERS } from "../data/explainers.js";
 import { PROPERTY_DEFINITIONS, PROPERTY_GROUPS } from "../data/schema.js";
@@ -9,32 +10,55 @@ import MarkdownView from "./MarkdownView.js";
 import Tag from "./Tag.js";
 import LinkifiedText from "./LinkifiedText.js";
 
-interface ProfileViewProps {
-  initialSel: string;
-  onSelChange: (id: string) => void;
+/** Properties measured only by the on-chain benchmarks, which currently cover Ethereum
+ *  protocols. */
+const BENCHMARKED_PROPERTIES = new Set([
+  "On-chain gas cost: deposit",
+  "On-chain gas cost: transfer",
+  "On-chain gas cost: withdraw",
+  "Anonymity set size",
+]);
+
+/** Explanatory note for an empty benchmarked property, shown instead of "No note yet":
+ *  pending for benchmarked (Ethereum) projects, out of scope for the rest. Returns
+ *  undefined for properties that should keep "No note yet". */
+function notMeasuredNoteFor(propertyName: string, protocolId: string): string | undefined {
+  if (!BENCHMARKED_PROPERTIES.has(propertyName)) return undefined;
+  return BENCHMARKED_PROJECT_IDS.has(protocolId)
+    ? "Benchmark pending — not yet measured for this protocol."
+    : "Not benchmarked — benchmarks currently cover Ethereum protocols only.";
 }
 
-export default function ProfileView({ initialSel, onSelChange }: ProfileViewProps) {
+interface ProfileViewProps {
+  initialSelected: string;
+  onSelectedChange: (id: string) => void;
+}
+
+export default function ProfileView({ initialSelected, onSelectedChange }: ProfileViewProps) {
   const firstId = evaluations[0]?.id ?? "";
-  const validSel = initialSel !== "" && evaluations.some((p) => p.id === initialSel) ? initialSel : firstId;
+  const validSelected =
+    initialSelected !== "" && evaluations.some((p) => p.id === initialSelected) ? initialSelected : firstId;
 
-  const [sel, setSelRaw] = useState(validSel);
-  const [protoSearch, setProtoSearch] = useState("");
+  const [selectedId, setSelectedId] = useState(validSelected);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [hidePending, setHidePending] = useState(false);
 
-  const setSel = (id: string) => {
-    setSelRaw(id);
-    onSelChange(id);
+  const setSelected = (id: string) => {
+    setSelectedId(id);
+    onSelectedChange(id);
   };
 
-  const proto = evaluations.find((p) => p.id === sel);
-  const q = protoSearch.trim().toLowerCase();
-  const filteredProtos =
-    q !== ""
-      ? evaluations.filter(
-          (p) => p.title.toLowerCase().includes(q) || p.categories.some((c) => c.toLowerCase().includes(q)),
-        )
-      : evaluations;
-  const subgraphReadmeMarkdown = proto !== undefined ? (readmes[proto.id] ?? "") : "";
+  const protocol = evaluations.find((project) => project.id === selectedId);
+  const searchQuote = searchQuery.trim().toLowerCase();
+  const filteredProtos = evaluations.filter((project) => {
+    if (hidePending && isPendingEvaluation(project)) return false;
+    if (searchQuote === "") return true;
+    return (
+      project.title.toLowerCase().includes(searchQuote) ||
+      project.categories.some((category) => category.toLowerCase().includes(searchQuote))
+    );
+  });
+  const subgraphReadmeMarkdown = protocol !== undefined ? (readmes[protocol.id] ?? "") : "";
 
   return (
     <div className="direction">
@@ -56,18 +80,18 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
               className="search"
               type="search"
               placeholder="Search protocols…"
-              value={protoSearch}
+              value={searchQuery}
               onChange={(e) => {
-                setProtoSearch(e.target.value);
+                setSearchQuery(e.target.value);
               }}
               aria-label="Search protocols"
             />
-            {protoSearch !== "" && (
+            {searchQuery !== "" && (
               <button
                 type="button"
                 className="sidebar-search__clear"
                 onClick={() => {
-                  setProtoSearch("");
+                  setSearchQuery("");
                 }}
                 aria-label="Clear search"
               >
@@ -75,22 +99,32 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
               </button>
             )}
           </div>
+          <button
+            type="button"
+            className={`sidebar-filter${hidePending ? " active" : ""}`}
+            onClick={() => {
+              setHidePending((v) => !v);
+            }}
+            aria-pressed={hidePending}
+          >
+            {hidePending ? "Show all protocols" : "Hide pending analysis"}
+          </button>
           {filteredProtos.length === 0 ? (
-            <div className="sidebar-empty">No protocol matches &ldquo;{protoSearch}&rdquo;</div>
+            <div className="sidebar-empty">No protocol matches &ldquo;{searchQuery}&rdquo;</div>
           ) : (
             filteredProtos.map((p) => (
               <button
                 key={p.id}
                 type="button"
-                className={`proto${p.id === sel ? " active" : ""}`}
+                className={`protocol${p.id === selectedId ? " active" : ""}`}
                 onClick={() => {
-                  setSel(p.id);
+                  setSelected(p.id);
                 }}
               >
                 <div>
                   <div className="name">{p.title}</div>
                   <div className="cats">
-                    {p.categories.join(", ")}
+                    <span className="cats-text">{p.categories.join(", ")}</span>
                     {isPendingEvaluation(p) && (
                       <span className="pending-badge pending-badge--inline">Pending analysis</span>
                     )}
@@ -102,26 +136,26 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
           )}
         </aside>
 
-        {proto !== undefined && (
+        {protocol !== undefined && (
           <div className="main">
             <div className="eyebrow">Protocol profile</div>
-            <h2>{proto.title}</h2>
-            {isPendingEvaluation(proto) && (
+            <h2>{protocol.title}</h2>
+            {isPendingEvaluation(protocol) && (
               <div className="pending-banner">
                 This project is listed as pending analysis. Values below are placeholders until research is completed.
               </div>
             )}
-            <p className="desc">{proto.description}</p>
+            <p className="desc">{protocol.description}</p>
             <div className="profile-tags">
-              {proto.categories.map((c) => (
+              {protocol.categories.map((c) => (
                 <Tag key={c} cat={c} />
               ))}
             </div>
-            {proto.documentation !== "" && (
+            {protocol.documentation !== "" && (
               <div className="profile-docs">
                 docs →{" "}
-                <a href={proto.documentation} target="_blank" rel="noreferrer" className="ext-link">
-                  {proto.documentation}
+                <a href={protocol.documentation} target="_blank" rel="noreferrer" className="ext-link">
+                  {protocol.documentation}
                 </a>
               </div>
             )}
@@ -134,9 +168,11 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
                   </summary>
                   <div className="body">
                     {PROPERTY_DEFINITIONS.filter((p) => p.group === g).map((prop) => {
-                      const { value, notes, url } = valueFor({ evaluations: proto, propertyName: prop.name });
+                      const { value, notes, url } = valueFor({ evaluations: protocol, propertyName: prop.name });
+                      const placeholderNote = value === "—" ? notMeasuredNoteFor(prop.name, protocol.id) : undefined;
+                      const dimmed = BENCHMARKED_PROPERTIES.has(prop.name) && !BENCHMARKED_PROJECT_IDS.has(protocol.id);
                       return (
-                        <div key={prop.name} className="prop-row">
+                        <div key={prop.name} className={`prop-row${dimmed ? " prop-row--dimmed" : ""}`}>
                           <div className="pname">
                             {prop.name}
                             <span className="metric">{prop.metric}</span>
@@ -146,7 +182,7 @@ export default function ProfileView({ initialSel, onSelChange }: ProfileViewProp
                             {notes !== "" ? (
                               <LinkifiedText text={notes} />
                             ) : (
-                              <span className="no-note">No note yet</span>
+                              <span className="no-note">{placeholderNote ?? "No note yet"}</span>
                             )}
                             {url !== "" && (
                               <div className="source-link">
