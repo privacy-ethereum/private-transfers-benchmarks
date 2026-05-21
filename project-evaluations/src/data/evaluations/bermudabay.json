@@ -131,7 +131,7 @@
     {
       "name": "Deposit time",
       "value": "0",
-      "notes": "Deposits are ordinary on-chain transactions: the SDK exposes a single deposit call that funds a Bermuda account with any ERC-20 token, with no queue, challenge window, or time-lock beyond host-chain block inclusion. Pre-shield screening runs through Predicate as part of the same transaction, so attestation latency does not delay the deposit itself.",
+      "notes": "Deposits are ordinary on-chain transactions: the SDK exposes a single deposit call that funds a Bermuda account with any ERC-20 token, with no queue, challenge window, or time-lock beyond host-chain block inclusion. Pre-shield screening runs through Predicate as part of the same transaction, so attestation latency does not delay the deposit itself. If Predicate compliance engine flags the address, the deposit transaction gets rejected immediately.",
       "citations": [
         {
           "cited_text": "Deposit ​ \n\nFund a/multiple Bermuda account/s with any ERC-20 token:\n\nlet payload = await bermuda . deposit ( { \nsigner , \ntoken : bermuda . ",
@@ -214,7 +214,7 @@
     {
       "name": "Upgradeability",
       "value": "Immutable",
-      "notes": "The pool and its associated verifier contracts are fully immutable, and the pool itself is a standard Solidity smart contract without any privileged admin functions, so no central party can alter pool or verifier behaviour after deployment. The compliance gateway blacklist root is updated by an off-chain compliance engine each time the curated list changes, making that one part of state mutable.",
+      "notes": "The pool and its associated verifier contracts are fully immutable, and the pool itself is a standard Solidity smart contract without any privileged admin functions, so no central party can alter pool or verifier behaviour after deployment. The compliance gateway blacklist root is updated by an off-chain compliance engine each time the curated list changes, making that one part of state mutable. It is worth pointing out that the deployed contract is not verified and the smart contracts code is not open source, so we could not validate the inmutability claim.",
       "citations": [
         {
           "cited_text": "These verifiers as well as our pool are fully immutable contracts.\n\n",
@@ -277,7 +277,7 @@
     {
       "name": "Implementation maturity",
       "value": "2 : Public testnet",
-      "notes": "The Bermuda wallet package is in beta with Plasma testnet as the only supported network, and the SDK is available to partners only by direct outreach. Bermuda is not deployed to mainnet.",
+      "notes": "The Bermuda wallet package is in beta deployed on Base Sepolia testnet as the only supported network, and the SDK is available to partners only by direct outreach. Bermuda is not deployed to mainnet.",
       "citations": [
         {
           "cited_text": "# @bermuda/wdk-wallet-bermuda\n\n\n**Note**: This package is currently in beta. Only supported network is Plasma testnet,\n\nA simple and secure package to manage Bermuda accounts for EVM-compatible blockchains.\n\n",
@@ -472,7 +472,7 @@
     {
       "name": "Open source",
       "value": "No",
-      "notes": "The wallet SDK repository wdk-wallet-bermuda is published under Apache License 2.0, an opem source licence. The public organisation listing shows Apache-2.0 on wdk-wallet-bermuda and the schnorr fork, with other repositories under GPL-3.0, MIT, or no declared licence. The circuits and contracts are not publicly inspectable from the github organisation.",
+      "notes": "The wallet SDK repository wdk-wallet-bermuda is published under Apache License 2.0, an open source licence. The public organisation listing shows Apache-2.0 on wdk-wallet-bermuda and the schnorr fork, with other repositories under GPL-3.0, MIT, or no declared licence. The circuits and contracts are not publicly inspectable from the github organisation.",
       "citations": [
         {
           "cited_text": "Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. ",
@@ -503,7 +503,7 @@
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
-      "notes": "Bermuda's shielded pool stores encrypted UTXOs on-chain, and the pool contract holds all shielded funds across deposits, transfers, and withdrawals. Each spend adds new commitments and consumes nullifiers held by the pool.",
+      "notes": "Bermuda's shielded pool stores encrypted UTXOs on-chain, and the pool contract holds all shielded funds across deposits, transfers, and withdrawals. Each spend adds new commitments and consumes nullifiers held by the pool. There is no mention of a pruning mechanism.",
       "citations": [
         {
           "cited_text": "Encryption Scheme | Bermuda \n\nEncryption Scheme\n\nEvery UTXO is encrypted with an authenticated encryption algorithm, particularly X25519-XChaCha20-Poly1305 which is ECDH over Curve25519 paired with the extended nonce variant of the ChaCha20-Poly1305 AEAD.\n\n",
@@ -522,7 +522,7 @@
     {
       "name": "Client-side indexing",
       "value": "No scanning",
-      "notes": "A separate chain-state service periodically downloads the most recent chain state via scheduled GitHub Actions, producing pre-indexed snapshots that the SDK ingests. The client SDK runs a single bootstrap synchronization step that loads this snapshot before performing ZK proving, rather than scanning every block itself. The indexing work is performed by the chain-state crawler service.",
+      "notes": "A separate chain-state service periodically downloads the most recent chain state via scheduled GitHub Actions, producing pre-indexed snapshots that the SDK ingests. The client SDK runs a single bootstrap synchronization step that loads this snapshot before performing ZK proving, rather than scanning every block itself. The indexing work is performed by the chain-state crawler service so the end user devices do not need to be constantly scanning on-chain events.",
       "citations": [
         {
           "cited_text": "import sdk from &#x27;@bermuda/sdk&#x27; \n\nlet bermuda = sdk ( &#x27;base-sepolia&#x27; ) \n\ninfo\n\nYou need to await bermuda._.initBbSync() before performing essential operations like ZK proving. ",
