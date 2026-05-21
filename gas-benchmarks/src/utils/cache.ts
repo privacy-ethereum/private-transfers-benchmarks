@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 
+import { withFileLock } from "./filelock.js";
 import { readJsonFile } from "./json.js";
 
 /**
@@ -50,23 +51,26 @@ export function CacheToFile(filePath: string, ttlMs: number) {
     // eslint-disable-next-line no-param-reassign
     descriptor.value = async function withCache(this: unknown, ...args: unknown[]): Promise<T> {
       const cacheKey = JSON.stringify({ method: String(propertyKey), args });
-      const fileCache = await readJsonFile<Record<string, { timestamp: number; data: T }>>(filePath, {});
 
-      const now = Date.now();
-      const cached = fileCache[cacheKey];
+      return withFileLock(filePath, async () => {
+        const fileCache = await readJsonFile<Record<string, { timestamp: number; data: T }>>(filePath, {});
 
-      if (cached && now - cached.timestamp < ttlMs) {
-        return cached.data;
-      }
+        const now = Date.now();
+        const cached = fileCache[cacheKey];
 
-      const result = await originalMethod.apply(this, args);
+        if (cached && now - cached.timestamp < ttlMs) {
+          return cached.data;
+        }
 
-      fileCache[cacheKey] = { timestamp: now, data: result };
+        const result = await originalMethod.apply(this, args);
 
-      await fs.mkdir(path.dirname(filePath), { recursive: true });
-      await fs.writeFile(path.resolve(filePath), JSON.stringify(fileCache, null, 2), "utf8");
+        fileCache[cacheKey] = { timestamp: now, data: result };
 
-      return result;
+        await fs.mkdir(path.dirname(filePath), { recursive: true });
+        await fs.writeFile(path.resolve(filePath), JSON.stringify(fileCache, null, 2), "utf8");
+
+        return result;
+      });
     };
 
     return descriptor;

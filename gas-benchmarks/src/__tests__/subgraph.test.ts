@@ -53,9 +53,13 @@ describe("SubgraphService", () => {
   it("should fetch data properly", async () => {
     const service = await SubgraphService.getInstance();
 
-    const result = await service.fetchRootQueryWithCache();
+    const results = await Promise.all([
+      service.fetchMainnetRootQueryWithCache(),
+      service.fetchSepoliaRootQueryWithCache(),
+    ]);
 
-    expect(result).toEqual({ data: "mocked-response" });
+    expect(results[0]).toEqual({ data: "mocked-response" });
+    expect(results[1]).toEqual({ data: "mocked-response" });
     expect(readJsonFile).toHaveBeenCalledTimes(0);
   });
 });

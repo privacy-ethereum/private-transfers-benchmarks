@@ -1,4 +1,4 @@
-import { graphql } from "../generated/gql.js";
+import { graphql } from "../generated/mainnet/gql.js";
 
 export const PrivacyPoolsProtocolStatsFragment = graphql(/* GraphQL */ `
   fragment PrivacyPoolsProtocolStatsFragment on Query {
