@@ -1,4 +1,4 @@
-import type { FeeMetrics } from "../utils/types.js";
+import type { IBenchmarkDb } from "../utils/db.js";
 
 import {
   NATIVE_ETH_TRANSFER,
@@ -10,8 +10,8 @@ import {
 export class Houdiniswap {
   readonly id = "houdiniswap";
 
-  benchmark(): Record<string, FeeMetrics> {
-    return {
+  benchmark(): Promise<IBenchmarkDb["houdiniswap"]> {
+    return Promise.resolve({
       publicToCEXETH: {
         averageGasUsed: NATIVE_ETH_TRANSFER,
       },
@@ -36,6 +36,6 @@ export class Houdiniswap {
       CEXToPublicUSDT: {
         averageGasUsed: USDT_ERC20_TRANSFER.existing,
       },
-    };
+    });
   }
 }

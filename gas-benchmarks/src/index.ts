@@ -1,94 +1,62 @@
 import { Fluidkey } from "./fluidkey/index.js";
-import { Hinkal } from "./hinkal/index.js";
 import { Houdiniswap } from "./houdiniswap/index.js";
 import { Intmax } from "./intmax/index.js";
 import { Monero } from "./monero/index.js";
-import { PrivacyPools } from "./privacy-pools/index.js";
-import { Railgun } from "./railgun/index.js";
-// import { SubgraphService } from "./subgraph/index.js";
-import { TornadoCash } from "./tornado-cash/index.js";
+import { SubgraphService } from "./subgraph/index.js";
 import { db } from "./utils/db.js";
 
-const railgun = new Railgun();
-const tornadoCash = new TornadoCash();
-const privacyPools = new PrivacyPools();
-const intmax = new Intmax();
-const monero = new Monero();
-const hinkal = new Hinkal();
 const fluidkey = new Fluidkey();
 const houdiniswap = new Houdiniswap();
+const intmax = new Intmax();
+const monero = new Monero();
 
 await db.read();
 
 const start = Date.now();
 
-// const subgraphService = await SubgraphService.getInstance();
-// const results = await Promise.all([
-//   subgraphService.fetchMainnetRootQueryWithCache(),
-//   subgraphService.fetchSepoliaRootQueryWithCache(),
-// ]);
-// eslint-disable-next-line no-console
-// console.log(results);
+const subgraphService = await SubgraphService.getInstance();
+const [mainnetRoot, sepoliaRoot] = await Promise.all([
+  subgraphService.fetchMainnetRootQueryWithCache(),
+  subgraphService.fetchSepoliaRootQueryWithCache(),
+]);
 
-const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, moneroMetrics, hinkalMetrics] =
-  await Promise.all([
-    railgun.benchmark(),
-    tornadoCash.benchmark(),
-    privacyPools.benchmark(),
-    intmax.benchmark(),
-    monero.benchmark(),
-    hinkal.benchmark(),
-  ]);
-
-const fluidkeyMetrics = fluidkey.benchmark();
-const houdiniswapMetrics = houdiniswap.benchmark();
+const [fluidkeyMetrics, houdiniswapMetrics, intmaxMetrics, moneroMetrics] = await Promise.all([
+  fluidkey.benchmark(),
+  houdiniswap.benchmark(),
+  intmax.benchmark(),
+  monero.benchmark(),
+]);
 
 await db.update((data) => {
   // eslint-disable-next-line no-param-reassign
-  data[`${railgun.name}_${railgun.version}`] = {
-    shield_erc20: railgunMetrics.shieldErc20,
-    unshield_erc20: railgunMetrics.unshieldErc20,
-    transfer_erc20: railgunMetrics.transferErc20,
+  data.railgun = mainnetRoot?.railgunProtocolStats;
+
+  // eslint-disable-next-line no-param-reassign
+  data.tornadoCash = mainnetRoot?.tornadoCashProtocolStats;
+
+  // eslint-disable-next-line no-param-reassign
+  data.privacyPools = mainnetRoot?.privacyPoolsProtocolStats;
+
+  // eslint-disable-next-line no-param-reassign
+  data.hinkal = mainnetRoot?.hinkalProtocolStats;
+
+  // eslint-disable-next-line no-param-reassign
+  data.fluidkey = {
+    ...(mainnetRoot?.fluidkeyProtocolStats ?? {}),
+    ...fluidkeyMetrics,
   };
 
   // eslint-disable-next-line no-param-reassign
-  data[`${tornadoCash.name}_${tornadoCash.version}`] = {
-    shield_eth: tornadoCashMetrics.shieldEth,
-    unshield_eth: tornadoCashMetrics.unshieldEth,
-  };
+  data.redact = sepoliaRoot?.redactProtocolStats;
 
   // eslint-disable-next-line no-param-reassign
-  data[`${privacyPools.name}_${privacyPools.version}`] = {
-    shield_eth: privacyPoolsMetrics.shieldEth,
-    unshield_eth: privacyPoolsMetrics.unshieldEth,
-  };
+  data.intmax = intmaxMetrics;
 
   // eslint-disable-next-line no-param-reassign
-  data[`${intmax.name}_${intmax.version}`] = {
-    deposit_eth: intmaxMetrics.depositEth,
-    withdraw_eth: intmaxMetrics.withdrawEth,
-  };
+  data.monero = moneroMetrics;
 
   // eslint-disable-next-line no-param-reassign
-  data[`${monero.name}_${monero.version}`] = {
-    transfer: moneroMetrics.transfer,
-  };
-
-  // eslint-disable-next-line no-param-reassign
-  data[`${hinkal.name}_${hinkal.version}`] = {
-    shield_eth: hinkalMetrics.shieldEth,
-    unshield_eth: hinkalMetrics.unshieldEth,
-    internal_transfer: hinkalMetrics.internalTransfer,
-    shield_erc20: hinkalMetrics.shieldErc20,
-    unshield_erc20: hinkalMetrics.unshieldErc20,
-    transfer_erc20: hinkalMetrics.internalTransfer,
-  };
-
-  // eslint-disable-next-line no-param-reassign
-  data[fluidkey.id] = fluidkeyMetrics;
-
-  // eslint-disable-next-line no-param-reassign
-  data[houdiniswap.id] = houdiniswapMetrics;
+  data.houdiniswap = houdiniswapMetrics;
 });
 
 const end = Date.now();
