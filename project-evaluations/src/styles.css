@@ -251,7 +251,8 @@ body {
   font-family: var(--font-mono);
 }
 
-.topbar .theme-toggle {
+.topbar .theme-toggle,
+.topbar .gh-link {
   appearance: none;
   border: 1px solid var(--border);
   background: var(--background);
@@ -265,12 +266,14 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  text-decoration: none;
   transition:
     border-color 120ms,
     background 120ms;
 }
 
-.topbar .theme-toggle:hover {
+.topbar .theme-toggle:hover,
+.topbar .gh-link:hover {
   border-color: var(--border-hover);
 }
 
