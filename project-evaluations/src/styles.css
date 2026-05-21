@@ -19,6 +19,7 @@
   /* PSE Identity kit colors */
   --anakiwa-300: #a3dff0;
   --anakiwa-400: #50c3e0;
+  --anakiwa-500: #4bcfe9;
   --cinnabar: #e3533a;
   --deep-fir: #002c00;
 
@@ -60,6 +61,7 @@
   --primary-high-contrast: var(--anakiwa-400);
   --body: var(--gray-950);
   --body-medium: var(--gray-600);
+  --body-light: var(--gray-400);
   --body-inverse: var(--white);
   --background: var(--white);
   --background-highlight: var(--gray-50);
@@ -132,6 +134,7 @@
   --primary-high-contrast: var(--anakiwa-300);
   --body: var(--gray-100);
   --body-medium: var(--gray-500);
+  --body-light: var(--gray-700);
   --body-inverse: var(--black);
   --background: var(--black);
   --background-highlight: var(--gray-900);
@@ -979,7 +982,7 @@ body {
 .pending-badge {
   display: inline-flex;
   align-items: center;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-md);
   border: 1px solid var(--pill-warn-br);
   background: var(--pill-warn-bg);
   color: var(--pill-warn-fg);
@@ -988,11 +991,13 @@ body {
   line-height: 1;
   padding: 3px 8px;
   margin-inline: 3px;
+  white-space: nowrap;
 }
 
+/* No margin: the pill's left edge lines up with the category text above it
+   (both flex-start in the column .cats); vertical spacing comes from the gap. */
 .pending-badge--inline {
-  margin-block: 3px;
-  margin-inline: 0px;
+  margin: 0;
 }
 
 /* =========================================================
@@ -1061,6 +1066,35 @@ body {
   text-align: center;
 }
 
+.sidebar-filter {
+  appearance: none;
+  width: 100%;
+  margin-bottom: var(--space-2);
+  padding: 8px 10px;
+  border: 1px solid var(--anakiwa-500);
+  border-radius: var(--radius-md);
+  background: var(--anakiwa-500);
+  color: var(--background);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  transition:
+    border-color 120ms,
+    background 120ms;
+}
+
+.sidebar-filter:hover {
+  background: var(--anakiwa-400);
+  border-color: var(--anakiwa-400);
+}
+
+.sidebar-filter.active {
+  background: var(--pill-warn-bg);
+  border-color: var(--pill-warn-br);
+  color: var(--pill-warn-fg);
+}
+
 .sidebar-list .proto {
   display: flex;
   justify-content: space-between;
@@ -1101,8 +1135,12 @@ body {
   font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--body-medium);
-  margin-top: 2px;
+  margin-top: 3px;
   line-height: 1.3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .sidebar-list .proto .arrow {
@@ -1406,6 +1444,14 @@ body {
   font-size: 13px;
   color: var(--body-medium);
   line-height: 1.6;
+}
+
+/* Benchmark properties for non-benchmarked (non-Ethereum) projects — greyed out. */
+.prop-row--dimmed .pname,
+.prop-row--dimmed .pval,
+.prop-row--dimmed .pnote,
+.prop-row--dimmed .no-note {
+  color: var(--body-light);
 }
 
 /* =========================================================
