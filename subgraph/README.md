@@ -2,7 +2,7 @@
 
 Build the required subgraph to fetch metrics data for the benchmarks.
 
-The current version of the deployed subgraph is `v0.0.13`.
+The current versions of the deployed subgraphs are mainnet - `v0.0.13`, sepolia - `v0.0.2`
 
 ## Build and deploy
 

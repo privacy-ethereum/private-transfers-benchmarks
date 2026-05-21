@@ -1,4 +1,4 @@
-import { graphql } from "../generated/gql.js";
+import { graphql } from "../generated/mainnet/gql.js";
 
 export const FluidkeyProtocolStatsFragment = graphql(/* GraphQL */ `
   fragment FluidkeyProtocolStatsFragment on Query {

@@ -33,7 +33,8 @@ jobs:
           ETH_RPC_URL: ${{ secrets.ETH_RPC_URL }}
           SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
           SCROLL_RPC_URL: ${{ secrets.SCROLL_RPC_URL }}
-          SUBGRAPH_URL: ${{ secrets.SUBGRAPH_URL }}
+          MAINNET_SUBGRAPH_URL: ${{ secrets.MAINNET_SUBGRAPH_URL }}
+          SEPOLIA_SUBGRAPH_URL: ${{ secrets.SEPOLIA_SUBGRAPH_URL }}
           MONERO_FAIL_NODES_API_URL: ${{ vars.MONERO_FAIL_NODES_API_URL }}
           MIN_SAMPLES: ${{ vars.MIN_SAMPLES }}
           BATCH_SIZE_FOR_RPC_CALLS: ${{ vars.BATCH_SIZE_FOR_RPC_CALLS }}

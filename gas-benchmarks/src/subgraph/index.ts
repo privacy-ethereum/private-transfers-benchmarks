@@ -2,34 +2,12 @@ import { GraphQLClient } from "graphql-request";
 
 import path from "path";
 
-import type {
-  HinkalProtocolStatsFragmentFragment,
-  FluidkeyProtocolStatsFragmentFragment,
-  PrivacyPoolsProtocolStatsFragmentFragment,
-  RailgunProtocolStatsFragmentFragment,
-  TornadoCashProtocolStatsFragmentFragment,
-} from "../generated/graphql.js";
-
-import { graphql } from "../generated/gql.js";
 import { CacheToFile } from "../utils/cache.js";
-import { SUBGRAPH_URL } from "../utils/constants.js";
+import { MAINNET_SUBGRAPH_URL, SEPOLIA_SUBGRAPH_URL } from "../utils/constants.js";
 import { readJsonFile } from "../utils/json.js";
 
-export type TRootQuery = RailgunProtocolStatsFragmentFragment &
-  TornadoCashProtocolStatsFragmentFragment &
-  HinkalProtocolStatsFragmentFragment &
-  FluidkeyProtocolStatsFragmentFragment &
-  PrivacyPoolsProtocolStatsFragmentFragment;
-
-export const RootQuery = graphql(/* GraphQL */ `
-  query RootQuery {
-    ...RailgunProtocolStatsFragment
-    ...TornadoCashProtocolStatsFragment
-    ...HinkalProtocolStatsFragment
-    ...FluidkeyProtocolStatsFragment
-    ...PrivacyPoolsProtocolStatsFragment
-  }
-`);
+import { MainnetRootQuery, type TMainnetRootQuery } from "./mainnet.js";
+import { SepoliaRootQuery, type TSepoliaRootQuery } from "./sepolia.js";
 
 const CACHE_FILE = path.resolve("./cache/root-query.json");
 const CACHE_TTL = 60 * 60 * 1000;
@@ -46,7 +24,7 @@ export interface ICacheValue {
   /**
    * Cached root query response data.
    */
-  data: TRootQuery;
+  data: TMainnetRootQuery & TSepoliaRootQuery;
 }
 
 /**
@@ -71,9 +49,14 @@ export class SubgraphService {
   private static instance?: SubgraphService;
 
   /**
-   * GraphQL client used to send requests to the subgraph endpoint.
+   * Mainnet GraphQL client used to send requests to the subgraph endpoint.
    */
-  private client: GraphQLClient;
+  private mainnetClient: GraphQLClient;
+
+  /**
+   * SepoliaGraphQL client used to send requests to the subgraph endpoint.
+   */
+  private sepoliaClient: GraphQLClient;
 
   /**
    * In-memory cache loaded from the cache file during initialization.
@@ -104,15 +87,16 @@ export class SubgraphService {
    * Creates a new `SubgraphService`.
    *
    * The constructor is private to enforce the singleton pattern.
-   * It initializes the GraphQL client and an empty in-memory cache.
+   * It initializes the GraphQL clients and an empty in-memory cache.
    */
   private constructor() {
-    this.client = new GraphQLClient(SUBGRAPH_URL);
+    this.mainnetClient = new GraphQLClient(MAINNET_SUBGRAPH_URL);
+    this.sepoliaClient = new GraphQLClient(SEPOLIA_SUBGRAPH_URL);
     this.cache = new Map<string, ICacheValue>();
   }
 
   /**
-   * Fetches the root query from the subgraph and caches the result to disk.
+   * Fetches the mainnet root query from the subgraph and caches the result to disk.
    *
    * Cached responses are stored in `CACHE_FILE` and remain valid for `CACHE_TTL`
    * milliseconds. If a valid cached response exists, it is returned instead of
@@ -121,8 +105,22 @@ export class SubgraphService {
    * @returns A promise that resolves to the root query response, or `null`.
    */
   @CacheToFile(CACHE_FILE, CACHE_TTL)
-  async fetchRootQueryWithCache(): Promise<TRootQuery | null> {
-    return this.client.request<TRootQuery>(RootQuery);
+  async fetchMainnetRootQueryWithCache(): Promise<TMainnetRootQuery | null> {
+    return this.mainnetClient.request<TMainnetRootQuery>(MainnetRootQuery);
+  }
+
+  /**
+   * Fetches the sepolia root query from the subgraph and caches the result to disk.
+   *
+   * Cached responses are stored in `CACHE_FILE` and remain valid for `CACHE_TTL`
+   * milliseconds. If a valid cached response exists, it is returned instead of
+   * making a network request.
+   *
+   * @returns A promise that resolves to the root query response, or `null`.
+   */
+  @CacheToFile(CACHE_FILE, CACHE_TTL)
+  async fetchSepoliaRootQueryWithCache(): Promise<TSepoliaRootQuery | null> {
+    return this.sepoliaClient.request<TSepoliaRootQuery>(SepoliaRootQuery);
   }
 
   /**

@@ -21,9 +21,12 @@ await db.read();
 const start = Date.now();
 
 // const subgraphService = await SubgraphService.getInstance();
-// const result = await subgraphService.fetchRootQueryWithCache();
+// const results = await Promise.all([
+//   subgraphService.fetchMainnetRootQueryWithCache(),
+//   subgraphService.fetchSepoliaRootQueryWithCache(),
+// ]);
 // eslint-disable-next-line no-console
-// console.log(result);
+// console.log(results);
 
 const [railgunMetrics, tornadoCashMetrics, privacyPoolsMetrics, intmaxMetrics, moneroMetrics, hinkalMetrics] =
   await Promise.all([
