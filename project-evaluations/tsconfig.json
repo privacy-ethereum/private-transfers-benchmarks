@@ -9,5 +9,5 @@
     "lib": ["ES2022", "DOM"],
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["src", "report"]
 }

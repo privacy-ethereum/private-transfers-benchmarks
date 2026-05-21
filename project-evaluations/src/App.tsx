@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import CategoryBrowser from "./components/CategoryBrowser.js";
 import ProfileView from "./components/ProfileView.js";
+import ReportBanner from "./components/ReportBanner.js";
 import ScorecardView from "./components/ScorecardView.js";
 import TopBar from "./components/TopBar.js";
 import { evaluations } from "./data/evaluations/index.js";
@@ -94,6 +95,7 @@ export default function App() {
 
   return (
     <>
+      <ReportBanner />
       <TopBar
         dark={dark}
         onToggleDark={() => {
