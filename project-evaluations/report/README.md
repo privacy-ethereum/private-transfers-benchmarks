@@ -21,7 +21,7 @@ The report is also generated on project build so it lives at `<host>/report.pdf`
 
 - `2_convert-markdown-to-pdf-report.ts` — renders `report.md` to HTML with `marked`, drops it into the template, then prints to `../public/report.pdf` via `puppeteer-core`.
 
-- `protocol-to-markdown.ts` — utiliy that converts single `Evaluation` to one markdown section.
+- `protocol-to-markdown.ts` — utility that converts single `Evaluation` to one markdown section.
 
 - `report-template.html` — print-styled HTML wrapper with a `{{content}}` placeholder. Controls fonts, page margins, headings, link colors, etc.
 
