@@ -17,8 +17,6 @@ export const propertySchema = z
         z.object({
           cited_text: z.string(),
           source: z.string(),
-          start_char_index: z.number().optional(),
-          end_char_index: z.number().optional(),
         }),
       )
       .min(1)

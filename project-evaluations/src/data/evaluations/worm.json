@@ -16,15 +16,11 @@
       "citations": [
         {
           "cited_text": "77 \nfollowers\n\nhttps://worm.cx \n\nX \n\n@EIP7503 \n\nhttps://discord.gg/EIP7503 \n\nhttps://t.me/WormPrivacy \n\n&#x6b;&#x65;&#x79;&#x76;&#x61;&#x6e;&#x6b;&#x61;&#x6d;&#x62;&#x61;&#x6b;&#x68;&#x73;&#x68;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d; \n\nREADME.md \n\n🪱 WORM: A Scarce Cryptoasset Rooted in Private ETH Destruction 🪱\n\nWORM is a cryptographically scarce ERC-20 token created through the destruction of Ethereum (ETH) in a privacy-preserving manner. ",
-          "source": "https://github.com/worm-privacy",
-          "start_char_index": 994,
-          "end_char_index": 1459
+          "source": "https://github.com/worm-privacy"
         },
         {
           "cited_text": "It is minted by consuming BETH , a private proof-of-burn receipt, which is itself generated using zk-SNARKs. ",
-          "source": "https://github.com/worm-privacy",
-          "start_char_index": 1459,
-          "end_char_index": 1568
+          "source": "https://github.com/worm-privacy"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#21-beth-the-proof-of-burn-receipt"
@@ -36,21 +32,15 @@
       "citations": [
         {
           "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  ",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1708,
-          "end_char_index": 2047
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "The burn-address hash, which is present in the Merkle-Patricia-Trie leaf key for which we provide a proof, is calculated using the following formula:\n`f₄(f₃(f₂(f₁(burnKey, receiverAddress, burnExtraCommitment))))`, where the inputs are all 254-bit numbers (finite-field elements), resulting in a 254 × 3 bit input space. ",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2655,
-          "end_char_index": 2976
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 968,
-          "end_char_index": 1096
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/proof-of-burn#burn-key"
@@ -68,15 +58,11 @@
       "citations": [
         {
           "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  ",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1708,
-          "end_char_index": 2047
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "The burn-address hash, which is present in the Merkle-Patricia-Trie leaf key for which we provide a proof, is calculated using the following formula:\n`f₄(f₃(f₂(f₁(burnKey, receiverAddress, burnExtraCommitment))))`, where the inputs are all 254-bit numbers (finite-field elements), resulting in a 254 × 3 bit input space. The function `f₁` is Poseidon2 with a 254-bit output space. The output is then passed to `f₂(x)`, which selects the first 160 bits to produce an Ethereum address, yielding a 160-bit output space. ",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2655,
-          "end_char_index": 3172
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#3-privacy-and-plausible-deniability"
@@ -112,9 +98,7 @@
       "citations": [
         {
           "cited_text": "Run the tests\n    - `python -m tests.test`\n\nAfter running `make`, the `main.py` script will first initiate a transfer to a burn-address and will then generate an input file for the circuit. Then it will try to generate a witness file through the Circom-generated C program.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 5152,
-          "end_char_index": 5427
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#1-introduction"
@@ -144,9 +128,7 @@
       "citations": [
         {
           "cited_text": "77 \nfollowers\n\nhttps://worm.cx \n\nX \n\n@EIP7503 \n\nhttps://discord.gg/EIP7503 \n\nhttps://t.me/WormPrivacy \n\n&#x6b;&#x65;&#x79;&#x76;&#x61;&#x6e;&#x6b;&#x61;&#x6d;&#x62;&#x61;&#x6b;&#x68;&#x73;&#x68;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d; \n\nREADME.md \n\n🪱 WORM: A Scarce Cryptoasset Rooted in Private ETH Destruction 🪱\n\nWORM is a cryptographically scarce ERC-20 token created through the destruction of Ethereum (ETH) in a privacy-preserving manner. ",
-          "source": "https://github.com/worm-privacy",
-          "start_char_index": 994,
-          "end_char_index": 1459
+          "source": "https://github.com/worm-privacy"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#2-architecture-and-design"
@@ -217,21 +199,15 @@
       "citations": [
         {
           "cited_text": "- `coin`: An encrypted value `Poseidon2(burnKey, amount)` representing the burned amount for selective disclosure or partial spending.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
-          "start_char_index": 9069,
-          "end_char_index": 9204
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md"
         },
         {
           "cited_text": "- `nullifier`: A one-time-use commitment derived as `Poseidon2(burnKey, 1)` to prevent reuse.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
-          "start_char_index": 8975,
-          "end_char_index": 9069
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md"
         },
         {
           "cited_text": "- `commitment`: A combined hash representing the burn event and receiver address, used to authorize minting BETH or WORM.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
-          "start_char_index": 9204,
-          "end_char_index": 9327
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#24-circom-circuits-verifying-the-proof-of-burn"
@@ -243,21 +219,15 @@
       "citations": [
         {
           "cited_text": "- `coin`: An encrypted value `Poseidon2(burnKey, amount)` representing the burned amount for selective disclosure or partial spending.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
-          "start_char_index": 9069,
-          "end_char_index": 9204
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md"
         },
         {
           "cited_text": "- `nullifier`: A one-time-use commitment derived as `Poseidon2(burnKey, 1)` to prevent reuse.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
-          "start_char_index": 8975,
-          "end_char_index": 9069
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md"
         },
         {
           "cited_text": "- `commitment`: A combined hash representing the burn event and receiver address, used to authorize minting BETH or WORM.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md",
-          "start_char_index": 9204,
-          "end_char_index": 9327
+          "source": "https://raw.githubusercontent.com/worm-privacy/whitepaper/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#24-circom-circuits-verifying-the-proof-of-burn"
@@ -269,63 +239,43 @@
       "citations": [
         {
           "cited_text": "[X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EIP7503)](https://x.com/EIP7503)\n\n***(The circuits are audited by yAudit: https://reports.yaudit.dev/2025-11-Worm)***\n\nThe circuit calculates the account-rlp of a burn address and then generate the leaf-trie-node accordingly.\n\nIt will then iterate through trie nodes and check whether `keccak(layer[i])` is within `keccak(layer[i+1])`.\n\nAs a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 320,
-          "end_char_index": 965
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 968,
-          "end_char_index": 1096
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "An encrypted representation of the remaining balance: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, intendedBalance - revealAmount)`.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1099,
-          "end_char_index": 1229
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `revealAmount`: an amount from the minted balance that is directly revealed upon submission of the proof.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1232,
-          "end_char_index": 1340
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `burnExtraCommitment`: commits to the way the revealed amount should be distributed by the contract.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1343,
-          "end_char_index": 1446
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `_proofExtraCommitment`: to glue information to the proof that aren't necessarily processed in the circuit.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1449,
-          "end_char_index": 1560
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "As a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 725,
-          "end_char_index": 965
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  ",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1708,
-          "end_char_index": 2047
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- PoW: `Keccak(burnKey | revealAmount | burnExtraCommitment | 'EIP-7503') < THRESHOLD`\n    Only burn-keys which fit in the equation can be used. ",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2174,
-          "end_char_index": 2319
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2382,
-          "end_char_index": 2500
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#21-beth-the-proof-of-burn-receipt"
@@ -337,9 +287,7 @@
       "citations": [
         {
           "cited_text": "## License\n\nThis project is licensed under the MIT License.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 5427,
-          "end_char_index": 5488
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/proof-of-burn/tree/main#license"
@@ -351,21 +299,15 @@
       "citations": [
         {
           "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 968,
-          "end_char_index": 1096
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2382,
-          "end_char_index": 2500
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "As a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. ",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 725,
-          "end_char_index": 871
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#23-privacy-preservation"
@@ -377,21 +319,15 @@
       "citations": [
         {
           "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  - A `burnExtraCommitment` which commits on the way the minted amount should be distributed by the contract after being minted.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1708,
-          "end_char_index": 2174
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n- Coin: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, amount)`\n    A \"coin\" is an encrypted amount which can be partially withdrawn, resulting in a new coin.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2382,
-          "end_char_index": 2655
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "[X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EIP7503)](https://x.com/EIP7503)\n\n***(The circuits are audited by yAudit: https://reports.yaudit.dev/2025-11-Worm)***\n\nThe circuit calculates the account-rlp of a burn address and then generate the leaf-trie-node accordingly.\n\nIt will then iterate through trie nodes and check whether `keccak(layer[i])` is within `keccak(layer[i+1])`.\n\nAs a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 320,
-          "end_char_index": 965
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ],
       "url": "https://worm.cx/wormhole"
@@ -403,33 +339,23 @@
       "citations": [
         {
           "cited_text": "An encrypted representation of the remaining balance: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, intendedBalance - revealAmount)`.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1099,
-          "end_char_index": 1229
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- Coin: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, amount)`\n    A \"coin\" is an encrypted amount which can be partially withdrawn, resulting in a new coin.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2500,
-          "end_char_index": 2655
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 968,
-          "end_char_index": 1096
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2382,
-          "end_char_index": 2500
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  - A `burnExtraCommitment` which commits on the way the minted amount should be distributed by the contract after being minted.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1708,
-          "end_char_index": 2174
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#public-inputs-and-circuit-outputs"
@@ -441,51 +367,35 @@
       "citations": [
         {
           "cited_text": "As a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 725,
-          "end_char_index": 965
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 968,
-          "end_char_index": 1096
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "An encrypted representation of the remaining balance: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, intendedBalance - revealAmount)`.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1099,
-          "end_char_index": 1229
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `revealAmount`: an amount from the minted balance that is directly revealed upon submission of the proof.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1232,
-          "end_char_index": 1340
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `burnExtraCommitment`: commits to the way the revealed amount should be distributed by the contract.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1343,
-          "end_char_index": 1446
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `_proofExtraCommitment`: to glue information to the proof that aren't necessarily processed in the circuit.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1449,
-          "end_char_index": 1560
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2382,
-          "end_char_index": 2500
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "## Burn-key\n\nBurn-key is a number you generate in order to start the burn/mint process. It somehow is your \"private-key\" to the world of EIP-7503.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1560,
-          "end_char_index": 1708
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ]
     },
@@ -496,21 +406,15 @@
       "citations": [
         {
           "cited_text": "77 \nfollowers\n\nhttps://worm.cx \n\nX \n\n@EIP7503 \n\nhttps://discord.gg/EIP7503 \n\nhttps://t.me/WormPrivacy \n\n&#x6b;&#x65;&#x79;&#x76;&#x61;&#x6e;&#x6b;&#x61;&#x6d;&#x62;&#x61;&#x6b;&#x68;&#x73;&#x68;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d; \n\nREADME.md \n\n🪱 WORM: A Scarce Cryptoasset Rooted in Private ETH Destruction 🪱\n\nWORM is a cryptographically scarce ERC-20 token created through the destruction of Ethereum (ETH) in a privacy-preserving manner. ",
-          "source": "https://github.com/worm-privacy",
-          "start_char_index": 994,
-          "end_char_index": 1459
+          "source": "https://github.com/worm-privacy"
         },
         {
           "cited_text": "WORM is designed to be usable, composable, and private—fueling a new generation of decentralized finance, payments, and speculative applications.\n\n",
-          "source": "https://github.com/worm-privacy",
-          "start_char_index": 2057,
-          "end_char_index": 2204
+          "source": "https://github.com/worm-privacy"
         },
         {
           "cited_text": "It is minted by consuming BETH , a private proof-of-burn receipt, which is itself generated using zk-SNARKs. ",
-          "source": "https://github.com/worm-privacy",
-          "start_char_index": 1459,
-          "end_char_index": 1568
+          "source": "https://github.com/worm-privacy"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#5-economic-model"
@@ -522,51 +426,35 @@
       "citations": [
         {
           "cited_text": "[X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EIP7503)](https://x.com/EIP7503)\n\n***(The circuits are audited by yAudit: https://reports.yaudit.dev/2025-11-Worm)***\n\nThe circuit calculates the account-rlp of a burn address and then generate the leaf-trie-node accordingly.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 320,
-          "end_char_index": 615
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "## Burn-key\n\nBurn-key is a number you generate in order to start the burn/mint process. It somehow is your \"private-key\" to the world of EIP-7503.\n\n- Burn-address: `Truncate160(Poseidon4(POSEIDON_BURN_ADDRESS_PREFIX, burnKey, revealAmount, burnExtraCommitment))`\n  - Is the 160 first bits of the Poseidon4 hash of a random-number `burnKey`, and 2 other values we are commiting to:\n  - A `revealAmount` which specifies part of the BETH that will be minted upon submission of the proof.\n  - A `burnExtraCommitment` which commits on the way the minted amount should be distributed by the contract after being minted.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1560,
-          "end_char_index": 2174
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "- Nullifier: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`\n    Nullifier prevents us from using the burn-key again.\n- Coin: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, amount)`\n    A \"coin\" is an encrypted amount which can be partially withdrawn, resulting in a new coin.\n\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 2382,
-          "end_char_index": 2655
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "As a public input, it will expect a single public commitment which itself is Keccak hash of multiple values (In order to optimize gas usage):\n\n1. The `blockRoot`: the state root of the block being referenced, passed by a Solidity contract.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 725,
-          "end_char_index": 965
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `nullifier`: `Poseidon2(POSEIDON_NULLIFIER_PREFIX, burnKey)`, used to prevent revealing the same burn address more than once.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 968,
-          "end_char_index": 1096
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "An encrypted representation of the remaining balance: `Poseidon3(POSEIDON_COIN_PREFIX, burnKey, intendedBalance - revealAmount)`.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1099,
-          "end_char_index": 1229
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `revealAmount`: an amount from the minted balance that is directly revealed upon submission of the proof.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1232,
-          "end_char_index": 1340
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         },
         {
           "cited_text": "A `burnExtraCommitment`: commits to the way the revealed amount should be distributed by the contract.\n",
-          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md",
-          "start_char_index": 1343,
-          "end_char_index": 1446
+          "source": "https://raw.githubusercontent.com/worm-privacy/proof-of-burn/master/README.md"
         }
       ],
       "url": "https://github.com/worm-privacy/whitepaper#24-circom-circuits-verifying-the-proof-of-burn"

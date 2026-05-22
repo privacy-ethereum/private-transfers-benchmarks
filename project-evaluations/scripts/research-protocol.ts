@@ -178,8 +178,6 @@ async function evaluateWithCitations(
         citations.push({
           cited_text: citation.cited_text,
           source: fetched.sourceUrl,
-          start_char_index: citation.start_char_index,
-          end_char_index: citation.end_char_index,
         });
       }
     }
