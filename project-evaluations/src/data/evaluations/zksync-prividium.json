@@ -1,0 +1,10 @@
+{
+  "id": "zksync-prividium",
+  "title": "ZKsync Prividium",
+  "description": "ZKsync Prividium is a permissioned Ethereum-secured chain by Matter Labs aimed at institutions. It runs as a Validium-style ZK chain where execution and data stay inside enterprise infrastructure while ZK validity proofs are posted to Ethereum for public verifiability without revealing transaction data.",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["Private Validium", "Zero Knowledge Proofs (ZKPs)"],
+  "properties": [],
+  "sourceUrls": []
+}

@@ -5,11 +5,10 @@
   "status": "pending",
   "documentation": "https://docs.fairblock.network/docs/welcome/vision",
   "categories": [
-    "Homomorphic encryption (FHE - HE)",
+    "Zero Knowledge Proofs (ZKPs)",
+    "Homomorphic Encryption (HE)",
     "Multi Party Computation (MPC)",
-    "Privacy Stack/Layer/Middleware",
-    "TEEs",
-    "Zero Knowledge Proofs (ZKPs)"
+    "Decentralised Network"
   ],
   "properties": [],
   "sourceUrls": []

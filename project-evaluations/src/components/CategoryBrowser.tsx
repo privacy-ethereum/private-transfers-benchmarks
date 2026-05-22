@@ -24,10 +24,7 @@ export default function CategoryBrowser({ onGoToProfile }: CategoryBrowserProps)
       </div>
 
       <div className="cat-grid">
-        {/* TODO: (delete later) "Edge blockchain" is removed from UI. It stays
-        in CATEGORIES until categories are updated. Making this a frontend-only
-        changes also avoids merge conflicts with other PRs currently raised */}
-        {CATEGORIES.filter((cat) => cat !== "Edge blockchain").map((cat) => {
+        {CATEGORIES.map((cat) => {
           const protos = evaluations.filter((p) => p.categories.includes(cat));
           const desc = CATEGORY_EXPLAINERS[cat];
           return (

@@ -4,7 +4,7 @@
   "description": "Umbra is a stealth-address protocol for Ethereum. A payer sends funds to a fresh address controlled by the intended recipient. Only the payer and recipient can link that address to the recipient.",
   "status": "pending",
   "documentation": "https://app.umbra.cash/faq",
-  "categories": ["Stealth addresses"],
+  "categories": ["Stealth Addresses"],
   "properties": [],
   "sourceUrls": []
 }

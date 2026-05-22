@@ -1,0 +1,10 @@
+{
+  "id": "scroll-cloak",
+  "title": "Scroll Cloak",
+  "description": "Scroll Cloak is a ZK-based privacy execution layer on Scroll L2 targeted at on-chain finance. Each transaction is processed inside a private ledger with hidden balances and details, while ZK proofs guarantee integrity publicly. Includes full EVM support for private smart contracts plus KYB/KYC hooks, real-time monitoring, and selective-disclosure APIs for compliance. The first version is live on Scroll's testnet.",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["Private Validium", "Zero Knowledge Proofs (ZKPs)"],
+  "properties": [],
+  "sourceUrls": []
+}

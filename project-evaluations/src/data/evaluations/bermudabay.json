@@ -3,12 +3,7 @@
   "title": "Bermuda",
   "description": "Bermuda is a privacy protocol built for EVM chains that acts as a privacy layer between applications and the underlying chain. The protocol gives existing EVM applications shielded accounts, stealth-address payments, with built-in compliance features without requiring smart contract changes. It combines zero-knowledge proofs with programmable compliance (deposit screening, retroactive flagging, withdrawal proofs). Bermuda supports private, compliant, and gasless transactions and is advertised as enterprise grade",
   "documentation": "https://docs.bermudabay.xyz",
-  "categories": [
-    "Shielded pool",
-    "Stealth addresses",
-    "Zero Knowledge Proofs (ZKPs)",
-    "Privacy Stack/Layer/Middleware"
-  ],
+  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [
     {
       "name": "Anonymity set size",

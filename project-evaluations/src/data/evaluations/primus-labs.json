@@ -4,7 +4,7 @@
   "description": "Primus (formerly PADO) is a trust, verification and privacy layer for crypto and AI-agent applications. Its core technologies are zkTLS and zkFHE. zkTLS extends the Transport Layer Security (TLS) protocol with zero-knowledge proofs, so data authenticity can be verified without revealing the data. zkFHE applies zero-knowledge proofs to computations on encrypted data, including when the computation is outsourced.",
   "status": "pending",
   "documentation": "https://docs.primuslabs.xyz/",
-  "categories": ["Homomorphic encryption (FHE - HE)"],
+  "categories": ["Zero Knowledge Proofs (ZKPs)"],
   "properties": [],
   "sourceUrls": []
 }

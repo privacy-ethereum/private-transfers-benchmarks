@@ -4,7 +4,7 @@
   "description": "Voidify is a decentralized, non-custodial protocol on the Solana blockchain. Users deposit and later withdraw assets using zero-knowledge proofs, creating unlinkable transactions between wallets without relying on an intermediary.",
   "status": "pending",
   "documentation": "https://voidifycto.gitbook.io/whitepaper",
-  "categories": ["Mixer", "Shielded pool"],
+  "categories": ["Mixer", "Solana project"],
   "properties": [],
   "sourceUrls": []
 }

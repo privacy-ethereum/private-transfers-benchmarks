@@ -3,7 +3,7 @@
   "title": "Monero",
   "description": "Monero is an alternative L1 blockchain focused exclusively on private transactions by default. It uses ring signatures (sender privacy), stealth addresses (receiver privacy), and Ring Confidential Transactions (amount privacy) to provide security, privacy, and decentralization.",
   "documentation": "https://www.getmonero.org/",
-  "categories": ["Stealth addresses", "Alternative L1"],
+  "categories": ["Stealth Addresses", "Private L1"],
   "properties": [
     {
       "name": "Confidentiality",

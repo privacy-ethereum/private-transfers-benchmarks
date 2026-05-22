@@ -3,7 +3,7 @@
   "title": "Intmax",
   "description": "A stateless Plasma-inspired zkRollup optimised for private payments, pushing most data off-chain so that on-chain costs are minimal while preserving user-side privacy through client-side proving.",
   "documentation": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture",
-  "categories": ["L2s", "Plasma", "Edge blockchain", "Zero Knowledge Proofs (ZKPs)"],
+  "categories": ["Private Plasma", "Private L3", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [
     {
       "name": "Confidentiality",

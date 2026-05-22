@@ -3,7 +3,12 @@
   "title": "Nullmask",
   "description": "Nullmask is a privacy layer that sits between an ordinary wallet (e.g. MetaMask) and a chain via a custom RPC proxy. Users sign a single authorization message to derive viewing, nullifying and encryption keys. The proxy converts a user's normal transactions into shielded notes and produces UltraHonk zk-SNARK proofs for deposits, transfers and withdrawals. All shielded transactions processed by the RPC proxy are sent to the Nullmask contract to be executed and registered. Shielded state is represented as encrypted notes on-chain alongside a key registry. Users trial-decrypt notes to find their own. Retroactive compliance allows flagged deposits to be revoked.",
   "documentation": "https://docs.nullmask.io/",
-  "categories": ["VPN (Private Intents)"],
+  "categories": [
+    "Virtual Private EVM Network",
+    "Shielded Pool",
+    "Zero Knowledge Proofs (ZKPs)",
+    "Privacy Stack/Layer/Middleware"
+  ],
   "properties": [
     {
       "name": "Anonymity set size",

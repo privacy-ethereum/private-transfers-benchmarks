@@ -4,7 +4,7 @@
   "description": "Miden is a zero-knowledge rollup with an actor-model architecture. Instead of a single global state updated sequentially, each account is an independent state machine that executes transactions locally and generates validity proofs.",
   "status": "pending",
   "documentation": "https://docs.miden.xyz/",
-  "categories": ["Edge blockchain", "L2s"],
+  "categories": ["Private L2", "Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [],
   "sourceUrls": []
 }

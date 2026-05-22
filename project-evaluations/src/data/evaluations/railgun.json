@@ -3,7 +3,7 @@
   "title": "Railgun",
   "description": "A privacy system for Ethereum using zk-SNARKs to shield ERC-20 tokens and ETH inside a smart contract, enabling private transfers and shielded DeFi interactions.",
   "documentation": "https://docs.railgun.org/wiki/learn/privacy-system",
-  "categories": ["Shielded pool", "Zero Knowledge Proofs (ZKPs)"],
+  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [
     {
       "name": "Anonymity set size",

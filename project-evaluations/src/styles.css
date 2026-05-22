@@ -1097,7 +1097,7 @@ body {
   color: var(--pill-warn-fg);
 }
 
-.sidebar-list .proto {
+.sidebar-list .protocol {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1114,26 +1114,26 @@ body {
     color 120ms;
 }
 
-.sidebar-list .proto:hover {
+.sidebar-list .protocol:hover {
   background: var(--background-highlight);
 }
 
-.sidebar-list .proto.active {
+.sidebar-list .protocol.active {
   background: var(--pill-cat-bg);
   color: var(--primary-high-contrast);
 }
 
-.sidebar-list .proto.active .cats {
+.sidebar-list .protocol.active .cats {
   color: var(--primary);
 }
 
-.sidebar-list .proto .name {
+.sidebar-list .protocol .name {
   font-size: 13.5px;
   font-weight: var(--fw-semibold);
   color: inherit;
 }
 
-.sidebar-list .proto .cats {
+.sidebar-list .protocol .cats {
   font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--body-medium);
@@ -1145,7 +1145,7 @@ body {
   gap: 6px;
 }
 
-.sidebar-list .proto .arrow {
+.sidebar-list .protocol .arrow {
   font-family: var(--font-sans);
   color: var(--body-medium);
   opacity: 0;
@@ -1155,8 +1155,8 @@ body {
   flex-shrink: 0;
 }
 
-.sidebar-list .proto:hover .arrow,
-.sidebar-list .proto.active .arrow {
+.sidebar-list .protocol:hover .arrow,
+.sidebar-list .protocol.active .arrow {
   opacity: 1;
   color: var(--primary);
 }

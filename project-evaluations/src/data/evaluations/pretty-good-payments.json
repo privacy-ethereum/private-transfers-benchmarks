@@ -1,0 +1,10 @@
+{
+  "id": "pretty-good-payments",
+  "title": "Pretty Good Payments",
+  "description": "Pretty Good Payments is a research proposal for free, private, scalable stablecoin payments on Ethereum. It combines zero-knowledge proofs with a yield-based fee model: idle deposits in the system generate yield that funds protocol operations, enabling zero user fees while preserving privacy of sender, receiver, and amount.",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
+  "properties": [],
+  "sourceUrls": []
+}

@@ -3,7 +3,7 @@
   "title": "zERC20",
   "description": "zERC20 is a fully ERC-20-compliant token with a private-transfer mechanism, usable from a standard wallet. A private transfer sends zERC20 to a cryptographically derived burn address. The recipient later withdraws the same amount to any address by submitting a zero-knowledge proof proving they know the burn secret, so the link between the two addresses is never revealed on-chain. Wrapper tokens are backed 1:1 by underlying assets such as ETH, USDC, and BNB, and cross-chain private transfers are supported via LayerZero. The token draws from the design of zk-Wormhole / EIP-7503 private proof-of-burn.",
   "documentation": "https://zerc20.gitbook.io/zerc20",
-  "categories": ["zkWormholes"],
+  "categories": ["Zero-Knowledge Wormholes", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [
     {
       "name": "Anonymity set size",

@@ -3,7 +3,7 @@
   "title": "Mirage",
   "description": "Mirage is a privacy layer for token transfers on Ethereum that makes private transactions indistinguishable from ordinary onchain activity. It does this via a technique called bytecode obfuscation along with some other components. It avoids shared pools by using per-transaction escrow contracts whose EVM bytecode is obfuscated by Azoth, an open-source Rust obfuscator that produces many deterministic variants of the same contract logic. Execution is carried out by a decentralised set of TEE-based nodes called Nomads that post bonds into the escrow and earn rewards for settling/finalising transfers.",
   "documentation": "https://docs.mirageprivacy.com/",
-  "categories": ["EVM Obfuscators"],
+  "categories": ["Bytecode Obfuscator"],
   "properties": [
     {
       "name": "Anonymity set size",
@@ -106,7 +106,7 @@
     {
       "name": "Time-to-finality",
       "value": "N/A",
-      "notes": "Mirage is an application-layer protocol that settles on host chains and inherits their finality guarantees, so finality is determined by the underlying chain's consensus rather than by anything Mirage adds. The design targets Ethereum, with adaptations for L2s such as Arbitrum and Base, and other L1s like Solana. For maximum privacy, transfers are multiple transactions and take place over several blocks — under ~90 seconds on Ethereum mainnet, under ~6 seconds on L2s, and under ~4 seconds on the Tempo testnet — describe node-settlement latency rather than cryptographic finality. A Mirage private transfer needs to be executed by a node of the Nomad network (TEEs) that is constantly listening on-chain for encrypted private transfer requests",
+      "notes": "Mirage is an application-layer protocol that settles on host chains and inherits their finality guarantees, so finality is determined by the underlying chain's consensus rather than by anything Mirage adds. The design targets Ethereum, with adaptations for L2s such as Arbitrum and Base, and other L1s like Solana. For maximum privacy, transfers are multiple transactions and take place over several blocks — under ~90 seconds on Ethereum mainnet, under ~6 seconds on L2s, and under ~4 seconds on the Tempo testnet — describe node-settlement latency rather than cryptographic finality. A Mirage private transfer needs to be executed by a node of the Nomad network (Trusted Execution Environments (TEEs)) that is constantly listening on-chain for encrypted private transfer requests",
       "citations": [
         {
           "cited_text": "Mirage takes a fundamentally different approach to address this issue on Ethereum, though Mirage can adapt the design for other networks such as L2s like Arbitrum and Base, or L1s like Solana.\n\n",

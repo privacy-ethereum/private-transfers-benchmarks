@@ -4,7 +4,7 @@
   "description": "AnomaPay is a privacy-preserving payments network built on the Anoma Distributed Operating System that enables shielded transfers of any ERC20 token on EVM-compatible blockchains.",
   "status": "pending",
   "documentation": "https://docs.anoma.net/anoma-pay-introduction",
-  "categories": ["VPN (Private Intents)"],
+  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [],
   "sourceUrls": []
 }

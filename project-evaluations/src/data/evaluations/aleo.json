@@ -4,7 +4,7 @@
   "description": "Aleo is a permissionless private programability blockchain. It achieves private programability by using zero knowledge proofs to execute transactions and smart contract functions. Aleo has its own SnarkVM and the Leo programming language.",
   "status": "pending",
   "documentation": "https://developer.aleo.org/concepts/network/core_architecture",
-  "categories": ["Alternative L1"],
+  "categories": ["Private L1"],
   "properties": [],
   "sourceUrls": []
 }

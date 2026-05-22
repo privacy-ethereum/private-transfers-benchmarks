@@ -4,7 +4,7 @@
   "description": "Mina replaces a traditional blockchain with a fixed-size cryptographic proof, reducing the amount of data each user must download. Instead of verifying the entire chain from genesis, participants verify the network and transactions using recursive zero-knowledge proofs (zk-SNARKs). Nodes store the small proof rather than the full chain, so the data each node holds stays a constant size as the chain grows.",
   "status": "pending",
   "documentation": "https://docs.minaprotocol.com/",
-  "categories": ["Edge blockchain", "Alternative L1"],
+  "categories": ["Private L1"],
   "properties": [],
   "sourceUrls": []
 }

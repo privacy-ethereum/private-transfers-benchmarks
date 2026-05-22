@@ -1,0 +1,10 @@
+{
+  "id": "encrypt-trade",
+  "title": "encrypt.trade",
+  "description": "encrypt.trade uses off-chain co-processors to keep smart contract state encrypted. Users encrypt their inputs and send them to the co-processors for computation.",
+  "status": "pending",
+  "documentation": "https://docs.encifher.io/docs/private-cross-chain-bridge",
+  "categories": ["Homomorphic Encryption (HE)", "Private Bridge"],
+  "properties": [],
+  "sourceUrls": []
+}
