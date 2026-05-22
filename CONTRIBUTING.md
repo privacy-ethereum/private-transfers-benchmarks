@@ -6,23 +6,29 @@ Feel welcome and read the following sections in order to know how to ask questio
 
 All members of our community are expected to follow our [Code of Conduct](CODE_OF_CONDUCT.md). Please make sure you are welcoming and friendly in all of our spaces.
 
-We're really glad you're reading this, because we need volunteer developers to help this project come to fruition. There is a lot we want to achieve, and this can only be made possible thanks to your support. 👏
-
 Disclaimer: We do not accept minor grammatical fixes (e.g., correcting typos, rewording sentences) unless they significantly improve clarity in technical documentation. These contributions, while appreciated, are not a priority for merging.
 
 ## How You Can Contribute
 
-This repository contains two main components: protocol evaluations to show in a public dashboard and protocol benchmarks to measure specific metrics of the evaluations. Please aim for your contribution to contain both an evaluation and a benchmark, to keep growing the repository in a balanced way. You can split your contribution into 2 PRs in order to make it easier to review, but please make sure to link the two PRs together in the description.
+This repository contains three main components: project-evaluations which contains evlaution data and a public dashboard; protocol benchmarks to record specific benchmark metrics; subgraph where we retrieve the onchain data required for the benchmarks.
 
-### TLDR
+You can contribute an evaluation or a benchmark. If you spot any mistakes with the evaluations, you can also raise an issue for someone to look into, or fix it yourself. Please check our citation requirements for evaluations below.
 
-1. Pick a protocol to evaluate and benchmark. We need both
-2. Submit PR for protocol evaluation
-3. Submit PR for protocol benchmark
+### Contribution options TLDR
 
-### Submit a protocol evaluation
+1. Spot an issue with our evaluations and raise an issue or PR to fix it
+2. Pick a protocol to evaluate and submit a PR
+3. Pick a protocol to benchmark and submit a PR
+
+### 1. Fix or highlight and issue with an evalution
+
+If you spot an issue
+
+### 2. Submit a protocol evaluation
 
 The protocol evaluations are located in the `project-evaluations` directory. If you are interested in contributing a protocol evaluation, you can follow these steps:
+
+We have many pending projects that you can pick up, check no one else is assigned to the issue if you're picking up an existing issue. See [pending project issues here](https://github.com/privacy-ethereum/private-transfers-benchmarks/issues/35)
 
 1. Follow the instructions in the [README](project-evaluations/README.md) to set up the project and run the dashboard locally.
 
@@ -30,11 +36,50 @@ The protocol evaluations are located in the `project-evaluations` directory. If 
 
 3. Start evaluating a protocol of your choice and add the content in `project-evaluations/src/data/evaluations/<PROTOCOL_NAME>.json`.
 
-4. Modify the `project-evaluations/src/data/evaluations/index.ts` file to add the protocol you evaluated. After doing so, the protocol should be visible in the local running dashboard.
+4. Please make sure to review your evaluation and check it is consistent across the different properties. If you used an AI tool to help you, make sure there is a human review of the content before submitting the PR. AI results are human responsibility, and we want to make sure the content we publish is accurate and of high quality.
 
-5. Please make sure to review your evaluation and check it is consistent across the different properties. If you used an AI tool to help you, make sure there is a human review of the content before submitting the PR. AI results are human responsibility, and we want to make sure the content we publish is accurate and of high quality.
+## Citation quality
 
-### Submit a protocol benchmark
+Every property value must be backed by a source.
+
+Prefer official docs, source code, or audits over blog posts or social media. One strong source beats several weak ones.
+
+AI tools may help you draft citations, but a human must verify every quote actually appears in the source and supports the value — AI output is the contributor's responsibility.
+
+Two formats are accepted:
+
+### 1. Citation:
+
+`cited_text` is the exact sentence or figure from the source that supports your value. This lets reviewers verify the claim without re-reading the whole page. You can copy and paste the cited text value.
+
+```json
+{
+  "name": "Confidentiality",
+  "value": "Yes",
+  "notes": "Zcash provides full confidentiality for shielded addresses...",
+  "citations": [
+    {
+      "cited_text": "Therefore, there are four basic types of transactions: Shielded/private (Value is not revealed on the blockchain)",
+      "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
+    }
+  ]
+}
+```
+
+### 2. URL:
+
+A single `url` linking to the page that backs the value.
+
+```json
+{
+   "name": "Confidentiality",
+   "value": "No",
+   "notes": "Privacy Pools uses the same the note-based architecture as Tornado Cash. Deposit and withdrawal amounts are publicly visible on-chain. The protocol provides unlinkability between deposit and withdrawal addresses, not amount or balance confidentiality.",
+   "url": "https://docs.privacypools.com/protocol/deposit"
+},
+```
+
+### 3. Submit a protocol benchmark
 
 The protocol benchmarks scripts are located in the `gas-benchmarks` directory but the data gathering logic is defined in the `subgraph` directory. If you are interested in contributing a protocol benchmark, you can follow these steps:
 
