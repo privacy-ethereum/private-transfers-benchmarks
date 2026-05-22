@@ -4,7 +4,7 @@
   "description": "An onchain privacy protocol with post-quantum security for EVM chains. It implements a shielded pool that works with any dApp.",
   "status": "pending",
   "documentation": "https://docs.platus.xyz/",
-  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)", "Post-Quantum", "Stealth Addresses"],
+  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)", "Stealth Addresses"],
   "properties": [],
   "sourceUrls": []
 }

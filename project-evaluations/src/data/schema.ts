@@ -17,7 +17,6 @@ export const CATEGORIES = [
   "Cross-Chain Swap Aggregator",
   "Private Bridge",
   "Zero-Knowledge Wormholes",
-  "Post-Quantum",
   "Private L1",
   "Private L2",
   "Private L3",
