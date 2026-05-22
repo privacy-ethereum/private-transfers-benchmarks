@@ -168,13 +168,24 @@ export default function ProfileView({ initialSelected, onSelectedChange }: Profi
                   </summary>
                   <div className="body">
                     {PROPERTY_DEFINITIONS.filter((p) => p.group === g).map((prop) => {
-                      const { value, notes, url } = valueFor({ evaluations: protocol, propertyName: prop.name });
+                      const { value, notes, url, needsResearchReview } = valueFor({
+                        evaluations: protocol,
+                        propertyName: prop.name,
+                      });
                       const placeholderNote = value === "—" ? notMeasuredNoteFor(prop.name, protocol.id) : undefined;
                       const dimmed = BENCHMARKED_PROPERTIES.has(prop.name) && !BENCHMARKED_PROJECT_IDS.has(protocol.id);
                       return (
                         <div key={prop.name} className={`prop-row${dimmed ? " prop-row--dimmed" : ""}`}>
                           <div className="pname">
                             {prop.name}
+                            {needsResearchReview !== "" && (
+                              <span
+                                className="review-warning pop-trigger"
+                                aria-label={`Needs additional review: ${needsResearchReview}`}
+                              >
+                                ⚠<span className="pop">{needsResearchReview}</span>
+                              </span>
+                            )}
                             <span className="metric">{prop.metric}</span>
                           </div>
                           <div className="pval">{value}</div>

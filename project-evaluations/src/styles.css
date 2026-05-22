@@ -309,6 +309,37 @@ body {
 }
 
 /* =========================================================
+   Work-in-progress banner
+   ========================================================= */
+.wip-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-8);
+  background: var(--background-highlight);
+  border-bottom: 1px solid var(--border);
+  color: var(--body-medium);
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.wip-banner__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--body);
+  text-decoration: underline;
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.wip-banner__link:hover {
+  opacity: 0.85;
+}
+
+/* =========================================================
    Tabs
    ========================================================= */
 .tabs {
@@ -507,6 +538,24 @@ body {
   transition:
     opacity 140ms,
     transform 140ms;
+}
+
+.review-warning {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  color: var(--pill-warn-fg);
+  margin-inline: 0.4em;
+  cursor: help;
+  user-select: none;
+}
+
+.pname .review-warning {
+  font-size: 1em;
+}
+
+.proto-val .review-warning {
+  font-size: 1.35em;
 }
 
 /* =========================================================
