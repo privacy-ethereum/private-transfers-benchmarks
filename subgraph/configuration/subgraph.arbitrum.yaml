@@ -6,7 +6,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: CurvyVaultV6
-    network: arbitrum
+    network: arbitrum-one
     source:
       address: "0xB4BA872fBa00Bc4268067D5DE4223240cEc4B6d5"
       abi: CurvyVaultV6
