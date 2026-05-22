@@ -5,6 +5,7 @@ import ProfileView from "./components/ProfileView.js";
 import ReportBanner from "./components/ReportBanner.js";
 import ScorecardView from "./components/ScorecardView.js";
 import TopBar from "./components/TopBar.js";
+import WipBanner from "./components/WipBanner.js";
 import { evaluations } from "./data/evaluations/index.js";
 
 type ViewDirection = "score" | "category" | "profile";
@@ -96,6 +97,7 @@ export default function App() {
   return (
     <>
       <ReportBanner />
+      <WipBanner />
       <TopBar
         dark={dark}
         onToggleDark={() => {

@@ -50,7 +50,7 @@ export default function ScoreGroup({ group, protos, onCellClick }: ScoreGroupPro
                   <div>{prop.metric}</div>
                 </td>
                 {protos.map((p) => {
-                  const { value } = valueFor({ evaluations: p, propertyName: prop.name });
+                  const { value, needsResearchReview } = valueFor({ evaluations: p, propertyName: prop.name });
                   const tone = cellTone({ value, propertyName: prop.name });
                   let cls: string;
 
@@ -78,6 +78,14 @@ export default function ScoreGroup({ group, protos, onCellClick }: ScoreGroupPro
                         }}
                       >
                         <span className={cls}>{value}</span>
+                        {needsResearchReview !== "" && (
+                          <span
+                            className="review-warning pop-trigger"
+                            aria-label={`Needs additional review: ${needsResearchReview}`}
+                          >
+                            ⚠<span className="pop">{needsResearchReview}</span>
+                          </span>
+                        )}
                       </button>
                     </td>
                   );

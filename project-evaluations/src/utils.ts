@@ -15,19 +15,25 @@ interface IValueForResult {
   value: string;
   notes: string;
   url: string;
+  needsResearchReview: string;
 }
 
-/** Fetches the value, notes and url for a specific property by property name */
+/** Fetches the value, notes, url and any open research-review flag for a property by name */
 export function valueFor({ evaluations, propertyName }: IValueForParams): IValueForResult {
   const property = evaluations.properties.find((_property) => _property.name === propertyName);
 
   if (!property) {
-    return { value: "—", notes: "", url: "" };
+    return { value: "—", notes: "", url: "", needsResearchReview: "" };
   }
 
   const value = Array.isArray(property.value) ? property.value.join(", ") : property.value;
 
-  return { value: value || "—", notes: property.notes ?? "", url: property.url ?? "" };
+  return {
+    value: value || "—",
+    notes: property.notes ?? "",
+    url: property.url ?? "",
+    needsResearchReview: property.needsResearchReview ?? "",
+  };
 }
 
 interface ICellToneParams {

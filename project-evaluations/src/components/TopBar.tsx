@@ -1,3 +1,5 @@
+import GitHubIcon from "./GitHubIcon.js";
+
 interface TopBarProps {
   dark: boolean;
   onToggleDark: () => void;
@@ -17,7 +19,7 @@ export default function TopBar({ dark, onToggleDark }: TopBarProps) {
           target="_blank"
           rel="noreferrer"
         >
-          GitHub ↗
+          <GitHubIcon /> GitHub
         </a>
         <button
           className="theme-toggle"
