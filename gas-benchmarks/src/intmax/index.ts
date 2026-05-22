@@ -1,5 +1,6 @@
 import { mainnet, scroll } from "viem/chains";
 
+import type { IBenchmarkDb } from "../utils/db.js";
 import type { FeeMetrics } from "../utils/types.js";
 
 import { MIN_SAMPLES } from "../utils/constants.js";
@@ -19,9 +20,7 @@ import {
 export class Intmax {
   readonly name = INTMAX_CONFIG.name;
 
-  readonly version = INTMAX_CONFIG.version;
-
-  async benchmark(): Promise<Record<string, FeeMetrics>> {
+  async benchmark(): Promise<IBenchmarkDb["intmax"]> {
     const [depositEth, withdrawEth] = await Promise.all([this.benchmarkDepositETH(), this.benchmarkWithdrawETH()]);
     return { depositEth, withdrawEth };
   }

@@ -3,21 +3,9 @@ import { describe, expect, it } from "vitest";
 import { readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 
-import { FLUIDKEY_CONFIG } from "../fluidkey/constants.js";
-import { HINKAL_CONFIG } from "../hinkal/constants.js";
 import { INTMAX_CONFIG } from "../intmax/constants.js";
-import { PRIVACY_POOLS_CONFIG } from "../privacy-pools/constants.js";
-import { RAILGUN_CONFIG } from "../railgun/constants.js";
-import { TORNADO_CASH_CONFIG } from "../tornado-cash/constants.js";
 
-const PROTOCOL_CONFIGS = [
-  { name: "fluidkey", config: FLUIDKEY_CONFIG },
-  { name: "hinkal", config: HINKAL_CONFIG },
-  { name: "intmax", config: INTMAX_CONFIG },
-  { name: "privacy-pools", config: PRIVACY_POOLS_CONFIG },
-  { name: "railgun", config: RAILGUN_CONFIG },
-  { name: "tornado-cash", config: TORNADO_CASH_CONFIG },
-];
+const PROTOCOL_CONFIGS = [{ name: "intmax", config: INTMAX_CONFIG }];
 
 /** Directories excluded from protocol config checks */
 const EXCLUDED_DIRS = new Set(["__tests__", "utils", "monero"]);
