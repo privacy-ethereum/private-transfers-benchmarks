@@ -1,0 +1,54 @@
+---
+name: property-rules-trust
+description: Per-property guidance for the Trust / robustness property group (drawn from the schema's Decentralization & Security and Verifiable groups, excluding maturity which lives in property-rules-timing). Invoke when evaluating, reviewing, or editing notes/values for Censorship resistance, External network dependence, Escape hatch, Open source, Upgradeability, or Third-party inspectability. Cross-cutting rules in scripts/research-prompts.ts still apply on top.
+---
+
+# Trust / robustness property rules
+
+Apply the rule for the property currently being evaluated. Cross-cutting rules in `scripts/research-prompts.ts` still apply.
+
+## Censorship resistance
+
+If the protocol is permissionless and any valid transaction can eventually be included (even if individual miners or validators soft-censor), the value is Yes. Relayer or broadcaster dependence alone does not make the protocol censorship-susceptible if users can bypass relayers and interact with contracts directly. Mention relayer roles in the notes.
+
+But the value is No whenever some entity can stop a valid transfer or withdrawal, regardless of how permissionless the host chain is: an asset-level blocklist/allowlist hook that reverts on listed addresses (e.g. an on-chain OFAC `isBlocked()` check on every balance update); a verifier or circuit an admin can upgrade, swap, or brick (e.g. a UUPS-proxy verifier, or a deposit Guard whose approval the protocol can withhold); or a permissioned executor set with no permissionless fallback the user can use instead (e.g. an onboarded-only operator network plus a team-held kill switch over those operators). This mirrors CROSS_CHECK_RULES #5 and #8 — if a blocklist hook makes Enforcement entities ≠ None, this property is almost certainly No too.
+
+## External network dependence
+
+The permissioned/permissionless qualifier describes who can join the external network's partner set, not its crypto-economic assumptions. For CEX-dependent protocols (routing aggregators, cross-chain swap services), the external network is centralised regulated companies, not a consensus system — do NOT describe their assumptions as "crypto-economic". Use "Yes, permissioned" when the partner set is curated through onboarding (KYB, integration deals, business relationships); "Yes, permissionless" only when anyone can join the external network without curation (e.g. open validator/relayer sets, public DA layers). For DEX or bridge dependencies, fall back to the same partner-curation test.
+
+## Escape hatch
+
+For standalone L1 blockchains where funds are native to the chain, the value may be N/A. For routing or aggregator services that never hold funds in a protocol-controlled pool (e.g. cross-chain CEX aggregators), the value is N/A because there is no pool to exit from — partner-level customer-service recovery is not a protocol-level escape hatch.
+
+When protocol value is held by the user as plain transferable tokens (not locked in a protocol-controlled pool) and the contracts that mint or hold them are immutable, the value is "Instantly" — the holder can always move or sell them using only the host chain's consensus and cryptography (e.g. an EIP-7503 burn-and-mint token like WORM/BETH). When exit depends on a verifier or circuit that an admin could upgrade or brick, keep "Instantly" (the exit path exists today) and state the upgradability dependency in the notes — do NOT downgrade the value for that reason alone. Downgrade to "Can exit in a time period" only when the protocol itself imposes a delay/challenge window before the user can withdraw (e.g. a bond deadline that must elapse first).
+
+Best-case vs worst-case framing. The value reflects exit time in the baseline state, not during in-flight protocol execution. If exit is instant under normal conditions and a delay applies only while an active settlement step is in progress (e.g. a Nomad has bonded against a Mirage escrow, a relayer has staked against a withdrawal request, a challenger window is open against a specific batch), the value is "Instantly" with the active-execution caveat documented in notes. Downgrade to "Can exit in a time period" only when the delay is a permanent feature of every exit, not a conditional one that fires during execution.
+
+Closed-source contract case. When the deployed pool / vault / verifier contract source is not published and no escape-hatch mechanism is described in the docs, the value is the conservative pick "No" — not INSUFFICIENT_DATA — and `needsResearchReview` should name the missing source (e.g. `"shielded pool contract source not published; cannot confirm whether the deployed contracts expose an operator-bypass exit path"`). The docs-side answer is "no escape hatch is documented"; the on-chain answer cannot be verified without source. The combined honest reading is "No" + flag.
+
+Privacy-reduction is not blocking. If compliance / blacklist / sanctions enforcement forces flagged funds onto a public withdrawal path (so the user loses privacy but can still exit), the value is "Instantly" — not "No". Block = funds are stuck; privacy reduction = funds can leave but observers see them. Verify against retroactive-flagging or withdrawal-proof docs which distinguish "rejected" from "forced public". This pattern surfaced with Bermuda's POI/blacklist flow; treat any blacklist-gated pool as Instantly unless the docs explicitly state blacklisted funds are non-withdrawable.
+
+## Open source
+
+Value "Yes" requires an OSI-approved license: MIT, Apache-2.0, any GPL-family, any BSD-family, ISC, MPL, or Unlicense. Source-available licenses (BSL, Commons Clause, SSPL, Elastic License, "no-commercial", or no license) are No. A BSL change-date to a future open-source license does NOT make the protocol open source today. Check ALL critical repositories — contracts, circuits, SDKs may have different licenses; if any critical component is source-available only, value is No. Notes should state the OSI licence and which components it covers (contracts, circuits, SDK, frontend) — do not include URLs, file paths, package.json fragments, or LICENSE-file references in the prose. The licence name is the fact; the file location is an implementation artefact (see WRITING_RULES #9).
+
+Notes for this property describe ONLY the licence facts (which OSI / source-available licence, which components it covers, missing-licence status). Do NOT mix in implementation-status facts such as "testing implementation" / "production contract pending" / "alpha" / "beta" — those belong in the Implementation maturity property and pollute the Open source verdict if included here.
+
+## Upgradeability
+
+Evaluate protocol-level upgrade authority, not just individual on-chain artefacts. If a central team can revoke operators, swap the toolchain that produces contracts (e.g. a bytecode obfuscator), sign the binaries that executors must run, or ship a successor contract that users are effectively forced to migrate to, the value is Single admin / Multi-sig / DAO depending on who holds the keys, even if each deployed contract instance is immutable after deployment. Immutable is only correct when there is no central party capable of changing protocol behaviour across future transfers.
+
+Distinguishing Single admin / Multi-sig / DAO requires on-chain evidence of the upgrade authority's composition, not docs prose. The procedure: (1) identify the canonical deployment of the upgradeable contract on its chain; (2) read the EIP-1967 admin/implementation slot (or the equivalent admin storage for non-EIP-1967 proxies) via a block explorer's "Read Contract" / "Read Proxy" feature to find the admin address; (3) classify it — a plain EOA → Single admin; a Gnosis Safe (or other multisig contract) → Multi-sig; a governance contract (Compound Governor, OpenZeppelin Governor, etc.) → DAO. The cited source for the value must be the block-explorer URL of the admin address (or a contract source page showing the immutable admin constant), substantiating the classification. A docs page that asserts a composition (e.g. "admin is a multisig") without an on-chain reference is insufficient — prose alone cannot ground a Single admin / Multi-sig / DAO classification. A docs page that says "X is upgradeable" without identifying the upgrade authority is also insufficient.
+
+If the admin address cannot be verified on-chain (no canonical deployment yet, source not public, multi-chain ambiguity with different admins per chain), set `needsResearchReview` to a reason string naming what's missing (e.g. `"on-chain admin slot not classified — EOA vs multisig wrapper unverified on canonical mainnet deployment"`). Do NOT default to Single admin (or any other composition) without verification — the flag is the honest answer.
+
+## Third-party inspectability
+
+Use the protocol's own docs or contract source as the primary citation. Forum threads (ethresear.ch, ethresearch, twitter) are acceptable only for forward-looking design discussions, not current-state facts. If a forum post is the only source for a current-state claim, treat the claim as unverified and set `needsResearchReview` to a reason string naming the unverified claim.
+
+Branch on the operator's trust model:
+
+- **ZK-based external prover** (e.g. Curvy's centrally operated ZK Prover that receives spent notes + amounts + sender + recipient as private witness inputs in plaintext): value is "Yes" — the prover operator is structurally positioned to inspect transaction details that are otherwise hidden from the public.
+- **TEE-based external execution** (e.g. Mirage's SGX-backed Nomad nodes that decrypt signals inside the enclave): value is "No" _contingent on the TEE's hardware-trust assumption_. The operator runs the box but the enclave seals the plaintext; an honest, un-compromised SGX setup with valid attestation prevents the operator from reading the signal. Notes MUST state this dependency explicitly — that the answer relies on Intel SGX attestation holding and the platform's enclave-signing key remaining uncompromised — and that the TEE has had known side-channel vulnerabilities, so the answer downgrades to "Yes" under a stronger threat model.
+- **Centralised indexer / observer service** (e.g. zERC20's indexer operator that observes sender / burn-address / value and learns the recipient on query): value is "Yes". The service sees plaintext relationships even when individual contract calls don't expose them.
