@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "research": "tsx scripts/index.ts",
+    "research": "tsx scripts/research.ts",
     "generate:markdown-report": "tsx report/1_generate-markdown-report.ts && prettier --write ./report/report.md",
     "generate:pdf-report": "tsx report/2_convert-markdown-to-pdf-report.ts",
     "update-report": "pnpm generate:markdown-report && pnpm generate:pdf-report"
