@@ -7,6 +7,7 @@ import { configs, type ProtocolConfig } from "./research-config.js";
 import { callCitations } from "./utils/citations-request.js";
 import { parseCitationsResponse } from "./utils/citations-response.js";
 import { fetchTextFromUrl, type FetchedSource } from "./utils/fetch-source.js";
+import { writeSourceCache } from "./utils/source-cache.js";
 
 type CacheEntry = { name: string; urls: string[]; summary: string };
 type ResearchCache = { id: string; generatedAt: string; properties: CacheEntry[] };
@@ -36,7 +37,7 @@ async function main() {
     throw new Error(`Research cache missing entries: ${missing.join(", ")}. Rerun /research-sources ${protocolId}.`);
   }
 
-  // Phase 1 — fetch every unique URL once.
+  // Phase 1 — fetch every unique URL once, persist by URL.
   const inScope = cache.properties.filter((e) => isInScope(e.name));
   const uniqueUrls = Array.from(new Set(inScope.flatMap((e) => e.urls)));
   console.log(`Fetching ${uniqueUrls.length} unique URLs for ${inScope.length} properties`);
@@ -48,7 +49,8 @@ async function main() {
       else console.warn(`warn: failed to fetch ${url}`);
     }),
   );
-  console.log(`Fetched ${Object.keys(snapshots).length}/${uniqueUrls.length} URLs\n`);
+  writeSourceCache(protocolId, snapshots);
+  console.log(`Wrote ${Object.keys(snapshots).length}/${uniqueUrls.length} URLs to .source-cache/${protocolId}.json\n`);
 
   // Phase 2 — evaluate each in-scope property, carry the rest through from disk.
   // The evaluation JSON must already exist: status and categories are preserved from it.
