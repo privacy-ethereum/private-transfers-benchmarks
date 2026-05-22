@@ -33,7 +33,7 @@ To showcase a project that is not fully analyzed yet, add a file like `src/data/
   "description": "Short description of the protocol and why it is listed.",
   "status": "pending",
   "documentation": "",
-  "categories": ["Shielded pool"],
+  "categories": ["Shielded Pool"],
   "properties": [],
   "sourceUrls": []
 }

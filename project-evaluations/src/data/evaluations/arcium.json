@@ -4,7 +4,7 @@
   "description": "Arcium provides confidential computation for Web2 and Web3 projects using Multi Party Computation (MPC).",
   "status": "pending",
   "documentation": "https://docs.arcium.com/",
-  "categories": ["Multi Party Computation (MPC)"],
+  "categories": ["Multi Party Computation (MPC)", "Solana project"],
   "properties": [],
   "sourceUrls": []
 }

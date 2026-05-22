@@ -1,0 +1,10 @@
+{
+  "id": "payy",
+  "title": "Payy",
+  "description": "Payy is an EVM-compatible ZK rollup for private stablecoin payments. It claims ~300ms deterministic finality, up to 100k TPS, and near-zero transfer fees, with native zero-knowledge cryptography precompiles. Targets stablecoin payments with privacy at every layer.",
+  "status": "pending",
+  "documentation": "",
+  "categories": ["Private L2", "Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
+  "properties": [],
+  "sourceUrls": []
+}

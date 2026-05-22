@@ -4,7 +4,7 @@
   "description": "AvaCloud Encrypted ERC is a privacy-focused implementation of ERC20-like tokens that allows users to perform confidential transactions on the blockchain using homomorphic encryption and zero knowledge proofs.",
   "status": "pending",
   "documentation": "https://docs.avacloud.io/encrypted-erc/welcome",
-  "categories": ["Homomorphic encryption (FHE - HE)", "Zero Knowledge Proofs (ZKPs)"],
+  "categories": ["Encrypted Tokens", "Homomorphic Encryption (HE)", "Zero Knowledge Proofs (ZKPs)", "Other L1 project"],
   "properties": [],
   "sourceUrls": []
 }

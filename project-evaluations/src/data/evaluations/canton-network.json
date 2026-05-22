@@ -4,7 +4,7 @@
   "description": "A privacy-preserving blockchain for financial institutions, where smart contract data is shared only with parties that have a legitimate need to see it. A network of networks.",
   "status": "pending",
   "documentation": "https://docs.digitalasset.com/overview/3.4/index.html",
-  "categories": ["Alternative L1"],
+  "categories": ["Private L1"],
   "properties": [],
   "sourceUrls": []
 }

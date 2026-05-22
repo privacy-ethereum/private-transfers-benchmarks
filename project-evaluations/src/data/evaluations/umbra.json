@@ -4,7 +4,7 @@
   "description": "Umbra Privacy provides cryptographic infrastructure for confidential transactions, letting users and applications keep financial data private on-chain. It enables anonymous, unlinkable, and auditable token transfers and interactions, using a shared-state model to reduce the per-user cost of on-chain privacy.",
   "status": "pending",
   "documentation": "https://docs.umbraprivacy.com/docs/introduction",
-  "categories": ["Multi Party Computation (MPC)"],
+  "categories": ["Zero Knowledge Proofs (ZKPs)", "Shielded Pool", "Solana project"],
   "properties": [],
   "sourceUrls": []
 }

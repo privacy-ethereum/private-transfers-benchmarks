@@ -48,9 +48,8 @@ export default function ProfileView({ initialSelected, onSelectedChange }: Profi
     onSelectedChange(id);
   };
 
-  const protocol = evaluations.find((project) => project.id === selectedId);
   const searchQuote = searchQuery.trim().toLowerCase();
-  const filteredProtos = evaluations.filter((project) => {
+  const filteredProtocols = evaluations.filter((project) => {
     if (hidePending && isPendingEvaluation(project)) return false;
     if (searchQuote === "") return true;
     return (
@@ -58,6 +57,7 @@ export default function ProfileView({ initialSelected, onSelectedChange }: Profi
       project.categories.some((category) => category.toLowerCase().includes(searchQuote))
     );
   });
+  const protocol = filteredProtocols.find((project) => project.id === selectedId) ?? filteredProtocols.at(0);
   const subgraphReadmeMarkdown = protocol !== undefined ? (readmes[protocol.id] ?? "") : "";
 
   return (
@@ -109,14 +109,14 @@ export default function ProfileView({ initialSelected, onSelectedChange }: Profi
           >
             {hidePending ? "Show all protocols" : "Hide pending analysis"}
           </button>
-          {filteredProtos.length === 0 ? (
+          {filteredProtocols.length === 0 ? (
             <div className="sidebar-empty">No protocol matches &ldquo;{searchQuery}&rdquo;</div>
           ) : (
-            filteredProtos.map((p) => (
+            filteredProtocols.map((p) => (
               <button
                 key={p.id}
                 type="button"
-                className={`protocol${p.id === selectedId ? " active" : ""}`}
+                className={`protocol${p.id === protocol?.id ? " active" : ""}`}
                 onClick={() => {
                   setSelected(p.id);
                 }}

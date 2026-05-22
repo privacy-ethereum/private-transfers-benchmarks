@@ -4,7 +4,7 @@
   "description": "Horizen is an EVM-native blockchain that rolls up to Base, supporting regulatory-compliant private onchain applications.",
   "status": "pending",
   "documentation": "https://docs.horizen.io/overview/architecture/",
-  "categories": ["Private L3"],
+  "categories": ["Trusted Execution Environments (TEEs)", "Private L3"],
   "properties": [],
   "sourceUrls": []
 }

@@ -44,9 +44,9 @@ A number of technologies can and are used amongst private transfer protocols.
 - Fully homomorphic encryption (FHE)
 - Homomorphic encryption (HE)
 - Multi Party Computation (MPC)
-- TEEs
+- Trusted Execution Environments (TEEs)
 - Garbled Circuits
-- coSNARKs
+- CoSNARKs
 - Post-quantum cryptography
 
 ### Architecture categories
@@ -58,12 +58,12 @@ A number of technologies can and are used amongst private transfer protocols.
 - **Private L2** - a L2 rollup with privacy features. Inherits data availability and settlement security from Ethereum while keeping transaction contents shielded.
 - **Private Plasma** - TODO
 - **Private Validium** - A Validium is a scaling solution that enforces integrity of transactions using validity proofs like ZK rollups, but doesn’t store transaction data on the Ethereum itself
-- **zkWormholes (burn-and-mint)** - Send funds to an unclaimable address and use zero-knowledge proofs to prove you own those funds in order to mint new tokens. The recipient mints to any address by privately proving the source is a valid burn, thus breaking the identifiable link between burn and mint
+- **Zero-Knowledge Wormholes** - Send funds to an unclaimable address and use zero-knowledge proofs to prove you own those funds in order to mint new tokens. The recipient mints to any address by privately proving the source is a valid burn, thus breaking the identifiable link between burn and mint
 - **Decentralised Network** - a standalone decentralised network focussing on providing an additional service. Sometimes with additional crypto-economic assumptions. For example, a FHE or TEE coprocessor.
-- **Privacy stack/layer/middleware** - a full stack privacy solution which incorporates multiple technologies and components. Or a privacy layer that sits between users and the chain to provide privacy.
+- **Privacy Stack/Layer/Middleware** - a full stack privacy solution which incorporates multiple technologies and components. Or a privacy layer that sits between users and the chain to provide privacy.
 - **Bytecode Obfuscator** - a technique that deterministically produces many functionally equivalent variants of the same contract logic. Each private transfer can settle through a freshly-deployed escrow contract that looks like unrelated bytecode, so transfers don't share an on-chain anchor that observers can cluster against
 - **Private VPN** - a privacy layer that sits between the user's wallet and the chain, as an RPC proxy. The user signs a regular transaction and the proxy generates a zero-knowledge proof that the transaction and its ECDSA signature are valid - this proof and the hidden transaction details can be used to interact with a privacy protocol.
-- **Cross-chain swap aggregator** - routes value across L1s via exchanges or other off-chain hops to break on-chain linkability between source and destination addresses
+- **Cross-Chain Swap Aggregator** - routes value across L1s via exchanges or other off-chain hops to break on-chain linkability between source and destination addresses
 
 ## Properties Definition
 
@@ -138,7 +138,7 @@ We evaluated 13 privacy protocols that enable private transfers. They are ordere
 
 Bermuda is a privacy protocol built for EVM chains that acts as a privacy layer between applications and the underlying chain. The protocol gives existing EVM applications shielded accounts, stealth-address payments, with built-in compliance features without requiring smart contract changes. It combines zero-knowledge proofs with programmable compliance (deposit screening, retroactive flagging, withdrawal proofs). Bermuda supports private, compliant, and gasless transactions and is advertised as enterprise grade
 
-**Categories**: Shielded pool, Stealth addresses, Zero Knowledge Proofs (ZKPs), Privacy Stack/Layer/Middleware
+**Categories**: Shielded Pool, Zero Knowledge Proofs (ZKPs)
 
 **Documentation**: https://docs.bermudabay.xyz
 
@@ -154,7 +154,7 @@ Bermuda is a privacy protocol built for EVM chains that acts as a privacy layer 
 
 **Number of secrets** — 1. Each Bermuda account is controlled by a spending and an encryption key pair, both deterministically derived from a single random seed. Using the user's wallet private key as seed inherits the host wallet's recovery setup, so no new secret beyond the existing wallet key is required. It is also possible to generate keys by using a signature over a fixed message as a seed. This path is not recommended because signature-based key generation introduces phishing attack vectors.
 
-**Deposit time** — 0. Deposits are ordinary on-chain transactions: the SDK exposes a single deposit call that funds a Bermuda account with any ERC-20 token, with no queue, challenge window, or time-lock beyond host-chain block inclusion. Pre-shield screening runs through Predicate as part of the same transaction, so attestation latency does not delay the deposit itself.
+**Deposit time** — 0. Deposits are ordinary on-chain transactions: the SDK exposes a single deposit call that funds a Bermuda account with any ERC-20 token, with no queue, challenge window, or time-lock beyond host-chain block inclusion. Pre-shield screening runs through Predicate as part of the same transaction, so attestation latency does not delay the deposit itself. If Predicate compliance engine flags the address, the deposit transaction gets rejected immediately.
 
 **Withdraw time** — 0. Withdrawals are single on-chain transactions: the SDK exposes a withdraw call that sends any shielded ERC-20 token to a public Ethereum account, gated only by ZK proof verification with no queue, exit window, or time-lock beyond host-chain block inclusion. Blacklist root checks run inline with the withdrawal proof and do not add a protocol-imposed wait.
 
@@ -164,13 +164,13 @@ Bermuda is a privacy protocol built for EVM chains that acts as a privacy layer 
 
 **Escape hatch** — Instantly. Bermuda's pool and verifier contracts are immutable, and withdrawals are not blocked by compliance. If a deposit lineage is retroactively flagged, the user can still withdraw — funds exit but they lose privacy.
 
-**Upgradeability** — Immutable. The pool and its associated verifier contracts are fully immutable, and the pool itself is a standard Solidity smart contract without any privileged admin functions, so no central party can alter pool or verifier behaviour after deployment. The compliance gateway blacklist root is updated by an off-chain compliance engine each time the curated list changes, making that one part of state mutable.
+**Upgradeability** — Immutable. The pool and its associated verifier contracts are fully immutable, and the pool itself is a standard Solidity smart contract without any privileged admin functions, so no central party can alter pool or verifier behaviour after deployment. The compliance gateway blacklist root is updated by an off-chain compliance engine each time the curated list changes, making that one part of state mutable. It is worth pointing out that the deployed contract is not verified and the smart contracts code is not open source, so we could not validate the inmutability claim.
 
 **Client-side proving** — Yes. Proof generation runs entirely on the user's device. All ZK proof generation happens client-side inside the prover. Spending keys and transaction details never leave the user's device. The circuits are written in Noir with the Barretenberg backend, and the design targets universal client-side proving on standard consumer hardware, with further proving-pipeline optimisations under evaluation.
 
 **Third-party inspectability** — No. Proof generation runs locally, so ZK proof generation happens client-side inside the embedded prover, and spending keys and transaction details never leave the user's device. The relayer and bundler dispatch transactions but, by design, are off-chain services that facilitate on-chain execution without having access to private transaction data. Withdrawal verification preserves confidentiality as well, since the pool can verify the withdrawal on-chain without revealing the user's identity, balance, or full transaction history.
 
-**Implementation maturity** — 2 : Public testnet. The Bermuda wallet package is in beta with Plasma testnet as the only supported network, and the SDK is available to partners only by direct outreach. Bermuda is not deployed to mainnet.
+**Implementation maturity** — 2 : Public testnet. The Bermuda wallet package is in beta deployed on Base Sepolia testnet as the only supported network, and the SDK is available to partners only by direct outreach. Bermuda is not deployed to mainnet.
 
 **Post-quantum secure** — No. Spending key pairs produce Schnorr signatures and operate over the Grumpkin curve, an elliptic-curve construction whose discrete-log hardness is broken by Shor's algorithm. UTXO encryption uses X25519-XChaCha20-Poly1305, ECDH over Curve25519 paired with XChaCha20-Poly1305, and the ECDH component is likewise vulnerable to a cryptographically relevant quantum adversary.
 
@@ -188,11 +188,11 @@ Bermuda is a privacy protocol built for EVM chains that acts as a privacy layer 
 
 **Cryptographic verifiability** — Yes. Transaction correctness on Bermuda rests on zk-SNARK verification performed by on-chain contracts. The pool contract holds shielded funds and manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. Circuits are written in Noir and use the Barretenberg backend. Verifier contracts perform ZK-SNARK proof verification, with multiple verifier instances covering different UTXO topologies and spending scenarios, so verifier selection is per-circuit rather than majority-based.
 
-**Open source** — No. The wallet SDK repository wdk-wallet-bermuda is published under Apache License 2.0, an opem source licence. The public organisation listing shows Apache-2.0 on wdk-wallet-bermuda and the schnorr fork, with other repositories under GPL-3.0, MIT, or no declared licence. The circuits and contracts are not publicly inspectable from the github organisation.
+**Open source** — No. The wallet SDK repository wdk-wallet-bermuda is published under Apache License 2.0, an open source licence. The public organisation listing shows Apache-2.0 on wdk-wallet-bermuda and the schnorr fork, with other repositories under GPL-3.0, MIT, or no declared licence. The circuits and contracts are not publicly inspectable from the github organisation.
 
-**Private State Scalability** — Infinity grow. Bermuda's shielded pool stores encrypted UTXOs on-chain, and the pool contract holds all shielded funds across deposits, transfers, and withdrawals. Each spend adds new commitments and consumes nullifiers held by the pool.
+**Private State Scalability** — Infinity grow. Bermuda's shielded pool stores encrypted UTXOs on-chain, and the pool contract holds all shielded funds across deposits, transfers, and withdrawals. Each spend adds new commitments and consumes nullifiers held by the pool. There is no mention of a pruning mechanism.
 
-**Client-side indexing** — No scanning. A separate chain-state service periodically downloads the most recent chain state via scheduled GitHub Actions, producing pre-indexed snapshots that the SDK ingests. The client SDK runs a single bootstrap synchronization step that loads this snapshot before performing ZK proving, rather than scanning every block itself. The indexing work is performed by the chain-state crawler service.
+**Client-side indexing** — No scanning. A separate chain-state service periodically downloads the most recent chain state via scheduled GitHub Actions, producing pre-indexed snapshots that the SDK ingests. The client SDK runs a single bootstrap synchronization step that loads this snapshot before performing ZK proving, rather than scanning every block itself. The indexing work is performed by the chain-state crawler service so the end user devices do not need to be constantly scanning on-chain events.
 
 **Private state model** — UTXO-based state model. Bermuda uses a UTXO-based shielded pool: state is organised as discrete encrypted outputs rather than per-account ciphertext balances. Each spend produces new commitments and consumes nullifiers held by the pool contract.
 
@@ -210,7 +210,7 @@ Bermuda is a privacy protocol built for EVM chains that acts as a privacy layer 
 
 Curvy is a privacy-preserving cross-chain payment protocol with compliance features. It combines stealth addressses with ZK-SNARKs
 
-**Categories**: Stealth addresses
+**Categories**: Stealth Addresses, Shielded Pool, Zero Knowledge Proofs (ZKPs)
 
 **Documentation**: https://docs.curvy.box/
 
@@ -282,7 +282,7 @@ Curvy is a privacy-preserving cross-chain payment protocol with compliance featu
 
 Fluidkey is a stealth address system on Ethereum that automatically generates a new Safe smart account for every incoming payment. It derives stealth addresses from user viewing keys following the ERC-5564 standard, surfacing them through a static ENS name (username.fkey.id) that resolves to a fresh stealth address on every query, ensuring funds arrive at an address that no observer can link back to the recipient.
 
-**Categories**: Stealth addresses
+**Categories**: Stealth Addresses
 
 **Documentation**: https://docs.fluidkey.com/
 
@@ -354,7 +354,7 @@ Fluidkey is a stealth address system on Ethereum that automatically generates a 
 
 A privacy protocol using stealth addresses and zk-SNARKs to enable confidential token transfers and shielded DeFi interactions on EVM chains, with built-in KYT compliance enforced at deposit and withdrawal.
 
-**Categories**: Shielded pool, Stealth addresses, Zero Knowledge Proofs (ZKPs)
+**Categories**: Shielded Pool, Zero Knowledge Proofs (ZKPs)
 
 **Documentation**: https://hinkal-team.gitbook.io/hinkal
 
@@ -426,7 +426,7 @@ A privacy protocol using stealth addresses and zk-SNARKs to enable confidential 
 
 Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains privacy by routing each swap through two independent off-chain CEX partners and three separate blockchains, so no single counterparty sees the full path from source to destination. It is not a mixer: liquidity is not pooled and no zero-knowledge proofs are used; privacy comes from partitioning knowledge across routing hops. The service aggregates DEXes and bridges across 100+ chains and curates CEX partners that run industry-standard AML programmes.
 
-**Categories**: Cross-chain swap aggregator
+**Categories**: Cross-Chain Swap Aggregator
 
 **Documentation**: https://docs.houdiniswap.com/
 
@@ -498,7 +498,7 @@ Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains pr
 
 Nullmask is a privacy layer that sits between an ordinary wallet (e.g. MetaMask) and a chain via a custom RPC proxy. Users sign a single authorization message to derive viewing, nullifying and encryption keys. The proxy converts a user's normal transactions into shielded notes and produces UltraHonk zk-SNARK proofs for deposits, transfers and withdrawals. All shielded transactions processed by the RPC proxy are sent to the Nullmask contract to be executed and registered. Shielded state is represented as encrypted notes on-chain alongside a key registry. Users trial-decrypt notes to find their own. Retroactive compliance allows flagged deposits to be revoked.
 
-**Categories**: VPN (Private Intents)
+**Categories**: Virtual Private EVM Network, Shielded Pool, Zero Knowledge Proofs (ZKPs), Privacy Stack/Layer/Middleware
 
 **Documentation**: https://docs.nullmask.io/
 
@@ -644,7 +644,7 @@ A privacy protocol that extends Tornado Cash unlinkability concept with associat
 
 A privacy system for Ethereum using zk-SNARKs to shield ERC-20 tokens and ETH inside a smart contract, enabling private transfers and shielded DeFi interactions.
 
-**Categories**: Shielded pool, Zero Knowledge Proofs (ZKPs)
+**Categories**: Shielded Pool, Zero Knowledge Proofs (ZKPs)
 
 **Documentation**: https://docs.railgun.org/wiki/learn/privacy-system
 
@@ -721,7 +721,7 @@ Chainalysis Sanctions Oracle
 
 A confidential transfer protocol on Ethereum using Fhenix's CoFHE (Coprocessor for Fully Homomorphic Encryption) to encrypt ERC20 token balances on-chain. All FHE computations are handled off-chain by the coprocessor network. Balances are hidden while addresses are fully visible.
 
-**Categories**: Homomorphic encryption (FHE - HE)
+**Categories**: Fully Homomorphic encryption (FHE), Encrypted Tokens
 
 **Documentation**: https://docs.redact.money/
 
@@ -793,7 +793,7 @@ A confidential transfer protocol on Ethereum using Fhenix's CoFHE (Coprocessor f
 
 A confidential payment protocol on Starknet that uses ElGamal homomorphic encryption and zero-knowledge proofs to enable private ERC20 token transfers. Account balances are stored as encrypted ciphertexts on-chain, hiding amounts while keeping the protocol verifiable and supporting an optional auditor for regulatory compliance.
 
-**Categories**: Homomorphic encryption (FHE - HE)
+**Categories**: Homomorphic Encryption (HE), Encrypted Tokens
 
 **Documentation**: https://docs.tongo.cash/
 
@@ -939,7 +939,7 @@ A non-custodial, Ethereum-based mixer that uses zk-SNARKs to break the on-chain 
 
 WORM is a protocol that uses an ERC-20 token (BETH for Burned ETH) which is minted via the process of burning Ethereum (ETH) by sending it to unclaimable addresses. Users generate a proof-of-burn receipt which enables the minting of BETH. ETH transfers sent to an unclaimable address are indistinguishable from a regular ETH transfer to a fresh address. There is no way for an outside observer to detect whether a user is interacting with the WORM protocol. The protocol is based on EIP-7503, which standardizes Private Proof-of-Burn.
 
-**Categories**: zkWormholes, Zero Knowledge Proofs (ZKPs)
+**Categories**: Zero-Knowledge Wormholes, Zero Knowledge Proofs (ZKPs)
 
 **Documentation**: https://github.com/worm-privacy/whitepaper
 
@@ -1011,7 +1011,7 @@ WORM is a protocol that uses an ERC-20 token (BETH for Burned ETH) which is mint
 
 zERC20 is a fully ERC-20-compliant token with a private-transfer mechanism, usable from a standard wallet. A private transfer sends zERC20 to a cryptographically derived burn address. The recipient later withdraws the same amount to any address by submitting a zero-knowledge proof proving they know the burn secret, so the link between the two addresses is never revealed on-chain. Wrapper tokens are backed 1:1 by underlying assets such as ETH, USDC, and BNB, and cross-chain private transfers are supported via LayerZero. The token draws from the design of zk-Wormhole / EIP-7503 private proof-of-burn.
 
-**Categories**: zkWormholes
+**Categories**: Zero-Knowledge Wormholes, Zero Knowledge Proofs (ZKPs)
 
 **Documentation**: https://zerc20.gitbook.io/zerc20
 

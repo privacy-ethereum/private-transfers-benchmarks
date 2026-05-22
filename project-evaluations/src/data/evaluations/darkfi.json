@@ -4,7 +4,7 @@
   "description": "DarkFi is a Layer 1 blockchain, using zero-knowledge cryptography. It provides private primitives for building applications.",
   "status": "pending",
   "documentation": "https://dark.fi/book/",
-  "categories": ["Alternative L1"],
+  "categories": ["Private L1"],
   "properties": [],
   "sourceUrls": []
 }

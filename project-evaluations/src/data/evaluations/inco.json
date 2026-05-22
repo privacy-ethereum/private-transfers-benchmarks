@@ -4,7 +4,7 @@
   "description": "Inco is a confidentiality layer for blockchains that enables privacy-preserving smart contracts without modifying the underlying blockchain. It takes a modular approach, comparable to how SSL/TLS adds security to internet protocols.",
   "status": "pending",
   "documentation": "https://docs.inco.org/home",
-  "categories": ["L2s", "TEEs"],
+  "categories": ["Trusted Execution Environments (TEEs)", "Private L2"],
   "properties": [],
   "sourceUrls": []
 }

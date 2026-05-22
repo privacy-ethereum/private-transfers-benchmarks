@@ -37,7 +37,7 @@ const sharedPlugins = {
   json,
   prettier,
   "unused-imports": unusedImports,
-  import: fixupPluginRules(_import),
+  "import": fixupPluginRules(_import),
   "@typescript-eslint": fixupPluginRules(typescriptEslint),
 };
 
@@ -104,7 +104,7 @@ const gasConfig = {
     },
   },
   settings: {
-    react: { version: "999.999.999" },
+    "react": { version: "999.999.999" },
     "import/resolver": {
       typescript: { project: resolve(__dirname, "./gas-benchmarks/tsconfig.json") },
       node: { extensions: [".ts", ".js"], moduleDirectory: ["node_modules", "ts", "src"] },
@@ -132,9 +132,9 @@ const gasConfig = {
     "import/order": [
       "error",
       {
-        groups: ["external", "builtin", "internal", "type", "parent", "sibling", "index", "object"],
-        alphabetize: { order: "asc", caseInsensitive: true },
-        warnOnUnassignedImports: true,
+        "groups": ["external", "builtin", "internal", "type", "parent", "sibling", "index", "object"],
+        "alphabetize": { order: "asc", caseInsensitive: true },
+        "warnOnUnassignedImports": true,
         "newlines-between": "always",
       },
     ],
@@ -145,7 +145,7 @@ const gasConfig = {
     "max-classes-per-file": "off",
     "no-use-before-define": ["off"],
     "no-shadow": "off",
-    curly: ["error", "all"],
+    "curly": ["error", "all"],
     "no-return-await": "off",
     "@typescript-eslint/explicit-member-accessibility": ["error", { accessibility: "no-public" }],
     "@typescript-eslint/explicit-module-boundary-types": "error",
@@ -177,7 +177,7 @@ const evalConfig = {
     prettier,
     "unused-imports": unusedImports,
     "@typescript-eslint": fixupPluginRules(typescriptEslint),
-    react: fixupPluginRules(reactPlugin),
+    "react": fixupPluginRules(reactPlugin),
     "react-hooks": fixupPluginRules(reactHooksPlugin),
   },
   languageOptions: {
@@ -240,7 +240,7 @@ const subgraphConfig = {
     },
   },
   settings: {
-    react: { version: "999.999.999" },
+    "react": { version: "999.999.999" },
     "import/resolver": {
       typescript: {},
       node: { extensions: [".ts", ".js"], moduleDirectory: ["node_modules", "src", "tests", "generated"] },
@@ -262,9 +262,9 @@ const subgraphConfig = {
     "import/order": [
       "error",
       {
-        groups: ["external", "builtin", "internal", "type", "parent", "sibling", "index", "object"],
-        alphabetize: { order: "asc", caseInsensitive: true },
-        warnOnUnassignedImports: true,
+        "groups": ["external", "builtin", "internal", "type", "parent", "sibling", "index", "object"],
+        "alphabetize": { order: "asc", caseInsensitive: true },
+        "warnOnUnassignedImports": true,
         "newlines-between": "always",
       },
     ],
@@ -275,7 +275,7 @@ const subgraphConfig = {
     "max-classes-per-file": "off",
     "no-use-before-define": ["off"],
     "no-shadow": "off",
-    curly: ["error", "all"],
+    "curly": ["error", "all"],
     "no-return-await": "off",
     "prefer-destructuring": "off",
     "@typescript-eslint/prefer-for-of": "off",
