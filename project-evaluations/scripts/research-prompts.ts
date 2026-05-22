@@ -1,4 +1,6 @@
+import { existsSync, readFileSync } from "fs";
 import type { PropertyContent } from "../src/types.js";
+import { PROPERTY_DEFINITIONS } from "../src/data/schema.js";
 
 /**
  * Single source of truth for evaluation rules.
@@ -13,11 +15,11 @@ import type { PropertyContent } from "../src/types.js";
  *                            and by review when verifying URL suitability.
  *   REVIEW_ONLY_RULES      — only used by the /review-evaluation skill (not injected into
  *                            the citations prompt — they describe post-hoc verification).
- *   PROPERTY_RULES         — per-property guidance, keyed by property name exactly as in
- *                            schema.ts. The citation prompt, /research-sources, and
- *                            /review-evaluation all look these up when the property applies.
  *
- * Skills that need to read rules should load this file directly with the Read tool.
+ * Per-property rules live in `.claude/skills/property-rules-{group}/SKILL.md`. The citation
+ * prompt loads them at runtime via the internal `loadPropertyRule(propertyName)` helper. The
+ * markdown skill files are also read directly by /research-sources, /review-evaluation, etc.
+ * To add or modify a per-property rule, edit the markdown skill file.
  */
 
 // prettier-ignore
@@ -76,37 +78,79 @@ REVIEW-ONLY RULES:
 6. Preserve citations; prefer the smallest edit. The end state across the evaluation should be: most properties retain their citations[] array from Phase B; only a few carry "needsResearchReview": true. Reword only the sentences that violate a rule and drop individual citations[] entries whose cited_text no longer supports the corrected prose; keep every citation whose cited_text still substantiates what the notes now say. Rewrite from scratch only when every existing citation has been invalidated.
 7. Flag and record the source. Whenever review changes a property's value or notes, set "needsResearchReview": true AND write the URL that verified the correction into the property's "url" field. If multiple URLs were used, pick the one that most directly substantiates the corrected claim. Purely editorial rewording (no new evidence) still needs the flag but may omit "url". A property may omit "needsResearchReview" only when its notes and value survive review unchanged AND every attached citation still substantiates the text.`;
 
-// prettier-ignore
-export const PROPERTY_RULES: Record<string, string> = {
-  "Confidentiality":
-    "For protocols that use standard ERC-20 (or any unmodified public-ledger token) as the user-facing balance, the value is No. The token contract leaks per-address balances and transfer amounts regardless of how private movement between addresses is.",
-  "Asset privacy":
-    "For single-asset protocols (e.g. a chain with only one native currency, or a single wrapped token per asset), the value is No.",
-  "Plausible deniability":
-    'This property asks whether the act of *entering* the privacy protocol is indistinguishable from an ordinary public transfer. zkWormhole protocols (e.g. WORM, zERC20) are Yes: the deposit/burn is a standard EOA-to-EOA or ERC-20 transfer to a cryptographically-derived address, which cannot be distinguished on-chain from a normal transfer. A user who only deposits never touches a privacy-specific contract and therefore has deniability. For privacy-by-default protocols (e.g. Monero) the answer is No — the entire chain is a known privacy system. For opt-in shielded-pool protocols (e.g. Railgun, Tornado Cash) the answer is No because the deposit itself calls a known privacy contract. When the answer is Yes, notes MUST state explicitly that deniability covers deposit/entry only and does not extend to withdraw/mint, since the withdraw step is a visible interaction with the verifier.',
-  "Deposit time":
-    "For L1 protocols without a distinct deposit concept, use N/A.",
-  "Withdraw time":
-    "For L1 protocols without a distinct withdraw concept, use N/A.",
-  "Time-to-finality":
-    "For apps and L2s deployed on other blockchains, the value is N/A and finality is inherited from the underlying chain. List the deployed networks in the notes. Exception: L3s may have their own finality time if their settlement adds delay beyond the underlying L2.",
-  "Escape hatch":
-    "For standalone L1 blockchains where funds are native to the chain, the value may be N/A. For routing or aggregator services that never hold funds in a protocol-controlled pool (e.g. cross-chain CEX aggregators), the value is N/A because there is no pool to exit from — partner-level customer-service recovery is not a protocol-level escape hatch.",
-  "Censorship resistance":
-    "If the protocol is permissionless and any valid transaction can eventually be included (even if individual miners or validators soft-censor), the value is Yes. Relayer or broadcaster dependence alone does not make the protocol censorship-susceptible if users can bypass relayers and interact with contracts directly. Mention relayer roles in the notes.",
-    "Number of secrets":
-      "Count only independently stored secrets. If all keys (spending, viewing, encryption) are deterministically derived from one wallet signature or mnemonic, the value is 1. The minimum is 1 whenever the user must sign anything to use the protocol — even when the protocol derives no keys of its own and the user just signs with their pre-existing Ethereum wallet, the wallet key is the one secret in use. Never emit 0. Notes MUST list every key, how each is derived, and the cryptographic primitives used.",
-  "Cryptographic verifiability":
-    'Yes when transaction correctness is enforced by cryptographic proof verification (zk-SNARKs, ring signatures, signature schemes) that an external observer can re-check against the math given the published verifier. Use "Yes, with L1 consensus" for L1 blockchains where individual transaction correctness is cryptographic but ordering/inclusion is consensus-based (PoW/PoS majority). No when correctness rests on an economic mechanism (stake-slashing not tied to a math proof), a social mechanism (multisig vote, governance signoff), or a hardware-trust mechanism (TEE/SGX attestation, where trust roots in a hardware vendor signing CA rather than pure math). Upgradeable verifier contracts and permissioned admin gates are NOT a reason to mark No here — those are separately captured by Upgradeability and Censorship resistance. Notes should still mention if the verifier is swappable so readers see the full picture.',
-  "Open source":
-    'Value "Yes" requires an OSI-approved license: MIT, Apache-2.0, any GPL-family, any BSD-family, ISC, MPL, or Unlicense. Source-available licenses (BSL, Commons Clause, SSPL, Elastic License, "no-commercial", or no license) are No. A BSL change-date to a future open-source license does NOT make the protocol open source today. Check ALL critical repositories — contracts, circuits, SDKs may have different licenses; if any critical component is source-available only, value is No. Name the specific license in notes.',
-  "Upgradeability":
-    "Evaluate protocol-level upgrade authority, not just individual on-chain artefacts. If a central team can revoke operators, swap the toolchain that produces contracts (e.g. a bytecode obfuscator), sign the binaries that executors must run, or ship a successor contract that users are effectively forced to migrate to, the value is Single admin (or Multi-sig / DAO depending on who holds the keys) even if each deployed contract instance is immutable after deployment. Immutable is only correct when there is no central party capable of changing protocol behaviour across future transfers.",
+/**
+ * Property → property-rules group, used to find the right SKILL.md when looking up a per-property rule.
+ * Properties marked out-of-scope (gas costs, anonymity set size) intentionally have no group.
+ */
+type PropertyName = (typeof PROPERTY_DEFINITIONS)[number]["name"];
+type RulesGroup = "privacy" | "compliance" | "trust" | "cryptography" | "state-model" | "timing" | "composability";
+
+const PROPERTY_GROUP: Partial<Record<PropertyName, RulesGroup>> = {
+  "Anonymity": "privacy",
+  "Confidentiality": "privacy",
+  "Asset privacy": "privacy",
+  "Plausible deniability": "privacy",
+  "Type of compliance": "compliance",
+  "Layer of enforcement": "compliance",
+  "Enforcement entities": "compliance",
+  "Point of enforcement": "compliance",
+  "Selective disclosure: viewing entity": "compliance",
+  "Selective disclosure: viewing control": "compliance",
+  "Censorship resistance": "trust",
+  "External network dependence": "trust",
+  "Escape hatch": "trust",
+  "Open source": "trust",
+  "Upgradeability": "trust",
+  "Third-party inspectability": "trust",
+  "Cryptographic verifiability": "cryptography",
+  "Post-quantum secure": "cryptography",
+  "Number of secrets": "cryptography",
+  "Client-side proving": "cryptography",
+  "Private state model": "state-model",
+  "Private Data Storage": "state-model",
+  "Client-side indexing": "state-model",
+  "Private State Scalability": "state-model",
+  "Time-to-finality": "timing",
+  "Deposit time": "timing",
+  "Withdraw time": "timing",
+  "Implementation maturity": "timing",
+  "Access to DeFi": "composability",
+  "Programmability / Generality": "composability",
 };
+
+/** Memoised so we only read each per-property skill markdown file once per process. */
+const ruleCache = new Map<string, string | null>();
+
+/**
+ * Look up the per-property rule body for a property. Resolves the property's group, opens the
+ * matching `property-rules-{group}/SKILL.md`, and extracts the `## {propertyName}` section.
+ * Returns null when there's no group, no skill file, or the section is a "(no property-specific
+ * rule yet …)" placeholder.
+ */
+function loadPropertyRule(propertyName: string): string | null {
+  if (ruleCache.has(propertyName)) return ruleCache.get(propertyName)!;
+  const rule = readPropertyRule(propertyName);
+  ruleCache.set(propertyName, rule);
+  return rule;
+}
+
+function readPropertyRule(propertyName: string): string | null {
+  const group = PROPERTY_GROUP[propertyName];
+  if (!group) return null;
+  const skillPath = new URL(`../.claude/skills/property-rules-${group}/SKILL.md`, import.meta.url);
+  if (!existsSync(skillPath)) return null;
+  // Match the `## {Property Name}` header up to the next `##` or end-of-file.
+  const escapedName = propertyName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const sectionRegex = new RegExp(`##\\s+${escapedName}\\s*\\n([\\s\\S]*?)(?=\\n##\\s|$)`);
+  const match = readFileSync(skillPath, "utf-8").match(sectionRegex);
+  const body = match?.[1].trim();
+  if (!body || body.startsWith("(no property-specific rule yet")) return null;
+  return body;
+}
 
 /** Rules assembled into the citations prompt for a given property. */
 function citationRulesFor(property: PropertyContent): string {
-  const perProperty = PROPERTY_RULES[property.name];
+  const perProperty = loadPropertyRule(property.name);
   const blocks = [WRITING_RULES, CROSS_CHECK_RULES, VALUE_FORMAT_RULES];
   if (perProperty) blocks.push(`PROPERTY-SPECIFIC RULE (${property.name}):\n${perProperty}`);
   return blocks.join("\n");
