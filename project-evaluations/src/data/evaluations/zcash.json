@@ -16,21 +16,15 @@
       "citations": [
         {
           "cited_text": "Therefore, there are four basic types of transactions:\n\nShielded/private (Value is not revealed on the blockchain) ¶ \n\nDeshielding (Value is revealed on the receiver end) ¶ \n\nShielding (Value is revealed on the sender end) ¶ \n\nTransparent/public (Value is revealed by both sender and receiver) ¶ \n\nShielded Addresses ¶ \n\nShielded addresses are the address type that use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 1325,
-          "end_char_index": 1799
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
         },
         {
           "cited_text": "Shielded addresses and the values sent to or from them are not publicly visible. ¶ \n\nA transaction between two shielded addresses (a shielded transaction) keeps the addresses, transaction amount and the memo field shielded from the public (with the exception of migrating funds between Sprout and Sapling shielded addresses).\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 2105,
-          "end_char_index": 2432
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
         },
         {
           "cited_text": "Transparent Addresses ¶ \n\nTransparent addresses work similarly to Bitcoin addresses and do not offer privacy for users.\n\nTransparent addresses and the values sent to or from them are publicly visible ¶ \n\nAt this time, some advanced features such as multisignature and the use of bitcoin-style scripting with opcodes are only supported by transparent addresses. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 4224,
-          "end_char_index": 4585
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
         }
       ]
     },
@@ -41,21 +35,15 @@
       "citations": [
         {
           "cited_text": "¶ \n\nA transaction between two shielded addresses (a shielded transaction) keeps the addresses, transaction amount and the memo field shielded from the public (with the exception of migrating funds between Sprout and Sapling shielded addresses).\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 2186,
-          "end_char_index": 2432
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
         },
         {
           "cited_text": "Therefore, there are four basic types of transactions:\n\nShielded/private (Value is not revealed on the blockchain) ¶ \n\nDeshielding (Value is revealed on the receiver end) ¶ \n\nShielding (Value is revealed on the sender end) ¶ \n\nTransparent/public (Value is revealed by both sender and receiver) ¶ \n\nShielded Addresses ¶ \n\nShielded addresses are the address type that use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 1325,
-          "end_char_index": 1799
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
         },
         {
           "cited_text": "Recipients of a shielded or deshielding transaction do not learn about the senders address through the transaction receipt in their wallet. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 2505,
-          "end_char_index": 2644
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
         }
       ]
     },
@@ -66,15 +54,11 @@
       "citations": [
         {
           "cited_text": "ZEC is the default (and currently the only defined) Asset for the Zcash mainnet.\n\nTAZ is the default (and currently the only defined) Asset for the Zcash testnet.\n\n",
-          "source": "https://zips.z.cash/zip-0227",
-          "start_char_index": 1228,
-          "end_char_index": 1392
+          "source": "https://zips.z.cash/zip-0227"
         },
         {
           "cited_text": "Abstract \n\nThis ZIP (ZIP 227) proposes the Orchard Zcash Shielded Assets (OrchardZSA) protocol, in conjunction with ZIP 226 10 . This protocol is an extension of the Orchard protocol that enables the creation, transfer and burn of Custom Assets on the Zcash chain. The creation of such Assets is defined in this ZIP (ZIP 227), while the transfer and burn of such Assets is defined in ZIP 226 10 . ",
-          "source": "https://zips.z.cash/zip-0227",
-          "start_char_index": 1710,
-          "end_char_index": 2107
+          "source": "https://zips.z.cash/zip-0227"
         }
       ]
     },
@@ -85,15 +69,11 @@
       "citations": [
         {
           "cited_text": "Therefore, there are four basic types of transactions:\n\nShielded/private (Value is not revealed on the blockchain) ¶ \n\nDeshielding (Value is revealed on the receiver end) ¶ \n\nShielding (Value is revealed on the sender end) ¶ \n\nTransparent/public (Value is revealed by both sender and receiver) ¶ \n\nShielded Addresses ¶ \n\nShielded addresses are the address type that use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 1325,
-          "end_char_index": 1799
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
         },
         {
           "cited_text": "Since ZEC must be mined to a transparent address before being sent to any shielded address, the value entering either the Sprout or Sapling value pools is visible. Similarly, because ZEC cannot be sent directly between shielded value pools without revealing the amount (see: Sprout-to-Sapling Migration ), the value exiting a shielded value pool is also visible. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 6263,
-          "end_char_index": 6626
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
         }
       ]
     },
@@ -116,21 +96,15 @@
       "citations": [
         {
           "cited_text": "Some may consider a single confirmation to be secure for low value transactions, although it is generally recommended to wait for 10+ confirmations.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html",
-          "start_char_index": 2356,
-          "end_char_index": 2506
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html"
         },
         {
           "cited_text": "Roughly every 2.5 minutes, on average, a new block is appended to the blockchain through mining and the transactions included receive their first confirmation .\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html",
-          "start_char_index": 974,
-          "end_char_index": 1136
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html"
         },
         {
           "cited_text": "Zcash has a rollback limit of 100 blocks.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html",
-          "start_char_index": 6813,
-          "end_char_index": 6856
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html"
         }
       ]
     },
@@ -141,21 +115,15 @@
       "citations": [
         {
           "cited_text": "Abstract \n\nThis proposal defines a mechanism for extending hierarchical deterministic wallets, as described in BIP 32 2 , to support Zcash's shielded addresses.\n\n",
-          "source": "https://zips.z.cash/zip-0032",
-          "start_char_index": 1163,
-          "end_char_index": 1325
+          "source": "https://zips.z.cash/zip-0032"
         },
         {
           "cited_text": "Specification: Wallet seeds \n\nSeveral of the key derivation algorithms specified in this ZIP derive a master key from a seed byte sequence. Any such seed byte sequence MUST be at least 32 and at most 252 bytes.\n\nThe method of generating such a seed byte sequence for Zcash purposes MUST ensure that it has at least 256 bits of entropy. ",
-          "source": "https://zips.z.cash/zip-0032",
-          "start_char_index": 6843,
-          "end_char_index": 7179
+          "source": "https://zips.z.cash/zip-0032"
         },
         {
           "cited_text": "This has several advantages over random generation:\n\nWallets only need to store a single seed (particularly useful for hardware wallets).\n\nA one-time backup of the seed (usually stored as a BIP 39 mnemonic 3 or SLIP 39 shares 4 ) can be used to recover funds from all future addresses.\n\n",
-          "source": "https://zips.z.cash/zip-0032",
-          "start_char_index": 2381,
-          "end_char_index": 2668
+          "source": "https://zips.z.cash/zip-0032"
         }
       ]
     },
@@ -172,9 +140,7 @@
       "citations": [
         {
           "cited_text": "Roughly every 2.5 minutes, on average, a new block is appended to the blockchain through mining and the transactions included receive their first confirmation .\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html",
-          "start_char_index": 974,
-          "end_char_index": 1136
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html"
         }
       ]
     },
@@ -185,15 +151,11 @@
       "citations": [
         {
           "cited_text": "Zcash network \nThe Zcash network is a peer-to-peer network of nodes where each node may interact directly with the others for broadcasting newly submitted transactions , mined blocks and various other messages that regulate behavior. This type of structure removes the need for a trusted regulating central party.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html",
-          "start_char_index": 12341,
-          "end_char_index": 12656
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html"
         },
         {
           "cited_text": "Mining \nMining is the process where for each block , nodes in the Zcash network compete by doing complex mathematical calculations to find a solution based on a self-adjusting difficulty. Zcash miners are rewarded with both the transaction fees of the transactions they confirm and block rewards . Zcash uses a proof-of-work mining algorithm called Equihash .\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html",
-          "start_char_index": 4331,
-          "end_char_index": 4692
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html"
         }
       ]
     },
@@ -204,9 +166,7 @@
       "citations": [
         {
           "cited_text": "Mining : Originally Zcash could be mined at home, using CPU or GPU machines. As mining hardware evolved, ASIC machines became the preferred mining machine for professional cryptocurrency miners and mining pools. ASICs can be customized for a particular use (such as mining Zcash) and therefore outperformed previous mining hardware such as CPUs and GPUs. Zcash community members voted against ASIC-resistant protocol updates in mid-2018 citing security concerns. The top mining pools for Zcash include Flypool, Nanopool and Slushpool.\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 3444,
-          "end_char_index": 3979
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         }
       ]
     },
@@ -217,9 +177,7 @@
       "citations": [
         {
           "cited_text": "Therefore, there are four basic types of transactions:\n\nShielded/private (Value is not revealed on the blockchain) ¶ \n\nDeshielding (Value is revealed on the receiver end) ¶ \n\nShielding (Value is revealed on the sender end) ¶ \n\nTransparent/public (Value is revealed by both sender and receiver) ¶ \n\nShielded Addresses ¶ \n\nShielded addresses are the address type that use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html",
-          "start_char_index": 1325,
-          "end_char_index": 1799
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
         }
       ]
     },
@@ -230,21 +188,15 @@
       "citations": [
         {
           "cited_text": "Network upgrades on\na bi-annual basis to maintain the Zcash network.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/nu_dev_guide.html",
-          "start_char_index": 914,
-          "end_char_index": 984
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/nu_dev_guide.html"
         },
         {
           "cited_text": "ZIP 143 Transaction Signature Verification for Overwinter \n\nZIP 200 Network Upgrade Mechanism \n\nZIP 201 Network Peer Management for Overwinter \n\nZIP 202 Version 3 Transaction Format for Overwinter \n\nZIP 203 Transaction Expiry \n\nThe network upgrade is coordinated via an on-chain activation mechanism.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/nu_dev_guide.html",
-          "start_char_index": 13355,
-          "end_char_index": 13657
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/nu_dev_guide.html"
         },
         {
           "cited_text": "Zcashd v1.1.0 (and future releases) running protocol version 170005 will\nactivate Overwinter at block 347500 at which point only v3 transactions\nare processed. Older versions of Zcashd <= 1.0.14, running protocol\nversions <= 170004, will partition themselves away from the main network\ninto a legacy chain.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/nu_dev_guide.html",
-          "start_char_index": 13657,
-          "end_char_index": 13965
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/nu_dev_guide.html"
         }
       ]
     },
@@ -255,27 +207,19 @@
       "citations": [
         {
           "cited_text": "Zcash is the first practical application of zk-SNARKs, a specific type of zero-knowledge proof.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 720,
-          "end_char_index": 817
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         },
         {
           "cited_text": "Zcash relies on a novel mathematical proof called a zk-SNARK. “SNARKs are the engine that can quickly and efficiently verify a transaction and add it to the blockchain without revealing any details to the public.” SNARKs require a set of public parameters which allow users to construct and verify private transactions. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 5555,
-          "end_char_index": 5875
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         },
         {
           "cited_text": "The most secure transaction is a shielded (z-to-z) one, which encrypts the sender and receiver addresses and transaction amount. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 2080,
-          "end_char_index": 2209
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         },
         {
           "cited_text": "The Sapling upgrade made efficiency improvements and enabled new kinds of core protocol features. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 6222,
-          "end_char_index": 6320
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         }
       ]
     },
@@ -286,9 +230,7 @@
       "citations": [
         {
           "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. This allows compliance with payment for auditing, tax regulations, or anti-money laundering rules.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 2336,
-          "end_char_index": 2748
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         }
       ]
     },
@@ -299,21 +241,15 @@
       "citations": [
         {
           "cited_text": "Creation : Zcash launched on October 28, 2016 by Electric Coin Co., a private company founded by Zooko Wilcox . ",
-          "source": "https://zcash.readthedocs.io/en/master/rtd_pages/basics.html",
-          "start_char_index": 5443,
-          "end_char_index": 5555
+          "source": "https://zcash.readthedocs.io/en/master/rtd_pages/basics.html"
         },
         {
           "cited_text": "2016 - 2018 : After the Zcash launch, the Zcash engineering team released a series of upgrades known as the “Sprout series.” The team also put forward plans for two core protocol upgrades known as Overwinter and Sapling. ",
-          "source": "https://zcash.readthedocs.io/en/master/rtd_pages/basics.html",
-          "start_char_index": 6001,
-          "end_char_index": 6222
+          "source": "https://zcash.readthedocs.io/en/master/rtd_pages/basics.html"
         },
         {
           "cited_text": "The Sapling upgrade activated October 29, 2018, almost two years to the date from the initial Zcash launch.\n\n",
-          "source": "https://zcash.readthedocs.io/en/master/rtd_pages/basics.html",
-          "start_char_index": 6723,
-          "end_char_index": 6832
+          "source": "https://zcash.readthedocs.io/en/master/rtd_pages/basics.html"
         }
       ]
     },
@@ -324,33 +260,23 @@
       "citations": [
         {
           "cited_text": "That said, Zcash is not yet fully quantum-resistant. Its zk-SNARK proofs, note encryption, and Orchard circuits still rely on elliptic-curve primitives that would lose soundness once quantum hardware becomes powerful enough. ",
-          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/",
-          "start_char_index": 13692,
-          "end_char_index": 13917
+          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/"
         },
         {
           "cited_text": "Even so, Zcash is not immune: components such as signatures, proof verification, and note encryption still depend on pre-quantum primitives that could eventually be broken. ",
-          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/",
-          "start_char_index": 2519,
-          "end_char_index": 2692
+          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/"
         },
         {
           "cited_text": "Developers are addressing these weaknesses through projects like Tachyon, which removes secret-sharing methods vulnerable to harvest-now-decrypt-later attacks, and by researching post-quantum alternatives for proofs and key exchange. ",
-          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/",
-          "start_char_index": 2692,
-          "end_char_index": 2926
+          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/"
         },
         {
           "cited_text": "Current Zcash mitigation strategies centre on reducing dependence on elliptic-curve assumptions, preparing migration paths to post-quantum cryptography, and introducing mechanisms that allow users to recover or secure funds if quantum capabilities advance faster than expected. ",
-          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/",
-          "start_char_index": 6734,
-          "end_char_index": 7012
+          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/"
         },
         {
           "cited_text": "Longer-term directions include exploring hash-based proof systems such as STARKs , investigating lattice-based key-exchange replacements like Kyber , and designing cold-storage protocols for users who need long-term resilience. ",
-          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/",
-          "start_char_index": 7339,
-          "end_char_index": 7567
+          "source": "https://blog.bitfinex.com/education/how-is-zcash-mitigating-the-risks-of-quantum-computing/"
         }
       ]
     },
@@ -361,15 +287,11 @@
       "citations": [
         {
           "cited_text": "Primary features:\n\nAddresses : Zcash has two types of addresses: private (z-addresses) and transparent (t-addresses). Z-addresses start with a “z,” and t-addresses start with a “t.” The two Zcash address types are interoperable. Funds can be transferred between z-addresses and t-addresses. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 1209,
-          "end_char_index": 1500
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         },
         {
           "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. This allows compliance with payment for auditing, tax regulations, or anti-money laundering rules.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 2336,
-          "end_char_index": 2748
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         }
       ]
     },
@@ -386,9 +308,7 @@
       "citations": [
         {
           "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. This allows compliance with payment for auditing, tax regulations, or anti-money laundering rules.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 2336,
-          "end_char_index": 2748
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         }
       ]
     },
@@ -399,9 +319,7 @@
       "citations": [
         {
           "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. This allows compliance with payment for auditing, tax regulations, or anti-money laundering rules.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 2336,
-          "end_char_index": 2748
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         }
       ]
     },
@@ -412,9 +330,7 @@
       "citations": [
         {
           "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 2336,
-          "end_char_index": 2648
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         }
       ]
     },
@@ -425,9 +341,7 @@
       "citations": [
         {
           "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. ",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html",
-          "start_char_index": 2336,
-          "end_char_index": 2648
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/basics.html"
         }
       ]
     },
@@ -439,21 +353,15 @@
       "citations": [
         {
           "cited_text": "The acronym zk-SNARK stands for Zero-Knowledge Succinct Non-Interactive Argument of Knowledge and refers to a proof construction where one can prove possession of certain information, e.g., a secret key, without revealing that information, and without any interaction between the prover and verifier.\n\n",
-          "source": "https://z.cash/learn/what-are-zk-snarks/",
-          "start_char_index": 3191,
-          "end_char_index": 3493
+          "source": "https://z.cash/learn/what-are-zk-snarks/"
         },
         {
           "cited_text": "The strong privacy guarantee of Zcash is derived from the fact that shielded transactions in Zcash can be fully encrypted on the blockchain, yet still be verified as valid under the network’s consensus rules by using zk-SNARK proofs.\n\n",
-          "source": "https://z.cash/learn/what-are-zk-snarks/",
-          "start_char_index": 3595,
-          "end_char_index": 3830
+          "source": "https://z.cash/learn/what-are-zk-snarks/"
         },
         {
           "cited_text": "“Succinct” zero-knowledge proofs can be verified within a few milliseconds, with a proof length of only a few hundred bytes even for statements about programs that are very large. In the first zero-knowledge protocols, the prover and verifier had to communicate back and forth for multiple rounds, but in “non-interactive” constructions, the proof consists of a single message sent from prover to verifier. ",
-          "source": "https://z.cash/learn/what-are-zk-snarks/",
-          "start_char_index": 4795,
-          "end_char_index": 5202
+          "source": "https://z.cash/learn/what-are-zk-snarks/"
         }
       ]
     },
@@ -464,15 +372,11 @@
       "citations": [
         {
           "cited_text": "The MIT software license (https://www.opensource.org/licenses/mit-license.php)\n\nabove applies to the code directly included in this source distribution, with\n\nthe exception of certain Autoconf macros. ",
-          "source": "https://github.com/zcash/zcash/blob/master/COPYING",
-          "start_char_index": 4766,
-          "end_char_index": 4967
+          "source": "https://github.com/zcash/zcash/blob/master/COPYING"
         },
         {
           "cited_text": "Dependencies downloaded as part of\n\nthe build process may be covered by other open-source licenses. ",
-          "source": "https://github.com/zcash/zcash/blob/master/COPYING",
-          "start_char_index": 4967,
-          "end_char_index": 5067
+          "source": "https://github.com/zcash/zcash/blob/master/COPYING"
         }
       ]
     },
@@ -483,15 +387,11 @@
       "citations": [
         {
           "cited_text": "Commitment tree - The Orchard Book \n\nLight \n\nRust \n\nCoal \n\nNavy \n\nAyu \n\nThe Orchard Book\n\nCommitment tree \n\nThe commitment tree structure for Orchard is identical to Sapling:\n\nA single global commitment tree of fixed depth 32.\n\nNote commitments are appended to the tree in-order from the block.\n\n",
-          "source": "https://zcash.github.io/orchard/design/commitment-tree.html",
-          "start_char_index": 0,
-          "end_char_index": 296
+          "source": "https://zcash.github.io/orchard/design/commitment-tree.html"
         },
         {
           "cited_text": "Valid Orchard anchors correspond to the global tree state at block boundaries (after all\ncommitments from a block have been appended, and before any commitments from the next\nblock have been appended).\n\n",
-          "source": "https://zcash.github.io/orchard/design/commitment-tree.html",
-          "start_char_index": 296,
-          "end_char_index": 499
+          "source": "https://zcash.github.io/orchard/design/commitment-tree.html"
         }
       ]
     },
@@ -502,21 +402,15 @@
       "citations": [
         {
           "cited_text": "One challenge unique to Zcash is block chain scanning: because\nshielded transactions reveal no metadata about the sender or receiver, users\nmust scan the block chain for relevant transactions using viewing keys .\n",
-          "source": "https://zebra.zfnd.org/dev/rfcs/0009-zebra-client.html",
-          "start_char_index": 2039,
-          "end_char_index": 2252
+          "source": "https://zebra.zfnd.org/dev/rfcs/0009-zebra-client.html"
         },
         {
           "cited_text": "In the case of the client component that needs to do blockchain scanning and\ntrial decryption, every valid block with non-coinbase transactions will need to\nbe checked and its transactions trial-decrypted with registered incoming viewing\nkeys to see if any notes have been received by the key’s owner and if any notes\nhave already been spent elsewhere.\n\n",
-          "source": "https://zebra.zfnd.org/dev/rfcs/0009-zebra-client.html",
-          "start_char_index": 8309,
-          "end_char_index": 8663
+          "source": "https://zebra.zfnd.org/dev/rfcs/0009-zebra-client.html"
         },
         {
           "cited_text": "This means that unlike a transparent blockchain with public transactions, a\nfull node must have online access to viewing keys to scan the chain. ",
-          "source": "https://zebra.zfnd.org/dev/rfcs/0009-zebra-client.html",
-          "start_char_index": 2252,
-          "end_char_index": 2397
+          "source": "https://zebra.zfnd.org/dev/rfcs/0009-zebra-client.html"
         }
       ]
     },
@@ -532,21 +426,15 @@
       "citations": [
         {
           "cited_text": "The blockchain stores a cryptographic commitment to the note, it does not store the note itself.\n\n",
-          "source": "https://maxdesalle.com/mastering-zcash",
-          "start_char_index": 35157,
-          "end_char_index": 35255
+          "source": "https://maxdesalle.com/mastering-zcash"
         },
         {
           "cited_text": "Each time that a note is created, its commitment is added to the commitment tree — a Merkle tree — containing every note commitment ever created on the network.\n\n",
-          "source": "https://maxdesalle.com/mastering-zcash",
-          "start_char_index": 37357,
-          "end_char_index": 37519
+          "source": "https://maxdesalle.com/mastering-zcash"
         },
         {
           "cited_text": "The network maintains a nullifier set, that is, a collection of every nullifier ever published. ",
-          "source": "https://maxdesalle.com/mastering-zcash",
-          "start_char_index": 42816,
-          "end_char_index": 42912
+          "source": "https://maxdesalle.com/mastering-zcash"
         }
       ]
     },
