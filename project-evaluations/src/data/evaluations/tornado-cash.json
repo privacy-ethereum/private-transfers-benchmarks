@@ -38,7 +38,7 @@
     {
       "name": "On-chain gas cost: transfer",
       "value": "0",
-      "notes": "There are no internal transactions in classic Tornado Cash. A user could \"transfer\" their secret note to allow another user to withdraw their shielded tokens. This transfer would happen off-chain and cannot be considered a Tornado Cash private transfer because it is not described in the documentation and was not in the original design. The new version called Tornado Cash Nova allows shielded transfers similar to shielded pool protocols",
+      "notes": "There are no internal transactions in classic Tornado Cash. A user could \"transfer\" their secret note to allow another user to withdraw their shielded tokens. This transfer would happen off-chain and cannot be considered a Tornado Cash private transfer because it is outside the original design and the supported flows. The new version called Tornado Cash Nova allows shielded transfers similar to shielded pool protocols",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-nova/shielded-transfers.html"
     },
     {

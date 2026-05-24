@@ -80,7 +80,7 @@
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "notes": "The deployed contracts show OpenZeppelin Cairo access control functions (is_upgrade_governor, has_role, get_role_admin), indicating the contracts use Starknet's native upgradeability via the replace_class syscall with role-based access control. The contract owner can also rotate the auditor public key.",
+      "notes": "The deployed contracts use OpenZeppelin Cairo access control functions (is_upgrade_governor, has_role, get_role_admin) and Starknet's native upgradeability via the replace_class syscall with role-based access control. The contract owner can also rotate the auditor public key.",
       "url": "https://docs.tongo.cash/protocol/contracts.html",
       "needsResearchReview": "Not verified — admin role needs verifying on-chain"
     },

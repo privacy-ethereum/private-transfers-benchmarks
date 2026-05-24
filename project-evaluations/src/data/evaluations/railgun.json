@@ -12,7 +12,7 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "RAILGUN private (shielded) balances are built through a registry of UTXOs (unspent transaction outputs), similar to Bitcoin. The primary difference is that the RAILGUN UTXO list is encrypted with the sender and receiver's keys, meaning that no outsider can view the contents of the UTXO unless it is the recipient of that transaction. In order to send a transaction, the user consumes their available UTXO notes and creates new encrypted notes that are sent on-chain in order for the receiver wallet to find them and add them to the aggregated user's balance. These UTXOs form a Merkle tree — a structured hash list used to validate the balance state during transactions. To reconstruct a wallet's private balance, each commitment leaf in the tree must be synced and decrypted, a process that takes a few minutes before UTXO token balances are aggregated.",
+      "notes": "RAILGUN shielded balances are built from a registry of UTXOs encrypted with the sender and receiver's keys, so no outsider can view a UTXO's contents unless they are the recipient. To send, a user consumes available UTXO notes and posts new encrypted notes on-chain for the recipient wallet to find and add to their balance. The UTXOs form a Merkle tree whose roots and leaves validate balance state during transactions. To reconstruct a wallet's private balance, each commitment leaf must be synced and decrypted, a process that takes a few minutes before token balances aggregate.",
       "url": "https://docs.railgun.org/developer-guide/wallet/private-balances"
     },
     {

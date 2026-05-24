@@ -124,7 +124,7 @@
     {
       "name": "Type of compliance",
       "value": ["Programmatic policies", "Selective disclosure"],
-      "notes": "Hinkal enforces programmable per-transaction policies via Chainalysis compliance components integrated into the smart contracts; the chain-analytics signal is a data input to the policy layer (not a separate compliance category). Screening applies at deposit and withdrawal, where public addresses are visible. Private transfers within the shielded pool are note-to-note and do not expose public addresses to the compliance layer. Users can also voluntarily share their viewing key with third parties for selective disclosure.",
+      "notes": "Hinkal enforces programmable per-transaction policies via Chainalysis compliance components integrated into the smart contracts — the chain-analytics signal is a data input to the policy layer (not a separate compliance category). Screening applies at deposit and withdrawal, where public addresses are visible. Private transfers within the shielded pool are note-to-note and do not expose public addresses to the compliance layer. Users can also voluntarily share their viewing key with third parties for selective disclosure.",
       "needsResearchReview": "Compliance mechanisms require citation",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
     },
@@ -143,7 +143,7 @@
     {
       "name": "Selective disclosure: viewing control",
       "value": "Pre-defined",
-      "notes": "Viewing access follows a pre-defined key-derivation scheme. There is no programmable, scope-limited viewing key; disclosure covers the full history accessible by the derived key. There is no update function to change the viewing key because it is derived from the spending key which is scoped to one per user.",
+      "notes": "Viewing access follows a pre-defined key-derivation scheme. There is no programmable, scope-limited viewing key — disclosure covers the full history accessible by the derived key. There is no update function to change the viewing key because it is derived from the spending key which is scoped to one per user.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/key-derivation-and-stealth-addresses"
     },
     {

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && pnpm lint:evaluations && vite build",
     "preview": "vite preview",
     "research": "tsx scripts/research.ts",
     "lint:evaluations": "tsx scripts/utils/lint-evaluations.ts",

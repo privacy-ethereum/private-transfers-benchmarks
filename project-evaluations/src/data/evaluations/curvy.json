@@ -27,7 +27,7 @@
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "For private transfers between users inside the privacy aggregators, both sender and recipient remain hidden — all qualities of the transaction are opaque. Shielding exposes the sender, currency, and amount but hides the recipient; unshielding to a regular EOA exposes the recipient, currency, and amount but hides the sender. Within the shielded set, both parties of a private transfer are anonymous.",
+      "notes": "For private transfers between users inside the privacy aggregators, both sender and recipient remain hidden — all qualities of the transaction are opaque. Shielding exposes the sender, currency, and amount but hides the recipient. Unshielding to a regular EOA exposes the recipient, currency, and amount but hides the sender. Within the shielded set, both parties of a private transfer are anonymous.",
       "needsResearchReview": "Shield/unshield leakage claim requires citation",
       "citations": [
         {
@@ -115,7 +115,7 @@
     {
       "name": "Deposit time",
       "value": "0",
-      "notes": "Curvy generates a Portal address to which funds can be sent, and after the Portal address receives supported funds, the Portal Broadcaster deploys the Portal contract through the Portal Factory. From an on-chain observer's perspective, funds are sent to a regular EOA address to which a smart contract (Portal) is later deployed by the Portal Broadcaster, which then moves the funds to the Privacy Aggregator. The protocol does not impose any waiting period before a user can send funds to the pre-computed Portal address; the deployment happens reactively after funds arrive.",
+      "notes": "Curvy generates a Portal address to which funds can be sent, and after the Portal address receives supported funds, the Portal Broadcaster deploys the Portal contract through the Portal Factory. From an on-chain observer's perspective, funds are sent to a regular EOA address to which a smart contract (Portal) is later deployed by the Portal Broadcaster, which then moves the funds to the Privacy Aggregator. The protocol does not impose any waiting period before a user can send funds to the pre-computed Portal address — the deployment happens reactively after funds arrive.",
       "citations": [
         {
           "cited_text": "Using the Curvy SDK , a random nonce, and Bob's public keys, a new Portal address is generated to which Bob can receive funds; no contract is deployed at that address yet.\n\n",
@@ -259,7 +259,7 @@
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "The actual implementation relies on secp256k1 for wallet-derived spending and viewing keypairs, Baby Jubjub for the in-circuit addressing key, and Baby Jubjub curves embedded in BN254-friendly zk-SNARK circuits — none of which resist Shor's algorithm. Curvy's docs reference research on post-quantum stealth address schemes, indicating awareness of quantum threats, but the live protocol does not implement post-quantum primitives.",
+      "notes": "The actual implementation relies on secp256k1 for wallet-derived spending and viewing keypairs, Baby Jubjub for the in-circuit addressing key, and Baby Jubjub curves embedded in BN254-friendly zk-SNARK circuits — none of which resist Shor's algorithm. Curvy's docs reference research on post-quantum stealth address schemes, but the live protocol does not implement post-quantum primitives.",
       "needsResearchReview": "Cryptographic primitives require citation",
       "citations": [
         {
@@ -309,7 +309,7 @@
     {
       "name": "Type of compliance",
       "value": ["Programmatic policies", "Selective disclosure"],
-      "notes": "Curvy implements programmable per-deposit policies through trusted analytics vendors that provide security and compliance scores for addresses; the Curvy-operated Portal Broadcaster uses these scores to determine whether a portal can be deployed and assets shielded, aiming to prevent known malicious addresses from shielding funds. Retroactive compliance checks, currently in development, would enable a trusted entity to taint malicious users even after funds are shielded — not yet live and therefore excluded from the value. Custom enterprise deployments support KYC checks that must pass prior to Curvy ID registration, but the canonical protocol does not feature this and KYC/KYB is therefore also excluded. Curvy IDs expose a viewing public key, enabling user-initiated selective disclosure via the viewing private key.",
+      "notes": "Curvy implements programmable per-deposit policies through trusted analytics vendors that provide security and compliance scores for addresses. The Curvy-operated Portal Broadcaster uses these scores to determine whether a portal can be deployed, blocking known malicious addresses from shielding funds. Retroactive compliance checks are in development. Custom enterprise deployments support KYC at Curvy ID registration, but the canonical protocol does not, so KYC/KYB is not yet live. Curvy IDs expose a viewing public key, enabling user-initiated selective disclosure via the viewing private key.",
       "needsResearchReview": "Compliance mechanisms require citation",
       "citations": [
         {
@@ -418,7 +418,7 @@
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
-      "notes": "Notes and Nullifiers are each arranged into a Sparse Merkle Tree, and with each proof submitted to the Aggregator smart contract, new Notes and/or Nullifiers are emitted through EVM events, and the roots of the SMT trees are updated on-chain. New Notes are created during shielding and aggregation operations, while aggregation consumes input Notes and produces output Notes. The trees accumulate entries monotonically as users shield funds and perform transfers, with no mechanism described for pruning or removing historical nullifiers or notes from the on-chain state. The Notes and Nullifiers data is essential so that every client can verify the validity of the SMTs and subsequently prove ownership of the Notes they wish to spend.",
+      "notes": "Notes and nullifiers are each arranged into a Sparse Merkle Tree, and each proof submitted to the Aggregator emits new notes and/or nullifiers throughå events and updates the SMT roots on-chain. New notes are created during shielding and aggregation, while aggregation also consumes input notes. The trees accumulate entries monotonically as users shield and transfer, with no pruning mechanism for historical nullifiers or notes. Clients need the full note and nullifier data to verify the SMTs and prove ownership of the notes they wish to spend.",
       "citations": [
         {
           "cited_text": "Notes and Nullifiers are each arranged into a Sparse Merkle Tree, a data-structure that allows for proofs of integrity, inclusion and non-inclusion (like Merkle Trees) in a manner that is much more friendly to zk-SNARK protocols.\n\n",
@@ -460,7 +460,7 @@
     {
       "name": "Private state model",
       "value": "UTXO-based state model",
-      "notes": "Curvy follows a UTXO-based model where each note represents an unspent output that is consumed by publishing its nullifier and producing fresh output notes. The privacy aggregator verifies proofs that validate state transitions of an ordered list of tuples called \"Notes\" and \"Nullifiers,\" which are each arranged into Sparse Merkle Trees. During shielding, a new Note is created indicating a not-yet-spent balance of a certain currency. Aggregation combines one or many input Notes into one or many output notes, where multiple inputs can spawn multiple outputs, the sum of inputs and outputs must be equal, and the actor must prove ownership of all inputs. ",
+      "notes": "Curvy follows a UTXO-based model where each note represents an unspent output that is consumed by publishing its nullifier and producing fresh output notes. The privacy aggregator verifies proofs that validate state transitions of an ordered list of tuples called \"Notes\" and \"Nullifiers,\" which are each arranged into Sparse Merkle Trees. During shielding, a new Note is created representing a not-yet-spent balance of a certain currency. Aggregation combines one or many input Notes into one or many output notes, where multiple inputs can spawn multiple outputs, the sum of inputs and outputs must be equal, and the actor must prove ownership of all inputs. ",
       "citations": [
         {
           "cited_text": "Like those systems, the Privacy Aggregator verifies proofs that a state transition of an ordered list of tuples, called \"Notes\" and \"Nullifiers,\" produced a valid end-state.\n\nNotes and Nullifiers are each arranged into a Sparse Merkle Tree, a data-structure that allows for proofs of integrity, inclusion and non-inclusion (like Merkle Trees) in a manner that is much more friendly to zk-SNARK protocols.\n\n",

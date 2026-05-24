@@ -31,7 +31,7 @@
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "ZCash supports full anonymity for both sender and receiver when using shielded addresses. A transaction between two shielded addresses keeps the addresses, transaction amount and the memo field shielded from the public, and shielded addresses use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. Recipients of a shielded or deshielding transaction do not learn about the senders address through the transaction receipt in their wallet, confirming sender privacy even to the receiver. While ZCash also supports transparent addresses that work like Bitcoin with public visibility, the availability of fully shielded transactions means the protocol supports sender and receiver anonymity.",
+      "notes": "ZCash supports full anonymity for both sender and receiver when using shielded addresses. A transaction between two shielded addresses keeps the addresses, transaction amount and the memo field shielded from the public, and shielded addresses use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. Recipients of a shielded or deshielding transaction do not learn the sender's address through the transaction receipt in their wallet, so sender privacy holds even against the receiver. Transparent addresses with public visibility also exist, but the fully shielded path is available for both parties.",
       "citations": [
         {
           "cited_text": "¶ \n\nA transaction between two shielded addresses (a shielded transaction) keeps the addresses, transaction amount and the memo field shielded from the public (with the exception of migrating funds between Sprout and Sapling shielded addresses).\n\n",
@@ -65,7 +65,7 @@
     {
       "name": "Plausible deniability",
       "value": "No",
-      "notes": "Zcash does not have plausible deniability because it supports two distinct transaction types that are publicly distinguishable: transparent transactions (using t-addresses) and shielded transactions (using z-addresses that start with \"z\"). Shielded addresses use zero-knowledge proofs to encrypt transaction data, making them clearly identifiable as privacy-focused transactions. Additionally, the value entering and exiting shielded value pools is publicly visible, as ZEC must be mined to a transparent address before being sent to any shielded address, and ZEC cannot be sent directly between shielded value pools without revealing the amount. This means observers can detect when users are interacting with the privacy protocol versus making public transfers.",
+      "notes": "Zcash exposes two publicly distinguishable transaction types: transparent transactions using t-addresses and shielded transactions using z-addresses. Shielded transactions are clearly identifiable on-chain because they carry zero-knowledge proofs and target z-addresses. Value entering and exiting shielded pools is publicly visible: ZEC must be mined to a transparent address before being sent to any shielded address, and ZEC cannot move directly between shielded value pools without revealing the amount. Observers can therefore tell when users interact with the privacy protocol rather than making public transfers.",
       "citations": [
         {
           "cited_text": "Therefore, there are four basic types of transactions:\n\nShielded/private (Value is not revealed on the blockchain) ¶ \n\nDeshielding (Value is revealed on the receiver end) ¶ \n\nShielding (Value is revealed on the sender end) ¶ \n\nTransparent/public (Value is revealed by both sender and receiver) ¶ \n\nShielded Addresses ¶ \n\nShielded addresses are the address type that use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. ",
@@ -92,7 +92,7 @@
     {
       "name": "Time-to-finality",
       "value": "25",
-      "notes": "It is generally recommended to wait for 10+ confirmations for a transaction to be considered secure in Zcash. Roughly every 2.5 minutes, on average, a new block is appended to the blockchain through mining and the transactions included receive their first confirmation. This means that 10 confirmations would take approximately 25 minutes (10 blocks × 2.5 minutes per block).",
+      "notes": "Zcash typically requires 10+ blocks for a transaction to be treated as secure. New blocks are mined roughly every 2.5 minutes on average, so 10 blocks take approximately 25 minutes (10 × 2.5 minutes per block).",
       "citations": [
         {
           "cited_text": "Some may consider a single confirmation to be secure for low value transactions, although it is generally recommended to wait for 10+ confirmations.\n\n",
@@ -136,7 +136,7 @@
     {
       "name": "Withdraw time",
       "value": "N/A",
-      "notes": "ZCash is a Layer 1 blockchain protocol where ZEC is the native currency. There is no protocol-level withdrawal mechanism or waiting period—funds exist directly on the chain in either transparent or shielded addresses. Blocks are appended to the blockchain roughly every 2.5 minutes on average through mining, and transactions included receive their first confirmation.",
+      "notes": "ZCash is a Layer 1 blockchain protocol where ZEC is the native currency. There is no protocol-level withdrawal mechanism or waiting period—funds exist directly on the chain in either transparent or shielded addresses. Blocks are appended to the blockchain roughly every 2.5 minutes on average through mining.",
       "citations": [
         {
           "cited_text": "Roughly every 2.5 minutes, on average, a new block is appended to the blockchain through mining and the transactions included receive their first confirmation .\n\n",
@@ -147,7 +147,7 @@
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "notes": "Yes, Zcash has censorship resistance. Zcash operates as a permissionless proof-of-work blockchain where the network is a peer-to-peer network of nodes that removes the need for a trusted regulating central party. Mining involves nodes competing to solve complex mathematical calculations using the Equihash proof-of-work algorithm, with miners rewarded through transaction fees and block rewards. Since anyone can participate in mining and the protocol has no mechanism to prevent valid transactions from being included, any miner can include any valid transaction in a block, ensuring that no entity can permanently prevent valid transactions from being confirmed on the chain.",
+      "notes": "Zcash operates as a permissionless proof-of-work blockchain on a peer-to-peer network of nodes, removing the need for a trusted regulating central party. Mining nodes compete to solve complex mathematical calculations using the Equihash proof-of-work algorithm, with miners rewarded through transaction fees and block rewards. Anyone can participate in mining and the protocol has no mechanism to block valid transactions from inclusion, so no entity can permanently prevent valid transactions from being added to the chain.",
       "citations": [
         {
           "cited_text": "Zcash network \nThe Zcash network is a peer-to-peer network of nodes where each node may interact directly with the others for broadcasting newly submitted transactions , mined blocks and various other messages that regulate behavior. This type of structure removes the need for a trusted regulating central party.\n\n",
@@ -447,7 +447,7 @@
     {
       "name": "Programmability / Generality",
       "value": "Only payments",
-      "notes": "Zcash supports only payment transactions and does not provide smart contract functionality or programmable logic beyond basic value transfers. The protocol implements shielded transfers using zk-SNARKs across transparent and shielded pools (Sprout, Sapling, Orchard), but lacks the ability to execute arbitrary computation or maintain programmable state. While transparent addresses inherit Bitcoin's UTXO scripting model, shielded addresses are restricted to private payments without programmable logic. No smart contract layer or general computation framework exists on the Zcash mainnet protocol. While research initiatives have explored smart contract integration, none have been deployed on the main protocol.",
+      "notes": "Zcash supports only payment transactions and does not provide smart contract functionality or programmable logic beyond basic value transfers. The protocol implements shielded transfers using zk-SNARKs across transparent and shielded pools (Sprout, Sapling, Orchard), but cannot execute arbitrary computation or maintain programmable state. Transparent addresses inherit Bitcoin's UTXO scripting model, while shielded addresses are restricted to private payments. Research initiatives have explored smart contract integration, but none have been deployed on the mainnet protocol.",
       "needsResearchReview": "Payments-only claim requires citation"
     }
   ]

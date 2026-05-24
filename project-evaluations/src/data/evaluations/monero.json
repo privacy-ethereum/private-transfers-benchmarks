@@ -38,13 +38,13 @@
     {
       "name": "Time-to-finality",
       "value": "1200",
-      "notes": "Monero is an alternative L1 blockchain with a 2-minute target block time. Transactions are confirmed after first block inclusion (~2 minutes). Most wallets treat received outputs as locked until 10 confirmations (~20 minutes), after which funds move from locked to unlocked status. This 10-block wait is a wallet-level safety policy, not a protocol-enforced lock. Additional confirmations reduce the risk of being exposed to a chain reorg. Monero has probabilistic finality with no finality gadget.",
+      "notes": "Monero is an alternative L1 blockchain with a 2-minute target block time. Transactions settle after first block inclusion (~2 minutes). Most wallets treat received outputs as locked until 10 blocks later (~20 minutes), after which funds move from locked to unlocked status. This 10-block wait is a wallet-level safety policy, not a protocol-enforced lock. Additional blocks reduce the risk of exposure to a chain reorg. Monero has probabilistic finality with no finality gadget.",
       "url": "https://www.monero.how/monero-transaction-confirmation-time"
     },
     {
       "name": "Deposit time",
       "value": "N/A",
-      "notes": "Monero is a standalone Layer 1 blockchain with no distinct deposit concept. Incoming funds are visible after the first confirmation (~2 minutes). Wallets often wait for 10 confirmations (~20 minutes) before considering funds spendable.",
+      "notes": "Monero is a standalone Layer 1 blockchain with no distinct deposit concept. Incoming funds are visible after the first block (~2 minutes). Wallets often wait for 10 blocks (~20 minutes) before treating funds as spendable.",
       "url": "https://www.monero.how/monero-transaction-confirmation-time"
     },
     {
