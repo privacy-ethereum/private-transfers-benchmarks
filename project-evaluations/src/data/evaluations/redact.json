@@ -97,8 +97,9 @@
     {
       "name": "Implementation maturity",
       "value": "2 : Public testnet",
-      "notes": "Redact is currently in Phase 0 (testnet deployment) per its roadmap. The protocol is available on public testnet with core encrypt, decrypt, and confidential transfer functionality operational.",
-      "url": "https://test.redact.money/"
+      "notes": "Redact is in Phase 0 (testnet deployment) per its roadmap. The protocol is available on public testnet with core encrypt, decrypt, and confidential transfer functionality operational.",
+      "url": "https://test.redact.money/",
+      "needsResearchReview": "testnet launch date not cited in any source"
     },
     {
       "name": "Post-quantum secure",

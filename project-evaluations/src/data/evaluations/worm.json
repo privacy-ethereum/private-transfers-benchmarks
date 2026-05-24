@@ -94,7 +94,7 @@
     {
       "name": "Deposit time",
       "value": "12",
-      "notes": "WORM requires burning ETH to an unspendable address via a standard Ethereum transfer, then generating a zk-SNARK proof to mint BETH. The burn transaction itself is a regular EOA-to-EOA transfer that confirms in approximately 12 seconds (one Ethereum block). No additional deposit time delay is enforced by the protocol beyond standard Ethereum block confirmation time.",
+      "notes": "WORM requires burning ETH to an unspendable address via a standard Ethereum transfer, then generating a zk-SNARK proof to mint BETH. The burn transaction itself is a regular EOA-to-EOA transfer that settles in approximately 12 seconds (one Ethereum block). No additional deposit time delay is enforced by the protocol beyond standard Ethereum block time.",
       "citations": [
         {
           "cited_text": "Run the tests\n    - `python -m tests.test`\n\nAfter running `make`, the `main.py` script will first initiate a transfer to a burn-address and will then generate an input file for the circuit. Then it will try to generate a witness file through the Circom-generated C program.\n\n",
@@ -157,7 +157,8 @@
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
       "notes": "BETH and WORM contracts were deployed on Ethereum mainnet in February 2026 (BETH ~Feb 12, WORM ~Feb 21), giving the protocol about two months of production history at the time of evaluation.",
-      "url": "https://etherscan.io/tx/0x681f4debcc8ceb6c905e7f831cbcf48e79a6d09e6df93d1caa57ba68be6a8516"
+      "url": "https://etherscan.io/tx/0x681f4debcc8ceb6c905e7f831cbcf48e79a6d09e6df93d1caa57ba68be6a8516",
+      "needsResearchReview": "February 2026 deployment dates not cited in any source"
     },
     {
       "name": "Post-quantum secure",
@@ -168,7 +169,7 @@
     {
       "name": "Layer of enforcement",
       "value": "None",
-      "notes": "WORM has no compliance enforcement. The smart contracts (BETH.sol and WORM.sol) and zk-SNARK circuits only enforce protocol correctness — burn address inclusion in Ethereum state, nullifier uniqueness, and per-epoch issuance caps — not any compliance policy such as blocklists, sanctions screening, or identity checks.",
+      "notes": "WORM has no compliance enforcement. The smart contracts and zk-SNARK circuits only enforce protocol correctness — burn address inclusion in Ethereum state, nullifier uniqueness, and per-epoch issuance caps — not any compliance policy such as blocklists, sanctions screening, or identity checks.",
       "url": "https://github.com/worm-privacy/worm/tree/main/src",
       "needsResearchReview": "Not verified — no-compliance claim needs a source"
     },

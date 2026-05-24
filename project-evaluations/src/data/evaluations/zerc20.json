@@ -244,7 +244,8 @@
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
       "notes": "Mainnet deployments exist on Ethereum, Arbitrum, Base, and BNB Chain with wrapped tokens zETH, zUSDC, and zBNB. The mainnet zETH contact was deployed on February 4th 2026.",
-      "url": "https://zerc20.gitbook.io/zerc20/reference/addresses"
+      "url": "https://zerc20.gitbook.io/zerc20/reference/addresses",
+      "needsResearchReview": "February 4 2026 zETH deployment date not cited in any source"
     },
     {
       "name": "Post-quantum secure",

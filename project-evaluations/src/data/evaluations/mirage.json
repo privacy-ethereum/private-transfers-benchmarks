@@ -61,7 +61,7 @@
     {
       "name": "Plausible deniability",
       "value": "Yes",
-      "notes": "Mirage's entry path is designed to be indistinguishable from ordinary on-chain activity. Each leg of the transfer (send & receive) are plausably deniable. Each transaction deploys a unique smart contract that to outside observers looks like a normal unverified contract — escrow deployments carry small random bytecode variations, making it costly and unreliable to detect which contracts belong to Mirage. Coordination moves off-chain via encrypted signals to executors, so the on-chain footprint is depositing tokens into what appears to be an ordinary contract, and someone else later making a standard transfer to the recipient. The recipient's payout is an EOA to account transfer from a node's wallet.",
+      "notes": "Mirage's entry path is designed to be indistinguishable from ordinary on-chain activity. Each leg of the transfer (send & receive) is plausibly deniable. Each transaction deploys a unique smart contract that to outside observers looks like a normal unverified contract, with small random bytecode variations making it costly to detect which contracts belong to Mirage. Coordination moves off-chain via encrypted signals to executors, so the on-chain footprint is a deposit into an ordinary-looking contract and a later standard transfer to the recipient from a node's wallet.",
       "citations": [
         {
           "cited_text": "Self-Sovereignty and Compliance \n\nInstead of using obvious mixer contracts, Mirage creates different unique smart contracts for each transaction. To outside observers, these look like normal, unverified contracts that appear on Ethereum every day. ",
@@ -88,7 +88,7 @@
     {
       "name": "Time-to-finality",
       "value": "N/A",
-      "notes": "Mirage is an application-layer protocol that settles on host chains and inherits their finality guarantees, so finality is determined by the underlying chain's consensus rather than by anything Mirage adds. The design targets Ethereum, with adaptations for L2s such as Arbitrum and Base, and other L1s like Solana. For maximum privacy, transfers are multiple transactions and take place over several blocks — under ~90 seconds on Ethereum mainnet, under ~6 seconds on L2s, and under ~4 seconds on the Tempo testnet — describe node-settlement latency rather than cryptographic finality. A Mirage private transfer needs to be executed by a node of the Nomad network (Trusted Execution Environments (TEEs)) that is constantly listening on-chain for encrypted private transfer requests",
+      "notes": "Mirage is an application-layer protocol that settles on host chains and inherits their finality guarantees, so finality is determined by the underlying chain's consensus rather than by anything Mirage adds. The design targets Ethereum, with adaptations for L2s such as Arbitrum and Base, and L1s like Solana. Quoted node-settlement latencies (~90s on Ethereum, ~6s on L2s, ~4s on Tempo testnet) describe the time for a Nomad-network TEE node to process a transfer, not cryptographic finality.",
       "citations": [
         {
           "cited_text": "Mirage takes a fundamentally different approach to address this issue on Ethereum, though Mirage can adapt the design for other networks such as L2s like Arbitrum and Base, or L1s like Solana.\n\n",

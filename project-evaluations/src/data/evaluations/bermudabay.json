@@ -223,6 +223,7 @@
       "name": "Implementation maturity",
       "value": "2 : Public testnet",
       "notes": "The Bermuda wallet package is in beta deployed on Base Sepolia testnet as the only supported network, and the SDK is available to partners only by direct outreach. Bermuda is not deployed to mainnet.",
+      "needsResearchReview": "testnet launch date not cited in any source",
       "citations": [
         {
           "cited_text": "# @bermuda/wdk-wallet-bermuda\n\n\n**Note**: This package is currently in beta. Only supported network is Plasma testnet,\n\nA simple and secure package to manage Bermuda accounts for EVM-compatible blockchains.\n\n",

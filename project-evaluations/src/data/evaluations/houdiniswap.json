@@ -1,7 +1,7 @@
 {
   "id": "houdiniswap",
   "title": "Houdini Swap",
-  "description": "Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains privacy by routing each swap through two independent off-chain CEX partners and three separate blockchains, so no single counterparty sees the full path from source to destination. It is not a mixer: liquidity is not pooled and no zero-knowledge proofs are used; privacy comes from partitioning knowledge across routing hops. The service aggregates DEXes and bridges across 100+ chains and curates CEX partners that run industry-standard AML programmes.",
+  "description": "Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains privacy by routing each swap through two independent off-chain CEX partners and three separate blockchains, so no single counterparty sees the full path from source to destination. It is not a mixer — liquidity is not pooled and no zero-knowledge proofs are used. Privacy comes from partitioning knowledge across routing hops. The service aggregates DEXes and bridges across 100+ chains and curates CEX partners that run industry-standard AML programmes.",
   "documentation": "https://docs.houdiniswap.com/",
   "categories": ["Cross-Chain Swap Aggregator"],
   "properties": [
@@ -12,7 +12,7 @@
     {
       "name": "Confidentiality",
       "value": "No",
-      "notes": "Balances and transfer amounts are transparent. Each swap consists of multiple hops routed through several intermediaries: For example, token A is sent from the source wallet and routed to a non-custodial exchange, where it is swapped into a temporary, privacy-centric Layer 1 intermediary token. This intermediary token is then routed to a second non-custodial exchange and delivered as token B to the recipient, meaning every hop settles as an ordinary on-chain transfer with visible amounts. There are no shielded commitments, notes, or encrypted amounts at both ends of the swap. The privacy focussed L1 token acts as the buffer that breaks the link in the chain — privacy comes from breaking the sender-receiver link across hops, not from hiding values.",
+      "notes": "Balances and transfer amounts are transparent. Each swap routes through a non-custodial exchange that converts token A into a privacy-centric Layer 1 intermediary, then through a second non-custodial exchange that delivers token B to the recipient. Swaps settle as an ordinary on-chain transfer with visible amounts, and there are no shielded commitments, notes, or encrypted amounts at either end. The privacy-focussed L1 token acts as the buffer breaking the link in the chain — privacy comes from breaking the sender-receiver link across hops, not from hiding values.",
       "citations": [
         {
           "cited_text": "​\n\nHow it Works \n\nA Private Swap routes each transaction through two unrelated intermediaries: \n\nLeg 1 (Source Chain): You send Token A from your source wallet. This is routed to a non-custodial exchange and swapped into a temporary, privacy-centric Layer 1 intermediary token.\n\nThe Intermediary Step: This temporary asset acts as a “buffer,” effectively breaking the trail of the original transaction.\n\nLeg 2 (Destination Chain): The intermediary asset is routed to a second non-custodial exchange, swapped into your desired Token B , and delivered to the recipient wallet.\n\n",
@@ -171,7 +171,7 @@
     {
       "name": "External network dependence",
       "value": "Yes, permissioned",
-      "notes": "Houdini's Private Swap routing depends on external networks it does not operate: partner CEXes for the multi-hop privacy path, and on-chain DEX aggregators, cross-chain bridges, and intent-based protocols for the on-chain path. The CEX partner set is curated rather than open — partners must pass Houdini's Know Your Business due diligence before integration — so the dependency is on a permissioned set of providers, not an open network. The Houdini routing engine itself only analyses routes and orchestrates the order lifecycle; all settlement security is inherited from these external venues.",
+      "notes": "Houdini's Private Swap routing depends on external networks it does not operate: partner CEXes for the multi-hop privacy path, and on-chain DEX aggregators, cross-chain bridges, and intent-based protocols for the on-chain path. The CEX partner set is curated rather than open — partners must pass Houdini's Know Your Business due diligence before integration — so the dependency is on a permissioned set of providers, not an open network. The Houdini routing engine itself only analyses routes and orchestrates the order lifecycle. All settlement security is inherited from these external venues.",
       "citations": [
         {
           "cited_text": "CEX Partners \n\nIntegrated centralized exchanges that enable: \n\nPrivate Swaps : Multi-hop routing through exchanges for maximum privacy\n\nStandard Swaps : Single CEX hop for faster execution\n\nCompliance and AML screening at partner level\n\nDeep liquidity for major trading pairs\n\nPrivacy Model : When using CEX routes, funds briefly touch partner exchanges. ",
@@ -438,7 +438,7 @@
     {
       "name": "Private Data Storage",
       "value": ["N/A"],
-      "notes": "Houdini Swap does not maintain any private transaction data of its own — there are no on-chain privacy commitments, shielded notes, or off-chain encrypted state tied to a chain commitment. Each leg is an ordinary on-chain transfer; per-leg transaction records reside inside each partner exchange's internal systems for regulatory purposes, while the routing engine keeps order metadata off-chain to orchestrate legs. The property does not apply to an off-chain routing service.",
+      "notes": "Houdini Swap does not maintain any private transaction data of its own — there are no on-chain privacy commitments, shielded notes, or off-chain encrypted state tied to a chain commitment. Each leg is an ordinary on-chain transfer. Per-leg transaction records reside inside each partner exchange's internal systems for regulatory purposes, while the routing engine keeps order metadata off-chain to orchestrate legs. The property does not apply to an off-chain routing service.",
       "citations": [
         {
           "cited_text": "​\n\nSecurity & Custody Model \n\nImportant : Houdini is an aggregator and affiliate partner, not a custodial exchange . \n\nNon-Custodial : Houdini doesn’t hold user funds long-term\n\nPartner Routing : CEX routes involve brief custody by partner exchanges\n\nSmart Contracts : DEX routes use audited smart contracts\n\nNo Registration : Most flows don’t require user accounts or KYC\n\nPartner Compliance : CEX partners handle their own AML/compliance screening\n\n​\n\nNext Steps \n\nGet API Keys\n\nSet up authentication and get your API credentials \n\nCore Concepts\n\nDeep dive into routing types and order lifecycle \n\nWhat You Can Build API Keys & Authentication \n\n⌘ I \n\nx github \n\nPowered by \n\nThis documentation is built and hosted on Mintlify, a developer documentation platform",
