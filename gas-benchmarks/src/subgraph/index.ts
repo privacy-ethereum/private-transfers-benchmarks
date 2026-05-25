@@ -3,9 +3,10 @@ import { GraphQLClient } from "graphql-request";
 import path from "path";
 
 import { CacheToFile } from "../utils/cache.js";
-import { MAINNET_SUBGRAPH_URL, SEPOLIA_SUBGRAPH_URL } from "../utils/constants.js";
+import { ARBITRUM_SUBGRAPH_URL, MAINNET_SUBGRAPH_URL, SEPOLIA_SUBGRAPH_URL } from "../utils/constants.js";
 import { readJsonFile } from "../utils/json.js";
 
+import { ArbitrumRootQuery, type TArbitrumRootQuery } from "./arbitrum.js";
 import { MainnetRootQuery, type TMainnetRootQuery } from "./mainnet.js";
 import { SepoliaRootQuery, type TSepoliaRootQuery } from "./sepolia.js";
 
@@ -49,12 +50,17 @@ export class SubgraphService {
   private static instance?: SubgraphService;
 
   /**
+   * Arbitrum GraphQL client used to send requests to the subgraph endpoint.
+   */
+  private arbitrumClient: GraphQLClient;
+
+  /**
    * Mainnet GraphQL client used to send requests to the subgraph endpoint.
    */
   private mainnetClient: GraphQLClient;
 
   /**
-   * SepoliaGraphQL client used to send requests to the subgraph endpoint.
+   * Sepolia GraphQL client used to send requests to the subgraph endpoint.
    */
   private sepoliaClient: GraphQLClient;
 
@@ -90,9 +96,24 @@ export class SubgraphService {
    * It initializes the GraphQL clients and an empty in-memory cache.
    */
   private constructor() {
+    this.arbitrumClient = new GraphQLClient(ARBITRUM_SUBGRAPH_URL);
     this.mainnetClient = new GraphQLClient(MAINNET_SUBGRAPH_URL);
     this.sepoliaClient = new GraphQLClient(SEPOLIA_SUBGRAPH_URL);
     this.cache = new Map<string, ICacheValue>();
+  }
+
+  /**
+   * Fetches the arbitrum root query from the subgraph and caches the result to disk.
+   *
+   * Cached responses are stored in `CACHE_FILE` and remain valid for `CACHE_TTL`
+   * milliseconds. If a valid cached response exists, it is returned instead of
+   * making a network request.
+   *
+   * @returns A promise that resolves to the root query response, or `null`.
+   */
+  @CacheToFile(CACHE_FILE, CACHE_TTL)
+  async fetchArbitrumRootQueryWithCache(): Promise<TArbitrumRootQuery | null> {
+    return this.arbitrumClient.request<TArbitrumRootQuery>(ArbitrumRootQuery);
   }
 
   /**
