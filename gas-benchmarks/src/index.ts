@@ -15,7 +15,8 @@ await db.read();
 const start = Date.now();
 
 const subgraphService = await SubgraphService.getInstance();
-const [mainnetRoot, sepoliaRoot] = await Promise.all([
+const [arbitrumRoot, mainnetRoot, sepoliaRoot] = await Promise.all([
+  subgraphService.fetchArbitrumRootQueryWithCache(),
   subgraphService.fetchMainnetRootQueryWithCache(),
   subgraphService.fetchSepoliaRootQueryWithCache(),
 ]);
@@ -28,6 +29,9 @@ const [fluidkeyMetrics, houdiniswapMetrics, intmaxMetrics, moneroMetrics] = awai
 ]);
 
 await db.update((data) => {
+  // eslint-disable-next-line no-param-reassign
+  data.curvy = arbitrumRoot?.fluidkeyProtocolStats;
+
   // eslint-disable-next-line no-param-reassign
   data.railgun = mainnetRoot?.railgunProtocolStats;
 

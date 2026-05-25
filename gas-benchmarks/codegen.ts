@@ -6,6 +6,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 config();
 
 const schemas = {
+  arbitrum: process.env.ARBITRUM_SUBGRAPH_URL,
   mainnet: process.env.MAINNET_SUBGRAPH_URL,
   sepolia: process.env.SEPOLIA_SUBGRAPH_URL,
 } as const;
@@ -28,6 +29,12 @@ const codegenConfig: CodegenConfig = {
   ignoreNoDocuments: true,
   emitLegacyCommonJSImports: false,
   generates: {
+    "src/generated/arbitrum/": {
+      schema: [schemas.arbitrum!, path.resolve(".", "scalars.graphql")],
+      documents: ["src/subgraph/curvy.ts", "src/subgraph/arbitrum.ts"],
+      ...sharedConfig,
+    },
+
     "src/generated/mainnet/": {
       schema: [schemas.mainnet!, path.resolve(".", "scalars.graphql")],
       documents: [

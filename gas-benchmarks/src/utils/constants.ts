@@ -22,6 +22,10 @@ if (!process.env.SEPOLIA_SUBGRAPH_URL) {
   throw new Error("SEPOLIA_SUBGRAPH_URL is not set");
 }
 
+if (!process.env.ARBITRUM_SUBGRAPH_URL) {
+  throw new Error("ARBITRUM_SUBGRAPH_URL is not set");
+}
+
 if (!process.env.MIN_SAMPLES) {
   throw new Error("MIN_SAMPLES is not set");
 }
@@ -34,7 +38,14 @@ if (!process.env.DELAY_BETWEEN_BATCHES) {
   throw new Error("DELAY_BETWEEN_BATCHES is not set");
 }
 
-export const { ETH_RPC_URL, SEPOLIA_RPC_URL, SCROLL_RPC_URL, MAINNET_SUBGRAPH_URL, SEPOLIA_SUBGRAPH_URL } = process.env;
+export const {
+  ETH_RPC_URL,
+  SEPOLIA_RPC_URL,
+  SCROLL_RPC_URL,
+  MAINNET_SUBGRAPH_URL,
+  SEPOLIA_SUBGRAPH_URL,
+  ARBITRUM_SUBGRAPH_URL,
+} = process.env;
 
 /** Minimum number of valid samples required per benchmark */
 export const MIN_SAMPLES = Number(process.env.MIN_SAMPLES);

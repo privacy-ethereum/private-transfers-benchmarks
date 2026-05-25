@@ -3,12 +3,14 @@ import { Low } from "lowdb";
 import { readFile, writeFile } from "node:fs/promises";
 
 import type { FeeMetrics } from "./types.js";
+import type { TArbitrumRootQuery } from "../subgraph/arbitrum.js";
 import type { TMainnetRootQuery } from "../subgraph/mainnet.js";
 import type { TSepoliaRootQuery } from "../subgraph/sepolia.js";
 
 import { BENCHMARKS_OUTPUT_PATH } from "./constants.js";
 
 export interface IBenchmarkDb {
+  curvy: TArbitrumRootQuery["fluidkeyProtocolStats"] | null;
   railgun: TMainnetRootQuery["railgunProtocolStats"] | null;
   tornadoCash: TMainnetRootQuery["tornadoCashProtocolStats"] | null;
   privacyPools: TMainnetRootQuery["privacyPoolsProtocolStats"] | null;
