@@ -2,7 +2,14 @@
 
 Build the required subgraph to fetch metrics data for the benchmarks.
 
-The current versions of the deployed subgraphs are mainnet - `v0.0.13`, sepolia - `v0.0.2`
+The current versions of the deployed subgraphs are:
+
+- mainnet (private-transfers-ethereum-benchmarks): `v0.0.1`
+- sepolia (private-transfers-sepolia-benchmarks): `v0.0.1`
+- arbitrum (private-transfers-arbitrum-benchmarks): `v0.0.1`
+- base (private-transfers-base-benchmarks): `v0.0.1`
+- scroll (private-transfers-scroll-benchmarks): `<NOT_DEPLOYED_YET>`
+- starknet (private-transfers-starknet-benchmarks): `<NOT_DEPLOYED_YET>`
 
 ## Build and deploy
 
@@ -13,12 +20,18 @@ The current versions of the deployed subgraphs are mainnet - `v0.0.13`, sepolia 
 NETWORK=mainnet pnpm run codegen
 NETWORK=sepolia pnpm run codegen
 NETWORK=arbitrum pnpm run codegen
+NETWORK=base pnpm run codegen
+NETWORK=scroll pnpm run codegen
+NETWORK=starknet pnpm run codegen
 
 
 # 2. build the subgraph
 NETWORK=mainnet pnpm run build
 NETWORK=sepolia pnpm run build
 NETWORK=arbitrum pnpm run build
+NETWORK=base pnpm run build
+NETWORK=scroll pnpm run build
+NETWORK=starknet pnpm run build
 
 # 3. Authenticate graph CLI
 graph auth <DEPLOY_KEY_DIFFERENT_FROM_API_KEY>
@@ -27,6 +40,9 @@ graph auth <DEPLOY_KEY_DIFFERENT_FROM_API_KEY>
 NETWORK=mainnet pnpm run deploy
 NETWORK=sepolia pnpm run deploy
 NETWORK=arbitrum pnpm run deploy
+NETWORK=base pnpm run deploy
+NETWORK=scroll pnpm run deploy
+NETWORK=starknet pnpm run deploy
 
 # On Windows use:
 $env:NETWORK="<NETWORK_NAME>"; pnpm run <COMMAND>

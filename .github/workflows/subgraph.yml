@@ -44,6 +44,12 @@ jobs:
           NETWORK=arbitrum pnpm run build
         working-directory: subgraph
 
+      - name: Codegen and build (base)
+        run: |-
+          NETWORK=base pnpm run codegen
+          NETWORK=base pnpm run build
+        working-directory: subgraph
+
       - name: Test
         run: pnpm run test
         working-directory: subgraph

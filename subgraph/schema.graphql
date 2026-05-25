@@ -1,3 +1,64 @@
+type BlanksquareProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  deposit: BlanksquareOperationStats!
+  withdraw: BlanksquareOperationStats!
+}
+
+type BlanksquareOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  depositStats: [BlanksquareDepositStats!]! @derivedFrom(field: "operationStats")
+  withdrawStats: [BlanksquareWithdrawStats!]! @derivedFrom(field: "operationStats")
+}
+
+type BlanksquareDepositStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: BlanksquareOperationStats!
+}
+
+type BlanksquareWithdrawStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: BlanksquareOperationStats!
+}
+
+type BlanksquareDeposit @entity(immutable: true) {
+  id: ID!
+  value: BigInt!
+  tokenAddress: Bytes!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type BlanksquareWithdraw @entity(immutable: true) {
+  id: ID!
+  value: BigInt!
+  tokenAddress: Bytes!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
 type CurvyProtocolStats @entity(immutable: false) {
   id: ID!
   totalTxCount: BigInt!
@@ -456,6 +517,114 @@ type TornadoCashWithdrawal @entity(immutable: true) {
   fee: BigInt!
   amount: BigInt!
   instance: TornadoCashInstance!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type VeilCashProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  depositQueued: VeilCashOperationStats!
+  depositAccepted: VeilCashOperationStats!
+  transfer: VeilCashOperationStats!
+  withdraw: VeilCashOperationStats!
+}
+
+type VeilCashOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  depositQueuedStats: [VeilCashDepositQueuedStats!]! @derivedFrom(field: "operationStats")
+  depositAcceptedStats: [VeilCashDepositAcceptedStats!]! @derivedFrom(field: "operationStats")
+  transferStats: [VeilCashTransferStats!]! @derivedFrom(field: "operationStats")
+  withdrawStats: [VeilCashWithdrawStats!]! @derivedFrom(field: "operationStats")
+}
+
+type VeilCashDepositQueuedStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: VeilCashOperationStats!
+}
+
+type VeilCashDepositAcceptedStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: VeilCashOperationStats!
+}
+
+type VeilCashTransferStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: VeilCashOperationStats!
+}
+
+type VeilCashWithdrawStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: VeilCashOperationStats!
+}
+
+type VeilCashDepositQueued @entity(immutable: true) {
+  id: ID!
+  nonce: BigInt!
+  sender: Bytes!
+  depositKey: Bytes!
+  value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type VeilCashDepositAccepted @entity(immutable: true) {
+  id: ID!
+  nonce: BigInt!
+  operator: Bytes!
+  veilEntry: Bytes!
+  value: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type VeilCashTransfer @entity(immutable: true) {
+  id: ID!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type VeilCashWithdraw @entity(immutable: true) {
+  id: ID!
+  value: BigInt!
 
   blockNumber: BigInt!
   timestamp: BigInt!

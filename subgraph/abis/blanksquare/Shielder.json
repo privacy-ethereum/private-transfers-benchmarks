@@ -1,0 +1,489 @@
+[
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  {
+    "inputs": [{ "internalType": "address", "name": "target", "type": "address" }],
+    "name": "AddressEmptyCode",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+    "name": "AddressInsufficientBalance",
+    "type": "error"
+  },
+  { "inputs": [], "name": "AmountTooHigh", "type": "error" },
+  { "inputs": [], "name": "ContractBalanceLimitReached", "type": "error" },
+  { "inputs": [], "name": "DepositFeeTooHigh", "type": "error" },
+  { "inputs": [], "name": "DepositVerificationFailed", "type": "error" },
+  { "inputs": [], "name": "DuplicatedNullifier", "type": "error" },
+  {
+    "inputs": [{ "internalType": "address", "name": "implementation", "type": "address" }],
+    "name": "ERC1967InvalidImplementation",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ERC1967NonPayable", "type": "error" },
+  { "inputs": [], "name": "EnforcedPause", "type": "error" },
+  { "inputs": [], "name": "ExpectedPause", "type": "error" },
+  { "inputs": [], "name": "FailedInnerCall", "type": "error" },
+  { "inputs": [], "name": "FeeHigherThanAmount", "type": "error" },
+  { "inputs": [], "name": "InvalidGrumpkinPoint", "type": "error" },
+  { "inputs": [], "name": "InvalidInitialization", "type": "error" },
+  { "inputs": [], "name": "InvalidTreeHeight", "type": "error" },
+  { "inputs": [], "name": "LeafNotExisting", "type": "error" },
+  { "inputs": [], "name": "MathOverflowedMulDiv", "type": "error" },
+  { "inputs": [], "name": "MaxTreeSizeExceeded", "type": "error" },
+  { "inputs": [], "name": "MerkleRootDoesNotExist", "type": "error" },
+  { "inputs": [], "name": "NativeTransferFailed", "type": "error" },
+  { "inputs": [], "name": "NewAccountVerificationFailed", "type": "error" },
+  { "inputs": [], "name": "NotAFieldElement", "type": "error" },
+  { "inputs": [], "name": "NotInitializing", "type": "error" },
+  {
+    "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
+    "name": "OwnableInvalidOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+    "name": "OwnableUnauthorizedAccount",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+    "name": "SafeERC20FailedOperation",
+    "type": "error"
+  },
+  { "inputs": [], "name": "UUPSUnauthorizedCallContext", "type": "error" },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "slot", "type": "bytes32" }],
+    "name": "UUPSUnsupportedProxiableUUID",
+    "type": "error"
+  },
+  { "inputs": [], "name": "WithdrawFeeTooHigh", "type": "error" },
+  { "inputs": [], "name": "WithdrawVerificationFailed", "type": "error" },
+  {
+    "inputs": [
+      { "internalType": "bytes3", "name": "actual", "type": "bytes3" },
+      { "internalType": "bytes3", "name": "expectedByCaller", "type": "bytes3" }
+    ],
+    "name": "WrongContractVersion",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ZeroAmount", "type": "error" },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes3", "name": "contractVersion", "type": "bytes3" },
+      { "indexed": false, "internalType": "address", "name": "tokenAddress", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "newNote", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "newNoteIndex", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "macSalt", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "macCommitment", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "protocolFee", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "memo", "type": "bytes" }
+    ],
+    "name": "Deposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "uint64", "name": "version", "type": "uint64" }],
+    "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes3", "name": "contractVersion", "type": "bytes3" },
+      { "indexed": false, "internalType": "uint256", "name": "prenullifier", "type": "uint256" },
+      { "indexed": false, "internalType": "address", "name": "tokenAddress", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "newNote", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "newNoteIndex", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "macSalt", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "macCommitment", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "protocolFee", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "memo", "type": "bytes" }
+    ],
+    "name": "NewAccount",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "name": "OwnershipTransferStarted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "account", "type": "address" }],
+    "name": "Paused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "account", "type": "address" }],
+    "name": "Unpaused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": true, "internalType": "address", "name": "implementation", "type": "address" }],
+    "name": "Upgraded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "bytes3", "name": "contractVersion", "type": "bytes3" },
+      { "indexed": false, "internalType": "address", "name": "tokenAddress", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "address", "name": "withdrawalAddress", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "newNote", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "newNoteIndex", "type": "uint256" },
+      { "indexed": false, "internalType": "address", "name": "relayerAddress", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "fee", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "macSalt", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "macCommitment", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "pocketMoney", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "protocolFee", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "memo", "type": "bytes" }
+    ],
+    "name": "Withdraw",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "ARITY",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "CONTRACT_VERSION",
+    "outputs": [{ "internalType": "bytes3", "name": "", "type": "bytes3" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "GAS_LIMIT",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MAX_CONTRACT_BALANCE",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MAX_TRANSACTION_AMOUNT",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "TREE_HEIGHT",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "UPGRADE_INTERFACE_VERSION",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  { "inputs": [], "name": "acceptOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [{ "internalType": "address", "name": "addr", "type": "address" }],
+    "name": "addressToUInt256",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "anonymityRevokerPubkey",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes3", "name": "expectedContractVersion", "type": "bytes3" },
+      { "internalType": "address", "name": "tokenAddress", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "uint256", "name": "oldNullifierHash", "type": "uint256" },
+      { "internalType": "uint256", "name": "newNote", "type": "uint256" },
+      { "internalType": "uint256", "name": "merkleRoot", "type": "uint256" },
+      { "internalType": "uint256", "name": "macSalt", "type": "uint256" },
+      { "internalType": "uint256", "name": "macCommitment", "type": "uint256" },
+      { "internalType": "bytes", "name": "proof", "type": "bytes" },
+      { "internalType": "bytes", "name": "memo", "type": "bytes" }
+    ],
+    "name": "depositERC20",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes3", "name": "expectedContractVersion", "type": "bytes3" },
+      { "internalType": "uint256", "name": "oldNullifierHash", "type": "uint256" },
+      { "internalType": "uint256", "name": "newNote", "type": "uint256" },
+      { "internalType": "uint256", "name": "merkleRoot", "type": "uint256" },
+      { "internalType": "uint256", "name": "macSalt", "type": "uint256" },
+      { "internalType": "uint256", "name": "macCommitment", "type": "uint256" },
+      { "internalType": "bytes", "name": "proof", "type": "bytes" },
+      { "internalType": "bytes", "name": "memo", "type": "bytes" }
+    ],
+    "name": "depositNative",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "index", "type": "uint256" }],
+    "name": "getMerklePath",
+    "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "initialOwner", "type": "address" },
+      { "internalType": "uint256", "name": "_anonymityRevokerPublicKeyX", "type": "uint256" },
+      { "internalType": "uint256", "name": "_anonymityRevokerPublicKeyY", "type": "uint256" },
+      { "internalType": "bool", "name": "_isArbitrumChain", "type": "bool" },
+      { "internalType": "uint256", "name": "_protocolDepositFeeBps", "type": "uint256" },
+      { "internalType": "uint256", "name": "_protocolWithdrawFeeBps", "type": "uint256" },
+      { "internalType": "address", "name": "_protocolFeeReceiver", "type": "address" }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "merkleTree",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes3", "name": "expectedContractVersion", "type": "bytes3" },
+      { "internalType": "address", "name": "tokenAddress", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "uint256", "name": "newNote", "type": "uint256" },
+      { "internalType": "uint256", "name": "prenullifier", "type": "uint256" },
+      { "internalType": "uint256", "name": "symKeyEncryptionC1X", "type": "uint256" },
+      { "internalType": "uint256", "name": "symKeyEncryptionC1Y", "type": "uint256" },
+      { "internalType": "uint256", "name": "symKeyEncryptionC2X", "type": "uint256" },
+      { "internalType": "uint256", "name": "symKeyEncryptionC2Y", "type": "uint256" },
+      { "internalType": "uint256", "name": "macSalt", "type": "uint256" },
+      { "internalType": "uint256", "name": "macCommitment", "type": "uint256" },
+      { "internalType": "bytes", "name": "proof", "type": "bytes" },
+      { "internalType": "bytes", "name": "memo", "type": "bytes" }
+    ],
+    "name": "newAccountERC20",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes3", "name": "expectedContractVersion", "type": "bytes3" },
+      { "internalType": "uint256", "name": "newNote", "type": "uint256" },
+      { "internalType": "uint256", "name": "prenullifier", "type": "uint256" },
+      { "internalType": "uint256", "name": "symKeyEncryptionC1X", "type": "uint256" },
+      { "internalType": "uint256", "name": "symKeyEncryptionC1Y", "type": "uint256" },
+      { "internalType": "uint256", "name": "symKeyEncryptionC2X", "type": "uint256" },
+      { "internalType": "uint256", "name": "symKeyEncryptionC2Y", "type": "uint256" },
+      { "internalType": "uint256", "name": "macSalt", "type": "uint256" },
+      { "internalType": "uint256", "name": "macCommitment", "type": "uint256" },
+      { "internalType": "bytes", "name": "proof", "type": "bytes" },
+      { "internalType": "bytes", "name": "memo", "type": "bytes" }
+    ],
+    "name": "newAccountNative",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "nullifier", "type": "uint256" }],
+    "name": "nullifiers",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  { "inputs": [], "name": "pause", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [],
+    "name": "paused",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pendingOwner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "protocolDepositFeeBps",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "protocolFeeReceiver",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "protocolWithdrawFeeBps",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxiableUUID",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "anonymityRevokerPubkeyX", "type": "uint256" },
+      { "internalType": "uint256", "name": "anonymityRevokerPubkeyY", "type": "uint256" }
+    ],
+    "name": "setAnonymityRevokerPubkey",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "newProtocolDepositFeeBps", "type": "uint256" }],
+    "name": "setProtocolDepositFeeBps",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newProtocolFeeReceiver", "type": "address" }],
+    "name": "setProtocolFeeReceiver",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "newProtocolWithdrawFeeBps", "type": "uint256" }],
+    "name": "setProtocolWithdrawFeeBps",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  { "inputs": [], "name": "unpause", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "newImplementation", "type": "address" },
+      { "internalType": "bytes", "name": "data", "type": "bytes" }
+    ],
+    "name": "upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes3", "name": "expectedContractVersion", "type": "bytes3" },
+      { "internalType": "address", "name": "tokenAddress", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "address", "name": "withdrawalAddress", "type": "address" },
+      { "internalType": "uint256", "name": "merkleRoot", "type": "uint256" },
+      { "internalType": "uint256", "name": "oldNullifierHash", "type": "uint256" },
+      { "internalType": "uint256", "name": "newNote", "type": "uint256" },
+      { "internalType": "bytes", "name": "proof", "type": "bytes" },
+      { "internalType": "address", "name": "relayerAddress", "type": "address" },
+      { "internalType": "uint256", "name": "relayerFee", "type": "uint256" },
+      { "internalType": "uint256", "name": "macSalt", "type": "uint256" },
+      { "internalType": "uint256", "name": "macCommitment", "type": "uint256" },
+      { "internalType": "bytes", "name": "memo", "type": "bytes" }
+    ],
+    "name": "withdrawERC20",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes3", "name": "expectedContractVersion", "type": "bytes3" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "address", "name": "withdrawalAddress", "type": "address" },
+      { "internalType": "uint256", "name": "merkleRoot", "type": "uint256" },
+      { "internalType": "uint256", "name": "oldNullifierHash", "type": "uint256" },
+      { "internalType": "uint256", "name": "newNote", "type": "uint256" },
+      { "internalType": "bytes", "name": "proof", "type": "bytes" },
+      { "internalType": "address", "name": "relayerAddress", "type": "address" },
+      { "internalType": "uint256", "name": "relayerFee", "type": "uint256" },
+      { "internalType": "uint256", "name": "macSalt", "type": "uint256" },
+      { "internalType": "uint256", "name": "macCommitment", "type": "uint256" },
+      { "internalType": "bytes", "name": "memo", "type": "bytes" }
+    ],
+    "name": "withdrawNative",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
