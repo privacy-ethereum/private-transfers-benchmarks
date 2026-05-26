@@ -75,7 +75,12 @@
       "name": "Implementation maturity",
       "value": "4 : Mainnet for more than 1 year",
       "notes": "Fluidkey launched its stable version in Q2 2024. Deployed on Ethereum mainnet, Base, Optimism, Arbitrum, Polygon, and Gnosis.",
-      "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#is-fluidkey-audited"
+      "citations": [
+        {
+          "cited_text": "Fluidkey's offchain cryptography has been audited by Dedaub in May 2024",
+          "source": "https://docs.fluidkey.com/readme/frequently-asked-questions#is-fluidkey-audited"
+        }
+      ]
     },
     {
       "name": "Post-quantum secure",

@@ -28,18 +28,13 @@
       "name": "Anonymity",
       "value": "Yes",
       "notes": "For private transfers between users inside the privacy aggregators, both sender and recipient remain hidden — all qualities of the transaction are opaque. Shielding exposes the sender, currency, and amount but hides the recipient. Unshielding to a regular EOA exposes the recipient, currency, and amount but hides the sender. Within the shielded set, both parties of a private transfer are anonymous.",
-      "needsResearchReview": "Shield/unshield leakage claim requires citation",
       "citations": [
         {
-          "cited_text": "*The recipient has to trust the exchange, whom you have completed KYC with before, that they will not use their information for purposes they do not agree with \n\n**The sender has to trust the wallet, and the RPC they are using that they have not collected and analyzed indirect PII \n\nPrivacy in Curvy ​ \n\nQuality / Scenario Shielding funds in Curvy Unshielding funds from Curvy Sending a private transaction with Curvy \n\nSender privacy 👀 Transparent 🛡️ Opaque 🛡️ Opaque \n\nRecipient privacy 🛡️ Opaque* 👀 Transparent 🛡️ Opaque \n\nAmount privacy 🛡️ Opaque 👀 Transparent 🛡️ Opaque \n\nCurrency privacy 👀 Transparent 👀 Transparent 🛡️ Opaque \n\nSender's PII privacy ⚠️ Trusted** 🛡️ Opaque 🛡️ Opaque \n\nRecipient's PII privacy 🛡️ Opaque 🛡️ Opaque 🛡️ Opaque \n\nShielding funds in Curvy ​ \n\nWhen shielding funds into Curvy, everyone can see the amount, currency, and sender , but no one can see the recipient of the funds .\n\n",
-          "source": "https://docs.curvy.box/for-the-curious/privacy-model.html"
+          "cited_text": "IMPORTANT\n\nAlthough this is the simplest process in Curvy, it is also the most private, as the exact: amount, currency, sender and recipient are completely hidden from the public eye.",
+          "source": "https://docs.curvy.box/for-the-curious/walkthroughs/sending-funds-privately"
         },
         {
-          "cited_text": "**The sender has to trust the wallet, and the RPC they are using that they have not collected and analyzed indirect PII \n\nUnshielding funds from Curvy ​ \n\nWhen unshielding funds from Curvy to a regular EOA address, the recipient, the currency, and the amount are publicly known , but everything about the sender remains completely private .\n\n",
-          "source": "https://docs.curvy.box/for-the-curious/privacy-model.html"
-        },
-        {
-          "cited_text": "Sending a private transaction with Curvy ​ \n\nWhen splitting, aggregating, or simply performing a private transfer of funds between two users inside the Curvy Privacy Aggregators, all qualities of the transaction remain completely private .\n\n",
+          "cited_text": "**The sender has to trust the wallet, and the RPC they are using that they have not collected and analyzed indirect PII \n\nUnshielding funds from Curvy ​ \n\nWhen unshielding funds from Curvy to a regular EOA address, the recipient, the currency, and the amount are publicly known , but everything about the sender remains completely private .\n\nSending a private transaction with Curvy ​ \n\nWhen splitting, aggregating, or simply performing a private transfer of funds between two users inside the Curvy Privacy Aggregators, all qualities of the transaction remain completely private .\n\n",
           "source": "https://docs.curvy.box/for-the-curious/privacy-model.html"
         }
       ]
@@ -150,10 +145,17 @@
       "name": "Censorship resistance",
       "value": "No",
       "notes": "Shielding requires going through a portal registered with the portal factory, and portal deployment is gated by the Curvy-operated Portal Broadcaster, which uses compliance scores from trusted analytics vendors to decide whether to deploy a portal for a given address. A flagged sender can therefore be blocked at entry, and there is no documented path for the user to bypass the Broadcaster and shield directly.",
-      "needsResearchReview": "Portal Broadcaster gating requires citation",
       "citations": [
         {
-          "cited_text": "Pre-emptive compliance checks ​ \n\nPre-emptive compliance checks allow trusted analytics vendors (Curvy is currently integrated with Global Ledger ) to provide a security and compliance score for a given address. This score is used by the Curvy-operated Portal Broadcaster to determine if a Portal can be deployed, allowing assets to be shielded.\n\nThese checks aim to prevent known malicious addresses involved in fraudulent activities from shielding funds with Curvy. \n\n",
+          "cited_text": "Curvy Portals carry multiple important responsibilities:\n\nCompliance: As only Portal Broadcasters, a set of entities that are deploying portals using publicly available (and completely anonymous) Announcement data can deploy portals that shield into the Privacy Aggregator, they are in charge of conducting compliance checks before deploying the Portals . ",
+          "source": "https://docs.curvy.box/for-the-curious/building-blocks/portals.html"
+        },
+        {
+          "cited_text": "Pre-emptive compliance checks ​ \n\nPre-emptive compliance checks allow trusted analytics vendors (Curvy is currently integrated with Global Ledger ) to provide a security and compliance score for a given address. This score is used by the Curvy-operated Portal Broadcaster to determine if a Portal can be deployed, allowing assets to be shielded.\n\n",
+          "source": "https://docs.curvy.box/for-the-curious/compliance-model.html"
+        },
+        {
+          "cited_text": "Retroactive compliance checks give us the ability for a trusted entity, such as a DAO or an analytics vendor, to taint (e.g., block access to protocol features) even after a malicious user has deposited and shielded their funds.\n\n",
           "source": "https://docs.curvy.box/for-the-curious/compliance-model.html"
         }
       ]
@@ -163,10 +165,6 @@
       "value": "Yes, permissionless",
       "notes": "Arbitrum is the only network that hosts the Privacy Aggregator smart contract, and on networks other than Arbitrum, the PortalFactory is configured to bridge funds through LiFi to Arbitrum so that they can be shielded. Portal Broadcasters are off-chain workers that scan announcements to identify Portal addresses that have received funds, in order to deploy a Portal. The protocol therefore relies on both the LiFi bridge network (a permissionless external bridge aggregator) and the Portal Broadcaster infrastructure to enable cross-chain shielding.",
       "citations": [
-        {
-          "cited_text": "Automatic bridging with LiFi ​ \n\nArbitrum is the only network right now that hosts the Privacy Aggregator smart contract. ",
-          "source": "https://docs.curvy.box/for-the-curious/building-blocks/portals.html"
-        },
         {
           "cited_text": "Portal Factories are deployed on each network, but in a different manner:\n\nOn networks other than Arbitrum, PortalFactory is configured to bridge funds through LiFi to Arbitrum so that it can be shielded.\n\n",
           "source": "https://docs.curvy.box/for-the-curious/building-blocks/portals.html"
@@ -205,10 +203,6 @@
         {
           "cited_text": "ICurvyWithdrawVerifierV3 public withdrawVerifier;\n\n// Curvy&#039;s portal factory contract; \n\nIPortalFactory public portalFactory;\n\n//#endregion \n\n//#region Init functions \n\n/// @custom:oz-upgrades-unsafe-allow constructor \n\nconstructor () {\n\n_disableInitializers ();\n\n}\n\nfunction initialize ( address initialOwner ) public initializer {\n\n__Ownable_init (initialOwner);\n\n}\n\nfunction _authorizeUpgrade ( address ) internal override onlyOwner {}\n\n//#endregion \n\n//#region Owner functions \n\nfunction updateConfig (CurvyTypes.AggregatorConfigurationUpdateV2 memory _update ) external onlyOwner returns ( bool ) {\n\nif (_update.insertionVerifier != address ( 0 )) {\n\ninsertionVerifier = ICurvyInsertionVerifier (_update.insertionVerifier);\n\n}\n\nif (_update.aggregationVerifier != address ( 0 )) {\n\naggregationVerifier = ICurvyAggregationVerifier (_update.aggregationVerifier);\n\n}\n\nif (_update.withdrawVerifier != address ( 0 )) {\n\nwithdrawVerifier = ICurvyWithdrawVerifierV3 (_update.withdrawVerifier);\n\n}\n\nif (_update.curvyVault != address ( 0 )) {\n\ncurvyVault = ICurvyVaultV3 (_update.curvyVault);\n\n}\n\nif (_update.portalFactory != address ( 0 )) {\n\nportalFactory = IPortalFactory (_update.portalFactory);\n\n}\n\nif (_update.maxDeposits != 0 ) {\n\nmaxDeposits = _update.maxDeposits;\n\n}\n\nif (_update.maxAggregations != 0 ) {\n\nmaxAggregations = _update.maxAggregations;\n\n}\n\nif (_update.maxWithdrawals != 0 ) {\n\nmaxWithdrawals = _update.maxWithdrawals;\n\n}\n\nreturn true ;\n\n}\n\n/* \n\n* @dev This function allows the owner to reset the roots of the notes and nullifiers trees to a known state. \n\n",
           "source": "https://github.com/0xCurvy/contracts/blob/main/contracts/aggregator-alpha/CurvyAggregatorAlphaV6.sol"
-        },
-        {
-          "cited_text": "ICurvyWithdrawVerifierV3 public withdrawVerifier;\n\n// Curvy&#039;s portal factory contract; \n\nIPortalFactory public portalFactory;\n\n//#endregion \n\n//#region Init functions \n\n/// @custom:oz-upgrades-unsafe-allow constructor \n\nconstructor () {\n\n_disableInitializers ();\n\n}\n\nfunction initialize ( address initialOwner ) public initializer {\n\n__Ownable_init (initialOwner);\n\n}\n\nfunction _authorizeUpgrade ( address ) internal override onlyOwner {}\n\n//#endregion \n\n//#region Owner functions \n\nfunction updateConfig (CurvyTypes.AggregatorConfigurationUpdateV2 memory _update ) external onlyOwner returns ( bool ) {\n\nif (_update.insertionVerifier != address ( 0 )) {\n\ninsertionVerifier = ICurvyInsertionVerifier (_update.insertionVerifier);\n\n}\n\nif (_update.aggregationVerifier != address ( 0 )) {\n\naggregationVerifier = ICurvyAggregationVerifier (_update.aggregationVerifier);\n\n}\n\nif (_update.withdrawVerifier != address ( 0 )) {\n\nwithdrawVerifier = ICurvyWithdrawVerifierV3 (_update.withdrawVerifier);\n\n}\n\nif (_update.curvyVault != address ( 0 )) {\n\ncurvyVault = ICurvyVaultV3 (_update.curvyVault);\n\n}\n\nif (_update.portalFactory != address ( 0 )) {\n\nportalFactory = IPortalFactory (_update.portalFactory);\n\n}\n\nif (_update.maxDeposits != 0 ) {\n\nmaxDeposits = _update.maxDeposits;\n\n}\n\nif (_update.maxAggregations != 0 ) {\n\nmaxAggregations = _update.maxAggregations;\n\n}\n\nif (_update.maxWithdrawals != 0 ) {\n\nmaxWithdrawals = _update.maxWithdrawals;\n\n}\n\nreturn true ;\n\n}\n\n/* \n\n* @dev This function allows the owner to reset the roots of the notes and nullifiers trees to a known state. \n\n* @notice Only to be used in emergency cases where the contract is in a bad state and cannot be recovered \n\n* through normal operation (i.e. proof verification and batch commitments). \n\n*/ \n\nfunction reset ( uint256 newNotesTreeRoot , uint256 newNullifiersTreeRoot ) external onlyOwner {\n\n_notesTreeRoot = newNotesTreeRoot;\n\n_nullifiersTreeRoot = newNullifiersTreeRoot;\n\n}\n\n//#endregions \n\n//#region Public functions \n\nfunction autoShield (CurvyTypes.Note memory note ) external payable {\n\n// Only allow auto shielding of portals that were deployed through the portalFactory \n\nif ( ! ",
-          "source": "https://github.com/0xCurvy/contracts/blob/main/contracts/aggregator-alpha/CurvyAggregatorAlphaV6.sol"
         }
       ]
     },
@@ -216,7 +210,6 @@
       "name": "Client-side proving",
       "value": "No",
       "notes": "Aggregation and unshielding proofs are generated by a Curvy-operated ZK Prover service rather than on the user's device. The Curvy SDK in the user's browser prepares notes and ownership proofs and orchestrates the flow, but the SNARK proof itself is produced by the external prover and submitted on-chain. A decentralized proving design has been discussed but is not part of the live system.",
-      "needsResearchReview": "External-prover claim requires citation",
       "citations": [
         {
           "cited_text": "⚫ Curvy ​ \n\nUsing the supplied notes and ownership proofs, the ZK Prover generates a new aggregation proof and submits it on-chain.\n\n",
@@ -228,7 +221,6 @@
       "name": "Third-party inspectability",
       "value": "Yes",
       "notes": "Producing aggregation and unshielding proofs requires the prover to know the private inputs of the transaction — the notes being spent, the amounts, and the destination. Today this prover role is operated by Curvy, so the operator is in a position to observe these plaintext inputs for every transaction it proves. This visibility is structural rather than something the user opts into by sharing a viewing key.",
-      "needsResearchReview": "Prover plaintext-access claim requires citation",
       "citations": [
         {
           "cited_text": "Prover operators will require knowledge of private inputs for the construction of ZK proofs and will be able to see certain disclosed information.",
@@ -239,28 +231,23 @@
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
-      "notes": "Curvy went live on Arbitrum mainnet in July 2025, so as of April 2026 it has been deployed on mainnet for approximately 9 months.",
-      "needsResearchReview": "Not verified — launch date needs a dated source",
+      "notes": "Curvy is deployed on several EVM mainnets — Arbitrum, Base, Ethereum, Optimism, Polygon, Binance Smart Chain, Linea, and Gnosis. The Privacy Aggregator first launched on Arbitrum in November 2025, with its first independent security audit publishing in Q2 2026.",
       "citations": [
         {
-          "cited_text": "The figure below compares the search times of the ephemeral public key registry for different numbers of announcements (5000, 10000, 20000, 40000 and 80000) of Curvy Protocol (with pairing-friendly curve bn254 and optimal Ate pairing) and the implementation of DKSAP . ",
-          "source": "https://3327.io/curvy-protocol-for-fast-anonymous-transactions-on-ethereum/"
+          "cited_text": "Curvy is currently available on:\n\nArbitrum\n\nBase\n\nEthereum\n\nOptimism\n\nPolygon\n\nBinance Smart Chain\n\nLinea\n\nGnosis\n\nThe stealth address flow (without the ZK aggregator component) is currently available on Starknet.",
+          "source": "https://docs.curvy.box/faq.html"
         },
         {
-          "cited_text": "We hope you liked our short blog about Curvy protocol .🚀 This research was carried out with the help of a grant from the ETH Foundation.\n\n",
-          "source": "https://3327.io/curvy-protocol-for-fast-anonymous-transactions-on-ethereum/"
-        },
-        {
-          "cited_text": "Implementation results \n\nSince it is very important from the point of view of the users of the protocol that the transaction is executed quickly, we wanted to create a protocol that meets the needs of the users. For this reason, it was important to optimize the most sensitive part (which takes the longest), namely the search - the calculation of the new stealth address by the recipient of the transaction.\n\nThe figure below compares the search times of the ephemeral public key registry for different numbers of announcements (5000, 10000, 20000, 40000 and 80000) of Curvy Protocol (with pairing-friendly curve bn254 and optimal Ate pairing) and the implementation of DKSAP . ",
-          "source": "https://3327.io/curvy-protocol-for-fast-anonymous-transactions-on-ethereum/"
+          "cited_text": "Curvy’s smart contracts are currently undergoing an independent security audit.\n\nThe audit report is expected to be published in Q2 2026.\n",
+          "source": "https://docs.curvy.box/faq.html"
         }
-      ]
+      ],
+      "url": "https://arbiscan.io/tx/0x6b272872dd37b25a3a17d62a7b87bd22385c12502dd68bc5c905a4dd1a786b1c"
     },
     {
       "name": "Post-quantum secure",
       "value": "No",
       "notes": "The actual implementation relies on secp256k1 for wallet-derived spending and viewing keypairs, Baby Jubjub for the in-circuit addressing key, and Baby Jubjub curves embedded in BN254-friendly zk-SNARK circuits — none of which resist Shor's algorithm. Curvy's docs reference research on post-quantum stealth address schemes, but the live protocol does not implement post-quantum primitives.",
-      "needsResearchReview": "Cryptographic primitives require citation",
       "citations": [
         {
           "cited_text": "Curvy ID | Curvy Docs \n\nSkip to content \n\nCurvy Docs \n\nAppearance\n\nMenu \nReturn to top \n\nCurvy ID ​ \n\nTIP\n\nTo get a mathematical understanding of how stealth addresses are derived in the Curvy protocol using viewing and spending keys, take a look at our previous research:\n\n\"Elliptic Curve Pairing Stealth Address Protocols\" \n\n\"Post-Quantum Secure Stealth Address Protocols\" \n\nWhat makes a Curvy user? ",
@@ -293,8 +280,8 @@
     },
     {
       "name": "Enforcement entities",
-      "value": "Admin",
-      "notes": "Pre-emptive compliance checks are performed by the Curvy-operated Portal Broadcaster, which uses scores from trusted analytics vendors (currently Global Ledger) to determine whether a portal can be deployed. Retroactive compliance checks grant a trusted entity, such as a DAO or an analytics vendor, the ability to taint malicious users even after funds have been shielded. The primary operational enforcement is carried out by Curvy (the admin/core team operating the Portal Broadcaster), while third-party analytics vendors provide the underlying compliance intelligence and DAOs are mentioned as potential trusted entities for retroactive actions.",
+      "value": "Third party",
+      "notes": "Pre-emptive compliance is gated by the security and compliance score supplied by a trusted analytics vendor — currently Global Ledger — whose verdict drives whether the Curvy-operated Portal Broadcaster deploys a Portal. Retroactive compliance similarly delegates the tainting decision to a trusted entity such as an analytics vendor or DAO.",
       "citations": [
         {
           "cited_text": "Pre-emptive compliance checks ​ \n\nPre-emptive compliance checks allow trusted analytics vendors (Curvy is currently integrated with Global Ledger ) to provide a security and compliance score for a given address. This score is used by the Curvy-operated Portal Broadcaster to determine if a Portal can be deployed, allowing assets to be shielded.\n\n",
@@ -310,7 +297,6 @@
       "name": "Type of compliance",
       "value": ["Programmatic policies", "Selective disclosure"],
       "notes": "Curvy implements programmable per-deposit policies through trusted analytics vendors that provide security and compliance scores for addresses. The Curvy-operated Portal Broadcaster uses these scores to determine whether a portal can be deployed, blocking known malicious addresses from shielding funds. Retroactive compliance checks are in development. Custom enterprise deployments support KYC at Curvy ID registration, but the canonical protocol does not, so KYC/KYB is not yet live. Curvy IDs expose a viewing public key, enabling user-initiated selective disclosure via the viewing private key.",
-      "needsResearchReview": "Compliance mechanisms require citation",
       "citations": [
         {
           "cited_text": "Pre-emptive compliance checks ​ \n\nPre-emptive compliance checks allow trusted analytics vendors (Curvy is currently integrated with Global Ledger ) to provide a security and compliance score for a given address. This score is used by the Curvy-operated Portal Broadcaster to determine if a Portal can be deployed, allowing assets to be shielded.\n\nThese checks aim to prevent known malicious addresses involved in fraudulent activities from shielding funds with Curvy. \n\n",
@@ -328,8 +314,8 @@
     },
     {
       "name": "Point of enforcement",
-      "value": ["Deposit", "Withdrawal"],
-      "notes": "Pre-emptive compliance checks are performed by the Portal Broadcaster, which uses a security and compliance score from analytics vendors to determine whether a Portal can be deployed and assets shielded, enforcing compliance at the deposit step. Retroactive compliance checks enable tainting of malicious users after they have deposited and shielded funds, restricting them to unshield only to the exact same address from which funds were shielded, which enforces compliance at the withdrawal step. Both mechanisms are part of Curvy's two-sided compliance model, though retroactive compliance checks are not yet publicly available.",
+      "value": ["Deposit"],
+      "notes": "Pre-emptive compliance checks are performed by the Portal Broadcaster, which uses a security and compliance score from analytics vendors to determine whether a Portal can be deployed and assets shielded, enforcing compliance at the deposit step. Retroactive compliance checks that would enforce at withdrawal are a WIP and not yet publicly available, so withdrawal is not currently a point of enforcement.",
       "citations": [
         {
           "cited_text": "Pre-emptive compliance checks ​ \n\nPre-emptive compliance checks allow trusted analytics vendors (Curvy is currently integrated with Global Ledger ) to provide a security and compliance score for a given address. This score is used by the Curvy-operated Portal Broadcaster to determine if a Portal can be deployed, allowing assets to be shielded.\n\n",
@@ -342,10 +328,6 @@
         {
           "cited_text": "Successful tainting means that the user can only unshield the funds to the exact same address from which they were shielded, which is now tainted.",
           "source": "https://docs.curvy.box/for-the-curious/compliance-model.html"
-        },
-        {
-          "cited_text": "Retroactive compliance checks ​ \n\nWARNING\n\nRetroactive compliance checks are a WIP and are not yet publicly available for Curvy users.\n\n",
-          "source": "https://docs.curvy.box/for-the-curious/compliance-model.html"
         }
       ]
     },
@@ -356,10 +338,6 @@
       "citations": [
         {
           "cited_text": "The corresponding viewing private key can be shared by the user with a third party to gain access to their private transaction history that would otherwise be completely hidden. The private key is envisioned to be shared when the user wants to prove their transactional activity but does not want to give control over their funds.\n\n",
-          "source": "https://docs.curvy.box/for-the-curious/building-blocks/curvy-id.html"
-        },
-        {
-          "cited_text": "Viewing public key ​ \n\nThe viewing public key is necessary to construct proper stealth addresses and notes for the user.\n\n",
           "source": "https://docs.curvy.box/for-the-curious/building-blocks/curvy-id.html"
         }
       ]
@@ -383,7 +361,6 @@
       "name": "Cryptographic verifiability",
       "value": "Yes",
       "notes": "The Privacy Aggregator verifies zk-SNARK proofs on-chain for every state transition, validating that changes to the Sparse Merkle Trees of notes and nullifiers follow defined rules, and updates the tree roots only after successful proof verification. ZK proofs provide provable on-chain data and state transition rule integrity without exposing the exact state transitions. All three action types—shielding, aggregation, and unshielding—are verified as valid state transitions by the Privacy Aggregator.",
-      "needsResearchReview": "Proving system requires citation",
       "citations": [
         {
           "cited_text": "Like those systems, the Privacy Aggregator verifies proofs that a state transition of an ordered list of tuples, called \"Notes\" and \"Nullifiers,\" produced a valid end-state.\n\n",
@@ -396,29 +373,29 @@
         {
           "cited_text": "Utilizing ZK proofs allows for provable on-chain data and state transition rule integrity without exposing the exact state transitions that took place. \n\n",
           "source": "https://docs.curvy.box/for-the-curious/building-blocks/privacy-aggregator.html"
-        },
-        {
-          "cited_text": "Actions ​ \n\nThere are three actions, or proof types, that the Privacy Aggregator can verify and allow as valid state transitions.\n\nLuckily, all of these actions are automatically orchestrated by the Curvy SDK , which translates users' intents into a set of Privacy Aggregator actions (among other things).\n\n",
-          "source": "https://docs.curvy.box/for-the-curious/building-blocks/privacy-aggregator.html"
         }
       ]
     },
     {
       "name": "Open source",
       "value": "Yes",
-      "notes": "The Solidity contracts repo is licensed under Apache-2.0, the SDK under MIT, and the kohaku wallet extension under GPL-3.0. All three critical components — contracts, SDK, and wallet extension — are published under OSI-approved licenses.",
+      "notes": "The Solidity contracts repo is licensed under Apache-2.0, the SDK under MIT. These critical components — contracts and SDK, are published under open source license.",
       "needsResearchReview": "License claims require citation",
       "citations": [
         {
-          "cited_text": "Dismiss alert \n\n{{ message }}\n\n0xCurvy\n\n/ \n\ncontracts \n\nPublic \n\nNotifications\nYou must be signed in to change notification settings \n\nFork\n0 \n\nStar\n1 \n\nFiles \n\nExpand file tree \n\n  main \n\n/ \nCurvyAggregatorAlphaV6.sol\n\nCopy path \n\nBlame \n\nMore file actions \n\nBlame \n\nMore file actions \n\nLatest commit\n\n \n\nHistory\n\nHistory \n\nHistory \n\n243 lines (191 loc) · 8.57 KB \n\n  main \n\n/ \nCurvyAggregatorAlphaV6.sol\n\nTop \n\nFile metadata and controls\n\nCode\n\nBlame\n\n243 lines (191 loc) · 8.57 KB \n\nRaw \n\nCopy raw file \n\nDownload raw file \n\nOpen symbols panel \n\nEdit and raw actions \n\n1\n\n2\n\n3\n\n4\n\n5\n\n6\n\n7\n\n8\n\n9\n\n10\n\n11\n\n12\n\n13\n\n14\n\n15\n\n16\n\n17\n\n18\n\n19\n\n20\n\n21\n\n22\n\n23\n\n24\n\n25\n\n26\n\n27\n\n28\n\n29\n\n30\n\n31\n\n32\n\n33\n\n34\n\n35\n\n36\n\n37\n\n38\n\n39\n\n40\n\n41\n\n42\n\n43\n\n44\n\n45\n\n46\n\n47\n\n48\n\n49\n\n50\n\n51\n\n52\n\n53\n\n54\n\n55\n\n56\n\n57\n\n58\n\n59\n\n60\n\n61\n\n62\n\n63\n\n64\n\n65\n\n66\n\n67\n\n68\n\n69\n\n70\n\n71\n\n72\n\n73\n\n74\n\n75\n\n76\n\n77\n\n78\n\n79\n\n80\n\n81\n\n82\n\n83\n\n84\n\n85\n\n86\n\n87\n\n88\n\n89\n\n90\n\n91\n\n92\n\n93\n\n94\n\n95\n\n96\n\n97\n\n98\n\n99\n\n100\n\n101\n\n102\n\n103\n\n104\n\n105\n\n106\n\n107\n\n108\n\n109\n\n110\n\n111\n\n112\n\n113\n\n114\n\n115\n\n116\n\n117\n\n118\n\n119\n\n120\n\n121\n\n122\n\n123\n\n124\n\n125\n\n126\n\n127\n\n128\n\n129\n\n130\n\n131\n\n132\n\n133\n\n134\n\n135\n\n136\n\n137\n\n138\n\n139\n\n140\n\n141\n\n142\n\n143\n\n144\n\n145\n\n146\n\n147\n\n148\n\n149\n\n150\n\n151\n\n152\n\n153\n\n154\n\n155\n\n156\n\n157\n\n158\n\n159\n\n160\n\n161\n\n162\n\n163\n\n164\n\n165\n\n166\n\n167\n\n168\n\n169\n\n170\n\n171\n\n172\n\n173\n\n174\n\n175\n\n176\n\n177\n\n178\n\n179\n\n180\n\n181\n\n182\n\n183\n\n184\n\n185\n\n186\n\n187\n\n188\n\n189\n\n190\n\n191\n\n192\n\n193\n\n194\n\n195\n\n196\n\n197\n\n198\n\n199\n\n200\n\n201\n\n202\n\n203\n\n204\n\n205\n\n206\n\n207\n\n208\n\n209\n\n210\n\n211\n\n212\n\n213\n\n214\n\n215\n\n216\n\n217\n\n218\n\n219\n\n220\n\n221\n\n222\n\n223\n\n224\n\n225\n\n226\n\n227\n\n228\n\n229\n\n230\n\n231\n\n232\n\n233\n\n234\n\n235\n\n236\n\n237\n\n238\n\n239\n\n240\n\n241\n\n242\n\n243\n\n// SPDX-License-Identifier: Apache-2.0 \n\npragma solidity ^ 0.8.28 ;\n\nimport \" ../portal/IPortalFactory.sol \" ;\n\nimport {\n\nICurvyInsertionVerifier,\n\nICurvyAggregationVerifier,\n\nICurvyWithdrawVerifier,\n\nICurvyWithdrawVerifierV3\n\n} from \" ./verifiers/ICurvyVerifiersAlpha.sol \" ;\n\nimport {CurvyTypes} from \" ../utils/Types.sol \" ;\n\nimport {ICurvyAggregatorAlphaV2} from \" ./ICurvyAggregatorAlphaV2.sol \" ;\n\nimport {ICurvyVaultV3} from \" ../vault/ICurvyVaultV3.sol \" ;\n\nimport {Initializable} from \" @openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol \" ;\n\nimport {OwnableUpgradeable} from \" @openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol \" ;\n\nimport {PoseidonT4} from \" ./utils/PoseidonT4.sol \" ;\n\nimport {SafeERC20, IERC20 } from \" @openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol \" ;\n\nimport {UUPSUpgradeable} from \" @openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol \" ;\n\n/** \n\n* @title CurvyAggregator \n\n* @author Curvy Protocol (https://curvy.box) \n\n* @dev Curvy&#039;s Aggregator contract. \n\n",
+          "cited_text": "// SPDX-License-Identifier: Apache-2.0\npragma solidity ^0.8.28;\n\nimport \"../portal/IPortalFactory.sol\";\nimport {\nICurvyInsertionVerifier,\nICurvyAggregationVerifier,\nICurvyWithdrawVerifier,\nICurvyWithdrawVerifierV3\n} from \"./verifiers/ICurvyVerifiersAlpha.sol\";\nimport {CurvyTypes} from \"../utils/Types.sol\";\nimport {ICurvyAggregatorAlphaV2} from \"./ICurvyAggregatorAlphaV2.sol\";\nimport {ICurvyVaultV3} from \"../vault/ICurvyVaultV3.sol\";\nimport {Initializable} from \"@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol\";\nimport {OwnableUpgradeable} from \"@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol\";\nimport {PoseidonT4} from \"./utils/PoseidonT4.sol\";\nimport {SafeERC20, IERC20} from \"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\";\nimport {UUPSUpgradeable} from \"@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol\";\n\n/**\n * @title CurvyAggregator\n * @author Curvy Protocol (https://curvy.box)\n * @dev Curvy's Aggregator contract.\n ",
           "source": "https://github.com/0xCurvy/contracts/blob/main/contracts/aggregator-alpha/CurvyAggregatorAlphaV6.sol"
+        },
+        {
+          "cited_text": "{\n  \"name\": \"@0xcurvy/curvy-sdk\",\n  \"license\": \"MIT\",\n  \"version\": \"0.0.6\",\n  \"repository\": \"https://github.com/0xCurvy/curvy-sdk\",\n  \"packageManager\": \"pnpm@10.12.1\",\n  \"type\": \"module\",\n  \"main\": \"./dist/_esm/index.js\",\n  \"module\": \"./dist/_esm/index.js\",\n  \"types\": \"./dist/_types/index.d.ts\",\n  \"typings\": \"./dist/_types/index.d.ts\",\n  \"description\": \"A TypeScript/JavaScript SDK for interacting with the Curvy platform.",
+          "source": "https://github.com/0xCurvy/sdk/blob/main/package.json"
         }
       ]
     },
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
-      "notes": "Notes and nullifiers are each arranged into a Sparse Merkle Tree, and each proof submitted to the Aggregator emits new notes and/or nullifiers throughå events and updates the SMT roots on-chain. New notes are created during shielding and aggregation, while aggregation also consumes input notes. The trees accumulate entries monotonically as users shield and transfer, with no pruning mechanism for historical nullifiers or notes. Clients need the full note and nullifier data to verify the SMTs and prove ownership of the notes they wish to spend.",
+      "notes": "Notes and nullifiers are each arranged into a Sparse Merkle Tree, and each proof submitted to the Aggregator emits new notes and/or nullifiers through events and updates the SMT roots on-chain. New notes are created during shielding and aggregation, while aggregation also consumes input notes. The trees accumulate entries monotonically as users shield and transfer, with no pruning mechanism for historical nullifiers or notes. Clients need the full note and nullifier data to verify the SMTs and prove ownership of the notes they wish to spend.",
       "citations": [
         {
           "cited_text": "Notes and Nullifiers are each arranged into a Sparse Merkle Tree, a data-structure that allows for proofs of integrity, inclusion and non-inclusion (like Merkle Trees) in a manner that is much more friendly to zk-SNARK protocols.\n\n",
@@ -430,14 +407,6 @@
         },
         {
           "cited_text": "During proof verification, a new Note is created, indicating a not-yet-spent balance of a certain currency.\n\nAggregation ​ \n\nAggregation is the process of combining one or many \"input\" Notes into one or many \"output\" notes.\n\n",
-          "source": "https://docs.curvy.box/for-the-curious/building-blocks/privacy-aggregator.html"
-        },
-        {
-          "cited_text": "Using Aggregation, one can:\n\nSplit one Note into multiple smaller ones\n\nMerge multiple Notes into one Note\n\nChange ownership of any output Note, effectively doing a transfer\n\nUnshielding ​ \n\nUnshielding is the process of moving funds out of the Privacy Aggregator.\n\n",
-          "source": "https://docs.curvy.box/for-the-curious/building-blocks/privacy-aggregator.html"
-        },
-        {
-          "cited_text": "The Notes and Nullifiers data is essential so that every client can verify the validity of the SMTs and subsequently prove ownership of the Notes they wish to spend.\n\n",
           "source": "https://docs.curvy.box/for-the-curious/building-blocks/privacy-aggregator.html"
         }
       ]
@@ -460,14 +429,10 @@
     {
       "name": "Private state model",
       "value": "UTXO-based state model",
-      "notes": "Curvy follows a UTXO-based model where each note represents an unspent output that is consumed by publishing its nullifier and producing fresh output notes. The privacy aggregator verifies proofs that validate state transitions of an ordered list of tuples called \"Notes\" and \"Nullifiers,\" which are each arranged into Sparse Merkle Trees. During shielding, a new Note is created representing a not-yet-spent balance of a certain currency. Aggregation combines one or many input Notes into one or many output notes, where multiple inputs can spawn multiple outputs, the sum of inputs and outputs must be equal, and the actor must prove ownership of all inputs. ",
+      "notes": "Curvy follows a UTXO-based model where each note represents an unspent output that is consumed by publishing its nullifier and producing fresh output notes. The privacy aggregator verifies proofs over a state transition of an ordered list of notes and nullifiers, kept in Sparse Merkle Trees. Shielding creates a new note. Aggregation combines one or more input notes into one or more output notes, with the sum of inputs and outputs equal and ownership of all inputs proven.",
       "citations": [
         {
           "cited_text": "Like those systems, the Privacy Aggregator verifies proofs that a state transition of an ordered list of tuples, called \"Notes\" and \"Nullifiers,\" produced a valid end-state.\n\nNotes and Nullifiers are each arranged into a Sparse Merkle Tree, a data-structure that allows for proofs of integrity, inclusion and non-inclusion (like Merkle Trees) in a manner that is much more friendly to zk-SNARK protocols.\n\n",
-          "source": "https://docs.curvy.box/for-the-curious/building-blocks/privacy-aggregator.html"
-        },
-        {
-          "cited_text": "During proof verification, a new Note is created, indicating a not-yet-spent balance of a certain currency.\n\n",
           "source": "https://docs.curvy.box/for-the-curious/building-blocks/privacy-aggregator.html"
         },
         {
@@ -495,11 +460,10 @@
       "name": "Access to DeFi",
       "value": "Access to internal DeFi ecosystem",
       "notes": "Curvy supports private send, receive, and a private swap on shielded balances across ETH, WETH, USDT, UNI, WBTC, and USDC. The private swap operates directly on shielded notes inside the privacy aggregator. Arbitrary external DeFi protocols cannot be called while funds are shielded — users must unshield to interact with them — so composability is bounded to the in-protocol swap.",
-      "needsResearchReview": "Not verified — external DEX use is undocumented",
       "citations": [
         {
-          "cited_text": "Curvy for users | Curvy Docs \n\nSkip to content \n\nCurvy Docs \n\nAppearance\n\nMenu \nReturn to top \n\nCurvy for users ​ \n\nThe Curvy App is a privacy-first application that provides a familiar set of features, similar to any crypto wallet.\n\nThis quick-start guide walks you through setting up your wallet and Curvy ID, as well as receiving and sending assets privately. ",
-          "source": "https://docs.curvy.box/for-users/"
+          "cited_text": "To access the Curvy's builtin swap feature, click on the Swap button in the bottom right corner of your portfolio balance:\n\nThe swap UI is made to feel familiar to users of the popular DEXs, simply input the amount you want to swap, choose the currencies and click on the Swap button.",
+          "source": "https://docs.curvy.box/for-users/swap-assets-privately"
         },
         {
           "cited_text": "Supported networks and tokens ​ \n\nCurvy currently supports:\n\nETH\n\nWETH\n\nUSDT\n\nUNI\n\nWBTC\n\nUSDC\n\non the following networks:\n\nArbitrum\n\nBase\n\nEthereum\n\nOptimism\n\nPolygon\n\nBinance Smart Chain\n\nLinea\n\nGnosis\n\nTIP\n\nYou can also play around with Curvy by switching to the Sepolia testnet, by clicking on this icon \n\nin the top-right corner.",
@@ -511,11 +475,10 @@
       "name": "Programmability / Generality",
       "value": "Transfers and DeFi operations",
       "notes": "Curvy is a privacy-first application that provides wallet features for receiving and sending assets privately. The platform currently supports a fixed set of tokens (ETH, WETH, USDT, UNI, WBTC, USDC) on multiple networks (Arbitrum, Base, Ethereum, Optimism, Polygon, Binance Smart Chain, Linea, Gnosis). The protocol surface consists of send, receive, and swap operations with no general-purpose shielded contract execution layer — limited to private payments plus a swap feature, without support for arbitrary private smart contract logic or composable DeFi operations beyond the built-in swap.",
-      "needsResearchReview": "Not verified — no-contracts claim is inferred",
       "citations": [
         {
-          "cited_text": "Curvy for users | Curvy Docs \n\nSkip to content \n\nCurvy Docs \n\nAppearance\n\nMenu \nReturn to top \n\nCurvy for users ​ \n\nThe Curvy App is a privacy-first application that provides a familiar set of features, similar to any crypto wallet.\n\nThis quick-start guide walks you through setting up your wallet and Curvy ID, as well as receiving and sending assets privately. ",
-          "source": "https://docs.curvy.box/for-users/"
+          "cited_text": "To access the Curvy's builtin swap feature, click on the Swap button in the bottom right corner of your portfolio balance:\n\nThe swap UI is made to feel familiar to users of the popular DEXs, simply input the amount you want to swap, choose the currencies and click on the Swap button.",
+          "source": "https://docs.curvy.box/for-users/swap-assets-privately"
         },
         {
           "cited_text": "Supported networks and tokens ​ \n\nCurvy currently supports:\n\nETH\n\nWETH\n\nUSDT\n\nUNI\n\nWBTC\n\nUSDC\n\non the following networks:\n\nArbitrum\n\nBase\n\nEthereum\n\nOptimism\n\nPolygon\n\nBinance Smart Chain\n\nLinea\n\nGnosis\n\nTIP\n\nYou can also play around with Curvy by switching to the Sepolia testnet, by clicking on this icon \n\nin the top-right corner.",
