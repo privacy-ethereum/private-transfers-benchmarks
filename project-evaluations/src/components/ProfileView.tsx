@@ -63,14 +63,13 @@ export default function ProfileView({ initialSelected, onSelectedChange }: Profi
   return (
     <div className="direction">
       <div className="direction-intro">
-        <div className="big-num">PROFILE</div>
-        <div>
+        <div className="direction-intro__header">
+          <div className="big-num">PROFILE</div>
           <h2>Protocol profiles</h2>
-          <p>
-            One protocol at a time. Pick from the list; the main panel shows its description, categories, and every
-            evaluated property grouped into sections.
-          </p>
         </div>
+        <p>
+          Pick a protocol to see its full evaluation — description, categories, and every property we&apos;ve measured.
+        </p>
       </div>
 
       <div className="profile">

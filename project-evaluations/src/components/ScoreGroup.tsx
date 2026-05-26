@@ -4,6 +4,8 @@ import { type Evaluation } from "../types";
 import { PROPERTY_DEFINITIONS } from "../data/schema";
 import { cellTone, valueFor } from "../utils";
 
+const TONE_CLASS = { "yes": "tag green", "no": "tag red", "warn": "tag yellow", "": "tag" } as const;
+
 interface ScoreGroupProps {
   group: string;
   protos: Evaluation[];
@@ -51,33 +53,22 @@ export default function ScoreGroup({ group, protos, onCellClick }: ScoreGroupPro
                 </td>
                 {protos.map((p) => {
                   const { value, needsResearchReview } = valueFor({ evaluations: p, propertyName: prop.name });
-                  const tone = cellTone({ value, propertyName: prop.name });
-                  let cls: string;
-
-                  switch (tone) {
-                    case "yes":
-                      cls = "tag green";
-                      break;
-                    case "no":
-                      cls = "tag red";
-                      break;
-                    case "warn":
-                      cls = "tag yellow";
-                      break;
-                    default:
-                      cls = "tag";
-                  }
+                  const cls = TONE_CLASS[cellTone({ value, propertyName: prop.name })];
 
                   return (
                     <td key={p.id} className="proto-val">
                       <button
                         type="button"
-                        className="btn-reset"
+                        className="btn-reset cell-expand-btn"
                         onClick={() => {
                           onCellClick(p.id, prop.name);
                         }}
+                        aria-label={`Open note for ${prop.name}`}
                       >
                         <span className={cls}>{value}</span>
+                        <span className="cell-expand" aria-hidden="true">
+                          ↗
+                        </span>
                         {needsResearchReview !== "" && (
                           <span
                             className="review-warning pop-trigger"

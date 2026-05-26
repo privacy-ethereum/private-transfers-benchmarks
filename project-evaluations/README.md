@@ -42,5 +42,5 @@ To showcase a project that is not fully analyzed yet, add a file like `src/data/
 Behavior:
 
 - Pending projects are visible in Category Browser and Protocol Profiles.
-- Pending projects are excluded from Scorecard comparisons until analyzed.
+- Pending projects are excluded from Comparison Table until analyzed.
 - Once analysis is ready, change `status` to `complete` (or remove it, defaults to `complete`) and populate `properties`.
