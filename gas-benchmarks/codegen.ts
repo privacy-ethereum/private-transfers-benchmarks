@@ -7,6 +7,7 @@ config();
 
 const schemas = {
   arbitrum: process.env.ARBITRUM_SUBGRAPH_URL,
+  base: process.env.BASE_SUBGRAPH_URL,
   mainnet: process.env.MAINNET_SUBGRAPH_URL,
   sepolia: process.env.SEPOLIA_SUBGRAPH_URL,
 } as const;
@@ -17,12 +18,14 @@ Object.entries(schemas).forEach(([name, url]) => {
   }
 });
 
-const sharedConfig = {
+const sharedConfig = (schema: string, documents: string[]) => ({
   preset: "client-preset" as const,
+  schema: [schema, path.resolve(".", "scalars.graphql")],
+  documents,
   config: {
     useTypeImports: true,
   },
-};
+});
 
 const codegenConfig: CodegenConfig = {
   overwrite: true,
@@ -30,28 +33,28 @@ const codegenConfig: CodegenConfig = {
   emitLegacyCommonJSImports: false,
   generates: {
     "src/generated/arbitrum/": {
-      schema: [schemas.arbitrum!, path.resolve(".", "scalars.graphql")],
-      documents: ["src/subgraph/curvy.ts", "src/subgraph/arbitrum.ts"],
-      ...sharedConfig,
+      ...sharedConfig(schemas.arbitrum!, ["src/subgraph/curvy.ts", "src/subgraph/arbitrum.ts"]),
+    },
+
+    "src/generated/base/": {
+      ...sharedConfig(schemas.base!, ["src/subgraph/blanksquare.ts", "src/subgraph/base.ts"]),
     },
 
     "src/generated/mainnet/": {
-      schema: [schemas.mainnet!, path.resolve(".", "scalars.graphql")],
-      documents: [
+      ...sharedConfig(schemas.mainnet!, [
         "src/subgraph/railgun.ts",
         "src/subgraph/tornado-cash.ts",
         "src/subgraph/hinkal.ts",
         "src/subgraph/fluidkey.ts",
         "src/subgraph/privacy-pools.ts",
+        "src/subgraph/worm.ts",
+        "src/subgraph/zerc20.ts",
         "src/subgraph/mainnet.ts",
-      ],
-      ...sharedConfig,
+      ]),
     },
 
     "src/generated/sepolia/": {
-      schema: [schemas.sepolia!, path.resolve(".", "scalars.graphql")],
-      documents: ["src/subgraph/redact.ts", "src/subgraph/sepolia.ts"],
-      ...sharedConfig,
+      ...sharedConfig(schemas.sepolia!, ["src/subgraph/redact.ts", "src/subgraph/sepolia.ts"]),
     },
   },
 };

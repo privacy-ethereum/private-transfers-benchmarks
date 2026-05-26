@@ -34,6 +34,7 @@ jobs:
           SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
           SCROLL_RPC_URL: ${{ secrets.SCROLL_RPC_URL }}
           ARBITRUM_SUBGRAPH_URL: ${{ secrets.ARBITRUM_SUBGRAPH_URL }}
+          BASE_SUBGRAPH_URL: ${{ secrets.BASE_SUBGRAPH_URL }}
           MAINNET_SUBGRAPH_URL: ${{ secrets.MAINNET_SUBGRAPH_URL }}
           SEPOLIA_SUBGRAPH_URL: ${{ secrets.SEPOLIA_SUBGRAPH_URL }}
           MONERO_FAIL_NODES_API_URL: ${{ vars.MONERO_FAIL_NODES_API_URL }}
