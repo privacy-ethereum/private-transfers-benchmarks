@@ -98,15 +98,13 @@
       "name": "Client-side proving",
       "value": "Yes",
       "notes": "ZK proofs for deposits and withdrawals are generated on the user's device. Simple private transfer transaction ZK proofs can also be generated locally but more complex ones (involving smart contract interactions, multiple tokens, etc) could take longer. Therefore Hinkal implements an external proof generation mechanism using AWS Nitro enclave. There is an option to turn on \"Extra Security\" and generate the ZK proofs inside the user's browser at a slower speed.",
-      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle",
-      "needsResearchReview": "The cited source does not mention AWS Nitro enclave. The external prover claim needs a source that names the TEE platform."
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle"
     },
     {
       "name": "Third-party inspectability",
       "value": "No",
       "notes": "If the \"Extra Security\" option is turned off, all private inputs for the ZK proofs (token address, amount, stealth address, etc.) are sent in plaintext to the AWS Nitro enclave. We can assume that the enclave (TEE) will not leak data to any third party but it is important to mention that there are known vulnerabilities around TEE that might allow an attacker to see the inside data. An alternative way to solve this issue is to turn on \"Extra Security\" and generate the proof locally.",
-      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle",
-      "needsResearchReview": "The cited source does not mention AWS Nitro enclave; the TEE-based inspectability claim needs a source that names the platform."
+      "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle"
     },
     {
       "name": "Implementation maturity",

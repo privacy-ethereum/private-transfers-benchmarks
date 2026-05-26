@@ -1,4 +1,6 @@
 const FETCH_TIMEOUT_MS = 15_000;
+const GITHUB_ROOT_URL = /^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/;
+const GITHUB_BLOB_URL = /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/;
 
 export interface FetchedSource {
   text: string;
@@ -15,7 +17,7 @@ export async function fetchTextFromUrl(url: string): Promise<FetchedSource | nul
   if (url.endsWith(".pdf")) return fetchTextFromUrl(url.replace(/\.pdf$/, ".html"));
 
   // Repo root → try README on main, then master.
-  if (/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/.test(url)) {
+  if (GITHUB_ROOT_URL.test(url)) {
     const base = url.replace("github.com", "raw.githubusercontent.com").replace(/\/$/, "");
     for (const branch of ["main", "master"]) {
       const rawUrl = `${base}/${branch}/README.md`;
@@ -26,7 +28,7 @@ export async function fetchTextFromUrl(url: string): Promise<FetchedSource | nul
   }
 
   // Blob URL → rewrite to raw, keep the blob URL as the citation source.
-  const blob = /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/.exec(url);
+  const blob = GITHUB_BLOB_URL.exec(url);
   if (blob) {
     const rawUrl = `https://raw.githubusercontent.com/${blob[1]}/${blob[2]}/${blob[3]}`;
     const r = await fetch(rawUrl, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }).catch(() => null);
