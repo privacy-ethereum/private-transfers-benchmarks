@@ -4,6 +4,8 @@ import type {
   PrivacyPoolsProtocolStatsFragmentFragment,
   RailgunProtocolStatsFragmentFragment,
   TornadoCashProtocolStatsFragmentFragment,
+  WormProtocolStatsFragmentFragment,
+  Zerc20ProtocolStatsFragmentFragment,
 } from "../generated/mainnet/graphql.js";
 
 import { graphql } from "../generated/mainnet/gql.js";
@@ -12,7 +14,9 @@ export type TMainnetRootQuery = RailgunProtocolStatsFragmentFragment &
   TornadoCashProtocolStatsFragmentFragment &
   HinkalProtocolStatsFragmentFragment &
   FluidkeyProtocolStatsFragmentFragment &
-  PrivacyPoolsProtocolStatsFragmentFragment;
+  PrivacyPoolsProtocolStatsFragmentFragment &
+  WormProtocolStatsFragmentFragment &
+  Zerc20ProtocolStatsFragmentFragment;
 
 export const MainnetRootQuery = graphql(/* GraphQL */ `
   query MainnetRootQuery {
@@ -21,5 +25,7 @@ export const MainnetRootQuery = graphql(/* GraphQL */ `
     ...HinkalProtocolStatsFragment
     ...FluidkeyProtocolStatsFragment
     ...PrivacyPoolsProtocolStatsFragment
+    ...WormProtocolStatsFragment
+    ...Zerc20ProtocolStatsFragment
   }
 `);
