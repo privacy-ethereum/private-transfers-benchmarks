@@ -1,10 +1,600 @@
 {
   "id": "aztec",
   "title": "Aztec",
-  "description": "A privacy-first zkRollup Layer 2 on Ethereum where private functions execute locally and generate zero-knowledge proofs verified on-chain, enabling confidential smart contracts with both private and public state coexisting in a single rollup.",
+  "description": "Aztec is a privacy-first zkRollup Layer 2 on Ethereum where smart contracts can have both private and public state and functions. Private functions execute locally in the user's Private Execution Environment (PXE) and generate client-side zero-knowledge proofs. Public functions execute on the sequencer like an EVM L2. Private state is held as encrypted note commitments with nullifiers. Public state is an account-based store. Contracts are written in Noir.",
   "status": "pending",
-  "documentation": "https://docs.aztec.network/networks",
+  "documentation": "https://docs.aztec.network/",
   "categories": ["Private L2", "Zero Knowledge Proofs (ZKPs)", "Shielded Pool"],
-  "properties": [],
-  "sourceUrls": []
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Aztec's private state lives as encrypted UTXO-style notes whose contents only the holder of the decryption key can read, so values held in private balances are hidden from outside observers. Transfer amounts are likewise concealed: spending a 5-dollar note on a $3.50 purchase nullifies the $5 note and creates two new notes ($1.50 for the sender, $3.50 for the recipient), and only sender and recipient know about the $3.50 transfer. Confidentiality holds only inside the private domain — arguments passed to a public function from a private function are publicly visible, so token designs that bridge to public state forfeit it for those flows.",
+      "citations": [
+        {
+          "cited_text": "Private State ​ \n\nPrivate state is encrypted and owned by users who hold the decryption keys. It uses an append-only data structure since updating records directly would leak information about the transaction graph.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Notes work like cash. To spend a 5 dollar note on a $3.50 purchase, you nullify the $5 note and create two new notes: $1.50 for yourself and $3.50 for the recipient. Only you and the recipient know about the $3.50 transfer.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Passing arguments to a public function from a private function. All of those arguments will be publicly visible.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Private transfers on Aztec move encrypted notes between accounts — on-chain observers see only commitments and nullifiers, and nullifiers are computed so that observers cannot link a state record to its nullifier without the owner's keys. The protocol's note-commitment tree hides the underlying notes, so both counterparties stay hidden inside the shielded set. Leakage arises when a private function enqueues a public call — the public sender is visible unless an opt-in null-address sender mode is used — and watching the L2 transaction pool exposes per-transaction fingerprints that can be linked to specific contracts or user-behaviour patterns.",
+      "citations": [
+        {
+          "cited_text": "Private State ​ \n\nPrivate state is encrypted and owned by users who hold the decryption keys. It uses an append-only data structure since updating records directly would leak information about the transaction graph.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "The nullifier is computed such that observers cannot link a state record to its nullifier without the owner's keys.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Rather than storing entire notes, the protocol stores note commitments (hashes) in a Merkle tree called the note hash tree. ",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Calling a public function from a private function and revealing the msg_sender of that call (the msg_sender will be publicly visible). You can hide the sender by using self.enqueue_incognito(...) instead of self.enqueue(...) , which sets msg_sender to a null address. ",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        },
+        {
+          "cited_text": "Timing of transactions ​ \n\nInformation about the nature of a transaction can be leaked based on the timing of that transaction.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        },
+        {
+          "cited_text": "Anyone watching the L2 transaction pool can see this fingerprint for every transaction that is submitted, and transactions with distinctive fingerprints can be linked to specific contracts or to patterns of user behavior.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "Asset identity is hidden for transfers that remain inside the private state model. Private state takes the form of notes — encrypted pieces of data that only their owner can decrypt — so any asset identifier and amount fields the contract chooses to put inside the note are hidden. Only commitment hashes appear on-chain, leaving the asset type encoded inside a note invisible to observers. Boundary interactions with specific public token contracts (deposits and withdrawals crossing into public state) remain observable at that interface.",
+      "citations": [
+        {
+          "cited_text": "Private State ​ \n\nPrivate state is encrypted and owned by users who hold the decryption keys. It uses an append-only data structure since updating records directly would leak information about the transaction graph.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Notes ​ \n\nPrivate state uses UTXOs, commonly called notes . Notes are encrypted pieces of data that only their owner can decrypt.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Rather than storing entire notes, the protocol stores note commitments (hashes) in a Merkle tree called the note hash tree. ",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Aztec operates as a separate zkRollup connected to Ethereum with its own transaction format and sequencer participation, so submitting an Aztec transaction is itself an observable, distinct action rather than something hidden within ordinary L1 activity. No mechanism exists to disguise usage as a plain native transfer — entry into the system is a recognisable interaction with Aztec infrastructure.",
+      "citations": [
+        {
+          "cited_text": "Overview ​ \n\nAlpha is connected to Ethereum mainnet and supports user transactions. Governance and staking infrastructure are fully operational. This network requires real stakes for sequencer participation.\n\n",
+          "source": "https://docs.aztec.network/networks"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "Aztec is an Ethereum L2 zk-rollup, so transaction finality is inherited from Ethereum once the epoch proof lands on L1. Each epoch root proof is verified by the HonkVerifier smart contract on Ethereum before the proven checkpoint number is advanced, and a single proof covers one checkpoint (1m 12s) up to one epoch (38m 24s). Once the epoch proof is verified, the state transitions are considered final.",
+      "citations": [
+        {
+          "cited_text": "Rollup.sol - propose() on Etherscan \n\nRollup.sol - validateBlobs() on Etherscan \n\nLearn more about the DA layer here: Ethereum \n\n8\nState validation \nA diagram of the state validation \n\nEach epoch root proof is verified by the HonkVerifier smart contract on Ethereum before the proven checkpoint number is advanced and the epoch outbox state root is inserted into the Outbox. Proving is permissionless , and a single proof can cover one Checkpoint (1m 12s) to one epoch (38m 24s). ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "The transaction settles to L1 – The block is posted to L1, and later, provers submit epoch proofs to the verifier contract on Ethereum. Once the epoch proof is verified, the state transitions are considered final and the private transfer has settled.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/transactions"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "3",
+      "notes": "Aztec accounts hold three independently stored secrets: a master nullifier secret, a master incoming viewing secret, and an application-defined signing key. Protocol keys (nullifier and incoming viewing) are generated by the PXE on account creation on the Grumpkin curve, with secret keys as scalars and public keys as elliptic curve points. App-siloed nullifier keys are deterministically derived from the master nullifier key so they do not add to the count. The signing key is a separate secret because it is abstracted to the account contract developer with complete flexibility in authentication methods, and is not derivable from the protocol keys.",
+      "citations": [
+        {
+          "cited_text": "Key Types ​ \n\nEach Aztec account uses multiple key pairs:\n\nKey Type Purpose Protocol Managed Rotatable \nNullifier Keys Spending notes (destroying private state) Yes No\nIncoming Viewing Keys Decrypting received notes Yes No\nSigning Keys Transaction authorization No (app-defined) Yes \n\nProtocol keys (nullifier and incoming viewing) are embedded into the protocol and cannot be changed once an account is created. ",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        },
+        {
+          "cited_text": "Key Management ​ \n\nKey Generation and Derivation ​ \n\nProtocol keys (nullifier and incoming viewing) are automatically generated by the Private Execution Environment (PXE) when creating an account. The PXE handles:\n\nInitial key pair generation\n\nApp-siloed key derivation\n\nSecure key storage and oracle access\n\nKey material never leaves the client\n\nAll keys use elliptic curve cryptography on the Grumpkin curve:\n\nSecret keys are scalars\n\nPublic keys are elliptic curve points (secret × generator point)\n\nSigning keys are application-defined and managed by your account contract logic.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        },
+        {
+          "cited_text": "How it works: \n\nEach account has a master nullifier key pair ( Npk_m , nhk_m )\n\nFor each application, an app-siloed key is derived: nhk_app = hash(nhk_m, app_contract_address) \n\nTo spend a note, compute its nullifier using the note hash and app-siloed key\n\nThe protocol verifies the app-siloed key comes from your master key and that your master public key is in your address\n\nThis ensures only the rightful owner can spend notes, while the app-siloing provides additional security isolation between contracts.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        },
+        {
+          "cited_text": "The signing key is abstracted to the account contract developer, allowing complete flexibility in authentication methods.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "72",
+      "notes": "Deposits into Aztec take roughly one checkpoint after the L1 transaction is included. The L1 Inbox exposes sendL2Message() to send a message from L1 to L2, and the message becomes available on L2 once the L1 block is processed by the rollup, after which the recipient can claim the tokens on L2. A one-checkpoint lag applies before consumption: the first checkpoint's messages tree is always empty because there has to be a 1 checkpoint lag to prevent sequencer DOS attacks. Checkpoint cadence is roughly 1m 12s, giving a typical wait of ~72 seconds with no longer queue or time-lock.",
+      "citations": [
+        {
+          "cited_text": "sendL2Message() ​ \n\nSends a message from L1 to L2.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/ethereum-aztec-messaging/inbox"
+        },
+        {
+          "cited_text": "With the pull model:\n\nThe deposit amount and original sender are visible on L1\n\nThe recipient on L2 can remain private\n\nL2 reveals only what's necessary\n\nTiming Considerations ​ \n\nDeposits (L1 → L2) ​ \n\nThe L1 transaction sends tokens to the portal and creates a message\n\nThe message becomes available on L2 once the L1 block is processed by the rollup\n\nThe recipient can then claim the tokens on L2\n\nWithdrawals (L2 → L1) ​ \n\nWithdrawals take longer:\n\nMust wait for the epoch to end\n\nMust wait for the proof to be generated\n\nMust wait for proof verification on Ethereum\n\nOnly then can tokens be claimed on L1\n\nThis delay is inherent to ZK rollups since the proof must be generated and verified before L1 state can be updated.\n\n",
+          "source": "https://docs.aztec.network/participate/basics/bridging"
+        },
+        {
+          "cited_text": "consume\n\n/** \n\n* @notice Consumes the current tree, and starts a new one if needed \n\n* @dev Only callable by the rollup contract \n\n* @dev In the first iteration we return empty tree root because first checkpoint's messages tree is always \n\n* empty because there has to be a 1 checkpoint lag to prevent sequencer DOS attacks \n\n* \n\n* @param _toConsume - The checkpoint number to consume \n\n* \n\n* @return The root of the consumed tree \n\n*/ \n\nfunction consume ( uint256 _toConsume ) external returns ( bytes32 ) ; \n\nSource code: l1-contracts/src/core/interfaces/messagebridge/IInbox.sol#L50-L62 \n\nName Type Description \n_toConsume uint256 The checkpoint number to consume.\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/ethereum-aztec-messaging/inbox"
+        },
+        {
+          "cited_text": "Proving is permissionless , and a single proof can cover one Checkpoint (1m 12s) to one epoch (38m 24s). ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "6840",
+      "notes": "Withdrawing from Aztec waits for the active epoch to end, the epoch proof to be generated, and that proof to be verified on Ethereum before the outbox root is available for consumption. A single proof can cover one checkpoint up to one epoch (38m 24s), and once verified there is no challenge period — finality on L1 is immediate. Typical worst-case wait sums to roughly one epoch plus the proof-submission window, around 1h 54m (~6,840 seconds).",
+      "citations": [
+        {
+          "cited_text": "With the pull model:\n\nThe deposit amount and original sender are visible on L1\n\nThe recipient on L2 can remain private\n\nL2 reveals only what's necessary\n\nTiming Considerations ​ \n\nDeposits (L1 → L2) ​ \n\nThe L1 transaction sends tokens to the portal and creates a message\n\nThe message becomes available on L2 once the L1 block is processed by the rollup\n\nThe recipient can then claim the tokens on L2\n\nWithdrawals (L2 → L1) ​ \n\nWithdrawals take longer:\n\nMust wait for the epoch to end\n\nMust wait for the proof to be generated\n\nMust wait for proof verification on Ethereum\n\nOnly then can tokens be claimed on L1\n\nThis delay is inherent to ZK rollups since the proof must be generated and verified before L1 state can be updated.\n\n",
+          "source": "https://docs.aztec.network/participate/basics/bridging"
+        },
+        {
+          "cited_text": "Proving is permissionless , and a single proof can cover one Checkpoint (1m 12s) to one epoch (38m 24s). ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "There is no challenge period; finality on L1 is immediate once the proof is verified.\n\n",
+          "source": "https://docs.aztec.network/participate/basics/bridging"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "Yes",
+      "notes": "Aztec's sequencer set is permissionless — joining requires staking 200K AZTEC — and each epoch samples a 48-member committee from the active set of 3,548 sequencers, with no single party holding inclusion authority. If the sampled committee censors, anyone bonding 332M AZTEC joins an escape-hatch candidate set, and every 2d 23h a candidate is pseudo-randomly selected to propose and prove checkpoints autonomously. All censorship-resistance tools rely on probabilistic inclusion rather than deterministic inclusion after a maximum delay. Slashing penalises sequencers who withhold transaction bodies or proofs required for permissionless proving.",
+      "citations": [
+        {
+          "cited_text": "Rollup.sol - deposit() on Etherscan \n\nRollup.sol - flushEntryQueue() on Etherscan \n\n11\nSequencing \n\nTransactions are ordered by a staked committee \n\nJoining the sequencer set is permissionless and requires staking 200 K AZTEC. For each epoch, the rollup samples a 48-member committee from the active sequencer set of 3548 and selects one proposer per slot. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "If the pseudo-randomly sampled committees censor proposals, anyone who bonds 332 M AZTEC will join the escape hatch candidate set. Every 2d 23h, a candidate is pseudo-randomly selected to propose and prove checkpoints fully autonomously. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "FeeJuicePortal.sol - on Etherscan \n\nOutbox.sol - on Etherscan \n\nInclusion is probabilistic \n\nAll censorship resistance tools that are part of the protocol rely on probabilistic inclusion. In contrast to “forced transactions”, there is no simple deterministic inclusion after some maximum delay, but rather different inclusion probabilities after different time horizons. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "Data Withholding: A sequencer proposes a checkpoint including state diff data availability on L1 but withholds the public transaction bodies and/or CHONK proofs required for permissionless proving.\n\n",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissionless",
+      "notes": "Aztec operates as its own zkRollup with a permissionless sequencer set that anyone can join by staking 200K AZTEC, with each epoch sampling a 48-member committee from the active set to order transactions. Proving is also permissionless, with a single proof covering one checkpoint to one epoch. Beyond Ethereum L1 for data availability and proof verification, no additional external committee, oracle, or off-protocol network secures transfers — crypto-economic security comes from AZTEC stake within the protocol itself, and checkpoint data is posted in EIP-4844 blobs whose commitments are revalidated by the epoch proof.",
+      "citations": [
+        {
+          "cited_text": "Rollup.sol - deposit() on Etherscan \n\nRollup.sol - flushEntryQueue() on Etherscan \n\n11\nSequencing \n\nTransactions are ordered by a staked committee \n\nJoining the sequencer set is permissionless and requires staking 200 K AZTEC. For each epoch, the rollup samples a 48-member committee from the active sequencer set of 3548 and selects one proposer per slot. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "Proving is permissionless , and a single proof can cover one Checkpoint (1m 12s) to one epoch (38m 24s). ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "7\nData availability \n\nAll transaction results (state diffs) are published in Ethereum blobs \n\nEach checkpoint proposal includes EIP-4844 blob commitments that are checked against the blob hashes in the proposing transaction. The epoch proof revalidates the accumulated blob commitments before the epoch is finalized.\n\n",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Can exit in a time period",
+      "notes": "Users can exit through a censorship-resistant fallback, but inclusion is probabilistic rather than guaranteed within a fixed deadline. If sampled committees censor, anyone who bonds 332M AZTEC joins an escape-hatch candidate set, and every 2d 23h a candidate is pseudo-randomly selected to propose and prove checkpoints autonomously. Users have 10 days to exit funds against an unwanted upgrade, with a 1-month delay before an upgrade is applied, and withdrawal inclusion via the decentralized sequencer set is simulated to take up to 20 days. The project passes L2BEAT's walkaway test — users can exit even if the Security Council disappears.",
+      "citations": [
+        {
+          "cited_text": "Sequencer\nfailure State\nvalidation Data\navailability Exit\nwindow Proposer\nfailure \n\nSequencer failure\n\nDecentralized Sequencer Set\n\nUsers can permissionlessly become a sequencer by staking 200 K AZTEC to join the queue and wait to obtain committee-based block production rights. If the pseudo-randomly sampled committees censor proposals, anyone who bonds 332 M AZTEC will join the escape hatch candidate set. Every 2d 23h, a candidate is pseudo-randomly selected to propose and prove checkpoints fully autonomously. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "Exit window\n\n10d\n\nUsers have 10d to exit funds in case of an unwanted upgrade. There is a 1mo delay before an upgrade is applied, and withdrawal inclusion via the decentralized sequencer set is probabilistic and simulated to take up to 20d to be processed. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "The project passes the walkaway test : users can exit in the presence of malicious operators even if the Security Council disappears.\n\n",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "FeeJuicePortal.sol - on Etherscan \n\nOutbox.sol - on Etherscan \n\nInclusion is probabilistic \n\nAll censorship resistance tools that are part of the protocol rely on probabilistic inclusion. In contrast to “forced transactions”, there is no simple deterministic inclusion after some maximum delay, but rather different inclusion probabilities after different time horizons. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "DAO",
+      "notes": "Upgrades are governed by an on-chain DAO where AZTEC token holders vote on payloads after sequencer signaling. Block producers signal support during assigned slots — once quorum is reached anyone can submit a proposal, token holders vote with snapshotted voting power, and after an execution delay anyone can trigger execution. The Rollup, its verifier, and canonical messaging contracts are immutable, but Governance owns critical configuration permissions and can designate a new Rollup address as canonical. Standard delay from proposal to execution is roughly one month and ten days.",
+      "citations": [
+        {
+          "cited_text": "How Governance Works ​ \n\nGovernance follows a multi-stage process:\n\nSignaling : Block producers on the canonical rollup signal support for a payload by calling signal() on the Governance Proposer during their assigned slots\n\nQuorum : When enough signals are received within a round (e.g., 151 out of 300 slots), the payload qualifies for proposal\n\nProposal Creation : Anyone can call submitRoundWinner() to formally submit the payload as a proposal to Governance\n\nVoting : Token holders vote on the proposal using their voting power (determined at the moment voting opens)\n\nExecution : After the voting period and execution delay, anyone can trigger execution of approved proposals\n\nAll signaling and voting happen on L1 (Ethereum).\n\n",
+          "source": "https://docs.aztec.network/participate/governance"
+        },
+        {
+          "cited_text": "Rollup Immutability\n\nThe smart contract code of Rollup , its verifier and its canonical messaging contracts cannot be changed. However, Governance owns critical permissions for configuration parameters that can freeze the L2 indefinitely. ‘Upgrading’ a Rollup contract involves a Governance action that designates a new Rollup contract address as canonical. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "Total standard delay from proposal to execution: 1mo 10d .\n\n",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Proof generation for private functions runs entirely on the user's device. The PXE generates proofs of private function execution, and sends these proofs along with public function execution requests to the sequencer, and private inputs never leave the client-side PXE. The PXE is a TypeScript library that can be run within Node.js, inside wallet software or a browser. During a transfer, the PXE produces zero-knowledge proofs of correct execution of the authorization and the private transfer method, then sends the proofs and required inputs such as new note commitments and nullifiers to the sequencer.",
+      "citations": [
+        {
+          "cited_text": "The PXE generates proofs of private function execution, and sends these proofs along with public function execution requests to the sequencer. Private inputs never leave the client-side PXE.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/pxe"
+        },
+        {
+          "cited_text": "It is a TypeScript library that can be run within Node.js, inside wallet software or a browser.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/pxe"
+        },
+        {
+          "cited_text": "The PXE proves correct execution – The PXE proves correct execution (via zero-knowledge proofs) of the authorization and of the private transfer method. Once the proofs have been generated, the PXE sends the proofs and required inputs (new note commitments and nullifiers) to the sequencer.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/transactions"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "Private execution and proof generation happen client-side in the PXE, so plaintext inputs never reach the sequencer or prover network: private inputs never leave the client-side PXE. Third-party node operators can still observe user-interest patterns — when the PXE queries the node for world state, the node learns which data the user is interested in, a known tradeoff users can mitigate by running their own node. Revealing a note's leaf index to a third party trivially reveals exactly the notes the user is about to read, and since those notes were created in a prior transaction the third party can link further activity over time.",
+      "citations": [
+        {
+          "cited_text": "The PXE generates proofs of private function execution, and sends these proofs along with public function execution requests to the sequencer. Private inputs never leave the client-side PXE.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/pxe"
+        },
+        {
+          "cited_text": "System architecture ​ \n\nPrivacy consideration\n\nWhen the PXE queries the node for world state (e.g., to check if a nullifier exists), the node learns which data the user is interested in. This is a known tradeoff—users can mitigate this by running their own node.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/pxe"
+        },
+        {
+          "cited_text": "Revealing the leaf's index to a third party trivially reveals exactly the note(s) you're about to read. And since those notes were created in some prior transaction, the third party will be able to link you with that prior transaction. Suppose then that the third party also serviced the creator of said prior transaction: they will slowly be able to link more and more transactions, and gain more and more insight into a network which is meant to be private.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "The Aztec Ignition Chain went live in November 2025 as the first decentralized L2 on Ethereum, serving as the coordination layer that the execution layer sits on top of. The user-facing Alpha network runs at 1TPS with ~6s block times. Alpha is live but early — bugs, including critical ones, are expected — and new releases of the alpha network are expected regularly to address any security vulnerabilities. Mainnet tenure as of the evaluation date is well under one year.",
+      "citations": [
+        {
+          "cited_text": "In November 2025, the Aztec Ignition Chain went live as the first decentralized L2 on Ethereum, it’s the coordination layer that the execution layer sits on top of. ",
+          "source": "https://aztec.network/blog/announcing-the-alpha-network"
+        },
+        {
+          "cited_text": "Alpha is live but early — bugs, including critical ones, are expected. ",
+          "source": "https://docs.aztec.network/networks"
+        },
+        {
+          "cited_text": "Alpha \n\nEnable transactions at 1TPS, ~6s block times and improve the security of the network via continual ongoing audits and bug bounty. New releases of the alpha network are expected regularly to address any security vulnerabilities. ",
+          "source": "https://aztec.network/blog/announcing-the-alpha-network"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Aztec's proving stack relies on classical elliptic-curve cryptography that is broken by Shor's algorithm. State validation uses SNARKs — succinct zero-knowledge proofs requiring a trusted setup — and verification on L1 is performed by a HonkVerifier contract running the Plonk UltraHonk scheme from Barretenberg. The PLONK family relies on pairing-based elliptic-curve assumptions that do not survive a cryptographically relevant quantum adversary. A squisher circuit compresses a Honk proof into a Standard Plonk or Fflonk proof for cheap Ethereum verification — also classical, pairing-based constructions with no lattice or hash-based fallback.",
+      "citations": [
+        {
+          "cited_text": "State validation\n\nValidity proofs (SN)\n\nSNARKs are succinct zero knowledge proofs that ensure state correctness, but require trusted setup .\n\n",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "Slashing - Aztec Docs \n\nSlashVeto Council - Github \n\nslashveto.me - Monitor Slashing \n\nPROVER\n\nBarretenberg \n\nTrusted Setups\n\nPlonk: UltraHonk\n\nOnchain verifier\n\nHonkVerifier \n\nby \n\nUsed in\n\nPlonk: UltraHonk\n\nOnchain verifier\n\nHonkVerifier \n\nby \n\nUsed in\n\n9\nUpgrades & Governance \nA diagram of the upgrades and governance \n\nStandard Path (Signaling)\n\nBecause sequencers stake AZTEC tokens to secure the L2 network , they are also the primary governors of the system. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "But we'll need some extra circuit(s) to squish a Honk proof (as produced by the Root Rollup Circuit) into a Standard Plonk or Fflonk proof, for cheap verification on Ethereum.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/circuits"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "No compliance enforcement exists at any layer of the Aztec protocol. The protocol documentation focuses on tools for developers to build private smart contracts, including encrypted persistent state readable only by holders of the decryption key, with no blocklist, allowlist, or screening gate at the chain or application layer. Any compliance behavior would need to be implemented by individual contract developers at the asset or app layer, as the base protocol is presented as a permissionless system that enables interaction with the public world through public L2 functions and L1 functions without restriction filters.",
+      "citations": [
+        {
+          "cited_text": "​ \n\nAztec provides a set of tools to enable developers to build private smart contracts. The following can be kept private:\n\nPrivate persistent state \n\nStore state variables in an encrypted form, so that no one can see what those variables are, except those with the decryption key.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        },
+        {
+          "cited_text": "Since Aztec also enables interaction with the public world (public L2 functions and L1 functions), private information can be accidentally leaked if developers aren't careful.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "No entity enforces compliance restrictions at the Aztec protocol level. The protocol's design centers on private smart contracts where state variables are stored in encrypted form so that no one can see them except those with the decryption key, and private functions execute without the world knowing which function was executed — leaving no chokepoint where an admin, governance body, third party, or asset issuer screens transfers. Governance contracts on L1 control protocol upgrades and parameters rather than user-level transfer enforcement, and no blocklist, allowlist, or screening mechanism is part of the protocol.",
+      "citations": [
+        {
+          "cited_text": "The following can be kept private:\n\nPrivate persistent state \n\nStore state variables in an encrypted form, so that no one can see what those variables are, except those with the decryption key.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        },
+        {
+          "cited_text": "Private function execution \n\nExecute a private function without the world knowing which function you've executed.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": "[\"Selective disclosure\"]",
+      "notes": "No protocol-level compliance gating exists on Aztec — no blocklist or allowlist membership checks, no KYC/KYB gate, and no oracle-delivered policy attestations are part of transaction validation. The available privacy-preserving primitive that could support voluntary compliance is selective disclosure: incoming viewing keys let a recipient share access to received notes, where the sender encrypts to the recipient's public viewing key and the holder of the secret viewing key can decrypt. Sharing viewing access without compromising spending ability is explicitly framed as selective disclosure, but this is a user-side action rather than an enforced gate.",
+      "citations": [
+        {
+          "cited_text": "Incoming Viewing Keys ​ \n\nPurpose : Receiving and decrypting private notes\n\nIncoming viewing keys enable private information to be shared with recipients. The sender uses the recipient's public viewing key ( Ivpk ) to encrypt notes, and the recipient uses their secret viewing key ( ivsk ) to decrypt them.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        },
+        {
+          "cited_text": "​ \n\nThe separation of keys in Aztec serves critical purposes:\n\nPrivacy isolation : Different keys for different operations prevent correlation attacks\n\nSelective disclosure : Share viewing access without compromising spending ability\n\nDamage limitation : If one key is compromised, others remain secure\n\nFlexible authorization : Choose any authentication method without affecting core protocol keys\n\nPer-application security : Keys can be scoped to specific contracts to minimize exposure\n\nThis multi-key architecture is what enables Aztec to provide strong privacy guarantees while maintaining flexibility and security.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": "[\"None\"]",
+      "notes": "No protocol-level compliance gate is enforced at any stage of the private transfer lifecycle on Aztec. The privacy documentation covers leakage vectors across the private/public boundary, transaction timing, function fingerprints, and data queries, with no mention of screening, allowlists, blocklists, or sanctions checks applied at deposit, transfer, or withdrawal paths. The toolkit lets developers build private smart contracts where state variables can be stored in encrypted form readable only by holders of the decryption key, and interaction with public L2 and L1 functions is left to developer discretion, with no compliance hook bound to bridging or transfer flows.",
+      "citations": [
+        {
+          "cited_text": "​ \n\nAztec provides a set of tools to enable developers to build private smart contracts. The following can be kept private:\n\nPrivate persistent state \n\nStore state variables in an encrypted form, so that no one can see what those variables are, except those with the decryption key.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        },
+        {
+          "cited_text": "Since Aztec also enables interaction with the public world (public L2 functions and L1 functions), private information can be accidentally leaked if developers aren't careful.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": "[\"User\",\"Voluntary third-party disclosure\"]",
+      "notes": "Aztec accounts include an incoming viewing key pair where the recipient uses their secret viewing key (ivsk) to decrypt notes encrypted to their public viewing key (Ivpk), giving the holder self-view over their own received notes. Because viewing capability is held as a secret scalar separate from the spending key, an owner can hand that secret to an auditor or accountant to grant read access without conferring spend authority — the keys doc frames this as 'selective disclosure: share viewing access without compromising spending ability.' No admin, regulator, or governance role with mandatory read access into user notes exists in the key architecture.",
+      "citations": [
+        {
+          "cited_text": "Incoming Viewing Keys ​ \n\nPurpose : Receiving and decrypting private notes\n\nIncoming viewing keys enable private information to be shared with recipients. The sender uses the recipient's public viewing key ( Ivpk ) to encrypt notes, and the recipient uses their secret viewing key ( ivsk ) to decrypt them.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        },
+        {
+          "cited_text": "​ \n\nThe separation of keys in Aztec serves critical purposes:\n\nPrivacy isolation : Different keys for different operations prevent correlation attacks\n\nSelective disclosure : Share viewing access without compromising spending ability\n\nDamage limitation : If one key is compromised, others remain secure\n\nFlexible authorization : Choose any authentication method without affecting core protocol keys\n\nPer-application security : Keys can be scoped to specific contracts to minimize exposure\n\nThis multi-key architecture is what enables Aztec to provide strong privacy guarantees while maintaining flexibility and security.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        },
+        {
+          "cited_text": "The PXE handles:\n\nInitial key pair generation\n\nApp-siloed key derivation\n\nSecure key storage and oracle access\n\nKey material never leaves the client\n\nAll keys use elliptic curve cryptography on the Grumpkin curve:\n\nSecret keys are scalars\n\nPublic keys are elliptic curve points (secret × generator point)\n\nSigning keys are application-defined and managed by your account contract logic.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "Viewing access on Aztec is fixed at account creation: incoming viewing keys are protocol-managed and not rotatable, and they enable recipients to decrypt notes sent to them — the sender encrypts with the recipient's public viewing key and the recipient decrypts with their secret viewing key. Because protocol keys cannot be rotated, are embedded in the immutable address, and require deploying a new account if compromised, sharing the secret viewing key with a third party hands over decryption rights to all past and future notes with no revocation path. There is no granular grant/revoke mechanism for retroactive auditor access or scoped time-bounded disclosure.",
+      "citations": [
+        {
+          "cited_text": "Key Types ​ \n\nEach Aztec account uses multiple key pairs:\n\nKey Type Purpose Protocol Managed Rotatable \nNullifier Keys Spending notes (destroying private state) Yes No\nIncoming Viewing Keys Decrypting received notes Yes No\nSigning Keys Transaction authorization No (app-defined) Yes \n\nProtocol keys (nullifier and incoming viewing) are embedded into the protocol and cannot be changed once an account is created. ",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        },
+        {
+          "cited_text": "Incoming Viewing Keys ​ \n\nPurpose : Receiving and decrypting private notes\n\nIncoming viewing keys enable private information to be shared with recipients. The sender uses the recipient's public viewing key ( Ivpk ) to encrypt notes, and the recipient uses their secret viewing key ( ivsk ) to decrypt them.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        },
+        {
+          "cited_text": "This provides crucial security isolation:\n\nHow it works: \n\nnhk_app = hash(nhk_m, app_contract_address) \n\nSecurity benefits: \n\nDamage containment : If a nullifier key for one app leaks, other apps remain secure\n\nPrivacy preservation : Activity in different apps cannot be correlated via nullifier keys\n\nKey Rotation ​ \n\nProtocol keys (nullifier, incoming viewing): Cannot be rotated. They are embedded in the address, which is immutable. If compromised, a new account must be deployed.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/accounts/keys"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes, with L1 consensus",
+      "notes": "Aztec enforces state-transition correctness through recursive SNARKs. The rollup circuits compress thousands of transactions into a single SNARK proof for verification on Ethereum, aggregating proofs from private kernel and AVM execution and producing the final epoch proof submitted to L1. Each epoch root proof is verified by the HonkVerifier smart contract on Ethereum before the proven checkpoint number is advanced. Each update to the system state must be accompanied by a ZK proof that ensures the new state was derived by correctly applying valid user transactions to the previous state.",
+      "citations": [
+        {
+          "cited_text": "Rollup Circuits | Privacy-first zkRollup | Aztec Documentation \n\nOn this page \n\nRollup Circuits\n\nThe rollup circuits compress thousands of transactions into a single SNARK proof for verification on Ethereum. They aggregate proofs from private kernel and AVM execution, validate state transitions, and produce the final epoch proof submitted to L1.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/circuits/rollup_circuits"
+        },
+        {
+          "cited_text": "Rollup.sol - propose() on Etherscan \n\nRollup.sol - validateBlobs() on Etherscan \n\nLearn more about the DA layer here: Ethereum \n\n8\nState validation \nA diagram of the state validation \n\nEach epoch root proof is verified by the HonkVerifier smart contract on Ethereum before the proven checkpoint number is advanced and the epoch outbox state root is inserted into the Outbox. ",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "cited_text": "Rollup.sol - submitEpochRootProof() on Etherscan \n\nValidity proofs \n\nEach update to the system state must be accompanied by a ZK proof that ensures that the new state was derived by correctly applying a series of valid user transactions to the previous state. These proofs are then verified on Ethereum by a smart contract.\n\n",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The Aztec monorepo houses all protocol components — the Barretenberg ZK prover backend (which also houses the Aztec VM), Solidity L1 rollup contracts, Noir code for Aztec contracts and protocol circuits, and TypeScript client and backend code — under a single repository. The codebase is released under the Apache License, Version 2.0, an OSI-approved open source licence covering the prover, contracts, circuits, and SDK together.",
+      "citations": [
+        {
+          "cited_text": "- [**`barretenberg`**](/barretenberg): The ZK prover backend that provides succinct verifiability for Aztec. Also houses the Aztec VM.\n- [**`l1-contracts`**](/l1-contracts): Solidity code for the Ethereum contracts that process rollups\n- [**`noir-projects`**](/noir-projects): Noir code for Aztec contracts and protocol circuits.\n- [**`yarn-project`**](/yarn-project): Typescript code for client and backend\n- [**`docs`**](/docs): Documentation source for the docs site\n\n## Popular packages\n\n- [Aztec.nr](./noir-projects/aztec-nr/): A [Noir](https://noir-lang.org) framework for smart contracts on Aztec.\n",
+          "source": "https://github.com/AztecProtocol/aztec-packages"
+        },
+        {
+          "cited_text": "Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. ",
+          "source": "https://github.com/AztecProtocol/aztec-packages/blob/master/LICENSE"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Infinity grow",
+      "notes": "Aztec's private state lives in two append-only Merkle trees — a note hash tree storing commitments and a nullifier tree for spent notes — both accumulating leaves monotonically with usage. Private state uses an append-only data structure since updating records directly would leak information about the transaction graph, and modifying state means nullifying the existing record and creating a new one. Every transfer therefore adds at least one note commitment plus one nullifier, with no pruning path.",
+      "citations": [
+        {
+          "cited_text": "Private State ​ \n\nPrivate state is encrypted and owned by users who hold the decryption keys. It uses an append-only data structure since updating records directly would leak information about the transaction graph.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "To \"delete\" private state, you add an associated nullifier to a nullifier set. The nullifier is computed such that observers cannot link a state record to its nullifier without the owner's keys.\n\nModifying state is accomplished by nullifying the existing record and creating a new one. ",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Since updating state directly leaks information, we simulate updates by \"destroying\" old UTXOs and creating new ones, resulting in an append-only merkle tree.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/storage/indexed_merkle_tree"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Partial scanning",
+      "notes": "The PXE performs targeted tag-based lookups rather than scanning every log. The contract calls the fetchTaggedLogs oracle, and the PXE computes tags for every (sender, recipient) pair it knows about, queries the node for matching logs, and returns them. Discovery is bounded by a sliding window — the highest aged index is the highest tag index seen in a block at least 24 hours old — with scanning extending from there to a short range beyond the finalized index. Coverage is limited to registered counterparties: to discover notes from a particular sender, the recipient's PXE must know the sender's address in advance so it can compute the shared tagging secret.",
+      "citations": [
+        {
+          "cited_text": "The process works as follows:\n\nFetch tagged logs : The contract calls the fetchTaggedLogs oracle. The PXE computes tags for every (sender, recipient) pair it knows about, queries the node for matching logs, and returns them to the contract.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/storage/note_discovery"
+        },
+        {
+          "cited_text": "The sliding window algorithm ​ \n\nThe PXE doesn't scan all possible tag indexes — it uses a window-based approach to efficiently find new logs:\n\nIt tracks the highest aged index : the highest tag index seen in a block at least 24 hours old ( MAX_TX_LIFETIME ). Once a block is this old, no new transactions can reference it as an anchor, so no new logs can appear at or below that index.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/storage/note_discovery"
+        },
+        {
+          "cited_text": "It scans from the aged index to 20 indexes beyond the finalized index, covering both recent and in-flight logs.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/storage/note_discovery"
+        },
+        {
+          "cited_text": "Registering known senders ​ \n\nTo discover notes from a particular sender, the recipient's PXE must know the sender's address in advance so it can compute the shared tagging secret. ",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/storage/note_discovery"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Aztec's private state follows a UTXO model: private state uses UTXOs, commonly called notes, which are encrypted pieces of data that only their owner can decrypt. Commitments live in an append-only Merkle structure and users prove they know the note preimage when updating private state. Spending consumes a record by publishing a nullifier — to \"delete\" private state, an associated nullifier is added to a nullifier set, computed such that observers cannot link a state record to its nullifier without the owner's keys. Public state, by contrast, is account-style and managed by smart-contract logic under the sequencer.",
+      "citations": [
+        {
+          "cited_text": "Notes ​ \n\nPrivate state uses UTXOs, commonly called notes . Notes are encrypted pieces of data that only their owner can decrypt.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Rather than storing entire notes, the protocol stores note commitments (hashes) in a Merkle tree called the note hash tree. Users prove they know the note preimage when updating private state.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "To \"delete\" private state, you add an associated nullifier to a nullifier set. The nullifier is computed such that observers cannot link a state record to its nullifier without the owner's keys.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": "[\"Smart contracts\",\"Off-chain storage with on-chain commitment\"]",
+      "notes": "Aztec's private state is anchored on-chain in the rollup. Note commitments (hashes) are stored in a Merkle tree called the note hash tree. Encrypted note bodies follow a hybrid delivery model — the standard onchain path emits an encrypted log as part of the transaction so recipients can find notes through note discovery, while an offchain path lets the sender share note data directly with a known recipient, who stores it in their PXE to spend later. Both routes resolve to the same on-chain commitment in the note hash tree as the authoritative anchor.",
+      "citations": [
+        {
+          "cited_text": "Rather than storing entire notes, the protocol stores note commitments (hashes) in a Merkle tree called the note hash tree. ",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "To \"delete\" private state, you add an associated nullifier to a nullifier set. The nullifier is computed such that observers cannot link a state record to its nullifier without the owner's keys.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Sending Notes ​ \n\nWhen creating notes for a recipient, you need a way to deliver them:\n\nOnchain (encrypted logs): The standard method. Emit an encrypted log as part of your transaction. The encrypted note data is posted onchain, allowing recipients to find notes through note discovery .\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        },
+        {
+          "cited_text": "Offchain: If you know the recipient directly, share the note data with them. They store it in their PXE and can spend it later.\n\n",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/state_management"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Access to internal DeFi ecosystem",
+      "notes": "Aztec contracts support both private and public state, with private functions able to enqueue public function calls within the same rollup. Private functions executed by a transaction can enqueue public functions to be executed later in the transaction life cycle, but public functions cannot call private functions, allowing private contracts to compose with other Aztec contracts as an internal DeFi ecosystem. Private functions from other contracts can also be called regularly or statically. External composability with Ethereum DeFi is not synchronous — there is no direct cross-call from an Aztec contract to an L1 DeFi contract, only asynchronous bridging.",
+      "citations": [
+        {
+          "cited_text": "It supports smart contracts with both private & public state and private & public execution.\n\n",
+          "source": "https://docs.aztec.network/developers/overview"
+        },
+        {
+          "cited_text": "This means that private functions executed by a transaction can enqueue public functions to be executed later in the transaction life cycle, but public functions cannot call private functions.\n\n",
+          "source": "https://docs.aztec.network/developers/overview"
+        },
+        {
+          "cited_text": "Private Calls ​ \n\nPrivate functions from other contracts can be called either regularly or statically by using self.call() and self.view() . ",
+          "source": "https://docs.aztec.network/developers/docs/foundational-topics/call_types"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Full programmability with public and private state",
+      "notes": "Aztec supports smart contracts with both private and public state and private and public execution, making it a general-purpose programmable environment rather than a payments-only system. Contracts are written in Noir, a zero-knowledge domain-specific language used for writing smart contracts for the Aztec network. A single transaction can flow from private client-side execution into public functions — private functions executed by a transaction can enqueue public functions to be executed later in the transaction life cycle, but public functions cannot call private functions.",
+      "citations": [
+        {
+          "cited_text": "It supports smart contracts with both private & public state and private & public execution.\n\n",
+          "source": "https://docs.aztec.network/developers/overview"
+        },
+        {
+          "cited_text": "Noir ​ \n\nNoir is a zero-knowledge domain specific language used for writing smart contracts for the Aztec network. ",
+          "source": "https://docs.aztec.network/developers/overview"
+        },
+        {
+          "cited_text": "This means that private functions executed by a transaction can enqueue public functions to be executed later in the transaction life cycle, but public functions cannot call private functions.\n\n",
+          "source": "https://docs.aztec.network/developers/overview"
+        }
+      ]
+    }
+  ]
 }

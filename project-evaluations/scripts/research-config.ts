@@ -147,4 +147,32 @@ export const configs: Record<string, ProtocolConfig> = {
     context:
       "Mirage's privacy model is NOT a shielded pool, mixer, or ZK rollup. It avoids pooled funds entirely. Each private transfer deploys a transaction-specific escrow contract; Azoth obfuscates the bytecode so the contract is indistinguishable from any other unverified deployment. A decentralised Nomad network settles transfers against the escrow using time-bonded execution. As of April 2026 the protocol is in closed alpha, with a public test environment in preparation — do not report it as mainnet-live. SGX is used by Nomad operators for node-side key handling.",
   },
+  aztec: {
+    id: "aztec",
+    title: "Aztec",
+    description:
+      "Aztec is a privacy-first zkRollup Layer 2 on Ethereum where smart contracts can have both private and public state and functions. Private functions execute locally in the user's Private Execution Environment (PXE) and generate client-side zero-knowledge proofs. Public functions execute on the sequencer like an EVM L2. Private state is held as encrypted note commitments with nullifiers. Public state is an account-based store. Contracts are written in Noir.",
+    status: "pending",
+    documentation: "https://docs.aztec.network/",
+    categories: ["Private L2", "Zero Knowledge Proofs (ZKPs)", "Shielded Pool"],
+    sourceUrls: [
+      "https://docs.aztec.network/",
+      "https://docs.aztec.network/aztec",
+      "https://docs.aztec.network/aztec/concepts/advanced/storage/private_state",
+      "https://docs.aztec.network/aztec/concepts/advanced/storage/public_state",
+      "https://docs.aztec.network/aztec/concepts/pxe",
+      "https://docs.aztec.network/aztec/concepts/transactions",
+      "https://docs.aztec.network/aztec/concepts/wallets/keys",
+      "https://docs.aztec.network/aztec/concepts/network/nodes_clients",
+      "https://docs.aztec.network/aztec/concepts/network/sequencers",
+      "https://docs.aztec.network/aztec/concepts/network/provers",
+      "https://docs.aztec.network/aztec/concepts/network/governance",
+      "https://docs.aztec.network/protocol-specs",
+      "https://noir-lang.org/docs",
+      "https://aztec.network/",
+      "https://github.com/AztecProtocol/aztec-packages",
+    ],
+    context:
+      "CRITICAL: 'Aztec' here means the Aztec Network zkRollup L2 — Alpha mainnet on Ethereum went live in early 2026 atop the Aztec Ignition Chain which launched in November 2025 — NOT the deprecated 'Aztec Connect' shielded-pool product (shut down in 2024). Do not cite Aztec Connect docs, contracts, or design as if they describe the current protocol. Aztec smart contracts are written in Noir; private execution happens client-side in the PXE (Private Execution Environment) and produces a ZK proof that is verified by the sequencer/prover network. Private state uses note commitments + nullifiers; public state uses an account-based store; both live in the same rollup. Alpha is presented as the operational mainnet in its initial phase — early, with known critical bugs — so treat maturity / live-deployment claims accordingly and prefer dated docs / blog posts as evidence.",
+  },
 };

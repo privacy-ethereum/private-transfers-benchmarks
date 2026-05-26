@@ -43,6 +43,8 @@ Distinguishing Single admin / Multi-sig / DAO requires on-chain evidence of the 
 
 If the admin address cannot be verified on-chain (no canonical deployment yet, source not public, multi-chain ambiguity with different admins per chain), set `needsResearchReview` to a reason string naming what's missing (e.g. `"on-chain admin slot not classified — EOA vs multisig wrapper unverified on canonical mainnet deployment"`). Do NOT default to Single admin (or any other composition) without verification — the flag is the honest answer.
 
+L2BEAT carveout. For L2/L3 protocols where L2BEAT's project page documents the upgrade authority (Registry ownership, Governance contract, GovernanceProposer, security council composition) — L2BEAT bases these on its own on-chain inspection and audit — citing the L2BEAT page is an acceptable substitute for direct block-explorer admin-slot inspection by the evaluator. The Single admin / Multi-sig / DAO classification can rest on L2BEAT's writeup alone, provided L2BEAT itself is unambiguous and does not contradict the protocol's own docs. Flag only when L2BEAT is silent on the upgrade authority, contradicts the docs, or rates the project as not-yet-tracked.
+
 ## Third-party inspectability
 
 Use the protocol's own docs or contract source as the primary citation. Forum threads (ethresear.ch, ethresearch, twitter) are acceptable only for forward-looking design discussions, not current-state facts. If a forum post is the only source for a current-state claim, treat the claim as unverified and set `needsResearchReview` to a reason string naming the unverified claim.
