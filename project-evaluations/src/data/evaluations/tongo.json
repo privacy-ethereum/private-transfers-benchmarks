@@ -178,7 +178,7 @@
     {
       "name": "Private Data Storage",
       "value": ["Smart contracts"],
-      "notes": "All private state—including encrypted account balances (current and pending) and auditor configuration—is stored directly in the Tongo smart contract on Starknet.",
+      "notes": "All private state, including encrypted account balances (current and pending) and auditor configuration is stored directly in the Tongo smart contract on Starknet.",
       "url": "https://docs.tongo.cash/protocol/storage.html"
     },
     {

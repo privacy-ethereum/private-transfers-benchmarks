@@ -1,4 +1,4 @@
-import { Evaluation } from "../src/types";
+import { type Evaluation } from "../src/types";
 
 export type ProtocolConfig = Omit<Evaluation, "properties"> & {
   /** Extra context injected into every research and evaluation prompt. Use this to
@@ -15,7 +15,7 @@ export const configs: Record<string, ProtocolConfig> = {
       " where sender, receiver, and amount are all encrypted on its own proof-of-work blockchain.",
     status: "complete",
     documentation: "https://zcash.readthedocs.io/en/latest/",
-    categories: ["Alternative L1"],
+    categories: ["Private L1"],
     sourceUrls: [
       "https://maxdesalle.com/mastering-zcash",
       "https://seanbowe.com/blog/tachyaction-at-a-distance/",
@@ -128,7 +128,7 @@ export const configs: Record<string, ProtocolConfig> = {
       "Mirage is a privacy layer for stablecoin transfers on Ethereum L1 that makes private transactions indistinguishable from ordinary onchain activity. It avoids shared pools by using per-transaction escrow contracts whose EVM bytecode is obfuscated by Azoth, an open-source Rust obfuscator that produces many deterministic variants of the same contract logic. Execution is carried out by a decentralised set of Nomad operator nodes that post bonds into the escrow and earn rewards for settling transfers. The protocol is currently in closed alpha with a public test environment in preparation.",
     status: "pending",
     documentation: "https://docs.mirageprivacy.com/",
-    categories: ["EVM Obfuscators"],
+    categories: ["Bytecode Obfuscator"],
     sourceUrls: [
       "https://docs.mirageprivacy.com/understanding-mirage/introduction",
       "https://docs.mirageprivacy.com/understanding-mirage/how-mirage-compares",

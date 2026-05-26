@@ -31,7 +31,7 @@
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "ZCash supports full anonymity for both sender and receiver when using shielded addresses. A transaction between two shielded addresses keeps the addresses, transaction amount and the memo field shielded from the public, and shielded addresses use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. Recipients of a shielded or deshielding transaction do not learn the sender's address through the transaction receipt in their wallet, so sender privacy holds even against the receiver. Transparent addresses with public visibility also exist, but the fully shielded path is available for both parties.",
+      "notes": "Zcash supports full anonymity for both sender and receiver when using shielded addresses. A transaction between two shielded addresses keeps the addresses, transaction amount and the memo field shielded from the public, and shielded addresses use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. Recipients of a shielded or deshielding transaction do not learn the sender's address through the transaction receipt in their wallet, so sender privacy holds even against the receiver. Transparent addresses with public visibility also exist, but the fully shielded path is available for both parties.",
       "citations": [
         {
           "cited_text": "¶ \n\nA transaction between two shielded addresses (a shielded transaction) keeps the addresses, transaction amount and the memo field shielded from the public (with the exception of migrating funds between Sprout and Sapling shielded addresses).\n\n",
@@ -191,10 +191,6 @@
           "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/nu_dev_guide.html"
         },
         {
-          "cited_text": "ZIP 143 Transaction Signature Verification for Overwinter \n\nZIP 200 Network Upgrade Mechanism \n\nZIP 201 Network Peer Management for Overwinter \n\nZIP 202 Version 3 Transaction Format for Overwinter \n\nZIP 203 Transaction Expiry \n\nThe network upgrade is coordinated via an on-chain activation mechanism.\n\n",
-          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/nu_dev_guide.html"
-        },
-        {
           "cited_text": "Zcashd v1.1.0 (and future releases) running protocol version 170005 will\nactivate Overwinter at block 347500 at which point only v3 transactions\nare processed. Older versions of Zcashd <= 1.0.14, running protocol\nversions <= 170004, will partition themselves away from the main network\ninto a legacy chain.\n\n",
           "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/nu_dev_guide.html"
         }
@@ -283,7 +279,7 @@
     {
       "name": "Layer of enforcement",
       "value": "None",
-      "notes": "Zcash does not enforce compliance at any layer of the protocol. The protocol operates as a permissionless cryptocurrency with two interoperable address types—shielded z-addresses and transparent t-addresses—that users can freely choose between without restriction. While viewing keys exist to allow z-address owners to share transaction details with third parties for auditing, tax regulations, or anti-money laundering compliance, these are optional disclosure tools under user control, not enforcement mechanisms. The consensus rules validate cryptographic correctness of transactions but do not filter or restrict based on compliance criteria.",
+      "notes": "Zcash does not enforce compliance at any layer of the protocol. The protocol operates as a permissionless cryptocurrency with two interoperable address types — shielded z-addresses and transparent t-addresses—that users can freely choose between without restriction. While viewing keys exist to allow z-address owners to share transaction details with third parties for auditing, tax regulations, or anti-money laundering compliance, these are optional disclosure tools under user control, not enforcement mechanisms. The consensus rules validate cryptographic correctness of transactions but do not filter or restrict based on compliance criteria.",
       "citations": [
         {
           "cited_text": "Primary features:\n\nAddresses : Zcash has two types of addresses: private (z-addresses) and transparent (t-addresses). Z-addresses start with a “z,” and t-addresses start with a “t.” The two Zcash address types are interoperable. Funds can be transferred between z-addresses and t-addresses. ",
@@ -298,13 +294,18 @@
     {
       "name": "Enforcement entities",
       "value": "None",
-      "notes": "Zcash operates as a permissionless, decentralized blockchain with no entity enforcing compliance restrictions at the protocol level. The network uses proof-of-work consensus where miners validate transactions according to protocol rules, but cannot selectively restrict or filter transactions based on compliance criteria. No centralized party, DAO, or governance body has the ability to enforce transaction-level compliance — any valid transaction can be included by any miner regardless of sender, recipient, or amount.",
-      "needsResearchReview": "No-enforcement claim requires citation"
+      "notes": "No entity enforces transaction-level compliance restrictions on Zcash. Disclosure mechanisms are user-controlled rather than entity-enforced: the owner of a shielded address may selectively disclose shielded transaction data by sharing a viewing key or payment disclosure with any third party, which is voluntary and does not constitute compliance enforcement.",
+      "citations": [
+        {
+          "cited_text": "Selective disclosure \nSelective disclosure refers to the features of shielded addresses where the owner may selectively disclose shielded transaction data. A user may share a viewing key or payment disclosure with any third party, allowing them to access shielded data while maintaining privacy from others.\n\n",
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html"
+        }
+      ]
     },
     {
       "name": "Type of compliance",
       "value": ["Selective disclosure"],
-      "notes": "ZCash supports selective disclosure as its primary compliance mechanism. The owner of a z-address can share transaction details with trusted third parties via a viewing key, which grants read access but not spend authority, enabling selective disclosure where transactions are auditable but disclosure is under the participant's control, allowing compliance with payment auditing, tax regulations, or anti-money laundering rules. The protocol does not enforce KYC/KYB, KYT, or programmatic policies at the consensus level—these remain optional tools available to users and service providers who choose to implement them.",
+      "notes": "Zcash supports selective disclosure as its primary compliance mechanism. The owner of a z-address can share transaction details with trusted third parties via a viewing key, which grants read access but not spend authority, enabling selective disclosure where transactions are auditable but disclosure is under the participant's control, allowing compliance with payment auditing, tax regulations, or anti-money laundering rules. The protocol does not enforce KYC/KYB, KYT, or programmatic policies at the consensus level—these remain optional tools available to users and service providers who choose to implement them.",
       "citations": [
         {
           "cited_text": "Viewing keys : The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for “selective disclosure”, where transactions are auditable but disclosure is under the participant’s control. This allows compliance with payment for auditing, tax regulations, or anti-money laundering rules.\n\n",
@@ -348,34 +349,29 @@
     {
       "name": "Cryptographic verifiability",
       "value": "Yes, with L1 consensus",
-      "notes": "Zcash is an L1 blockchain whose individual transaction correctness is enforced by zk-SNARK verification (Halo2 / Orchard, Groth16 for legacy Sapling), while block ordering and inclusion are decided by majority-based PoW consensus. Shielded transactions are fully encrypted on-chain yet still verifiable as valid under the network's consensus rules. Per the rule, L1 protocols with cryptographic transaction correctness plus consensus-based ordering take \"Yes, with L1 consensus\".",
-      "needsResearchReview": "Proving system requires citation",
+      "notes": "Zcash is an L1 blockchain whose individual transaction correctness is enforced by zk-SNARK verification (Halo2 / Orchard, Groth16 for legacy Sapling), while block ordering and inclusion are decided by majority-based PoW consensus. Shielded transactions are fully encrypted on-chain yet still verifiable as valid under the network's consensus rules.",
       "citations": [
-        {
-          "cited_text": "The acronym zk-SNARK stands for Zero-Knowledge Succinct Non-Interactive Argument of Knowledge and refers to a proof construction where one can prove possession of certain information, e.g., a secret key, without revealing that information, and without any interaction between the prover and verifier.\n\n",
-          "source": "https://z.cash/learn/what-are-zk-snarks/"
-        },
         {
           "cited_text": "The strong privacy guarantee of Zcash is derived from the fact that shielded transactions in Zcash can be fully encrypted on the blockchain, yet still be verified as valid under the network’s consensus rules by using zk-SNARK proofs.\n\n",
           "source": "https://z.cash/learn/what-are-zk-snarks/"
         },
         {
-          "cited_text": "“Succinct” zero-knowledge proofs can be verified within a few milliseconds, with a proof length of only a few hundred bytes even for statements about programs that are very large. In the first zero-knowledge protocols, the prover and verifier had to communicate back and forth for multiple rounds, but in “non-interactive” constructions, the proof consists of a single message sent from prover to verifier. ",
-          "source": "https://z.cash/learn/what-are-zk-snarks/"
+          "cited_text": "Zcash uses a proof-of-work mining algorithm called Equihash .\n\n",
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html"
+        },
+        {
+          "cited_text": "Roughly every 2.5 minutes, on average, a new block is appended to the blockchain through mining and the transactions included receive their first confirmation .\n\n",
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/glossary.html"
         }
       ]
     },
     {
       "name": "Open source",
       "value": "Yes",
-      "notes": "Yes, Zcash is open source. The Zcash codebase is distributed under the MIT software license, which is a permissive open source license that allows free use, modification, and distribution of the code. The source code is publicly available on GitHub. Dependencies downloaded as part of the build process may be covered by other open source licenses.",
+      "notes": "The Zcash codebase is distributed under the MIT software license, which is a permissive open source license that allows free use, modification, and distribution of the code. The source code is publicly available on GitHub. Dependencies downloaded as part of the build process may be covered by other open source licenses.",
       "citations": [
         {
           "cited_text": "The MIT software license (https://www.opensource.org/licenses/mit-license.php)\n\nabove applies to the code directly included in this source distribution, with\n\nthe exception of certain Autoconf macros. ",
-          "source": "https://github.com/zcash/zcash/blob/master/COPYING"
-        },
-        {
-          "cited_text": "Dependencies downloaded as part of\n\nthe build process may be covered by other open-source licenses. ",
           "source": "https://github.com/zcash/zcash/blob/master/COPYING"
         }
       ]
@@ -388,17 +384,13 @@
         {
           "cited_text": "Commitment tree - The Orchard Book \n\nLight \n\nRust \n\nCoal \n\nNavy \n\nAyu \n\nThe Orchard Book\n\nCommitment tree \n\nThe commitment tree structure for Orchard is identical to Sapling:\n\nA single global commitment tree of fixed depth 32.\n\nNote commitments are appended to the tree in-order from the block.\n\n",
           "source": "https://zcash.github.io/orchard/design/commitment-tree.html"
-        },
-        {
-          "cited_text": "Valid Orchard anchors correspond to the global tree state at block boundaries (after all\ncommitments from a block have been appended, and before any commitments from the next\nblock have been appended).\n\n",
-          "source": "https://zcash.github.io/orchard/design/commitment-tree.html"
         }
       ]
     },
     {
       "name": "Client-side indexing",
       "value": "Always scanning",
-      "notes": "ZCash requires Always scanning for shielded transactions. Because shielded transactions reveal no metadata about the sender or receiver, users must scan the block chain for relevant transactions using viewing keys. Every valid block with non-coinbase transactions will need to be checked and its transactions trial-decrypted with registered incoming viewing keys to see if any notes have been received by the key's owner and if any notes have already been spent elsewhere. Unlike a transparent blockchain with public transactions, a full node must have online access to viewing keys to scan the chain.",
+      "notes": "Shielded transactions reveal no metadata about the sender or receiver, users must scan the block chain for relevant transactions using viewing keys. Every valid block with non-coinbase transactions will need to be checked and its transactions trial-decrypted with registered incoming viewing keys to see if any notes have been received by the key's owner and if any notes have already been spent elsewhere. Unlike a transparent blockchain with public transactions, a full node must have online access to viewing keys to scan the chain.",
       "citations": [
         {
           "cited_text": "One challenge unique to Zcash is block chain scanning: because\nshielded transactions reveal no metadata about the sender or receiver, users\nmust scan the block chain for relevant transactions using viewing keys .\n",
@@ -417,7 +409,21 @@
     {
       "name": "Private state model",
       "value": "UTXO-based state model",
-      "notes": "Zcash transactions between transparent addresses work just like Bitcoin, which uses a UTXO model. Shielded transactions (z-to-z) encrypt the sender and receiver addresses and transaction amount, but operate within the same underlying UTXO framework where transactions consume inputs and create outputs. The protocol manages both transparent UTXOs that are publicly visible and shielded notes that are encrypted UTXOs verified through zk-SNARKs."
+      "notes": "Zcash transactions between transparent addresses work just like Bitcoin, which uses a UTXO model. Shielded transactions (z-to-z) encrypt the sender and receiver addresses and transaction amount, but operate within the same underlying UTXO framework where transactions consume inputs and create outputs. The protocol manages both transparent UTXOs that are publicly visible and shielded notes that are encrypted UTXOs verified through zk-SNARKs.",
+      "citations": [
+        {
+          "cited_text": "Zcash&rsquo;s shielded pool uses something conceptually similar called notes; you can think of notes as encrypted UTXOs.\n\n",
+          "source": "https://maxdesalle.com/mastering-zcash"
+        },
+        {
+          "cited_text": "When you receive shielded ZEC, a note is created. When you spend the shielded Zec, that note is consumed and new notes are created for the recipient and your change if applicable, exactly as with UTXOs.\n\n",
+          "source": "https://maxdesalle.com/mastering-zcash"
+        },
+        {
+          "cited_text": "Notes are never modified, there is no updating of a balance. Rather, they&rsquo;re created, they exist, and they&rsquo;re destroyed when spent. ",
+          "source": "https://maxdesalle.com/mastering-zcash"
+        }
+      ]
     },
     {
       "name": "Private Data Storage",
@@ -448,7 +454,20 @@
       "name": "Programmability / Generality",
       "value": "Only payments",
       "notes": "Zcash supports only payment transactions and does not provide smart contract functionality or programmable logic beyond basic value transfers. The protocol implements shielded transfers using zk-SNARKs across transparent and shielded pools (Sprout, Sapling, Orchard), but cannot execute arbitrary computation or maintain programmable state. Transparent addresses inherit Bitcoin's UTXO scripting model, while shielded addresses are restricted to private payments. Research initiatives have explored smart contract integration, but none have been deployed on the mainnet protocol.",
-      "needsResearchReview": "Payments-only claim requires citation"
+      "citations": [
+        {
+          "cited_text": "Therefore, there are four basic types of transactions:\n\nShielded/private (Value is not revealed on the blockchain) ¶ \n\nDeshielding (Value is revealed on the receiver end) ¶ \n\nShielding (Value is revealed on the sender end) ¶ \n\nTransparent/public (Value is revealed by both sender and receiver) ¶ \n\nShielded Addresses ¶ \n\nShielded addresses are the address type that use zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes. ",
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
+        },
+        {
+          "cited_text": "Senders to a shielded address may or may not include an encrypted memo.\n\n",
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
+        },
+        {
+          "cited_text": "Transparent addresses and the values sent to or from them are publicly visible ¶ \n\nAt this time, some advanced features such as multisignature and the use of bitcoin-style scripting with opcodes are only supported by transparent addresses. Multisignature addresses start with a “t3” as opposed to the single signature standard address which start with a “t1”.\n\n",
+          "source": "https://zcash.readthedocs.io/en/latest/rtd_pages/addresses.html"
+        }
+      ]
     }
   ]
 }

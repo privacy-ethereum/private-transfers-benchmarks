@@ -13,7 +13,12 @@ const FILENAME_PATTERN = /\b\w+\.(sol|circom|rs|ts)\b/;
 const YEAR_TOKEN = /\b20\d{2}\b/;
 const VAGUE_IMPLY = /\bimpl(y|ies|ying)\b/i;
 
-type Issue = { file: string; property: string; rule: string; error: string };
+interface Issue {
+  file: string;
+  property: string;
+  rule: string;
+  error: string;
+}
 
 function checkDescription(file: string, propertyName: string, description: string, issues: Issue[]) {
   const push = (rule: string, error: string) => issues.push({ file, property: propertyName, rule, error });
@@ -29,7 +34,7 @@ function checkDescription(file: string, propertyName: string, description: strin
   if (VAGUE_IMPLY.test(description)) push("vague-phrase", "imply/implies/implying");
 
   if (!PROPERTIES_ALLOWING_FILENAMES.has(propertyName)) {
-    const match = description.match(FILENAME_PATTERN);
+    const match = FILENAME_PATTERN.exec(description);
     if (match) push("filename-in-description", match[0]);
   }
 }

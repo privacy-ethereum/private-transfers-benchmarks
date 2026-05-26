@@ -2,11 +2,11 @@ import type Anthropic from "@anthropic-ai/sdk";
 import type { Property } from "../../src/types.js";
 import type { FetchedSource } from "./fetch-source.js";
 
-export type ParsedResponse = {
-  value: string | "INSUFFICIENT_DATA";
+export interface ParsedResponse {
+  value: string;
   notes: string;
   citations: NonNullable<Property["citations"]>;
-};
+}
 
 /**
  * Walk an Anthropic citations response: extract the tool_use value, the prose text blocks, and

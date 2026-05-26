@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "fs";
 import type { PropertyContent } from "../src/types.js";
-import { PROPERTY_DEFINITIONS } from "../src/data/schema.js";
+import { type PROPERTY_DEFINITIONS } from "../src/data/schema.js";
 
 /**
  * Cross-cutting rules for evaluation authoring and review.

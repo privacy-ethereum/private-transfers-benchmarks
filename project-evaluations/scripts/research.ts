@@ -9,8 +9,16 @@ import { parseCitationsResponse } from "./utils/citations-response.js";
 import { fetchTextFromUrl, type FetchedSource } from "./utils/fetch-source.js";
 import { writeSourceCache } from "./utils/source-cache.js";
 
-type CacheEntry = { name: string; urls: string[]; summary: string };
-type ResearchCache = { id: string; generatedAt: string; properties: CacheEntry[] };
+interface CacheEntry {
+  name: string;
+  urls: string[];
+  summary: string;
+}
+interface ResearchCache {
+  id: string;
+  generatedAt: string;
+  properties: CacheEntry[];
+}
 
 /** Properties skipped by research — measured separately (gas) or not yet automatable
  *  (anonymity set size). They carry through from the existing evaluation unchanged. */
@@ -91,7 +99,7 @@ function parseArgs(): { protocolId: string; only: string[] } {
   const protocolId = args.find((a) => !a.startsWith("--"));
   const onlyIdx = args.indexOf("--only");
   const only = onlyIdx >= 0 ? (args[onlyIdx + 1]?.split(",").map((s) => s.trim()) ?? []) : [];
-  if (!protocolId || !configs[protocolId]) {
+  if (!protocolId || !(protocolId in configs)) {
     console.error(`Usage: pnpm run research <protocol> [--only "A,B"]\nAvailable: ${Object.keys(configs).join(", ")}`);
     process.exit(1);
   }
