@@ -231,7 +231,7 @@
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
-      "notes": "Curvy is deployed on several EVM mainnets — Arbitrum, Base, Ethereum, Optimism, Polygon, Binance Smart Chain, Linea, and Gnosis — with the stealth address flow (without the ZK aggregator component) available on Starknet. The Privacy Aggregator first launched on Arbitrum in November 2025, with its first independent security audit publishing in Q2 2026.",
+      "notes": "Curvy is deployed on several EVM mainnets — Arbitrum, Base, Ethereum, Optimism, Polygon, Binance Smart Chain, Linea, and Gnosis. The Privacy Aggregator first launched on Arbitrum in November 2025, with its first independent security audit publishing in Q2 2026.",
       "citations": [
         {
           "cited_text": "Curvy is currently available on:\n\nArbitrum\n\nBase\n\nEthereum\n\nOptimism\n\nPolygon\n\nBinance Smart Chain\n\nLinea\n\nGnosis\n\nThe stealth address flow (without the ZK aggregator component) is currently available on Starknet.",
