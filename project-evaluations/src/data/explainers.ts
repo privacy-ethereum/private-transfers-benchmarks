@@ -51,6 +51,42 @@ export const CATEGORY_EXPLAINERS: Record<string, string | undefined> = {
   "Other L1 project": "A privacy protocol built as an application on an existing general-purpose Layer-1.",
 };
 
+export type CategoryType = "technology" | "architecture" | "ecosystem";
+
+/** Splits each category into a technology, architecture, or ecosystem. */
+export const CATEGORY_TYPES: Record<string, CategoryType> = {
+  // Technologies
+  "Zero Knowledge Proofs (ZKPs)": "technology",
+  "Fully Homomorphic encryption (FHE)": "technology",
+  "Homomorphic Encryption (HE)": "technology",
+  "Multi Party Computation (MPC)": "technology",
+  "Trusted Execution Environments (TEEs)": "technology",
+  "Garbled Circuits": "technology",
+  "CoSNARKs": "technology",
+
+  // Architectures
+  "Mixer": "architecture",
+  "Shielded Pool": "architecture",
+  "Stealth Addresses": "architecture",
+  "Encrypted Tokens": "architecture",
+  "Bytecode Obfuscator": "architecture",
+  "Virtual Private EVM Network": "architecture",
+  "Cross-Chain Swap Aggregator": "architecture",
+  "Private Bridge": "architecture",
+  "Zero-Knowledge Wormholes": "architecture",
+  "Private L1": "architecture",
+  "Private L2": "architecture",
+  "Private L3": "architecture",
+  "Private Plasma": "architecture",
+  "Private Validium": "architecture",
+  "Decentralised Network": "architecture",
+  "Privacy Stack/Layer/Middleware": "architecture",
+
+  // Ecosystems
+  "Solana project": "ecosystem",
+  "Other L1 project": "ecosystem",
+};
+
 export const GROUP_EXPLAINERS: Record<string, string | undefined> = {
   "Privacy":
     "What is actually hidden: amounts, identities, assets, and whether using the protocol is itself observable.",

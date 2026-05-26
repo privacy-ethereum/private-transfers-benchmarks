@@ -13,7 +13,7 @@ interface DrawerState {
   propName: string;
 }
 
-interface ScorecardViewProps {
+interface ComparisonTableViewProps {
   pinned: string[];
   setPinned: Dispatch<SetStateAction<string[]>>;
   category: string;
@@ -22,15 +22,16 @@ interface ScorecardViewProps {
   setSearch: Dispatch<SetStateAction<string>>;
 }
 
-export default function ScorecardView({
+export default function ComparisonTableView({
   pinned,
   setPinned,
   category,
   setCategory,
   search,
   setSearch,
-}: ScorecardViewProps) {
+}: ComparisonTableViewProps) {
   const [drawer, setDrawer] = useState<DrawerState | null>(null);
+  const [hidePending, setHidePending] = useState(false);
 
   const analyzedEvaluations = useMemo(() => evaluations.filter((protocol) => !isPendingEvaluation(protocol)), []);
 
@@ -51,53 +52,43 @@ export default function ScorecardView({
   }, [effectivePinned, pinned.length, setPinned]);
 
   const protosByCategory = useMemo<Record<string, Evaluation[]>>(() => {
-    const out: Record<string, Evaluation[]> = {};
-    for (const cat of CATEGORIES) {
-      out[cat] = analyzedEvaluations.filter((protocol) => protocol.categories.includes(cat));
-    }
-    return out;
-  }, [analyzedEvaluations]);
+    const source = hidePending ? analyzedEvaluations : evaluations;
+    return Object.fromEntries(
+      CATEGORIES.map((cat) => [cat, source.filter((protocol) => protocol.categories.includes(cat))]),
+    );
+  }, [hidePending, analyzedEvaluations]);
 
   const activeProtos = useMemo(() => {
-    if (effectivePinned.length === 0) {
-      return [];
-    }
-
-    let list = analyzedEvaluations.filter((protocol) => effectivePinned.includes(protocol.id));
-
-    if (category !== "") {
-      list = list.filter((protocol) => protocol.categories.some((c) => c === category));
-    }
-
-    if (search !== "") {
-      list = list.filter((protocol) => protocol.title.toLowerCase().includes(search.toLowerCase()));
-    }
-
-    return list;
+    if (effectivePinned.length === 0) return [];
+    const query = search.toLowerCase();
+    return analyzedEvaluations.filter(
+      (protocol) =>
+        effectivePinned.includes(protocol.id) &&
+        (category === "" || protocol.categories.some((other) => other === category)) &&
+        (query === "" || protocol.title.toLowerCase().includes(query)),
+    );
   }, [effectivePinned, category, search, analyzedEvaluations]);
 
   const selectAllInCat = (cat: string) => {
-    const catProtos = protosByCategory[cat] ?? [];
-    const ids = catProtos.map((protocol) => protocol.id);
+    const ids = (protosByCategory[cat] ?? [])
+      .filter((protocol) => !isPendingEvaluation(protocol))
+      .map((protocol) => protocol.id);
+    const idSet = new Set(ids);
     const allIn = ids.every((id) => effectivePinned.includes(id));
-    setPinned(
-      allIn ? effectivePinned.filter((id) => !ids.includes(id)) : Array.from(new Set([...effectivePinned, ...ids])),
-    );
+    setPinned(allIn ? effectivePinned.filter((id) => !idSet.has(id)) : [...new Set([...effectivePinned, ...ids])]);
   };
 
   return (
     <div className="direction">
       <div className="direction-intro">
-        <div className="big-num">SCORECARD</div>
-        <div>
-          <h2>Compare Protocols</h2>
-          <p>
-            Compare projects across properties (Privacy, Cost, UX etc.) and categories (Stealth addresses, Shielded
-            pools etc.). Pin the protocols you want to compare — only pinned protocols show up as columns. Protocols
-            marked as pending analysis appear in the other views and are excluded here until they are fully evaluated.
-            Click any value to read the note and source for that protocol × property pair.
-          </p>
+        <div className="direction-intro__header">
+          <div className="big-num">COMPARISON</div>
+          <h2>Comparison Table</h2>
         </div>
+        <p>
+          Compare protocols side-by-side across every property. <strong>Pin protocols</strong> to add them as columns.{" "}
+          <strong>Click any value</strong> to read the note and source.
+        </p>
       </div>
 
       <CompareBar
@@ -109,6 +100,8 @@ export default function ScorecardView({
         setSearch={setSearch}
         protosByCategory={protosByCategory}
         selectAllInCat={selectAllInCat}
+        hidePending={hidePending}
+        setHidePending={setHidePending}
       />
 
       {activeProtos.length === 0 ? (
@@ -119,7 +112,7 @@ export default function ScorecardView({
           </div>
         </div>
       ) : (
-        <div className="scorecard">
+        <div className="comparison-table">
           {PROPERTY_GROUPS.map((g) => (
             <ScoreGroup
               key={g}

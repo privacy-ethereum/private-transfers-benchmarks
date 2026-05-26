@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import CategoryBrowser from "./components/CategoryBrowser.js";
 import ProfileView from "./components/ProfileView.js";
 import ReportBanner from "./components/ReportBanner.js";
-import ScorecardView from "./components/ScorecardView.js";
+import ComparisonTableView from "./components/ComparisonTableView.js";
 import TopBar from "./components/TopBar.js";
 import WipBanner from "./components/WipBanner.js";
 import { evaluations } from "./data/evaluations/index.js";
@@ -11,7 +11,7 @@ import { evaluations } from "./data/evaluations/index.js";
 type ViewDirection = "score" | "category" | "profile";
 
 const DIRECTIONS: { id: ViewDirection; label: string }[] = [
-  { id: "score", label: "Scorecard & compare" },
+  { id: "score", label: "Comparison Table" },
   { id: "category", label: "Category browser" },
   { id: "profile", label: "Protocol profiles" },
 ];
@@ -124,7 +124,7 @@ export default function App() {
       </nav>
 
       {dir === "score" && (
-        <ScorecardView
+        <ComparisonTableView
           pinned={pinned}
           setPinned={setPinned}
           category={category}
