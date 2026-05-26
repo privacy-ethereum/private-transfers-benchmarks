@@ -34,6 +34,18 @@
       "url": "https://docs.redact.money/using-redact/encrypting#id-3.-encryption"
     },
     {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
       "name": "Number of secrets",
       "value": "1",
       "notes": "Users only need their existing Ethereum wallet to interact with Redact. Permits are temporary EIP-712 signatures derived from the wallet key with a 24-hour default expiration. Balances are encrypted using the CoFHE network's TFHE public key, which is published on-chain. The corresponding private key is distributed across threshold network nodes using MPC, so no single node holds the decryption key.",
@@ -147,9 +159,21 @@
     {
       "name": "Cryptographic verifiability",
       "value": "No",
-      "notes": "Correctness rests on a permissioned threshold-decryption network (an economic / multi-party trust mechanism), so the value is No per the rule that excludes economic mechanisms from cryptographic verifiability. The CoFHE architecture claims to use zero-knowledge proofs of knowledge (ZKPoK) alongside TFHE, but even if ZKPoK is implemented, decryption itself depends on threshold-network honesty rather than pure math.",
-      "needsResearchReview": "Not verified — CoFHE ZKPoK support unconfirmed",
-      "url": "https://docs.redact.money/architecture/cofhe-overview#security-and-privacy-measures"
+      "notes": "Transaction correctness rests on the off-chain CoFHE coprocessor and its threshold-decryption network rather than cryptographic proofs of homomorphic computation. The only zero-knowledge component is a proof of knowledge that the user knows the plaintext of an encrypted input, which guards input well-formedness but does not attest to computation correctness. Decryption results are produced by an MPC protocol among permissioned parties and signed by a dispatcher, so on-chain acceptance reduces to trusting a registered signer set. The input-proof verifier runs in a TEE, but hardware attestation is not a cryptographic correctness proof over the FHE computation itself.",
+      "citations": [
+        {
+          "cited_text": "It allows users to prove they know the plaintext of an encrypted input they’re sending to a smart contract, without revealing the plaintext itself. \n",
+          "source": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/zk-verifier"
+        },
+        {
+          "cited_text": "​\n\nDispatcher Signing \n\nThe Threshold Network’s Dispatcher component signs every decrypt and sealoutput result with an ECDSA key. This signature enables on-chain verification — clients can publish signed decrypt results directly to the TaskManager contract via FHE.publishDecryptResult() . \n\n",
+          "source": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network"
+        },
+        {
+          "cited_text": "The ZKVerifier is intended to run in a TEE to reduce trust and ensure the integrity of the inputs and signed verification messages. \n\n",
+          "source": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/zk-verifier"
+        }
+      ]
     },
     {
       "name": "Open source",
@@ -161,9 +185,21 @@
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
-      "notes": "Redact uses an account-based model where each user's encrypted balance handle is stored as a mapping within the smart contract storage. On-chain state grows proportionally to the number of accounts. Full ciphertexts grow on the off-chain DA layer proportionally to the number of operations — every transfer emits a new ciphertext that must be retained for balance reconstruction.",
-      "url": "https://docs.redact.money/architecture/fherc20-token-standard#encrypted-balances",
-      "needsResearchReview": "State-growth model requires citation"
+      "notes": "Redact's private state grows with usage. Each ERC20 token's balance is kept as an encrypted ciphertext, with on-chain storage holding per-address ciphertext handles updated in place while the full encrypted state lives off-chain on the Fhenix CoFHE coprocessor. Every homomorphic operation produces a fresh encrypted value, and the coprocessor-side ciphertext set accumulates with every transfer. The on-chain mapping scales with the number of accounts rather than transactions, but the off-chain encrypted state grows without bound in the number of operations.",
+      "citations": [
+        {
+          "cited_text": "hashtag \n\nConcepts\n\nhashtag \n\nEncrypted Balances\n\nUtilizing the Fhenix CoFHE coprocessor, Fully Homomorphic Encryption (FHE) operations are integrated into the blockchain environment. This ensures that an ERC20 token&#x27;s balance is maintained in an encrypted state, accessible only under specific conditions as:\n\nhashtag \n\nManually decrypted \n\nA user or contract can request to decrypt their own balance. ",
+          "source": "https://docs.redact.money/architecture/fherc20-token-standard"
+        },
+        {
+          "cited_text": "The encrypted value can be used as part of an FHE operation, such as FHE.add, FHE.sub, or FHE.select (branching). The value remains encrypted throughout these FHE operations, and no data is revealed at any stage.\n\n",
+          "source": "https://docs.redact.money/architecture/fherc20-token-standard"
+        },
+        {
+          "cited_text": "Result Processor : Handles FHE operation results from the computation layer and publishes them back to the blockchain. \n\nFHEOS Server : Executes the actual FHE operations on encrypted data and maintains the encrypted state. \n\n",
+          "source": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/overview"
+        }
+      ]
     },
     {
       "name": "Client-side indexing",

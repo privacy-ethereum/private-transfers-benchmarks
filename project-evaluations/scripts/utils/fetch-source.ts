@@ -1,6 +1,9 @@
 const FETCH_TIMEOUT_MS = 15_000;
 
-export type FetchedSource = { text: string; sourceUrl: string };
+export interface FetchedSource {
+  text: string;
+  sourceUrl: string;
+}
 
 /**
  * Fetch a URL and strip to plain text. Returns null on failure.
@@ -23,7 +26,7 @@ export async function fetchTextFromUrl(url: string): Promise<FetchedSource | nul
   }
 
   // Blob URL → rewrite to raw, keep the blob URL as the citation source.
-  const blob = url.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/);
+  const blob = /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/.exec(url);
   if (blob) {
     const rawUrl = `https://raw.githubusercontent.com/${blob[1]}/${blob[2]}/${blob[3]}`;
     const r = await fetch(rawUrl, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }).catch(() => null);

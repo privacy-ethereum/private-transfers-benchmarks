@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "prelint": "pnpm -r run codegen",
-    "lint": "eslint gas-benchmarks/src project-evaluations/src subgraph/src subgraph/tests",
+    "lint": "eslint gas-benchmarks/src project-evaluations/src project-evaluations/scripts subgraph/src subgraph/tests",
     "lint:fix": "pnpm run lint --fix",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",

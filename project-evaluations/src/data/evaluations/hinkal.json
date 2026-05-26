@@ -34,6 +34,18 @@
       "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-send/features#on-chain-behavior"
     },
     {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
       "name": "Number of secrets",
       "value": "1",
       "notes": "Hinkal requires a spending key and a viewing key to operate, but both derive from a single Ethereum wallet signature. The spending key is produced deterministically from an ECDSA signature (secp256k1), and the viewing key (Curve25519) is derived from the spending key using libsodium. Stealth addresses use the BabyJubjub curve with Poseidon hashing for commitments. Only the Ethereum wallet key needs to be stored independently.",
@@ -77,24 +89,24 @@
     },
     {
       "name": "Upgradeability",
-      "value": "Multi-sig",
-      "notes": "Hinkal does not have a governance token at the moment but there are plans to launch a token in the near future. At the moment any upgrades to the protocol would be done by Hinkal internal team which likely uses a multi-signature wallet to introduce new changes on-chain. TODO: is this true, it looks like the answer is uncertain and source doesn't prove it either way",
+      "value": "Single admin",
+      "notes": "Hinkal does not have a governance token at the moment but there are plans to launch a token in the near future. Upgrades to the protocol are controlled by the Hinkal internal team. The admin key on the deployed contracts has not been independently classified, so the upgrade authority defaults to single admin until a multi-sig or threshold scheme is established on-chain.",
       "url": "https://hinkal-team.gitbook.io/hinkal/faq#q-does-hinkal-have-a-token",
       "needsResearchReview": "Not verified — admin role needs verifying on-chain"
     },
     {
       "name": "Client-side proving",
       "value": "Yes",
-      "notes": "ZK proofs for deposits and withdrawals are generated on the user's device. Simple private transfer transaction ZK proofs can also be generated locally but more complex ones (involving smart contract interactions, multiple tokens, etc) could take longer. Therefore Hinkal implements an external proof generation mechanism using AWS Nitro enclave. There is an option to turn on \"Extra Security\" and generate the ZK proofs inside the user's browser at a slower speed. TODO: Source doesn't mention AWS. Need to verify",
+      "notes": "ZK proofs for deposits and withdrawals are generated on the user's device. Simple private transfer transaction ZK proofs can also be generated locally but more complex ones (involving smart contract interactions, multiple tokens, etc) could take longer. Therefore Hinkal implements an external proof generation mechanism using AWS Nitro enclave. There is an option to turn on \"Extra Security\" and generate the ZK proofs inside the user's browser at a slower speed.",
       "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle",
-      "needsResearchReview": "Not verified — TEE platform not named in source"
+      "needsResearchReview": "The cited source does not mention AWS Nitro enclave. The external prover claim needs a source that names the TEE platform."
     },
     {
       "name": "Third-party inspectability",
       "value": "No",
-      "notes": "If the \"Extra Security\" option is turned off, all private inputs for the ZK proofs (token address, amount, stealth address, etc.) are sent in plaintext to the AWS Nitro enclave. We can assume that the enclave (TEE) will not leak data to any third party but it is important to mention that there are known vulnerabilities around TEE that might allow an attacker to see the inside data. An alternative way to solve this issue is to turn on \"Extra Security\" and generate the proof locally. TODO: Source doesn't mention AWS. Need to verify",
+      "notes": "If the \"Extra Security\" option is turned off, all private inputs for the ZK proofs (token address, amount, stealth address, etc.) are sent in plaintext to the AWS Nitro enclave. We can assume that the enclave (TEE) will not leak data to any third party but it is important to mention that there are known vulnerabilities around TEE that might allow an attacker to see the inside data. An alternative way to solve this issue is to turn on \"Extra Security\" and generate the proof locally.",
       "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-wallet/settings#id-1.-extra-security-toggle",
-      "needsResearchReview": "Not verified — TEE platform not named in source"
+      "needsResearchReview": "The cited source does not mention AWS Nitro enclave; the TEE-based inspectability claim needs a source that names the platform."
     },
     {
       "name": "Implementation maturity",
@@ -123,15 +135,39 @@
     },
     {
       "name": "Type of compliance",
-      "value": ["Programmatic policies", "Selective disclosure"],
-      "notes": "Hinkal enforces programmable per-transaction policies via Chainalysis compliance components integrated into the smart contracts — the chain-analytics signal is a data input to the policy layer (not a separate compliance category). Screening applies at deposit and withdrawal, where public addresses are visible. Private transfers within the shielded pool are note-to-note and do not expose public addresses to the compliance layer. Users can also voluntarily share their viewing key with third parties for selective disclosure.",
-      "needsResearchReview": "Compliance mechanisms require citation",
-      "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
+      "value": ["Programmatic policies", "Selective disclosure", "Proof of innocence (POI) / ASP"],
+      "notes": "Hinkal layers three mechanisms. Programmatic policies: Chainalysis integration blocks transactions involving sanctioned addresses at the smart-contract level with continuous re-screening. Selective disclosure: users can export an audit file for a chosen time interval to share with third parties via the viewing key. POI/ASP: source-of-funds is enforced by a ZK proof that funds are not associated with any depositId linked to a blacklisted address — a non-membership proof at transfer or withdrawal. Deposits above $10,000 require a privacy-preserving identity attestation (zkTLS or reusable attestations from zkMe, Galxe, AiPrise, BABT, Authento), short of full KYC.",
+      "citations": [
+        {
+          "cited_text": "KYT & Pool Integrity\n\nHinkal enforces real-time screening at the smart contract level through integration with Chainalysis. Transactions involving sanctioned or illicit addresses are blocked before entering the confidential smart contract, preventing contamination and preserving smart contract integrity.\n\n",
+          "source": "https://hinkal-team.gitbook.io/hinkal/introduction/compliance"
+        },
+        {
+          "cited_text": "Continuous Re-Screening via Chainalysis\n\nHinkal integrates directly with Chainalysis arrow-up-right for continuous, real-time re-screening of depositor addresses.\n\n",
+          "source": "https://hinkal-team.gitbook.io/hinkal/introduction/compliance"
+        },
+        {
+          "cited_text": "If the user has an account at a supported exchange, they can prove account ownership without revealing personal data to Hinkal, using zkTLS-based attestations.\n\nThis proof is generated by logging into the exchange and producing a zero-knowledge proof (powered by Reclaim Protocol).\n\n",
+          "source": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
+        },
+        {
+          "cited_text": "Alternatively, Hinkal supports reusable attestations from zkMe arrow-up-right , Galxe arrow-up-right , AiPrise arrow-up-right , Binance Account Bound Token arrow-up-right (BABt), Galxe Passport arrow-up-right , and Authento arrow-up-right .\n\n",
+          "source": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
+        },
+        {
+          "cited_text": "2) Selective disclosure for auditability and proof of ownership\n\nHinkal Wallet includes selective disclosure, enabling users to prove transaction history and ownership when required (e.g., for an exchange review, audit, or internal compliance). Users can export an audit file for a chosen time interval and share it with third parties to establish provenance and provide an audit trail, without making all activity public by default.\n\n",
+          "source": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
+        },
+        {
+          "cited_text": "When a user initiates a private transfer or withdrawal, they must generate a zero-knowledge proof demonstrating that their funds are not associated with any depositId linked to a blacklisted address.\n\nThis proof is verified against the current blacklist state, ensuring that compliance checks always reflect the most up-to-date sanctions and risk data.\n\n",
+          "source": "https://hinkal-team.gitbook.io/hinkal/introduction/compliance"
+        }
+      ]
     },
     {
       "name": "Point of enforcement",
-      "value": ["Deposit", "Withdrawal"],
-      "notes": "Compliance checks are applied when assets enter the shielded pool (deposit) and when they leave (withdrawal), blocking flagged addresses at either boundary. Private transfers within the pool are note-to-note operations between stealth addresses and do not pass through the Chainalysis compliance contract directly.",
+      "value": ["Deposit", "Transfer", "Withdrawal"],
+      "notes": "Chainalysis KYT screening and the large-deposit integrity check apply at deposit, blocking flagged addresses before assets enter the shielded pool. A zero-knowledge non-membership proof that funds are not linked to a blacklisted depositId is then required on every private transfer and on every withdrawal, so a depositor address flagged after entering Hinkal loses both internal-pool movement and shielded withdrawal.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
     },
     {
