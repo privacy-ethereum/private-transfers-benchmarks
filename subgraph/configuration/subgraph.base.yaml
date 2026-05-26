@@ -33,3 +33,58 @@ dataSources:
           handler: handleWithdraw
           receipt: true
       file: ../src/blanksquare/shielder.ts
+
+  - kind: ethereum
+    name: VeilETHQueueV3
+    network: base
+    source:
+      address: "0xA4a926A2E7a22c38e8DFC6744A61a6aA8b06B230"
+      abi: VeilETHQueueV3
+      startBlock: 37661782
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - VeilCashProtocolStats
+        - VeilCashOperationStats
+        - VeilCashDepositQueuedStats
+        - VeilCashDepositAcceptedStats
+        - VeilCashDepositQueued
+        - VeilCashDepositAccepted
+      abis:
+        - name: VeilETHQueueV3
+          file: ../abis/veil-cash/VeilETHQueueV3.json
+      eventHandlers:
+        - event: DepositQueued(indexed uint256,indexed address,uint256,bytes)
+          handler: handleDepositQueued
+          receipt: true
+        - event: DepositAccepted(indexed uint256,indexed address,indexed address,uint256)
+          handler: handleDepositAccepted
+          receipt: true
+      file: ../src/veil-cash/veil-eth-queue-v3.ts
+
+  - kind: ethereum
+    name: VeilETHPool
+    network: base
+    source:
+      address: "0x293dCda114533FF8f477271c5cA517209FFDEEe7"
+      abi: VeilETHPool
+      startBlock: 37986022
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - VeilCashProtocolStats
+        - VeilCashOperationStats
+        - VeilCashTransferStats
+        - VeilCashTransfer
+      abis:
+        - name: VeilETHPool
+          file: ../abis/veil-cash/VeilETHPool.json
+      eventHandlers:
+        - event: NewNullifier(bytes32)
+          handler: handleNewNullifier
+          receipt: true
+      file: ../src/veil-cash/veil-eth-pool.ts
