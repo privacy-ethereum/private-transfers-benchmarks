@@ -6,23 +6,47 @@ const propertyNameEnum = z.enum(propertyNames);
 const categoryEnum = z.enum(CATEGORIES);
 const evaluationStatusEnum = z.enum(["complete", "pending"]);
 
+/** Citation accepted on every property. */
+const baseCitation = z.strictObject({
+  cited_text: z.string().optional(),
+  source: z.string(),
+});
+
+/** Implementation maturity citation. */
+const maturityCitation = baseCitation.extend({
+  contract_address: z.string().optional(),
+  date: z.iso.date().optional(),
+});
+
+/** Upgradeability citation. */
+const upgradeabilityCitation = baseCitation.extend({
+  contract_address: z.string().optional(),
+  admin_class: z.enum(["Single admin", "Multi-sig", "DAO", "Network upgrade (hard/soft fork)"]).optional(),
+});
+
+const baseProperty = z.object({
+  name: propertyNameEnum,
+  value: z.union([z.string(), z.array(z.string())]),
+  notes: z.string().optional(),
+  url: z.string().optional(),
+  citations: z.array(baseCitation).min(1).optional(),
+  needsResearchReview: z.string().min(1).optional(),
+});
+
 export const propertySchema = z
-  .object({
-    name: propertyNameEnum,
-    value: z.union([z.string(), z.array(z.string())]),
-    notes: z.string().optional(),
-    url: z.string().optional(),
-    citations: z
-      .array(
-        z.object({
-          cited_text: z.string(),
-          source: z.string(),
-        }),
-      )
-      .min(1)
-      .optional(),
-    needsResearchReview: z.string().min(1).optional(),
-  })
+  .discriminatedUnion("name", [
+    baseProperty.extend({
+      name: z.literal("Implementation maturity"),
+      citations: z.array(maturityCitation).min(1).optional(),
+    }),
+    baseProperty.extend({
+      name: z.literal("Upgradeability"),
+      citations: z.array(upgradeabilityCitation).min(1).optional(),
+    }),
+    baseProperty.extend({
+      name: propertyNameEnum.exclude(["Implementation maturity", "Upgradeability"]),
+    }),
+  ])
   .superRefine((property, ctx) => {
     const invalid = findInvalidValues(property);
     if (invalid && invalid.length > 0) {
