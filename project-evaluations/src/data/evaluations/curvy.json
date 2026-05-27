@@ -2,6 +2,7 @@
   "id": "curvy",
   "title": "Curvy",
   "description": "Curvy is a privacy-preserving cross-chain payment protocol with compliance features. It combines stealth addressses with ZK-SNARKs",
+  "status": "complete",
   "documentation": "https://docs.curvy.box/",
   "categories": ["Stealth Addresses", "Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [

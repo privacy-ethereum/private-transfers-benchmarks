@@ -2,6 +2,7 @@
   "id": "tornado-cash",
   "title": "Tornado Cash",
   "description": "A non-custodial, Ethereum-based mixer that uses zk-SNARKs to break the on-chain link between deposit and withdrawal addresses for fixed-denomination ETH and ERC-20 deposits.",
+  "status": "complete",
   "documentation": "https://docs.tornadocash.eth.limo/",
   "categories": ["Mixer", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [

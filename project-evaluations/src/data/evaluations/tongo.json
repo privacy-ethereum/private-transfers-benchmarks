@@ -2,6 +2,7 @@
   "id": "tongo",
   "title": "Tongo",
   "description": "A confidential payment protocol on Starknet that uses ElGamal homomorphic encryption and zero-knowledge proofs to enable private ERC20 token transfers. Account balances are stored as encrypted ciphertexts on-chain, hiding amounts while keeping the protocol verifiable and supporting an optional auditor for regulatory compliance.",
+  "status": "complete",
   "documentation": "https://docs.tongo.cash/",
   "categories": ["Homomorphic Encryption (HE)", "Encrypted Tokens"],
   "properties": [

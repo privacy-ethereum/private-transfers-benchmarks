@@ -2,6 +2,7 @@
   "id": "hinkal",
   "title": "Hinkal",
   "description": "A privacy protocol using stealth addresses and zk-SNARKs to enable confidential token transfers and shielded DeFi interactions on EVM chains, with built-in KYT compliance enforced at deposit and withdrawal.",
+  "status": "complete",
   "documentation": "https://hinkal-team.gitbook.io/hinkal",
   "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [
