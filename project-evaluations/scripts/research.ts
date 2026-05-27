@@ -85,7 +85,10 @@ async function main() {
   // status and categories always come from the existing file — they are not in research-config.
   const base = only.length > 0 ? existing : config;
   const evaluation = {
-    ...base,
+    id: base.id,
+    title: base.title,
+    description: base.description,
+    documentation: base.documentation,
     status: existing.status,
     categories: existing.categories,
     properties,

@@ -42,10 +42,10 @@
       "notes": "Deniability applies to the deposit side, which is a native ETH transfer to an address derived from Truncate160(Poseidon4(prefix, burnKey, revealAmount, burnExtraCommitment)) — indistinguishable on-chain from an ordinary transfer to a fresh EOA. A burner does not need to interact with any WORM contract to destroy the ETH, so the burner is never forced to reveal participation. The recipient's mint transaction to the BETH verifier is observable, so deniability covers entry only, not withdrawal.",
       "citations": [
         {
-          "cited_text": "In contrast, WORM offers:\n\n* **Unlinkable entry**: Users burn ETH to derived addresses that are not marked or identified as WORM-related.\n* **Zero custody**: ETH is not held or controlled by any contract or intermediary.\n"
+          "cited_text": "In contrast, WORM offers:\n\n* **Unlinkable entry**: Users burn ETH to derived addresses that are not marked or identified as WORM-related.\n* **Zero custody**: ETH is not held or controlled by any contract or intermediary.\n",
+          "source": "https://github.com/worm-privacy/whitepaper#3-privacy-and-plausible-deniability"
         }
-      ],
-      "url": "https://github.com/worm-privacy/whitepaper#3-privacy-and-plausible-deniability"
+      ]
     },
     {
       "name": "On-chain gas cost: deposit",
