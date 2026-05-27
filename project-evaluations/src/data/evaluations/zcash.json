@@ -2,6 +2,7 @@
   "id": "zcash",
   "title": "ZCash",
   "description": "A privacy-focused cryptocurrency using zk-SNARKs to enable fully shielded transactions where sender, receiver, and amount are all encrypted on its own proof-of-work blockchain.",
+  "status": "complete",
   "documentation": "https://zcash.readthedocs.io/en/latest/",
   "categories": ["Private L1", "Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [

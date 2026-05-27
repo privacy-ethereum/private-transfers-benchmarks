@@ -2,6 +2,7 @@
   "id": "redact",
   "title": "Redact",
   "description": "A confidential transfer protocol on Ethereum using Fhenix's CoFHE (Coprocessor for Fully Homomorphic Encryption) to encrypt ERC20 token balances on-chain. All FHE computations are handled off-chain by the coprocessor network. Balances are hidden while addresses are fully visible.",
+  "status": "complete",
   "documentation": "https://docs.redact.money/",
   "categories": ["Fully Homomorphic encryption (FHE)", "Encrypted Tokens"],
   "properties": [

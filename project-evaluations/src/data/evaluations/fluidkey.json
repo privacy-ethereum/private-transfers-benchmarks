@@ -2,6 +2,7 @@
   "id": "fluidkey",
   "title": "Fluidkey",
   "description": "Fluidkey is a stealth address system on Ethereum that automatically generates a new Safe smart account for every incoming payment. It derives stealth addresses from user viewing keys following the ERC-5564 standard, surfacing them through a static ENS name (username.fkey.id) that resolves to a fresh stealth address on every query, ensuring funds arrive at an address that no observer can link back to the recipient.",
+  "status": "complete",
   "documentation": "https://docs.fluidkey.com/",
   "categories": ["Stealth Addresses"],
   "properties": [

@@ -2,6 +2,7 @@
   "id": "worm",
   "title": "WORM",
   "description": "WORM is a protocol that uses an ERC-20 token (BETH for Burned ETH) which is minted via the process of burning Ethereum (ETH) by sending it to unclaimable addresses. Users generate a proof-of-burn receipt which enables the minting of BETH. ETH transfers sent to an unclaimable address are indistinguishable from a regular ETH transfer to a fresh address. There is no way for an outside observer to detect whether a user is interacting with the WORM protocol. The protocol is based on EIP-7503, which standardizes Private Proof-of-Burn.",
+  "status": "complete",
   "documentation": "https://github.com/worm-privacy/whitepaper",
   "categories": ["Zero-Knowledge Wormholes", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [

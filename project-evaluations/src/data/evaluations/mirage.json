@@ -2,6 +2,7 @@
   "id": "mirage",
   "title": "Mirage",
   "description": "Mirage is a privacy layer for token transfers on Ethereum that makes private transactions indistinguishable from ordinary onchain activity. It does this via a technique called bytecode obfuscation along with some other components. It avoids shared pools by using per-transaction escrow contracts whose EVM bytecode is obfuscated by Azoth, an open-source Rust obfuscator that produces many deterministic variants of the same contract logic. Execution is carried out by a decentralised set of TEE-based nodes called Nomads that post bonds into the escrow and earn rewards for settling/finalising transfers.",
+  "status": "complete",
   "documentation": "https://docs.mirageprivacy.com/",
   "categories": ["Bytecode Obfuscator"],
   "properties": [
