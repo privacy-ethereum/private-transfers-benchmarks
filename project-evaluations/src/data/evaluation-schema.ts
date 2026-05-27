@@ -75,7 +75,7 @@ export const evaluationSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
-  status: evaluationStatusEnum.default("complete"),
+  status: evaluationStatusEnum,
   documentation: z.string(),
   categories: z.array(categoryEnum).min(1),
   properties: z.array(propertySchema),
