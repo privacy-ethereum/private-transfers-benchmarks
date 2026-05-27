@@ -34,6 +34,10 @@ Some other ways of thinking about privacy. There is another way to classify priv
 - **Balance Hiding**: An observer cannot determine the total balance held across a user's stealth addresses.
 - **Pattern Hiding**: An observer cannot build behavioral profiles from fragmented transaction histories.
 
+## Methodology
+
+TODO: cover how protocols were selected, how categories and properties were defined
+
 ## Categories
 
 ### Technology categories
@@ -56,7 +60,7 @@ A number of technologies can and are used amongst private transfer protocols.
 - **Stealth addresses** - A scheme where each payment goes to a fresh one-time address derived from the recipient's public spending and viewing keys. Outside observers can't link payments to a single account. The recipient scans the chain with their viewing key to find and spend funds
 - **Encrypted Tokens** - tokens whose balances and transfer amounts stay encrypted on-chain. Computations can be made on encrypted state without revealing values
 - **Private L2** - a L2 rollup with privacy features. Inherits data availability and settlement security from Ethereum while keeping transaction contents shielded.
-- **Private Plasma** - TODO
+- **Private Plasma** - A scaling design where most activity lives off-chain with only compact commitments and exits are posted on-chain, combined with privacy over that off-chain state.
 - **Private Validium** - A Validium is a scaling solution that enforces integrity of transactions using validity proofs like ZK rollups, but doesn’t store transaction data on the Ethereum itself
 - **Zero-Knowledge Wormholes** - Send funds to an unclaimable address and use zero-knowledge proofs to prove you own those funds in order to mint new tokens. The recipient mints to any address by privately proving the source is a valid burn, thus breaking the identifiable link between burn and mint
 - **Decentralised Network** - a standalone decentralised network focussing on providing an additional service. Sometimes with additional crypto-economic assumptions. For example, a FHE or TEE coprocessor.
@@ -69,64 +73,54 @@ A number of technologies can and are used amongst private transfer protocols.
 
 ### Privacy
 
-- **Anonymity** set size: Number of entities participating in the protocol TODO: drop
-
 1. **Confidentiality**: Balances and amounts are private
 2. **Anonymity**: Sender and receiver are private
 3. **Asset privacy**: The asset being transferred is private
 4. **Plausible deniability**: Whether it is possible to detect if you are interacting with the privacy protocol. transfers are indistinguishable from public transfers
 
-### Cost and Performance
-
-TODO: drop cost and performance as it’s in the dashboard and won’t be applied to every project
-
-- **On-chain gas cost: deposit**: The gas cost of submitting a deposit transaction on-chain
-- **On-chain gas cost: transfer**: The gas cost of submitting a transfer transaction on-chain
-- **On-chain gas cost: withdraw**: The gas cost of submitting a withdraw transaction on-chain
-
 ### UX
 
-6. **Number of secrets**: How many secrets does the app or protocol require a user to store?
-7. **Time-to-finality**: The time it takes for a transaction is considered irreversible and permanently part of the blockchain
-8. **Deposit time**: Duration required before you can deposit into the protocol
-9. **Withdraw time**: Duration required before you can withdraw funds from the protocol
+5. **Number of secrets**: How many secrets does the app or protocol require a user to store?
+6. **Time-to-finality**: The time it takes for a transaction is considered irreversible and permanently part of the blockchain
+7. **Deposit time**: Duration required before you can deposit into the protocol
+8. **Withdraw time**: Duration required before you can withdraw funds from the protocol
 
 ### Decentralization & Security
 
-10. **Censorship resistance**: Ability to use the protocol without any restriction or being censored
-11. **External network dependence**: Whether the protocol relies on an external network with additional crypto-economic assumptions
-12. **Escape hatch**: Whether users can withdraw funds relying only on Ethereum consensus, smart contracts, and cryptography
-13. **Upgradeability**: How upgrades to the system are performed
-14. **Client-side proving**: Whether the protocol generates proofs on the client device or if it depends on an external service
-15. **Third-party inspectability**: Whether a third party or parties can inspect the private info of the users. This can happen if the protocol uses an external prover to generate proofs.
-16. **Implementation maturity**: How developed and battle-tested the protocol is, measured by type of deployment, production readiness, and amount of time deployed on mainnet. Maturity weights follow a 1–5 scale.
-17. **Post-quantum secure**: Is the protocol secure against quantum threats
+9. **Censorship resistance**: Ability to use the protocol without any restriction or being censored
+10. **External network dependence**: Whether the protocol relies on an external network with additional crypto-economic assumptions
+11. **Escape hatch**: Whether users can withdraw funds relying only on Ethereum consensus, smart contracts, and cryptography
+12. **Upgradeability**: How upgrades to the system are performed
+13. **Client-side proving**: Whether the protocol generates proofs on the client device or if it depends on an external service
+14. **Third-party inspectability**: Whether a third party or parties can inspect the private info of the users. This can happen if the protocol uses an external prover to generate proofs.
+15. **Implementation maturity**: How developed and battle-tested the protocol is, measured by type of deployment, production readiness, and amount of time deployed on mainnet. Maturity weights follow a 1–5 scale.
+16. **Post-quantum secure**: Is the protocol secure against quantum threats
 
 ### Compliance
 
-18. **Layer of enforcement**: Where is compliance enforced in the protocol? Is it enforced on the blockchain itself? The protocol/app being used, or the underlying asset?
-19. **Enforcement entities**: Which entity or entities enforce compliance restrictions
-20. **Type of compliance**: What type of compliance is being enforced
-21. **Point of enforcement**: Where the compliance is enforced in the private transfer lifecycle. When depositing, transferring within the protocol, or withdrawing.
-22. **Selective disclosure**: viewing entity: The ability to share only what's needed (e.g. proving you own an NFT without revealing your entire wallet history)
-23. **Selective disclosure**: Viewing control: How selective disclosure viewing control managed
+17. **Layer of enforcement**: Where is compliance enforced in the protocol? Is it enforced on the blockchain itself? The protocol/app being used, or the underlying asset?
+18. **Enforcement entities**: Which entity or entities enforce compliance restrictions
+19. **Type of compliance**: What type of compliance is being enforced
+20. **Point of enforcement**: Where the compliance is enforced in the private transfer lifecycle. When depositing, transferring within the protocol, or withdrawing.
+21. **Selective disclosure**: viewing entity: The ability to share only what's needed (e.g. proving you own an NFT without revealing your entire wallet history)
+22. **Selective disclosure**: Viewing control: How selective disclosure viewing control managed
 
 ### Verifiable
 
-24. **Cryptographic verifiability**: Whether correctness is guaranteed by cryptography rather than economic and/or majority-based mechanisms
-25. **Open source**: The source code for the underlying protocol, any backend infrastructure, and any frontend applications is publicly available to inspect and has an open source software license.
+23. **Cryptographic verifiability**: Whether correctness is guaranteed by cryptography rather than economic and/or majority-based mechanisms
+24. **Open source**: The source code for the underlying protocol, any backend infrastructure, and any frontend applications is publicly available to inspect and has an open source software license.
 
 ### State
 
-26. **Private State Scalability**: How protocol-specific private data is stored over time
-27. **Client-side indexing**: Whether user devices must continuously scan the chain to track balances or accounts
-28. **Private state model**: What model does the protocol use for managing private state
-29. **On-chain storage**: Where is the submitted on-chain data stored
+25. **Private State Scalability**: How protocol-specific private data is stored over time
+26. **Client-side indexing**: Whether user devices must continuously scan the chain to track balances or accounts
+27. **Private state model**: What model does the protocol use for managing private state
+28. **Private Data Storage**: Where is the submitted on-chain data stored
 
 ### Composability
 
-30. **Access to DeFi**: Whether the solution can be used directly with DeFi applications. Whether the solution provides a native DeFi ecosystem for shielded assets Or whether there is no access to DeFi
-31. **Programmability/Generality**: Range and expressiveness of private logic: from simple payment flows to rich private smart-contract ecosystems.
+29. **Access to DeFi**: Whether the solution can be used directly with DeFi applications. Whether the solution provides a native DeFi ecosystem for shielded assets Or whether there is no access to DeFi
+30. **Programmability/Generality**: Range and expressiveness of private logic: from simple payment flows to rich private smart-contract ecosystems.
 
 ## Evaluations
 
@@ -216,7 +210,7 @@ Curvy is a privacy-preserving cross-chain payment protocol with compliance featu
 
 **Confidentiality** — Yes. Amounts and balances are private only in specific flows. When splitting, aggregating, or performing a private transfer between two users inside the privacy aggregators, all qualities of the transaction — including amount and currency — remain completely private. However, shielding funds exposes the amount and currency publicly, and unshielding to a regular EOA also reveals the recipient, currency, and amount, so amounts are transparent at the boundaries of the system. Internal user-to-user transfers fully hide amounts, giving confidentiality for balances held and moved within the shielded set.
 
-**Anonymity** — Yes. For private transfers between users inside the privacy aggregators, both sender and recipient remain hidden — all qualities of the transaction are opaque. Shielding exposes the sender, currency, and amount but hides the recipient; unshielding to a regular EOA exposes the recipient, currency, and amount but hides the sender. Within the shielded set, both parties of a private transfer are anonymous.
+**Anonymity** — Yes. For private transfers between users inside the privacy aggregators, both sender and recipient remain hidden — all qualities of the transaction are opaque. Shielding exposes the sender, currency, and amount but hides the recipient. Unshielding to a regular EOA exposes the recipient, currency, and amount but hides the sender. Within the shielded set, both parties of a private transfer are anonymous.
 
 **Asset privacy** — Yes. For private transfers between users inside the privacy aggregators, all qualities of the transaction — including the currency — remain hidden. Currency becomes visible at the boundaries: when shielding, the amount, currency, and sender are public, and at unshielding the currency and amount are public. The asset moved within the shielded set is not visible to external observers.
 
@@ -226,7 +220,7 @@ Curvy is a privacy-preserving cross-chain payment protocol with compliance featu
 
 **Number of secrets** — 2. The user holds an Ethereum wallet key to sign on-chain transactions, plus one Curvy-side root from which the viewing, spending, and Baby Jubjub private keys are deterministically derived. That root is either a FIDO2 passkey with PRF extension, or the signature of a fixed message under the wallet combined with a user password.
 
-**Deposit time** — 0. Curvy generates a Portal address to which funds can be sent, and after the Portal address receives supported funds, the Portal Broadcaster deploys the Portal contract through the Portal Factory. From an on-chain observer's perspective, funds are sent to a regular EOA address to which a smart contract (Portal) is later deployed by the Portal Broadcaster, which then moves the funds to the Privacy Aggregator. The protocol does not impose any waiting period before a user can send funds to the pre-computed Portal address; the deployment happens reactively after funds arrive.
+**Deposit time** — 0. Curvy generates a Portal address to which funds can be sent, and after the Portal address receives supported funds, the Portal Broadcaster deploys the Portal contract through the Portal Factory. From an on-chain observer's perspective, funds are sent to a regular EOA address to which a smart contract (Portal) is later deployed by the Portal Broadcaster, which then moves the funds to the Privacy Aggregator. The protocol does not impose any waiting period before a user can send funds to the pre-computed Portal address — the deployment happens reactively after funds arrive.
 
 **Withdraw time** — 0. Proofs are generated by a Curvy-operated ZK Prover, and these are submitted on-chain to the aggregator. After verifying the withdrawal proof, the aggregator automatically initiates the unshielding to the recipient address in the same transaction. From an on-chain observer's perspective, funds simply move from the aggregator to the destination address. There is no delay or lock period imposed by the protocol.
 
@@ -242,17 +236,17 @@ Curvy is a privacy-preserving cross-chain payment protocol with compliance featu
 
 **Third-party inspectability** — Yes. Producing aggregation and unshielding proofs requires the prover to know the private inputs of the transaction — the notes being spent, the amounts, and the destination. Today this prover role is operated by Curvy, so the operator is in a position to observe these plaintext inputs for every transaction it proves. This visibility is structural rather than something the user opts into by sharing a viewing key.
 
-**Implementation maturity** — 3 : Mainnet for less than 1 year. Curvy went live on Arbitrum mainnet in July 2025, so as of April 2026 it has been deployed on mainnet for approximately 9 months.
+**Implementation maturity** — 3 : Mainnet for less than 1 year. Curvy is deployed on several EVM mainnets — Arbitrum, Base, Ethereum, Optimism, Polygon, Binance Smart Chain, Linea, and Gnosis. The Privacy Aggregator first launched on Arbitrum in November 2025, with its first independent security audit publishing in Q2 2026.
 
-**Post-quantum secure** — No. The actual implementation relies on secp256k1 for wallet-derived spending and viewing keypairs, Baby Jubjub for the in-circuit addressing key, and Baby Jubjub curves embedded in BN254-friendly zk-SNARK circuits — none of which resist Shor's algorithm. Curvy's docs reference research on post-quantum stealth address schemes, indicating awareness of quantum threats, but the live protocol does not implement post-quantum primitives.
+**Post-quantum secure** — No. The actual implementation relies on secp256k1 for wallet-derived spending and viewing keypairs, Baby Jubjub for the in-circuit addressing key, and Baby Jubjub curves embedded in BN254-friendly zk-SNARK circuits — none of which resist Shor's algorithm. Curvy's docs reference research on post-quantum stealth address schemes, but the live protocol does not implement post-quantum primitives.
 
 **Layer of enforcement** — App. Curvy's pre-emptive compliance checks are enforced at the application layer: a Curvy-operated Portal Broadcaster uses security and compliance scores from analytics vendors to determine whether a Portal can be deployed, blocking shielding for flagged addresses. Retroactive compliance checks (currently work-in-progress) would also operate at the app layer, allowing a trusted entity to taint notes and restrict unshielding paths. KYC-gated registration is available only in custom enterprise deployments, not in the canonical Curvy Web App or protocol.
 
-**Enforcement entities** — Admin. Pre-emptive compliance checks are performed by the Curvy-operated Portal Broadcaster, which uses scores from trusted analytics vendors (currently Global Ledger) to determine whether a portal can be deployed. Retroactive compliance checks grant a trusted entity, such as a DAO or an analytics vendor, the ability to taint malicious users even after funds have been shielded. The primary operational enforcement is carried out by Curvy (the admin/core team operating the Portal Broadcaster), while third-party analytics vendors provide the underlying compliance intelligence and DAOs are mentioned as potential trusted entities for retroactive actions.
+**Enforcement entities** — Third party. Pre-emptive compliance is gated by the security and compliance score supplied by a trusted analytics vendor — currently Global Ledger — whose verdict drives whether the Curvy-operated Portal Broadcaster deploys a Portal. Retroactive compliance similarly delegates the tainting decision to a trusted entity such as an analytics vendor or DAO.
 
-**Type of compliance** — Programmatic policies, Selective disclosure. Curvy implements programmable per-deposit policies through trusted analytics vendors that provide security and compliance scores for addresses; the Curvy-operated Portal Broadcaster uses these scores to determine whether a portal can be deployed and assets shielded, aiming to prevent known malicious addresses from shielding funds. Retroactive compliance checks, currently in development, would enable a trusted entity to taint malicious users even after funds are shielded — not yet live and therefore excluded from the value. Custom enterprise deployments support KYC checks that must pass prior to Curvy ID registration, but the canonical protocol does not feature this and KYC/KYB is therefore also excluded. Curvy IDs expose a viewing public key, enabling user-initiated selective disclosure via the viewing private key.
+**Type of compliance** — Programmatic policies, Selective disclosure. Curvy implements programmable per-deposit policies through trusted analytics vendors that provide security and compliance scores for addresses. The Curvy-operated Portal Broadcaster uses these scores to determine whether a portal can be deployed, blocking known malicious addresses from shielding funds. Retroactive compliance checks are in development. Custom enterprise deployments support KYC at Curvy ID registration, but the canonical protocol does not, so KYC/KYB is not yet live. Curvy IDs expose a viewing public key, enabling user-initiated selective disclosure via the viewing private key.
 
-**Point of enforcement** — Deposit, Withdrawal. Pre-emptive compliance checks are performed by the Portal Broadcaster, which uses a security and compliance score from analytics vendors to determine whether a Portal can be deployed and assets shielded, enforcing compliance at the deposit step. Retroactive compliance checks enable tainting of malicious users after they have deposited and shielded funds, restricting them to unshield only to the exact same address from which funds were shielded, which enforces compliance at the withdrawal step. Both mechanisms are part of Curvy's two-sided compliance model, though retroactive compliance checks are not yet publicly available.
+**Point of enforcement** — Deposit. Pre-emptive compliance checks are performed by the Portal Broadcaster, which uses a security and compliance score from analytics vendors to determine whether a Portal can be deployed and assets shielded, enforcing compliance at the deposit step. Retroactive compliance checks that would enforce at withdrawal are a WIP and not yet publicly available, so withdrawal is not currently a point of enforcement.
 
 **Selective disclosure: viewing entity** — User, Voluntary third-party disclosure. The viewing private key can be shared by the user with a third party to gain access to their private transaction history that would otherwise be completely hidden, envisioned for proving transactional activity without giving control over funds. The viewing public key is necessary to construct proper stealth addresses and notes for the user. The user holds the viewing private key and can query their own transaction history, and voluntary delegation to trusted parties such as auditors is supported through key sharing. No involuntary third-party access or protocol-level disclosure mechanisms are documented.
 
@@ -260,13 +254,13 @@ Curvy is a privacy-preserving cross-chain payment protocol with compliance featu
 
 **Cryptographic verifiability** — Yes. The Privacy Aggregator verifies zk-SNARK proofs on-chain for every state transition, validating that changes to the Sparse Merkle Trees of notes and nullifiers follow defined rules, and updates the tree roots only after successful proof verification. ZK proofs provide provable on-chain data and state transition rule integrity without exposing the exact state transitions. All three action types—shielding, aggregation, and unshielding—are verified as valid state transitions by the Privacy Aggregator.
 
-**Open source** — Yes. The Solidity contracts repo is licensed under Apache-2.0, the SDK under MIT, and the kohaku wallet extension under GPL-3.0. All three critical components — contracts, SDK, and wallet extension — are published under OSI-approved licenses.
+**Open source** — Yes. The Solidity contracts repo is licensed under Apache-2.0, the SDK under MIT. These critical components — contracts and SDK, are published under open source license.
 
-**Private State Scalability** — Infinity grow. Notes and Nullifiers are each arranged into a Sparse Merkle Tree, and with each proof submitted to the Aggregator smart contract, new Notes and/or Nullifiers are emitted through EVM events, and the roots of the SMT trees are updated on-chain. New Notes are created during shielding and aggregation operations, while aggregation consumes input Notes and produces output Notes. The trees accumulate entries monotonically as users shield funds and perform transfers, with no mechanism described for pruning or removing historical nullifiers or notes from the on-chain state. The Notes and Nullifiers data is essential so that every client can verify the validity of the SMTs and subsequently prove ownership of the Notes they wish to spend.
+**Private State Scalability** — Infinity grow. Notes and nullifiers are each arranged into a Sparse Merkle Tree, and each proof submitted to the Aggregator emits new notes and/or nullifiers through events and updates the SMT roots on-chain. New notes are created during shielding and aggregation, while aggregation also consumes input notes. The trees accumulate entries monotonically as users shield and transfer, with no pruning mechanism for historical nullifiers or notes. Clients need the full note and nullifier data to verify the SMTs and prove ownership of the notes they wish to spend.
 
 **Client-side indexing** — Always scanning. The Curvy App, using the open-source Curvy SDK, starts syncing notes from the public Notes Registry immediately upon starting, and the SDK simultaneously scans the synced notes with the user's private keys to detect which notes are secretly in their ownership and to decrypt their balances. Note ownership is completely hidden from on-chain observers, which means continuous scanning with private keys is required to identify which notes belong to the user. The SDK must attempt decryption on all notes because there is no public index by recipient address.
 
-**Private state model** — UTXO-based state model. Curvy follows a UTXO-based model where each note represents an unspent output that is consumed by publishing its nullifier and producing fresh output notes. The privacy aggregator verifies proofs that validate state transitions of an ordered list of tuples called "Notes" and "Nullifiers," which are each arranged into Sparse Merkle Trees. During shielding, a new Note is created indicating a not-yet-spent balance of a certain currency. Aggregation combines one or many input Notes into one or many output notes, where multiple inputs can spawn multiple outputs, the sum of inputs and outputs must be equal, and the actor must prove ownership of all inputs.
+**Private state model** — UTXO-based state model. Curvy follows a UTXO-based model where each note represents an unspent output that is consumed by publishing its nullifier and producing fresh output notes. The privacy aggregator verifies proofs over a state transition of an ordered list of notes and nullifiers, kept in Sparse Merkle Trees. Shielding creates a new note. Aggregation combines one or more input notes into one or more output notes, with the sum of inputs and outputs equal and ownership of all inputs proven.
 
 **Private Data Storage** — Smart contracts. The privacy aggregator stores the Sparse Merkle Tree roots for notes and nullifiers in contract state, and emits each new note and nullifier as an EVM event so the data is persisted on-chain in the transaction logs. The Note Registry is an off-chain index of those events for ease of querying, but it is not the authoritative source — clients can rebuild the SMTs from chain history alone.
 
@@ -314,7 +308,7 @@ Fluidkey is a stealth address system on Ethereum that automatically generates a 
 
 **Third-party inspectability** — Yes. Fluidkey has read access to all incoming transactions and stealth account balances through the shared viewing key node. This access is required for Fluidkey to scan the blockchain and display the user's dashboard. Fluidkey cannot move funds (no spending key access), but can see all transaction history by default without explicit user consent per transaction. It is theoretically possible for a user to run their own indexer to scan the blockchain and infer their balance.
 
-**Implementation maturity** — 4 : Mainnet for more than 1 year. Fluidkey launched its stable version in June 2024. Deployed on Ethereum mainnet, Base, Optimism, Arbitrum, Polygon, and Gnosis.
+**Implementation maturity** — 4 : Mainnet for more than 1 year. Fluidkey launched its stable version in Q2 2024. Deployed on Ethereum mainnet, Base, Optimism, Arbitrum, Polygon, and Gnosis.
 
 **Post-quantum secure** — No. Fluidkey's stealth address derivation is based on ECDH on the secp256k1 curve, which is vulnerable to Shor's algorithm and is therefore not post-quantum secure.
 
@@ -380,11 +374,11 @@ A privacy protocol using stealth addresses and zk-SNARKs to enable confidential 
 
 **Escape hatch** — No. If an address is sanctioned or blacklisted by Chainalysis, withdrawal requests from that address will be blocked at the smart contract level. Users would need to work with regulators and the Hinkal team to resolve access. This is a design trade-off for institutional compliance.
 
-**Upgradeability** — Multi-sig. Hinkal does not have a governance token at the moment but there are plans to launch a token in the near future. At the moment any upgrades to the protocol would be done by Hinkal internal team which likely uses a multi-signature wallet to introduce new changes on-chain. TODO: is this true, it looks like the answer is uncertain and source doesn't prove it either way
+**Upgradeability** — Single admin. Hinkal does not have a governance token at the moment but there are plans to launch a token in the near future. Upgrades to the protocol are controlled by the Hinkal internal team. The admin key on the deployed contracts has not been independently classified, so the upgrade authority defaults to single admin until a multi-sig or threshold scheme is established on-chain.
 
-**Client-side proving** — Yes. ZK proofs for deposits and withdrawals are generated on the user's device. Simple private transfer transaction ZK proofs can also be generated locally but more complex ones (involving smart contract interactions, multiple tokens, etc) could take longer. Therefore Hinkal implements an external proof generation mechanism using AWS Nitro enclave. There is an option to turn on "Extra Security" and generate the ZK proofs inside the user's browser at a slower speed. TODO: Source doesn't mention AWS. Need to verify
+**Client-side proving** — Yes. ZK proofs for deposits and withdrawals are generated on the user's device. Simple private transfer transaction ZK proofs can also be generated locally but more complex ones (involving smart contract interactions, multiple tokens, etc) could take longer. Therefore Hinkal implements an external proof generation mechanism using AWS Nitro enclave. There is an option to turn on "Extra Security" and generate the ZK proofs inside the user's browser at a slower speed.
 
-**Third-party inspectability** — No. If the "Extra Security" option is turned off, all private inputs for the ZK proofs (token address, amount, stealth address, etc.) are sent in plaintext to the AWS Nitro enclave. We can assume that the enclave (TEE) will not leak data to any third party but it is important to mention that there are known vulnerabilities around TEE that might allow an attacker to see the inside data. An alternative way to solve this issue is to turn on "Extra Security" and generate the proof locally. TODO: Source doesn't mention AWS. Need to verify
+**Third-party inspectability** — No. If the "Extra Security" option is turned off, all private inputs for the ZK proofs (token address, amount, stealth address, etc.) are sent in plaintext to the AWS Nitro enclave. We can assume that the enclave (TEE) will not leak data to any third party but it is important to mention that there are known vulnerabilities around TEE that might allow an attacker to see the inside data. An alternative way to solve this issue is to turn on "Extra Security" and generate the proof locally.
 
 **Implementation maturity** — 3 : Mainnet for less than 1 year. The Hinkal shielded-pool contract was first deployed on Ethereum mainnet in June 27, 2025. The protocol has been live on mainnet for less than one year at time of evaluation.
 
@@ -394,13 +388,13 @@ A privacy protocol using stealth addresses and zk-SNARKs to enable confidential 
 
 **Enforcement entities** — Third party. KYT checks are delegated to a third-party compliance provider (Chainalysis) integrated into the Hinkal smart contracts directly. Chainalysis compliance components are on-chain smart contracts that authorize or not a specific address or transaction depending on external automated analysis.
 
-**Type of compliance** — Programmatic policies, Selective disclosure. Hinkal enforces programmable per-transaction policies via Chainalysis compliance components integrated into the smart contracts; the chain-analytics signal is a data input to the policy layer (not a separate compliance category). Screening applies at deposit and withdrawal, where public addresses are visible. Private transfers within the shielded pool are note-to-note and do not expose public addresses to the compliance layer. Users can also voluntarily share their viewing key with third parties for selective disclosure.
+**Type of compliance** — Programmatic policies, Selective disclosure, Proof of innocence (POI) / ASP. Hinkal layers three mechanisms. Programmatic policies: Chainalysis integration blocks transactions involving sanctioned addresses at the smart-contract level with continuous re-screening. Selective disclosure: users can export an audit file for a chosen time interval to share with third parties via the viewing key. POI/ASP: source-of-funds is enforced by a ZK proof that funds are not associated with any depositId linked to a blacklisted address — a non-membership proof at transfer or withdrawal. Deposits above $10,000 require a privacy-preserving identity attestation (zkTLS or reusable attestations from zkMe, Galxe, AiPrise, BABT, Authento), short of full KYC.
 
-**Point of enforcement** — Deposit, Withdrawal. Compliance checks are applied when assets enter the shielded pool (deposit) and when they leave (withdrawal), blocking flagged addresses at either boundary. Private transfers within the pool are note-to-note operations between stealth addresses and do not pass through the Chainalysis compliance contract directly.
+**Point of enforcement** — Deposit, Transfer, Withdrawal. Chainalysis KYT screening and the large-deposit integrity check apply at deposit, blocking flagged addresses before assets enter the shielded pool. A zero-knowledge non-membership proof that funds are not linked to a blacklisted depositId is then required on every private transfer and on every withdrawal, so a depositor address flagged after entering Hinkal loses both internal-pool movement and shielded withdrawal.
 
 **Selective disclosure: viewing entity** — User, Voluntary third-party disclosure. Users can view their own transaction history via their viewing key (self-view). They can also voluntarily share this viewing key with third parties such as regulators, auditors, or wallet managers, granting read-only access to their shielded transaction history.
 
-**Selective disclosure: viewing control** — Pre-defined. Viewing access follows a pre-defined key-derivation scheme. There is no programmable, scope-limited viewing key; disclosure covers the full history accessible by the derived key. There is no update function to change the viewing key because it is derived from the spending key which is scoped to one per user.
+**Selective disclosure: viewing control** — Pre-defined. Viewing access follows a pre-defined key-derivation scheme. There is no programmable, scope-limited viewing key — disclosure covers the full history accessible by the derived key. There is no update function to change the viewing key because it is derived from the spending key which is scoped to one per user.
 
 **Cryptographic verifiability** — Yes. Correctness of all shielded operations is guaranteed by zk-SNARK proofs (Groth16 or similar pairing-based scheme on BN254) verified on-chain. Commitments use Poseidon hashing over the BabyJubjub curve, and viewing keys use Curve25519 encryption.
 
@@ -424,13 +418,13 @@ A privacy protocol using stealth addresses and zk-SNARKs to enable confidential 
 
 **Houdini Swap**
 
-Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains privacy by routing each swap through two independent off-chain CEX partners and three separate blockchains, so no single counterparty sees the full path from source to destination. It is not a mixer: liquidity is not pooled and no zero-knowledge proofs are used; privacy comes from partitioning knowledge across routing hops. The service aggregates DEXes and bridges across 100+ chains and curates CEX partners that run industry-standard AML programmes.
+Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains privacy by routing each swap through two independent off-chain CEX partners and three separate blockchains, so no single counterparty sees the full path from source to destination. It is not a mixer — liquidity is not pooled and no zero-knowledge proofs are used. Privacy comes from partitioning knowledge across routing hops. The service aggregates DEXes and bridges across 100+ chains and curates CEX partners that run industry-standard AML programmes.
 
 **Categories**: Cross-Chain Swap Aggregator
 
 **Documentation**: https://docs.houdiniswap.com/
 
-**Confidentiality** — No. Balances and transfer amounts are transparent. Each swap consists of multiple hops routed through several intermediaries: For example, token A is sent from the source wallet and routed to a non-custodial exchange, where it is swapped into a temporary, privacy-centric Layer 1 intermediary token. This intermediary token is then routed to a second non-custodial exchange and delivered as token B to the recipient, meaning every hop settles as an ordinary on-chain transfer with visible amounts. There are no shielded commitments, notes, or encrypted amounts at both ends of the swap. The privacy focussed L1 token acts as the buffer that breaks the link in the chain — privacy comes from breaking the sender-receiver link across hops, not from hiding values.
+**Confidentiality** — No. Balances and transfer amounts are transparent. Each swap routes through a non-custodial exchange that converts token A into a privacy-centric Layer 1 intermediary, then through a second non-custodial exchange that delivers token B to the recipient. Swaps settle as an ordinary on-chain transfer with visible amounts, and there are no shielded commitments, notes, or encrypted amounts at either end. The privacy-focussed L1 token acts as the buffer breaking the link in the chain — privacy comes from breaking the sender-receiver link across hops, not from hiding values.
 
 **Anonymity** — Unlinkability. Sender and receiver addresses are unlinkable on-chain. Each swap is routed through separate non-custodial exchanges with a temporary layer-1 token as an intermediary, and the sender and receiver never appear in the same transaction trail. Each leg of the transaction appears to terminate independently, so to an outside observer each leg looks like a standard, unrelated transaction. Addresses themselves remain visible on their respective chains.
 
@@ -448,7 +442,7 @@ Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains pr
 
 **Censorship resistance** — No. Swaps can be blocked by multiple entities. Partner CEXes must use tools like Chainalysis to screen incoming deposits for links to sanctioned wallets or criminal activity, and they prevent transactions from OFAC-listed entities and jurisdictions, so a CEX hop can reject a deposit or payout mid-route. Houdini itself imposes structural gates: swaps over $100,000 are not facilitated, access from Tor and restricted jurisdictions is blocked, and users connecting from sanctioned countries are geo-blocked. Because routing depends on these vetted intermediaries with no permissionless fallback, a refusal at either layer halts the transfer.
 
-**External network dependence** — Yes, permissioned. Houdini's Private Swap routing depends on external networks it does not operate: partner CEXes for the multi-hop privacy path, and on-chain DEX aggregators, cross-chain bridges, and intent-based protocols for the on-chain path. The CEX partner set is curated rather than open — partners must pass Houdini's Know Your Business due diligence before integration — so the dependency is on a permissioned set of providers, not an open network. The Houdini routing engine itself only analyses routes and orchestrates the order lifecycle; all settlement security is inherited from these external venues.
+**External network dependence** — Yes, permissioned. Houdini's Private Swap routing depends on external networks it does not operate: partner CEXes for the multi-hop privacy path, and on-chain DEX aggregators, cross-chain bridges, and intent-based protocols for the on-chain path. The CEX partner set is curated rather than open — partners must pass Houdini's Know Your Business due diligence before integration — so the dependency is on a permissioned set of providers, not an open network. The Houdini routing engine itself only analyses routes and orchestrates the order lifecycle. All settlement security is inherited from these external venues.
 
 **Escape hatch** — N/A. The escape hatch property does not apply here because there is no protocol-controlled pool or shielded balance to exit from. The routing is non-custodial and executed through exchange protocols rather than a Houdini Swap contract, and each swap passes through two separate non-custodial exchanges with a temporary intermediary asset acting as a buffer between legs. If a partner exchange fails to deliver during the brief window between legs, recovery is a customer-service matter with that venue, not an on-chain withdrawal path. According to the docs, Houdini Swap offers a 24/7 human support portal on Telegram.
 
@@ -484,7 +478,7 @@ Houdini Swap is a non-custodial cross-chain liquidity aggregator that obtains pr
 
 **Private state model** — N/A. Houdini Swap does not maintain any protocol-level private state. User balances remain ordinary wallet balances on whichever host chain they reside on. Most supported chains and the majority of swap volume sit on account-model networks, so so you could argue the closest match is the account-based model, though this property does not really apply to an off-chain routing service.
 
-**Private Data Storage** — N/A. Houdini Swap does not maintain any private transaction data of its own — there are no on-chain privacy commitments, shielded notes, or off-chain encrypted state tied to a chain commitment. Each leg is an ordinary on-chain transfer; per-leg transaction records reside inside each partner exchange's internal systems for regulatory purposes, while the routing engine keeps order metadata off-chain to orchestrate legs. The property does not apply to an off-chain routing service.
+**Private Data Storage** — N/A. Houdini Swap does not maintain any private transaction data of its own — there are no on-chain privacy commitments, shielded notes, or off-chain encrypted state tied to a chain commitment. Each leg is an ordinary on-chain transfer. Per-leg transaction records reside inside each partner exchange's internal systems for regulatory purposes, while the routing engine keeps order metadata off-chain to orchestrate legs. The property does not apply to an off-chain routing service.
 
 **Access to DeFi** — No access to DeFi. Houdini operates as a swap router that delivers plain destination tokens to a user-controlled address, with no protocol-issued shielded asset, wrapper, or note format that could plug into DeFi. After a swap, any subsequent DeFi use is whatever the recipient does with the plaintext token on the destination chain.
 
@@ -524,7 +518,7 @@ Nullmask is a privacy layer that sits between an ordinary wallet (e.g. MetaMask)
 
 **Escape hatch** — Instantly. Withdrawals settle in the same transaction as proof verification, with no protocol-imposed delay. After the on-chain verifier validates the proof, the contract spends the nullifiers, records the transaction nullifier, inserts the change commitments, pays the relayer fee, and transfers the withdrawal amount to the recipient. Exit depends on the verifier contract, which sits behind an upgradeable proxy with upgrade authority delegated to a controller — a controller-driven upgrade could alter the verifier.
 
-**Upgradeability** — Single admin. The main contract is a UUPS upgradeable contract, and the upgrade permission mechanism itself is upgradeable. The current upgrade controller is held by a single admin (the deployer), with that same authority gating verifier swaps and other privileged setters. Migration to a timelock, multisig, or DAO is described as a future possibility rather than a live arrangement. The on-chain admin address has not been independently verified to confirm whether the deployer key is an EOA or a multisig wrapper.
+**Upgradeability** — Single admin. The main contract is a UUPS upgradeable contract, and the upgrade permission mechanism itself is upgradeable. The current upgrade controller is held by a single admin (the deployer), with that same authority gating verifier swaps and other privileged setters. Migration to a timelock, multisig, or DAO is described as a future possibility rather than a live arrangement. The on-chain admin address has not been independently verified to determine whether the deployer key is an EOA or a multisig wrapper.
 
 **Client-side proving** — No. By default, proofs are generated by the RPC proxy: it parses transaction intent, selects funding notes, and generates ZK proofs server-side, accessed via a web page where the server operator can observe user transfers. The protocol uses the UltraHonk proof system, which the docs note can prove an EIP-1559 transaction and verify its ECDSA signature on consumer-grade hardware in roughly two seconds, so client-side proving is supported. A self-hosted path running on mobile or as a browser extension is documented as an alternative privacy-preserving deployment, but it requires installation and is not the default flow for the typical user.
 
@@ -548,7 +542,7 @@ Nullmask is a privacy layer that sits between an ordinary wallet (e.g. MetaMask)
 
 **Cryptographic verifiability** — Yes. Transaction correctness is enforced cryptographically: every shielded action requires a valid ZK proof verified by an on-chain verifier contract, and the proof cannot be forged without breaking the UltraHonk proof system, with Ethereum signatures verified inside the ZK circuit via secp256k1 ECDSA. Proofs are verified on-chain. The verifier contracts are upgradeable.
 
-**Open source** — No. The documentation lists deployed addresses and comprehensively describes the protocol architecture, smart contract interfaces, and RPC API in detail. The documentation states that contracts and circuits are open source, but no public source repository or open source licence is referenced.
+**Open source** — No. Public documentation lists deployed addresses and comprehensively describes the protocol architecture, smart contract interfaces, and RPC API in detail. Contracts and circuits are stated to be open source, but no public source repository or open source licence is referenced.
 
 **Private State Scalability** — Infinity grow. Private state grows without bound with usage. Every shielded action appends a new note commitment to an on-chain Merkle tree and publishes a nullifier that is permanently retained. The contract maintains a set of all spent nullifiers and rejects any transaction that attempts to spend a note whose nullifier has already been recorded.
 
@@ -592,7 +586,7 @@ A privacy protocol that extends Tornado Cash unlinkability concept with associat
 
 **Withdraw time** — 28800. After depositing, the Association Set Provider (ASP) must vet the deposit before a private withdrawal is possible. This vetting process can take up to 8 hours. If the ASP rejects the deposit or does not process it in time, users can recover funds publicly via the ragequit mechanism, which withdraws funds to the original depositing address. This action is public and is routed back to the depositing address, therefore there is no unlinkability unlike a regular withdrawal.
 
-**Censorship resistance** — No. The Association Set Provider (ASP) is a closed framework at the moment and external ASPs cannot be configured in the current Privacy Pools contracts. In theory anyone could deploy new contracts with loose ASP controls but that would not be related to the official Privacy Pools protocol. The ASP is the core feature of the protocol because it allows users to maintain anonymity without mixing funds with malicious or sanctioned actors.
+**Censorship resistance** — Yes. Privacy Pools provides a ragequit mechanism: when the Association Set Provider (ASP) does not approve a deposit or revokes approval, the original depositor can withdraw funds directly via the ragequit method, bypassing both the ASP and any relayer. The trade-off is privacy — ragequit publicly links the deposit and withdrawal addresses, so the user forfeits anonymity in exchange for the censorship-resistant exit.
 
 **External network dependence** — Yes, permissioned. The Association Set Provider needs to be running in order to allow deposit and withdraw function executions in the smart contracts. Hence the protocol depends on a permissioned network that authorizes smart contract interactions. If the ASP is taken down then the deposit and withdraw actions will be blocked. As stated in the censorship resistance property, there could be Privacy Pools contracts that do not rely on any ASP or rely on more trustless ASP.
 
@@ -648,7 +642,7 @@ A privacy system for Ethereum using zk-SNARKs to shield ERC-20 tokens and ETH in
 
 **Documentation**: https://docs.railgun.org/wiki/learn/privacy-system
 
-**Confidentiality** — Yes. RAILGUN private (shielded) balances are built through a registry of UTXOs (unspent transaction outputs), similar to Bitcoin. The primary difference is that the RAILGUN UTXO list is encrypted with the sender and receiver's keys, meaning that no outsider can view the contents of the UTXO unless it is the recipient of that transaction. In order to send a transaction, the user consumes their available UTXO notes and creates new encrypted notes that are sent on-chain in order for the receiver wallet to find them and add them to the aggregated user's balance. These UTXOs form a Merkle tree — a structured hash list used to validate the balance state during transactions. To reconstruct a wallet's private balance, each commitment leaf in the tree must be synced and decrypted, a process that takes a few minutes before UTXO token balances are aggregated.
+**Confidentiality** — Yes. RAILGUN shielded balances are built from a registry of UTXOs encrypted with the sender and receiver's keys, so no outsider can view a UTXO's contents unless they are the recipient. To send, a user consumes available UTXO notes and posts new encrypted notes on-chain for the recipient wallet to find and add to their balance. The UTXOs form a Merkle tree whose roots and leaves validate balance state during transactions. To reconstruct a wallet's private balance, each commitment leaf must be synced and decrypted, a process that takes a few minutes before token balances aggregate.
 
 **Anonymity** — Yes. When a user sends a transaction using Railgun, they consume their available UTXOs (notes) by adding a nullifier to the on-chain state. In the same step new UTXOs belonging to the recipient are generated and added to the commitments merkle tree. These new UTXOs are encrypted and only the recipient has the ability to check their values and aggregate their total balance. An outside on-chain observer can see commitments added (notes generated) and nullifiers (notes consumed) but cannot link the sender or recipient with a specific transaction.
 
@@ -753,7 +747,7 @@ A confidential transfer protocol on Ethereum using Fhenix's CoFHE (Coprocessor f
 
 **Third-party inspectability** — Yes. The threshold decryption network, operated by Fhenix, holds distributed shares of the FHE private key and uses an MPC protocol for collaborative decryption. A colluding majority of party members could reconstruct the key and decrypt user balances. The system currently uses a trusted dealer to initialize secret shares, with plans to eliminate this centralization risk.
 
-**Implementation maturity** — 2 : Public testnet. Redact is currently in Phase 0 (testnet deployment) per its roadmap. The protocol is available on public testnet with core encrypt, decrypt, and confidential transfer functionality operational.
+**Implementation maturity** — 2 : Public testnet. Redact is in Phase 0 (testnet deployment) per its roadmap. The protocol is available on public testnet with core encrypt, decrypt, and confidential transfer functionality operational.
 
 **Post-quantum secure** — No. The TFHE encryption layer uses lattice-based cryptography (LWE problem), which is believed to be post-quantum secure. However, the underlying Ethereum transactions use ECDSA signatures, and the threshold network and DA layer likely use classical cryptographic primitives that are not post-quantum resistant. The system as a whole is not post-quantum secure.
 
@@ -769,11 +763,11 @@ A confidential transfer protocol on Ethereum using Fhenix's CoFHE (Coprocessor f
 
 **Selective disclosure: viewing control** — Pre-defined. Permits use a fixed EIP-712 schema with three defined types (self, sharing, recipient) and a 24-hour default expiry. Users can issue permits within this fixed structure but cannot create custom viewing policies or modify the disclosure schema. Selective disclosure of transaction history and DeFi actions will be possible in the future.
 
-**Cryptographic verifiability** — No. Correctness rests on a permissioned threshold-decryption network (an economic / multi-party trust mechanism), so the value is No per the rule that excludes economic mechanisms from cryptographic verifiability. The CoFHE architecture claims to use zero-knowledge proofs of knowledge (ZKPoK) alongside TFHE, but even if ZKPoK is implemented, decryption itself depends on threshold-network honesty rather than pure math.
+**Cryptographic verifiability** — No. Transaction correctness rests on the off-chain CoFHE coprocessor and its threshold-decryption network rather than cryptographic proofs of homomorphic computation. The only zero-knowledge component is a proof of knowledge that the user knows the plaintext of an encrypted input, which guards input well-formedness but does not attest to computation correctness. Decryption results are produced by an MPC protocol among permissioned parties and signed by a dispatcher, so on-chain acceptance reduces to trusting a registered signer set. The input-proof verifier runs in a TEE, but hardware attestation is not a cryptographic correctness proof over the FHE computation itself.
 
 **Open source** — No. The Redact repository and cofhe-contracts are licensed under MIT. However, the fheOS computation engine, threshold network node code, and DA layer do not appear in the FhenixProtocol GitHub organization. These are critical infrastructure components.
 
-**Private State Scalability** — Infinity grow. Redact uses an account-based model where each user's encrypted balance handle is stored as a mapping within the smart contract storage. On-chain state grows proportionally to the number of accounts. Full ciphertexts grow on the off-chain DA layer proportionally to the number of operations — every transfer emits a new ciphertext that must be retained for balance reconstruction.
+**Private State Scalability** — Stateless. Redact's onchain private state does not grow with usage. Each ERC20 token's balance is kept as an encrypted ciphertext, with on-chain storage holding per-address ciphertext handles updated in place while the full encrypted state lives off-chain on the Fhenix CoFHE coprocessor. The on-chain mapping scales with the number of accounts rather than transactions.
 
 **Client-side indexing** — No scanning. Since Redact uses an account-based model with encrypted balances stored directly as contract state, users can retrieve their encrypted balance directly from the contract without scanning past blockchain events.
 
@@ -819,7 +813,7 @@ A confidential payment protocol on Starknet that uses ElGamal homomorphic encryp
 
 **Escape hatch** — Instantly. Tongo provides a ragequit mechanism that allows users to instantly withdraw their full current balance back to ERC20 tokens. The user submits a ZK proof demonstrating ownership of the account private key and that the disclosed amount equals their full balance. The contract converts the encrypted balance to ERC20 and sends it to the specified address. The pending balance is not affected by this operation.
 
-**Upgradeability** — Single admin. The deployed contracts show OpenZeppelin Cairo access control functions (is_upgrade_governor, has_role, get_role_admin), indicating the contracts use Starknet's native upgradeability via the replace_class syscall with role-based access control. The contract owner can also rotate the auditor public key.
+**Upgradeability** — Single admin. The deployed contracts use OpenZeppelin Cairo access control functions (is_upgrade_governor, has_role, get_role_admin) and Starknet's native upgradeability via the replace_class syscall with role-based access control. The contract owner can also rotate the auditor public key.
 
 **Client-side proving** — Yes. Tongo uses ElGamal homomorphic encryption and Sigma protocol zero-knowledge proofs over the Stark curve to update on-chain encrypted balances. The SHE (Somewhat Homomorphic Encryption) library provides proof primitives for operations like same-encryption verification, range proofs, and bit proofs. The SDK runs these provers on the user's device with no external proving service.
 
@@ -851,7 +845,7 @@ A confidential payment protocol on Starknet that uses ElGamal homomorphic encryp
 
 **Private state model** — Account-based state model. Tongo maintains an account-based private state where each account holds an encrypted current balance (immediately spendable) and an encrypted pending balance (received but not yet rolled over). Users must explicitly rollover pending funds to make them spendable.
 
-**Private Data Storage** — Smart contracts. All private state—including encrypted account balances (current and pending) and auditor configuration—is stored directly in the Tongo smart contract on Starknet.
+**Private Data Storage** — Smart contracts. All private state, including encrypted account balances (current and pending) and auditor configuration is stored directly in the Tongo smart contract on Starknet.
 
 **Access to DeFi** — Composable interface, but requires DeFi protocol changes. Tongo uses an ERC20-compatible encrypted token interface. The docs list AMMs (hidden trade sizes) and DAO governance (confidential voting) as use cases. DeFi protocols would need to be built or adapted to work with encrypted balances and ZK proofs. Currently no DeFi integrations exist, but the design is composable.
 
@@ -877,7 +871,7 @@ A non-custodial, Ethereum-based mixer that uses zk-SNARKs to break the on-chain 
 
 **Plausible deniability** — No. Everyone with access to on-chain data can see which addresses have interacted with the Tornado Cash pools and smart contracts. Depositors and withdrawers are identifiable by their interactions with the contract. There is no way to deny that a specific address has used Tornado Cash, as shielded transactions are distinguishable from regular transfers.
 
-**On-chain gas cost: transfer** — 0. There are no internal transactions in classic Tornado Cash. A user could "transfer" their secret note to allow another user to withdraw their shielded tokens. This transfer would happen off-chain and cannot be considered a Tornado Cash private transfer because it is not described in the documentation and was not in the original design. The new version called Tornado Cash Nova allows shielded transfers similar to shielded pool protocols
+**On-chain gas cost: transfer** — 0. There are no internal transactions in classic Tornado Cash. A user could "transfer" their secret note to allow another user to withdraw their shielded tokens. This transfer would happen off-chain and cannot be considered a Tornado Cash private transfer because it is outside the original design and the supported flows. The new version called Tornado Cash Nova allows shielded transfers similar to shielded pool protocols
 
 **Time-to-finality** — N/A. Tornado Cash is deployed on Ethereum, BNB Chain, Polygon, Arbitrum, Optimism, Avalanche, and Gnosis. Finality is inherited from each underlying chain.
 
@@ -1079,12 +1073,143 @@ zERC20 is a fully ERC-20-compliant token with a private-transfer mechanism, usab
 
 ## Table of project evaluations
 
-<!-- TODO: hand-written or auto-generated summary table -->
+<!-- BEGIN: comparison-table -->
+
+### Privacy
+
+<table class="compare-table">
+<tr><th>Protocol</th><th>Confidentiality</th><th>Anonymity</th><th>Asset privacy</th><th>Plausible deniability</th></tr>
+<tr><th class="proto">Bermuda</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="">No</td></tr>
+<tr><th class="proto">Curvy</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="">No</td></tr>
+<tr><th class="proto">Fluidkey</th><td class="cell--no">No</td><td class="">Unlinkability</td><td class="cell--no">No</td><td class="">Yes</td></tr>
+<tr><th class="proto">Hinkal</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="">No</td></tr>
+<tr><th class="proto">Houdini Swap</th><td class="cell--no">No</td><td class="">Unlinkability</td><td class="cell--no">No</td><td class="">Yes</td></tr>
+<tr><th class="proto">Nullmask</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="">No</td></tr>
+<tr><th class="proto">Privacy Pools</th><td class="cell--no">No</td><td class="">Unlinkability</td><td class="cell--no">No</td><td class="">No</td></tr>
+<tr><th class="proto">Railgun</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="">No</td></tr>
+<tr><th class="proto">Redact</th><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="cell--no">No</td><td class="">No</td></tr>
+<tr><th class="proto">Tongo</th><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="cell--no">No</td><td class="">No</td></tr>
+<tr><th class="proto">Tornado Cash</th><td class="cell--no">No</td><td class="">Unlinkability</td><td class="cell--no">No</td><td class="">No</td></tr>
+<tr><th class="proto">zERC20</th><td class="cell--no">No</td><td class="">Unlinkability</td><td class="cell--no">No</td><td class="">No</td></tr>
+</table>
+
+### UX
+
+<table class="compare-table">
+<tr><th>Protocol</th><th>Number of secrets</th><th>Deposit time</th><th>Withdraw time</th></tr>
+<tr><th class="proto">Bermuda</th><td class="cell--yes">1</td><td class="">0</td><td class="">0</td></tr>
+<tr><th class="proto">Curvy</th><td class="cell--warn">2</td><td class="">0</td><td class="">0</td></tr>
+<tr><th class="proto">Fluidkey</th><td class="cell--yes">1</td><td class="">0</td><td class="">0</td></tr>
+<tr><th class="proto">Hinkal</th><td class="cell--yes">1</td><td class="">0</td><td class="">0</td></tr>
+<tr><th class="proto">Houdini Swap</th><td class="cell--yes">1</td><td class="">0</td><td class="">0</td></tr>
+<tr><th class="proto">Nullmask</th><td class="cell--yes">1</td><td class="">15-30 seconds</td><td class="">0</td></tr>
+<tr><th class="proto">Privacy Pools</th><td class="cell--warn">2</td><td class="">0</td><td class="">28800</td></tr>
+<tr><th class="proto">Railgun</th><td class="cell--yes">1</td><td class="">3600</td><td class="">0</td></tr>
+<tr><th class="proto">Redact</th><td class="cell--yes">1</td><td class="">0</td><td class="">0</td></tr>
+<tr><th class="proto">Tongo</th><td class="cell--warn">2</td><td class="">0</td><td class="">0</td></tr>
+<tr><th class="proto">Tornado Cash</th><td class="cell--warn">2</td><td class="">0</td><td class="">0</td></tr>
+<tr><th class="proto">zERC20</th><td class="cell--yes">1</td><td class="">0</td><td class="">0</td></tr>
+</table>
+
+### Decentralization & Security
+
+<table class="compare-table">
+<tr><th>Protocol</th><th>Censorship resistance</th><th>External network dependence</th><th>Escape hatch</th><th>Upgradeability</th><th>Client-side proving</th><th>Third-party inspectability</th><th>Implementation maturity</th><th>Post-quantum secure</th></tr>
+<tr><th class="proto">Bermuda</th><td class="cell--no">No</td><td class="">Yes, permissioned</td><td class="">Instantly</td><td class="">Immutable</td><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="">2 : Public testnet</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Curvy</th><td class="cell--no">No</td><td class="">Yes, permissionless</td><td class="cell--no">No</td><td class="">Single admin</td><td class="cell--no">No</td><td class="cell--yes">Yes</td><td class="">3 : Mainnet for less than 1 year</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Fluidkey</th><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="">Instantly</td><td class="">Immutable</td><td class="">N/A</td><td class="cell--yes">Yes</td><td class="">4 : Mainnet for more than 1 year</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Hinkal</th><td class="cell--no">No</td><td class="cell--no">No</td><td class="cell--no">No</td><td class="">Single admin</td><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="">3 : Mainnet for less than 1 year</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Houdini Swap</th><td class="cell--no">No</td><td class="">Yes, permissioned</td><td class="">N/A</td><td class="">Single admin</td><td class="">N/A</td><td class="cell--yes">Yes</td><td class="">5 : Mainnet for more than 2 years</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Nullmask</th><td class="cell--no">No</td><td class="">Yes, permissioned</td><td class="">Instantly</td><td class="">Single admin</td><td class="cell--no">No</td><td class="cell--yes">Yes</td><td class="">3 : Mainnet for less than 1 year</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Privacy Pools</th><td class="cell--yes">Yes</td><td class="">Yes, permissioned</td><td class="">Instantly</td><td class="">Multi-sig</td><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="">4 : Mainnet for more than 1 year</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Railgun</th><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="">Can exit in a time period</td><td class="">DAO</td><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="">5 : Mainnet for more than 2 years</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Redact</th><td class="cell--no">No</td><td class="">Yes, permissioned</td><td class="cell--no">No</td><td class="">Network upgrade (hard/soft fork)</td><td class="">N/A</td><td class="cell--yes">Yes</td><td class="">2 : Public testnet</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Tongo</th><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="">Instantly</td><td class="">Single admin</td><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="">3 : Mainnet for less than 1 year</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Tornado Cash</th><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="">Instantly</td><td class="">Immutable</td><td class="cell--yes">Yes</td><td class="cell--no">No</td><td class="">5 : Mainnet for more than 2 years</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">zERC20</th><td class="cell--no">No</td><td class="">Yes, permissionless</td><td class="cell--no">No</td><td class="">Single admin</td><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td><td class="">3 : Mainnet for less than 1 year</td><td class="cell--no">No</td></tr>
+</table>
+
+### Compliance
+
+<table class="compare-table">
+<tr><th>Protocol</th><th>Layer of enforcement</th><th>Enforcement entities</th><th>Type of compliance</th><th>Point of enforcement</th><th>Selective disclosure: viewing entity</th><th>Selective disclosure: viewing control</th></tr>
+<tr><th class="proto">Bermuda</th><td class="">Protocol/chain</td><td class="">Third party</td><td class="">Proof of innocence (POI) / ASP, Programmatic policies</td><td class="">Deposit, Withdrawal</td><td class="">User, Voluntary third-party disclosure</td><td class="">Pre-defined</td></tr>
+<tr><th class="proto">Curvy</th><td class="">App</td><td class="">Third party</td><td class="">Programmatic policies, Selective disclosure</td><td class="">Deposit</td><td class="">User, Voluntary third-party disclosure</td><td class="">Pre-defined</td></tr>
+<tr><th class="proto">Fluidkey</th><td class="">None</td><td class="">None</td><td class="">Selective disclosure</td><td class="">None</td><td class="">User, Voluntary third-party disclosure</td><td class="">Pre-defined</td></tr>
+<tr><th class="proto">Hinkal</th><td class="">Protocol/chain</td><td class="">Third party</td><td class="">Programmatic policies, Selective disclosure, Proof of innocence (POI) / ASP</td><td class="">Deposit, Transfer, Withdrawal</td><td class="">User, Voluntary third-party disclosure</td><td class="">Pre-defined</td></tr>
+<tr><th class="proto">Houdini Swap</th><td class="">App</td><td class="">Third party</td><td class="">Programmatic policies</td><td class="">Deposit, Withdrawal</td><td class="">Involuntary third-party disclosure</td><td class="">Pre-defined</td></tr>
+<tr><th class="proto">Nullmask</th><td class="">Protocol/chain</td><td class="">Third party</td><td class="">Programmatic policies, Proof of innocence (POI) / ASP</td><td class="">Deposit</td><td class="">User, Voluntary third-party disclosure</td><td class="">Pre-defined</td></tr>
+<tr><th class="proto">Privacy Pools</th><td class="">Protocol/chain</td><td class="">Third party</td><td class="">Proof of innocence (POI) / ASP</td><td class="">Withdrawal</td><td class="">User</td><td class="">None</td></tr>
+<tr><th class="proto">Railgun</th><td class="">App</td><td class="">Third party</td><td class="">Proof of innocence (POI) / ASP</td><td class="">Deposit</td><td class="">User, Voluntary third-party disclosure</td><td class="">Pre-defined</td></tr>
+<tr><th class="proto">Redact</th><td class="">None</td><td class="">None</td><td class="">Selective disclosure</td><td class="">None</td><td class="">User, Voluntary third-party disclosure</td><td class="">Pre-defined</td></tr>
+<tr><th class="proto">Tongo</th><td class="">App</td><td class="">Admin</td><td class="">Programmatic policies, Selective disclosure</td><td class="">Deposit, Transfer, Withdrawal</td><td class="">Involuntary third-party disclosure, User</td><td class="">Programmable</td></tr>
+<tr><th class="proto">Tornado Cash</th><td class="">None</td><td class="">None</td><td class="">Selective disclosure</td><td class="">None</td><td class="">User</td><td class="">Pre-defined</td></tr>
+<tr><th class="proto">zERC20</th><td class="">Asset</td><td class="">Admin</td><td class="">Proof of innocence (POI) / ASP</td><td class="">Deposit, Transfer, Withdrawal</td><td class="">None</td><td class="">None</td></tr>
+</table>
+
+### Verifiable
+
+<table class="compare-table">
+<tr><th>Protocol</th><th>Cryptographic verifiability</th><th>Open source</th></tr>
+<tr><th class="proto">Bermuda</th><td class="cell--yes">Yes</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Curvy</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td></tr>
+<tr><th class="proto">Fluidkey</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td></tr>
+<tr><th class="proto">Hinkal</th><td class="cell--yes">Yes</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Houdini Swap</th><td class="cell--no">No</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Nullmask</th><td class="cell--yes">Yes</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Privacy Pools</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td></tr>
+<tr><th class="proto">Railgun</th><td class="cell--yes">Yes</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Redact</th><td class="cell--no">No</td><td class="cell--no">No</td></tr>
+<tr><th class="proto">Tongo</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td></tr>
+<tr><th class="proto">Tornado Cash</th><td class="cell--yes">Yes</td><td class="cell--yes">Yes</td></tr>
+<tr><th class="proto">zERC20</th><td class="cell--yes">Yes</td><td class="cell--no">No</td></tr>
+</table>
+
+### State
+
+<table class="compare-table">
+<tr><th>Protocol</th><th>Private State Scalability</th><th>Client-side indexing</th><th>Private state model</th><th>Private Data Storage</th></tr>
+<tr><th class="proto">Bermuda</th><td class="">Infinity grow</td><td class="">No scanning</td><td class="">UTXO-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">Curvy</th><td class="">Infinity grow</td><td class="">Always scanning</td><td class="">UTXO-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">Fluidkey</th><td class="">Stateless</td><td class="">Always scanning</td><td class="">Account-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">Hinkal</th><td class="">Infinity grow</td><td class="">Partial scanning</td><td class="">UTXO-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">Houdini Swap</th><td class="">Stateless</td><td class="">No scanning</td><td class="">N/A</td><td class="">N/A</td></tr>
+<tr><th class="proto">Nullmask</th><td class="">Infinity grow</td><td class="">Always scanning</td><td class="">UTXO-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">Privacy Pools</th><td class="">Infinity grow</td><td class="">No scanning</td><td class="">UTXO-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">Railgun</th><td class="">Infinity grow</td><td class="">Partial scanning</td><td class="">UTXO-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">Redact</th><td class="">Stateless</td><td class="">No scanning</td><td class="">Account-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">Tongo</th><td class="">Stateless</td><td class="">No scanning</td><td class="">Account-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">Tornado Cash</th><td class="">Infinity grow</td><td class="">No scanning</td><td class="">UTXO-based state model</td><td class="">Smart contracts</td></tr>
+<tr><th class="proto">zERC20</th><td class="">Infinity grow</td><td class="">Always scanning</td><td class="">Account-based state model</td><td class="">Smart contracts, Off-chain storage with on-chain commitment</td></tr>
+</table>
+
+### Composability
+
+<table class="compare-table">
+<tr><th>Protocol</th><th>Access to DeFi</th><th>Programmability / Generality</th></tr>
+<tr><th class="proto">Bermuda</th><td class="">Unlimited access to DeFi applications</td><td class="">Transfers and DeFi operations</td></tr>
+<tr><th class="proto">Curvy</th><td class="">Access to internal DeFi ecosystem</td><td class="">Transfers and DeFi operations</td></tr>
+<tr><th class="proto">Fluidkey</th><td class="">Unlimited access to DeFi applications</td><td class="">Only payments</td></tr>
+<tr><th class="proto">Hinkal</th><td class="">Access to external, but limited choice of DeFi protocols</td><td class="">Partial programmability</td></tr>
+<tr><th class="proto">Houdini Swap</th><td class="">No access to DeFi</td><td class="">Only payments</td></tr>
+<tr><th class="proto">Nullmask</th><td class="">Access to external, but limited choice of DeFi protocols</td><td class="">Transfers and DeFi operations</td></tr>
+<tr><th class="proto">Privacy Pools</th><td class="">No access to DeFi</td><td class="">Only payments</td></tr>
+<tr><th class="proto">Railgun</th><td class="">Unlimited access to DeFi applications</td><td class="">Partial programmability</td></tr>
+<tr><th class="proto">Redact</th><td class="">No access to DeFi</td><td class="">Partial programmability</td></tr>
+<tr><th class="proto">Tongo</th><td class="">Composable interface, but requires DeFi protocol changes</td><td class="">Transfers and DeFi operations</td></tr>
+<tr><th class="proto">Tornado Cash</th><td class="">No access to DeFi</td><td class="">Only payments</td></tr>
+<tr><th class="proto">zERC20</th><td class="">Unlimited access to DeFi applications</td><td class="">Only payments</td></tr>
+</table>
+<!-- END: comparison-table -->
+
+## Key Findings
+
+TODO: highlight key findings from evaluating different protocols across different areas. ecosystem strengths,gaps, interesting results
 
 ## Future Work
 
-<!-- TODO: hand-written -->
+TODO: what future work exists e.g. post quantum
 
 ## Conclusion
 
-<!-- TODO: hand-written -->
+TODO: conclusion

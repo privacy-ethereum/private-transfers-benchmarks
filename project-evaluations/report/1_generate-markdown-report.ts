@@ -1,7 +1,9 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import type { Evaluation } from "../src/types.js";
 import { evaluationSchema } from "../src/data/evaluation-schema.js";
+import { buildComparisonTable } from "./comparison-table.js";
 import { protocolToMarkdown } from "./protocol-to-markdown.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -19,7 +21,7 @@ const ETHEREUM_PROJECTS = [
   "redact",
   "tongo",
   "tornado-cash",
-  "worm",
+  // "worm", // bug parsing worm json file, address in future PR
   "zerc20",
 ];
 
@@ -37,15 +39,19 @@ function updateSection(source: string, id: string, section: string): string {
 }
 
 let report = readFileSync(REPORT_PATH, "utf-8");
+const evaluations: Evaluation[] = [];
 
 ETHEREUM_PROJECTS.forEach((id) => {
   const path = new URL(`../src/data/evaluations/${id}.json`, import.meta.url);
   if (!existsSync(path)) throw new Error(`No evaluation JSON for ${id}`);
 
   const evaluation = evaluationSchema.parse(JSON.parse(readFileSync(path, "utf-8")));
+  evaluations.push(evaluation);
   report = updateSection(report, id, protocolToMarkdown(evaluation));
   console.log(`Updated section: ${id}`);
 });
+
+report = updateSection(report, "comparison-table", buildComparisonTable(evaluations));
 
 writeFileSync(REPORT_PATH, report);
 console.log(`Wrote ${REPORT_PATH}`);
