@@ -60,7 +60,7 @@ A number of technologies can and are used amongst private transfer protocols.
 - **Stealth addresses** - A scheme where each payment goes to a fresh one-time address derived from the recipient's public spending and viewing keys. Outside observers can't link payments to a single account. The recipient scans the chain with their viewing key to find and spend funds
 - **Encrypted Tokens** - tokens whose balances and transfer amounts stay encrypted on-chain. Computations can be made on encrypted state without revealing values
 - **Private L2** - a L2 rollup with privacy features. Inherits data availability and settlement security from Ethereum while keeping transaction contents shielded.
-- **Private Plasma** - <!-- TODO: one-line definition of Private Plasma in the privacy-protocol context -->
+- **Private Plasma** - A scaling design where most activity lives off-chain with only compact commitments and exits are posted on-chain, combined with privacy over that off-chain state.
 - **Private Validium** - A Validium is a scaling solution that enforces integrity of transactions using validity proofs like ZK rollups, but doesn’t store transaction data on the Ethereum itself
 - **Zero-Knowledge Wormholes** - Send funds to an unclaimable address and use zero-knowledge proofs to prove you own those funds in order to mint new tokens. The recipient mints to any address by privately proving the source is a valid burn, thus breaking the identifiable link between burn and mint
 - **Decentralised Network** - a standalone decentralised network focussing on providing an additional service. Sometimes with additional crypto-economic assumptions. For example, a FHE or TEE coprocessor.

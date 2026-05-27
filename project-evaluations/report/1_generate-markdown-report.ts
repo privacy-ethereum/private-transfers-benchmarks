@@ -21,7 +21,7 @@ const ETHEREUM_PROJECTS = [
   "redact",
   "tongo",
   "tornado-cash",
-  "worm",
+  // "worm", // bug parsing worm json file, address in future PR
   "zerc20",
 ];
 
