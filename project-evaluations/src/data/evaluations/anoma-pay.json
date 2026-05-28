@@ -88,7 +88,7 @@
       "notes": "AnomaPay inherits finality from its host chain. The public beta runs on BNB Chain through the Protocol Adapter contract, so a transaction is irreversible once the host-chain block containing the adapter call reaches BNB Chain finality.",
       "citations": [
         {
-          "cited_text": "Anoma launched its private payments application AnomaPay on BNB Chain today.",
+          "cited_text": "launched its private payments application AnomaPay on BNB Chain today.",
           "source": "https://anoma.foundation/press/anomapaybeta"
         }
       ]
@@ -103,7 +103,7 @@
           "source": "https://anoma.foundation/press/anomapaybeta"
         },
         {
-          "cited_text": "Authority Public Key | 33 | Discovery Public Key | 33 | Encryption Public Key | 33 | Nullifier Key Commitment | 32 | CRC32 Checksum | 4 | Total | 135",
+          "cited_text": "Anoma Pay uses a custom address format that encodes multiple public keys into a single Base64URL string",
           "source": "https://github.com/anoma/anoma-app-sdk"
         }
       ],
@@ -312,7 +312,7 @@
           "source": "https://anoma.foundation/press/anomapaybeta"
         },
         {
-          "cited_text": "Authority Public Key | 33 | Discovery Public Key | 33 | Encryption Public Key | 33 | Nullifier Key Commitment | 32",
+          "cited_text": "Anoma Pay uses a custom address format that encodes multiple public keys into a single Base64URL string",
           "source": "https://github.com/anoma/anoma-app-sdk"
         }
       ]
@@ -361,7 +361,7 @@
       "notes": "The pay address includes a Discovery Public Key alongside the Encryption and Nullifier Key Commitment fields.",
       "citations": [
         {
-          "cited_text": "Authority Public Key | 33 | Discovery Public Key | 33 | Encryption Public Key | 33 | Nullifier Key Commitment | 32",
+          "cited_text": "Anoma Pay uses a custom address format that encodes multiple public keys into a single Base64URL string",
           "source": "https://github.com/anoma/anoma-app-sdk"
         }
       ],
@@ -377,7 +377,7 @@
           "source": "https://github.com/anoma/pa-evm"
         },
         {
-          "cited_text": "Authority Public Key | 33 | Discovery Public Key | 33 | Encryption Public Key | 33 | Nullifier Key Commitment | 32",
+          "cited_text": "Anoma Pay uses a custom address format that encodes multiple public keys into a single Base64URL string",
           "source": "https://github.com/anoma/anoma-app-sdk"
         }
       ]
