@@ -4,9 +4,7 @@
   "description": "Umbra is a stealth-address protocol for EVM networks. A payer sends funds to a fresh address controlled by the intended recipient. Only the payer and recipient can link that address to the recipient.",
   "documentation": "https://app.umbra.cash/faq",
   "status": "complete",
-  "categories": [
-    "Stealth Addresses"
-  ],
+  "categories": ["Stealth Addresses"],
   "properties": [
     {
       "name": "Anonymity set size",
@@ -15,7 +13,7 @@
     {
       "name": "Confidentiality",
       "value": "No",
-      "notes": "Umbra is a stealth-address overlay, not a shielded pool. Each payment emits an on-chain announcement whose receiver address, amount, and token are visible in clear. Funds rest at one-time stealth externally-owned accounts (for ETH) or in the protocol contract under a public per-stealth-address mapping (for ERC-20). The privacy guarantee is unlinkability of recipient identity.",
+      "notes": "Umbra is a stealth-address protocol. Each payment emits an on-chain announcement whose receiver address, amount, and token are visible in clear. Funds rest at one-time stealth externally-owned accounts (for ETH) or in the protocol contract under a public per-stealth-address mapping (for ERC-20). The privacy guarantee is unlinkability of recipient identity.",
       "citations": [
         {
           "cited_text": "Umbra is a stealth address protocol for EVM networks. That means it allows a payer to send funds to a fresh address. That address is controlled by the intended receiver",
@@ -30,7 +28,7 @@
     {
       "name": "Anonymity",
       "value": "Unlinkability",
-      "notes": "Sender wallet and recipient stealth address are both visible on-chain — what is broken is the link between the stealth address and the recipient's long-term identity. The fresh receiving address has never been seen on-chain so outside observers cannot identify who controls it. The anonymity set is the union of all on-chain announcements on the protocol contract.",
+      "notes": "Sender wallet and recipient stealth address are both visible on-chain — what is broken is the link between the stealth address and the recipient's main identity. The fresh receiving address has never been seen on-chain so outside observers cannot identify who controls it.",
       "citations": [
         {
           "cited_text": "Everyone can see who sent the funds, and everyone can see the address funds were sent to, but that receiving address has never been seen on-chain",
@@ -45,7 +43,7 @@
     {
       "name": "Asset privacy",
       "value": "No",
-      "notes": "Each on-chain announcement declares the indexed token address for every payment, so the asset (ETH placeholder or specific ERC-20) is publicly visible per send. Amount is also visible. Umbra hides only the link between the sender wallet and the recipient's long-term identity — asset type and amount are part of every emitted announcement.",
+      "notes": "Each on-chain announcement declares the token address for every payment, so the asset is publicly visible per send. Amount is also visible. Umbra hides only the link between the sender wallet and the recipient's identity — asset type and amount are part of every emitted announcement.",
       "citations": [
         {
           "cited_text": "address indexed token, // token address or ETH placeholder",
@@ -79,7 +77,7 @@
     {
       "name": "Time-to-finality",
       "value": "N/A",
-      "notes": "Umbra is an application-layer protocol deployed as smart contracts on EVM host chains. It has no settlement layer of its own — finality is inherited from the host chain on which each deployment runs.",
+      "notes": "Umbra is an application-layer protocol deployed as smart contracts on Ethereum. Finality is inherited from the host chain on which each deployment runs.",
       "citations": [
         {
           "cited_text": "Umbra is a protocol for stealth payments on EVM blockchain networks.",
@@ -90,7 +88,7 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "Users sign a single wallet message. The hash of that signature deterministically derives both the spending key (controls funds) and the viewing key (identifies incoming payments). Each user therefore stores one root secret — the wallet seed used to produce the message signature — and the two stealth-protocol keys are reproducible from it via SECP256k1 derivation.",
+      "notes": "Users sign a single wallet message. The hash of that signature deterministically derives both the spending key (controls funds) and the viewing key (identifies incoming payments). Each user therefore stores one root secret — the wallet seed used to produce the message signature — and the two stealth-protocol keys are reproducible from it via secp256k1 derivation.",
       "citations": [
         {
           "cited_text": "users sign a message. The hash of this message is used to generate two private keys—a \"spending key\" and a \"viewing key\".",
@@ -179,7 +177,7 @@
     {
       "name": "Client-side proving",
       "value": "N/A",
-      "notes": "Umbra uses elliptic-curve cryptography on SECP256k1, not zero-knowledge proofs. The sender computes an ephemeral key and ciphertext that the recipient decrypts off-chain with their viewing key. There is no proving step on either side.",
+      "notes": "Umbra uses elliptic-curve cryptography on secp256k1, not zero-knowledge proofs. The sender computes an ephemeral key and ciphertext that the recipient decrypts off-chain with their viewing key. There is no proving step on either side.",
       "citations": [
         {
           "cited_text": "Umbra does not use zero knowledge proofs. Instead, Umbra is based on ordinary elliptic curve cryptography.",
@@ -205,7 +203,7 @@
     {
       "name": "Implementation maturity",
       "value": "5 : Mainnet for more than 2 years",
-      "notes": "Umbra has been live on Ethereum mainnet since April 2021 and carries a ConsenSys Diligence audit from March 2021. The canonical contract has processed over 22,000 transactions.",
+      "notes": "Umbra has been live on Ethereum mainnet since April 2021 and carries a ConsenSys Diligence audit from March 2021. The canonical contract has processed over 22,000 transactions at the time of writing.",
       "citations": [
         {
           "cited_text": "ConsenSys Diligence - March 26th, 2021 - Security Audit Report",
@@ -228,7 +226,7 @@
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "Stealth address derivation relies on SECP256k1 ECDH and the elliptic-curve discrete-log hardness assumption. There is no post-quantum primitive in either the stealth-address scheme or the on-chain contracts. A quantum adversary capable of breaking the discrete log could derive recipients' viewing and spending keys from their published public keys.",
+      "notes": "Stealth address derivation relies on secp256k1 ECDH and the elliptic-curve discrete-log hardness assumption. There is no post-quantum primitive in either the stealth-address scheme or the on-chain contracts. A quantum adversary capable of breaking the discrete log could derive recipients' viewing and spending keys from their published public keys.",
       "citations": [
         {
           "cited_text": "Initial Implementation of SECP256k1 with View Tags",
@@ -364,8 +362,8 @@
     },
     {
       "name": "Private state model",
-      "value": "N/A",
-      "notes": "Umbra has no protocol-level private state. There is no commitment tree, no nullifier set, no encrypted balance per account. Funds rest at ordinary EVM stealth accounts (for ETH) or in a public per-stealth-address mapping on the protocol contract (for ERC-20). The private artefact is the off-chain link between sender and recipient identity, not on-chain shielded state.",
+      "value": "Account-based state model",
+      "notes": "Umbra has no protocol-level private state. Funds rest at ordinary EVM stealth accounts (for ETH) or in a public per-stealth-address mapping on the protocol contract (for ERC-20). There is no commitment tree, no nullifier set, no encrypted balance per account. ",
       "citations": [
         {
           "cited_text": "Umbra does not use zero knowledge proofs. Instead, Umbra is based on ordinary elliptic curve cryptography.",
@@ -386,8 +384,8 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
-      "notes": "Umbra is payments-only — there is no protocol token, no shielded asset, no composability hook over protocol-controlled funds. Once funds reach the stealth account, they are ordinary host-chain ETH or ERC-20s that the recipient can use anywhere, but that surface is the host chain's, not Umbra's. The single withdrawal-time callback is a post-withdrawal hook, not access to DeFi for protocol assets.",
+      "value": "Unlimited access to DeFi applications",
+      "notes": "Umbra is designed for payments, but users can easily use funds in any DeFi application if they so choose. Once funds reach the stealth account, they are ordinary host-chain ETH or ERC-20s that the recipient can use anywhere.",
       "citations": [
         {
           "cited_text": "It’s meant for payments between two entities, and comes with a different set of privacy tradeoffs.",
@@ -398,7 +396,7 @@
     {
       "name": "Programmability / Generality",
       "value": "Only payments",
-      "notes": "Umbra exposes only send and withdraw paths plus a single withdrawal-time callback for atomic post-withdrawal actions. There is no shielded VM, no scripting, no programmable private execution. The protocol is scoped to two-party stealth payments between an existing sender wallet and a fresh stealth recipient account.",
+      "notes": "Umbra exposes only send and withdraw paths plus a single withdrawal-time callback for atomic post-withdrawal actions. There is no programmable private execution. The protocol is scoped to two-party stealth payments between an existing sender wallet and a fresh stealth recipient account.",
       "citations": [
         {
           "cited_text": "It’s meant for payments between two entities, and comes with a different set of privacy tradeoffs.",
