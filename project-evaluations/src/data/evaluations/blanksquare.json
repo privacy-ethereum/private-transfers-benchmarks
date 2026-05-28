@@ -1,10 +1,406 @@
 {
   "id": "blanksquare",
   "title": "Blanksquare",
-  "description": "Blanksquare is a privacy stack for wallets and DeFi apps. It provides privacy infrastructure (Shielder SDK, Shielded Accounts, Relayer Network, Anonymity Revoking mechanisms) that integrates directly into EVM-compatible wallets.",
-  "status": "pending",
+  "description": "Blanksquare is a composable privacy stack for EVM wallets and DeFi apps. The Shielder SDK lets any ERC-20 token be deposited into a shielded pool that uses zk-SNARKs to break linkability between deposit and withdrawal addresses. Designed for integration into wallets and DeFi protocols with 600-800ms proving on consumer hardware.",
   "documentation": "https://docs.blanksquare.io/",
-  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)", "Privacy Stack/Layer/Middleware"],
-  "properties": [],
-  "sourceUrls": []
+  "status": "complete",
+  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Blanksquare is a shielded pool — internal Shielder state hides balances and transfer amounts between accounts. A 3rd party observer only sees that some unknown account interacted with the Shielder. Deposit and withdraw boundary amounts to/from the pool are publicly visible at entry/exit, but in-protocol confidentiality holds.",
+      "citations": [
+        {
+          "cited_text": "A 3rd party observer only sees that some unknown account just withdrew `20` USDT from the shielder.",
+          "source": "https://docs.blanksquare.io/protocol-details/shielder.md"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Blanksquare's shielded pool hides sender and receiver of in-pool transfers — there is no way to link the deposit transaction to the withdraw transaction. Once funds are in the pool, transfers between accounts cannot be linked to the depositing or withdrawing wallets by outside observers.",
+      "citations": [
+        {
+          "cited_text": "There is no way to link the deposit transaction to the withdraw transaction.",
+          "source": "https://docs.blanksquare.io/protocol-details/shielder.md"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "At the entry/exit boundary the deposit/withdraw transaction names the specific ERC-20 contract being moved, making the asset type visible to chain observers. Internal transfers within the pool are token-specific by design (the deposit names the token).",
+      "citations": [
+        {
+          "cited_text": "Alice calls the `deposit` method of the `Shielder` contract, sending `100 USDT` along the call.",
+          "source": "https://docs.blanksquare.io/protocol-details/shielder.md"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Entering the pool requires calling the Shielder contract directly — a protocol-specific entry point identifiable on-chain as Blanksquare usage. The deposit transaction is distinguishable from an ordinary ERC-20 transfer.",
+      "citations": [
+        {
+          "cited_text": "Alice calls the `deposit` method of the `Shielder` contract, sending `100 USDT` along the call.",
+          "source": "https://docs.blanksquare.io/protocol-details/shielder.md"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "Application-layer Solidity contracts deployed on host chains. Mainnet on Base, with testnets on Base Sepolia, Arbitrum Sepolia, and Hyperliquid testnet (HyperEVM). Finality inherits from each host chain.",
+      "citations": [
+        {
+          "cited_text": "Base 0x064A67a5484DF6baf36be42F9554d45E7741dCFf",
+          "source": "https://docs.blanksquare.io/integration-guides/deployments.md"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "The user holds a single 256-bit master seed. ZK-ID, per-transaction nullifiers, and trapdoors are deterministically derived from it. The proof system is Ultraplonk with KZG commitments, instantiated via Halo2 over BN256.",
+      "citations": [
+        {
+          "cited_text": "we introduce a deterministic secret management scheme that allows the user to keep just one secret seed and derive all the remaining secrets out of it.",
+          "source": "https://docs.blanksquare.io/protocol-details/client-side-components/deterministic-secret-management.md"
+        },
+        {
+          "cited_text": "The user starts by generating a master seed: `seed` with say 256 bits,",
+          "source": "https://docs.blanksquare.io/protocol-details/client-side-components/deterministic-secret-management.md"
+        },
+        {
+          "cited_text": "### Proof System \n\nWe use the Ultraplonk proof system instantiated using a KZG commitment scheme. ",
+          "source": "https://docs.blanksquare.io/protocol-details/cryptography.md"
+        },
+        {
+          "cited_text": "For the time being we decided to use BN256, at least until support for the BLS12 family of curves is added to Halo2. ",
+          "source": "https://docs.blanksquare.io/protocol-details/cryptography.md"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Deposit is a single Shielder.deposit() transaction. No protocol-imposed queue, challenge window, or time-lock is documented. Host-chain block latency is not a deposit waiting period.",
+      "citations": [
+        {
+          "cited_text": "Sends a deposit transaction to the Shielder smart contract",
+          "source": "https://docs.blanksquare.io/integration-guides/shielding-tokens.md"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Withdraw is a single Shielder.withdraw() transaction submitted via a relayer. No queue, exit window, or time-lock is imposed by the protocol. Host-chain block latency is not a withdraw waiting period.",
+      "citations": [
+        {
+          "cited_text": "The relayer pays gas and broadcasts the transaction to the network.",
+          "source": "https://docs.blanksquare.io/integration-guides/withdrawing-tokens.md"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "The Shielder is deployed behind an ERC1967 proxy on Base mainnet, so the upgrade authority can swap or brick the on-chain verifier. Per the per-property trust rule, a verifier an admin can upgrade qualifies the protocol as censorship-susceptible regardless of host-chain permissionless inclusion. Users can self-broadcast at the cost of privacy.",
+      "citations": [
+        {
+          "cited_text": "if this was done just by the user itself, then it would lead to privacy loss",
+          "source": "https://docs.blanksquare.io/protocol-details/relayers.md"
+        },
+        {
+          "kind": "explorer",
+          "source": "https://basescan.org/address/0x064A67a5484DF6baf36be42F9554d45E7741dCFf"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "Relayers exist as a convenience broadcasting layer but are optional — users can self-broadcast the signed shielder transaction directly. No external committee, oracle, or staked validator set is required between the user and the host chain.",
+      "citations": [
+        {
+          "cited_text": "parties that post shielder transactions to chain, on behalf of normal users",
+          "source": "https://docs.blanksquare.io/protocol-details/relayers.md"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "notes": "The Shielder contract on Base mainnet exposes a withdraw entry point callable at any time using only host-chain consensus and the on-chain zk-SNARK verifier. The deployment sits behind an ERC1967 proxy, so a verifier upgrade could affect future exits, but the baseline exit path runs without a protocol-imposed timelock or admin gate.",
+      "citations": [
+        {
+          "cited_text": "Base 0x064A67a5484DF6baf36be42F9554d45E7741dCFf",
+          "source": "https://docs.blanksquare.io/integration-guides/deployments.md"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Multi-sig",
+      "notes": "The Base mainnet Shielder is a UUPS ERC1967 proxy, so its implementation, including the verifier circuit and the rest of the shielder behaviour, can be replaced. Upgrade authorization is gated by _authorizeUpgrade onlyOwner, and the owner resolves on-chain to a 2-of-N Ownable2Step multisig that can also pause the contract. The power to swap the implementation rests with that multisig.",
+      "citations": [
+        {
+          "kind": "explorer",
+          "source": "https://basescan.org/address/0x064A67a5484DF6baf36be42F9554d45E7741dCFf",
+          "contract_address": "0x064A67a5484DF6baf36be42F9554d45E7741dCFf",
+          "admin_class": "Multi-sig"
+        },
+        {
+          "cited_text": "function _authorizeUpgrade(address) internal override onlyOwner {}",
+          "source": "https://github.com/Cardinal-Cryptography/zkOS-monorepo/blob/main/contracts/Shielder.sol"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Blanksquare generates ZK proofs in-browser via a WASM cryptography engine. The deposit and withdraw flows construct the proof on the user device before submitting the transaction or handing it to a relayer.",
+      "citations": [
+        {
+          "cited_text": "Generates ZK proof client-side using WASM cryptography engine",
+          "source": "https://docs.blanksquare.io/integration-guides/shielding-tokens.md"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Proving runs in-browser via the WASM engine, so no external prover sees the witness inputs. Relayers receive the signed proof and public inputs but not the private witness.",
+      "citations": [
+        {
+          "cited_text": "Generates ZK proof client-side using WASM cryptography engine",
+          "source": "https://docs.blanksquare.io/integration-guides/shielding-tokens.md"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "Blanksquare's Shielder contract on Base mainnet was deployed in July 2025, placing it under one year of mainnet operation as of mid-2026. Additional testnet deployments exist on Base Sepolia, Arbitrum Sepolia, and Hyperliquid testnet.",
+      "citations": [
+        {
+          "kind": "explorer",
+          "cited_text": "Jul-23-2025 02:51:39 PM +UTC \n308 days ago | Jul-23-2025 02:51:39 PM +UTC",
+          "source": "https://basescan.org/tx/0xf63c31263f7dc17c56862a7d763b4d24f1fd9e0f141e488d5d43401730068045",
+          "contract_address": "0x064A67a5484DF6baf36be42F9554d45E7741dCFf",
+          "date": "2025-07-23"
+        },
+        {
+          "cited_text": "Base 0x064A67a5484DF6baf36be42F9554d45E7741dCFf https://base-shielder-relayer-v3.blanksquare.dev",
+          "source": "https://docs.blanksquare.io/integration-guides/deployments.md",
+          "contract_address": "0x064A67a5484DF6baf36be42F9554d45E7741dCFf"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "The cryptographic stack relies on primitives that fall to Shor's algorithm. The proof system is Ultraplonk instantiated with a KZG commitment scheme, and the elliptic curve choice is BN256, pending support for the BLS12 family in Halo2 — both pairing-based constructions broken by a quantum adversary. Asymmetric encryption uses ElGamal over the Grumpkin elliptic curve, whose discrete-log hardness is likewise broken by Shor.",
+      "citations": [
+        {
+          "cited_text": "### Proof System \n\nWe use the Ultraplonk proof system instantiated using a KZG commitment scheme. ",
+          "source": "https://docs.blanksquare.io/protocol-details/cryptography.md"
+        },
+        {
+          "cited_text": "For the time being we decided to use BN256, at least until support for the BLS12 family of curves is added to Halo2. ",
+          "source": "https://docs.blanksquare.io/protocol-details/cryptography.md"
+        },
+        {
+          "cited_text": "For asymmetric encryption we use the familiar ElGamal cryptosystem, however to make it snark-friendly we need a specific choice of the group we work with. Specifically let $$G$$ be the Grumpkin",
+          "source": "https://docs.blanksquare.io/protocol-details/cryptography/snark-friendly-asymmetric-encryption.md"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "App",
+      "notes": "Compliance via Anonymity Revokers operates at the application layer of the Shielder protocol. Revocation is triggered by a governance vote, not by host-chain consensus.",
+      "citations": [
+        {
+          "cited_text": "A governance process decides whether to deanonymize the user behind this deposit.",
+          "source": "https://docs.blanksquare.io/protocol-details/design-against-bad-actors/anonymity-revokers.md"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "DAO/Governance",
+      "notes": "A governance process votes on whether to invoke the Anonymity Revoker against a specific deposit. The Anonymity Revoker entity executes the decryption only after governance approval.",
+      "citations": [
+        {
+          "cited_text": "A governance process decides whether to deanonymize the user behind this deposit.",
+          "source": "https://docs.blanksquare.io/protocol-details/design-against-bad-actors/anonymity-revokers.md"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["Other", "Selective disclosure"],
+      "notes": "Two parallel mechanisms exist. Anonymity Revokers perform governance-triggered involuntary post-hoc deanonymization (Other). The Shielder SDK also exposes voluntary user-controlled viewing keys that grant chosen counterparties read access to activity (Selective disclosure).",
+      "citations": [
+        {
+          "cited_text": "A governance process decides whether to deanonymize the user behind this deposit.",
+          "source": "https://docs.blanksquare.io/protocol-details/design-against-bad-actors/anonymity-revokers.md"
+        },
+        {
+          "cited_text": "the user has access to special \"viewing keys\" which allows them to view all their past activity in shielder",
+          "source": "https://docs.blanksquare.io/key-concepts/shielder-sdk.md"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["Deposit"],
+      "notes": "The Anonymity Revoker's encrypted commitment is sealed into the account-creation circuit at first deposit, anchoring future deanonymization to that initial proof. Subsequent transfers and withdrawals do not run additional compliance gates.",
+      "citations": [
+        {
+          "cited_text": "Find the `key(id)`of the user (account) who created this transaction.",
+          "source": "https://docs.blanksquare.io/protocol-details/design-against-bad-actors/anonymity-revokers.md"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User", "Voluntary third-party disclosure", "Involuntary third-party disclosure", "Protocol"],
+      "notes": "Users can self-view their own past activity using their viewing keys. They can voluntarily share a viewing key with any chosen third party. Governance can additionally invoke the Anonymity Revoker to deanonymize a specific deposit, an involuntary protocol-level disclosure path.",
+      "citations": [
+        {
+          "cited_text": "the user has access to special \"viewing keys\" which allows them to view all their past activity in shielder",
+          "source": "https://docs.blanksquare.io/key-concepts/shielder-sdk.md"
+        },
+        {
+          "cited_text": "A governance process decides whether to deanonymize the user behind this deposit.",
+          "source": "https://docs.blanksquare.io/protocol-details/design-against-bad-actors/anonymity-revokers.md"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "Viewing keys can be granted by the user to any chosen party at any time. The Anonymity Revoker's commitment is sealed at first deposit, but the user-controlled viewing-key channel lets the user grant, withhold, or share viewing material after the fact.",
+      "citations": [
+        {
+          "cited_text": "The user can also share this key with any other entity that they want to grant view access to their trace.",
+          "source": "https://docs.blanksquare.io/key-concepts/shielder-sdk.md"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Shielder verifies zk-SNARK proofs in the on-chain verifier contract rather than relying on majority vote or social attestation. Inclusion and ordering are inherited from the host chain.",
+      "citations": [
+        {
+          "cited_text": "uses the technology of zk-SNARKs to enable private payments and private interactions with Defi.",
+          "source": "https://docs.blanksquare.io/protocol-details/shielder.md"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The deployed Base Shielder, the shielder SDK, and the relayer are published in the zkOS-monorepo under the Apache-2.0 licence, which is where the live contract source lives. The newer blanksquare-v2-monorepo, holding the Noir circuits and generated verifiers, carries no licence, and the zkOS repository is archived read-only.",
+      "citations": [
+        {
+          "kind": "license",
+          "source": "https://github.com/Cardinal-Cryptography/zkOS-monorepo/blob/main/LICENSE"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Infinity grow",
+      "notes": "The Shielder maintains an append-only Merkle tree of note commitments plus a growing nullifier set. No pruning mechanism is documented and on-chain state grows with cumulative pool usage.",
+      "citations": [
+        {
+          "cited_text": "set of elements of type `Scalar` whose purpose is to invalidate old notes",
+          "source": "https://docs.blanksquare.io/protocol-details/notes-and-accounts.md"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Always scanning",
+      "notes": "The client syncs the latest Shielder state and constructs proofs locally. No server-side index keyed to the user is documented. The WASM cryptography engine drives both proving and chain scanning.",
+      "citations": [
+        {
+          "cited_text": "Sync to ensure up-to-date state",
+          "source": "https://docs.blanksquare.io/integration-guides/withdrawing-tokens.md"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Each note is a UTXO-style commitment stored as a leaf in the Merkle tree, with a hashed nullifier published on spend to prevent double-spend. Notes carry an account identifier but the on-chain leaf is treated as a UTXO commitment.",
+      "citations": [
+        {
+          "cited_text": "Each leaf of the `notes` Merkle Tree is a hash of a `note`",
+          "source": "https://docs.blanksquare.io/protocol-details/notes-and-accounts.md"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Smart contracts"],
+      "notes": "The notes Merkle tree, the nullifier set, and the encrypted note payloads are stored in the Shielder smart contract on the host chain. The state is recoverable by any full node.",
+      "citations": [
+        {
+          "cited_text": "Each leaf of the `notes` Merkle Tree is a hash of a `note`",
+          "source": "https://docs.blanksquare.io/protocol-details/notes-and-accounts.md"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Access to external, but limited choice of DeFi protocols",
+      "notes": "Shielded assets are traded on public DeFi venues rather than a dedicated shielded DEX, so reaching protocols such as Uniswap or Cowswap is supported through the public route. A built-in Shielder-SDK integration with various DEXes is planned but not yet shipped, so today the path runs through the public withdraw route rather than a native in-pool DeFi runtime, which bounds what shielded balances can reach directly.",
+      "citations": [
+        {
+          "cited_text": "any public protocol can be used to trade shielded assets, such as Uniswap or Cowswap",
+          "source": "https://docs.blanksquare.io/key-concepts/shielded-pools/shielded-trading.md"
+        },
+        {
+          "cited_text": "An out-of-the-box integration with various DEXes will be provided as part of Shielder-SDK in the future.",
+          "source": "https://docs.blanksquare.io/key-concepts/shielded-pools/shielded-trading.md"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "Blanksquare's current surface is shielded payments — deposit, transfer between shielded accounts, withdraw. The Shielder SDK enables developers to integrate this primitive into wallets and apps but does not extend the protocol's own programmability beyond payments.",
+      "citations": [
+        {
+          "cited_text": "a clear programmatic interface to Shielder, enabling the development of privacy-enhanced apps and wallets",
+          "source": "https://docs.blanksquare.io/key-concepts/shielder-sdk.md"
+        }
+      ]
+    }
+  ]
 }
