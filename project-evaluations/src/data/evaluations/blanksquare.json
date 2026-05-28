@@ -132,6 +132,7 @@
           "source": "https://docs.blanksquare.io/protocol-details/relayers.md"
         },
         {
+          "kind": "explorer",
           "source": "https://basescan.org/address/0x064A67a5484DF6baf36be42F9554d45E7741dCFf"
         }
       ]
@@ -164,6 +165,7 @@
       "notes": "The Base mainnet Shielder deployment is an ERC1967 proxy. The upgrade authority controls the implementation contract and therefore the verifier circuit and all future shielder behaviour.",
       "citations": [
         {
+          "kind": "explorer",
           "source": "https://basescan.org/address/0x064A67a5484DF6baf36be42F9554d45E7741dCFf"
         }
       ],
@@ -197,6 +199,7 @@
       "notes": "Blanksquare's Shielder contract on Base mainnet was deployed in July 2025, placing it under one year of mainnet operation as of mid-2026. Additional testnet deployments exist on Base Sepolia, Arbitrum Sepolia, and Hyperliquid testnet.",
       "citations": [
         {
+          "kind": "explorer",
           "cited_text": "Jul-23-2025 02:51:39 PM +UTC \n308 days ago | Jul-23-2025 02:51:39 PM +UTC",
           "source": "https://basescan.org/tx/0xf63c31263f7dc17c56862a7d763b4d24f1fd9e0f141e488d5d43401730068045",
           "contract_address": "0x064A67a5484DF6baf36be42F9554d45E7741dCFf",
