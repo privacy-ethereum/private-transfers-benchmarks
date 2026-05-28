@@ -42,6 +42,9 @@ const VAGUE_WORD_ROOTS = ["indicat", "suggest", "confirm"];
 const FILENAME_PATTERN = /\b\w+\.(sol|circom|rs|ts)\b/;
 const YEAR_TOKEN = /\b20\d{2}\b/;
 const VAGUE_IMPLY = /\bimpl(y|ies|ying)\b/i;
+const EXPLORER_HOST =
+  /^https?:\/\/(?:[a-z]+\.)*(?:etherscan\.io|basescan\.org|arbiscan\.io|polygonscan\.com|optimistic\.etherscan\.io|scrollscan\.com|lineascan\.build|solscan\.io|solana\.fm|bscscan\.com|snowtrace\.io)\//;
+const L2BEAT_HOST = /^https?:\/\/(?:www\.)?l2beat\.com\//;
 
 interface Issue {
   file: string;
@@ -142,6 +145,24 @@ function checkCitations(file: string, property: Property, legacy: boolean, sourc
       push("cited-text-not-in-source", `cited_text not found in source-cache for ${citation.source}`);
     }
   }
+
+  for (const citation of property.citations ?? []) {
+    const expectedKind = inferKind(citation);
+    if (expectedKind && citation.kind !== expectedKind) {
+      push(
+        "citation-kind-mismatch",
+        `expected kind="${expectedKind}" (citation has ${citation.kind ? `kind="${citation.kind}"` : "no kind"}, source: ${citation.source})`,
+      );
+    }
+  }
+}
+
+/** Infer the expected `kind` from a citation's shape. Returns null if no constraint applies. */
+function inferKind(citation: { source: string; admin_class?: string; date?: string }): string | null {
+  if (citation.admin_class || citation.date) return "explorer";
+  if (EXPLORER_HOST.test(citation.source)) return "explorer";
+  if (L2BEAT_HOST.test(citation.source)) return "l2beat";
+  return null;
 }
 
 const issues: Issue[] = [];

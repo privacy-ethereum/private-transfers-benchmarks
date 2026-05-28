@@ -100,10 +100,12 @@
       "notes": "An Aztec transaction is final when its epoch proof is verified on L1. A single proof can cover one checkpoint (1m 12s) up to one epoch (38m 24s = 2,304 seconds), and the epoch root proof is verified by the HonkVerifier contract before the proven checkpoint is advanced. Worst-case for inclusion is one full epoch — Ethereum L1 finality (~13 minutes) sits on top before the proof transaction itself is irreversible.",
       "citations": [
         {
+          "kind": "l2beat",
           "cited_text": "Each epoch root proof is verified by the HonkVerifier smart contract on Ethereum before the proven checkpoint number is advanced and the epoch outbox state root is inserted into the Outbox.",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": "a single proof can cover one Checkpoint (1m 12s) to one epoch (38m 24s).",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
@@ -154,6 +156,7 @@
           "source": "https://docs.aztec.network/developers/docs/foundational-topics/ethereum-aztec-messaging/inbox"
         },
         {
+          "kind": "l2beat",
           "cited_text": "a single proof can cover one Checkpoint (1m 12s) to one epoch (38m 24s).",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         }
@@ -169,6 +172,7 @@
           "source": "https://docs.aztec.network/participate/basics/bridging"
         },
         {
+          "kind": "l2beat",
           "cited_text": "a single proof can cover one Checkpoint (1m 12s) to one epoch (38m 24s). Unproven checkpoints are pruned after the proof submission window of 1h 16m expires.",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
@@ -184,14 +188,17 @@
       "notes": "Aztec's sequencer set is permissionless — joining requires staking 200K AZTEC — and each epoch samples a 48-member committee from the active set of 3,548 sequencers, so no single party holds inclusion authority. If the sampled committee censors, anyone bonding 332M AZTEC joins an escape-hatch candidate set, and every 2d 23h a candidate is pseudo-randomly selected to propose and prove checkpoints autonomously. Inclusion is probabilistic rather than guaranteed within a fixed deadline.",
       "citations": [
         {
+          "kind": "l2beat",
           "cited_text": "Joining the sequencer set is permissionless and requires staking 200 K AZTEC. For each epoch, the rollup samples a 48-member committee from the active sequencer set of 3548",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": "anyone who bonds 332 M AZTEC will join the escape hatch candidate set. Every 2d 23h, a candidate is pseudo-randomly selected to propose and prove checkpoints fully autonomously.",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": "All censorship resistance tools that are part of the protocol rely on probabilistic inclusion.",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         }
@@ -203,14 +210,17 @@
       "notes": "Aztec's sequencer and prover networks are part of the protocol itself rather than an external service: anyone can join the permissionless sequencer set by staking 200K AZTEC, and proving is permissionless too. The only external dependency is Ethereum L1, which provides data availability (EIP-4844 blobs whose commitments are revalidated by the epoch proof) and proof verification. No additional off-protocol committee, oracle, or relayer network is required for transfers.",
       "citations": [
         {
+          "kind": "l2beat",
           "cited_text": "Joining the sequencer set is permissionless and requires staking 200 K AZTEC. For each epoch, the rollup samples a 48-member committee from the active sequencer set of 3548",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": ", and a single proof can cover one Checkpoint (1m 12s) to one epoch (38m 24s).",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": "Each checkpoint proposal includes EIP-4844 blob commitments that are checked against the blob hashes in the proposing transaction.",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         }
@@ -222,14 +232,17 @@
       "notes": "Users can exit through a censorship-resistant fallback, but inclusion is probabilistic rather than guaranteed within a fixed deadline. If sampled committees censor, anyone who bonds 332M AZTEC joins an escape-hatch candidate set, and every 2d 23h a candidate is pseudo-randomly selected to propose and prove checkpoints autonomously. Users have 10 days to exit funds against an unwanted upgrade, with a 1-month upgrade delay, and withdrawal inclusion is simulated to take up to 20 days.",
       "citations": [
         {
+          "kind": "l2beat",
           "cited_text": "anyone who bonds 332 M AZTEC will join the escape hatch candidate set. Every 2d 23h, a candidate is pseudo-randomly selected to propose and prove checkpoints fully autonomously.",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": "Users have 10d to exit funds in case of an unwanted upgrade. There is a 1mo delay before an upgrade is applied, and withdrawal inclusion ",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": "The project passes the walkaway test : users can exit in the presence of malicious operators even if the Security Council disappears.",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         }
@@ -245,10 +258,12 @@
           "source": "https://docs.aztec.network/participate/governance"
         },
         {
+          "kind": "l2beat",
           "cited_text": ", its verifier and its canonical messaging contracts cannot be changed. However, Governance owns critical permissions for configuration parameters",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": "Total standard delay from proposal to execution: 1mo 10d",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         }
@@ -299,6 +314,7 @@
           "source": "https://aztec.network/blog/announcing-the-alpha-network"
         },
         {
+          "kind": "explorer",
           "source": "https://etherscan.io/address/0x603bb2c05D474794ea97805e8De69bCcFb3bCA12",
           "contract_address": "0x603bb2c05D474794ea97805e8De69bCcFb3bCA12",
           "date": "2025-11-13"
@@ -311,10 +327,12 @@
       "notes": "Aztec's proving stack relies on classical elliptic-curve cryptography that is broken by Shor's algorithm. State validation uses SNARKs — succinct zero-knowledge proofs requiring a trusted setup — and L1 verification is performed by a HonkVerifier contract running Barretenberg's UltraHonk. The PLONK family relies on pairing-based elliptic-curve assumptions that do not survive a quantum adversary, and squisher circuits compress proofs into Standard Plonk or Fflonk with no lattice fallback.",
       "citations": [
         {
+          "kind": "l2beat",
           "cited_text": "SNARKs are succinct zero knowledge proofs that ensure state correctness, but require trusted setup",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": "PROVER\n\nBarretenberg \n\nTrusted Setups\n\nPlonk: UltraHonk\n\nOnchain verifier\n\nHonkVerifier",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
@@ -431,10 +449,12 @@
           "source": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/circuits/rollup_circuits"
         },
         {
+          "kind": "l2beat",
           "cited_text": "Each epoch root proof is verified by the HonkVerifier smart contract on Ethereum before the proven checkpoint number is advanced",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         },
         {
+          "kind": "l2beat",
           "cited_text": "Each update to the system state must be accompanied by a ZK proof that ensures that the new state was derived by correctly applying a series of valid user transactions to the previous state.",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         }

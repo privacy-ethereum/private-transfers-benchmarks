@@ -4,7 +4,11 @@
   "description": "A stateless Plasma-inspired zkRollup optimised for private payments, pushing most data off-chain so that on-chain costs are minimal while preserving user-side privacy through client-side proving.",
   "status": "complete",
   "documentation": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture",
-  "categories": ["Private Plasma", "Private L3", "Zero Knowledge Proofs (ZKPs)"],
+  "categories": [
+    "Private Plasma",
+    "Private L3",
+    "Zero Knowledge Proofs (ZKPs)"
+  ],
   "properties": [
     {
       "name": "Anonymity set size",
@@ -134,7 +138,10 @@
     },
     {
       "name": "Type of compliance",
-      "value": ["Programmatic policies", "Proof of innocence (POI) / ASP"],
+      "value": [
+        "Programmatic policies",
+        "Proof of innocence (POI) / ASP"
+      ],
       "notes": "Intmax gates incoming deposits via Predicate AVS — a programmable per-deposit policy framework that returns a cryptographic attestation of compliance against rule sets sourcing from blockchain-analytics vendors. Predicate is the canonical example of programmatic policies. Users additionally demonstrate via a Proof of Innocence model that their funds are not associated with sanctioned or illicit activity before being accepted into the network.",
       "citations": [
         {
@@ -145,13 +152,17 @@
     },
     {
       "name": "Point of enforcement",
-      "value": ["Deposit"],
+      "value": [
+        "Deposit"
+      ],
       "notes": "AML and compliance checks are applied exclusively at the deposit stage when users bridge assets from Ethereum L1 into the Intmax network. Once funds are inside the network, subsequent transfers are not subject to additional compliance screening. Withdrawals are assumed to be clean if no bad actor has deposited into the network.",
       "url": "https://docs.network.intmax.io/user-guides/privacy-mining/#aml-rules"
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": ["None"],
+      "value": [
+        "None"
+      ],
       "notes": "Intmax has no viewing key or protocol-level selective disclosure mechanism. Users can manually share individual transaction details, ZK proofs, and on-chain references with third parties, but there is no systematic viewing access.",
       "url": "https://docs.network.intmax.io/user-guides/check-transaction-history"
     },
@@ -168,10 +179,12 @@
       "needsResearchReview": "Proving system requires citation",
       "citations": [
         {
+          "kind": "l2beat",
           "cited_text": "INTMAX Whitepaper \n\n7\nState validation \n\nINTMAX uses validity proofs to ensure that users cannot withdraw more than they have. For every transfer made, a ZK proof is required to prove the amount that has been transferred to be subtracted from the sender’s balance. ",
           "source": "https://l2beat.com/scaling/projects/intmax"
         },
         {
+          "kind": "l2beat",
           "cited_text": "Sequencer failure\n\nSelf sequence\n\nIn the event of a sequencer failure, users can force transactions to be included in the project’s chain by sending them to L1 . There can be up to a 7d delay on this operation. Proposing new blocks requires creating ZK proofs.\n\n",
           "source": "https://l2beat.com/scaling/projects/intmax"
         }
@@ -204,7 +217,9 @@
     },
     {
       "name": "Private Data Storage",
-      "value": ["Off-chain storage with on-chain commitment"],
+      "value": [
+        "Off-chain storage with on-chain commitment"
+      ],
       "notes": "Intmax minimises on-chain footprint by storing only block roots and validity proofs on Ethereum L1. All transaction and balance data is self-custodied by users, who must maintain balance proofs received from aggregators during deposits and transfers. On-chain commitments serve as the source of truth for finality.",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#minimal-on-chain-data"
     },
