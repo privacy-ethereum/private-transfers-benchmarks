@@ -57,6 +57,7 @@ describe("SubgraphService", () => {
       service.fetchArbitrumRootQueryWithCache(),
       service.fetchBaseRootQueryWithCache(),
       service.fetchMainnetRootQueryWithCache(),
+      service.fetchScrollRootQueryWithCache(),
       service.fetchSepoliaRootQueryWithCache(),
     ]);
 
@@ -64,6 +65,7 @@ describe("SubgraphService", () => {
     expect(results[1]).toEqual({ data: "mocked-response" });
     expect(results[2]).toEqual({ data: "mocked-response" });
     expect(results[3]).toEqual({ data: "mocked-response" });
+    expect(results[4]).toEqual({ data: "mocked-response" });
     expect(readJsonFile).toHaveBeenCalledTimes(0);
   });
 });

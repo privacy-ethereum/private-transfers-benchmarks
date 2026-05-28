@@ -1,0 +1,81 @@
+type IntmaxMainnetProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  deposit: IntmaxMainnetOperationStats!
+}
+
+type IntmaxMainnetOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  depositStats: [IntmaxMainnetDepositStats!]! @derivedFrom(field: "operationStats")
+}
+
+type IntmaxMainnetDepositStats @entity(immutable: false) {
+  id: ID!
+  tokenIndex: BigInt!
+  tokenAddress: Bytes!
+
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: IntmaxMainnetOperationStats!
+}
+
+type IntmaxMainnetDeposit @entity(immutable: true) {
+  id: ID!
+  tokenIndex: BigInt!
+  tokenAddress: Bytes!
+  amount: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}
+
+type IntmaxScrollProtocolStats @entity(immutable: false) {
+  id: ID!
+  totalTxCount: BigInt!
+  totalGasUsed: BigInt!
+
+  withdrawal: IntmaxScrollOperationStats!
+}
+
+type IntmaxScrollOperationStats @entity(immutable: false) {
+  id: ID!
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+
+  withdrawalStats: [IntmaxScrollWithdrawalStats!]! @derivedFrom(field: "operationStats")
+}
+
+type IntmaxScrollWithdrawalStats @entity(immutable: false) {
+  id: ID!
+  tokenIndex: BigInt!
+
+  totalCount: BigInt!
+  totalGasUsed: BigInt!
+  totalValue: BigInt!
+
+  operationStats: IntmaxScrollOperationStats!
+}
+
+type IntmaxScrollWithdrawal @entity(immutable: true) {
+  id: ID!
+  tokenIndex: BigInt!
+  amount: BigInt!
+
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+}

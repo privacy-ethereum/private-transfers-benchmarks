@@ -4,12 +4,15 @@ import { readFile, writeFile } from "node:fs/promises";
 
 import type { FeeMetrics } from "./types.js";
 import type { TArbitrumRootQuery } from "../subgraph/arbitrum.js";
+import type { TBaseRootQuery } from "../subgraph/base.js";
 import type { TMainnetRootQuery } from "../subgraph/mainnet.js";
+import type { TScrollRootQuery } from "../subgraph/scroll.js";
 import type { TSepoliaRootQuery } from "../subgraph/sepolia.js";
 
 import { BENCHMARKS_OUTPUT_PATH } from "./constants.js";
 
 export interface IBenchmarkDb {
+  blanksquare: TBaseRootQuery["blanksquareProtocolStats"] | null;
   curvy: TArbitrumRootQuery["fluidkeyProtocolStats"] | null;
   railgun: TMainnetRootQuery["railgunProtocolStats"] | null;
   tornadoCash: TMainnetRootQuery["tornadoCashProtocolStats"] | null;
@@ -23,8 +26,8 @@ export interface IBenchmarkDb {
   };
   redact: TSepoliaRootQuery["redactProtocolStats"] | null;
   intmax: {
-    depositEth: FeeMetrics | undefined;
-    withdrawEth: FeeMetrics | undefined;
+    mainnet: TMainnetRootQuery["intmaxMainnetProtocolStats"] | null;
+    scroll: TScrollRootQuery["intmaxScrollProtocolStats"] | null;
   };
   monero: {
     transfer: Partial<FeeMetrics> | undefined;
@@ -39,6 +42,8 @@ export interface IBenchmarkDb {
     publicToCEXUSDT: FeeMetrics;
     CEXToPublicUSDT: FeeMetrics;
   };
+  worm: TMainnetRootQuery["wormProtocolStats"] | null;
+  zerc20: TMainnetRootQuery["zerc20ProtocolStats"] | null;
 }
 
 const serializeBigInt = (_key: string, value: unknown) => (typeof value === "bigint" ? `${value.toString()}n` : value);

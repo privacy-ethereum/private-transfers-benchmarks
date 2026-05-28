@@ -7,6 +7,7 @@ import {
   ARBITRUM_SUBGRAPH_URL,
   BASE_SUBGRAPH_URL,
   MAINNET_SUBGRAPH_URL,
+  SCROLL_SUBGRAPH_URL,
   SEPOLIA_SUBGRAPH_URL,
 } from "../utils/constants.js";
 import { readJsonFile } from "../utils/json.js";
@@ -14,6 +15,7 @@ import { readJsonFile } from "../utils/json.js";
 import { ArbitrumRootQuery, type TArbitrumRootQuery } from "./arbitrum.js";
 import { BaseRootQuery, type TBaseRootQuery } from "./base.js";
 import { MainnetRootQuery, type TMainnetRootQuery } from "./mainnet.js";
+import { ScrollRootQuery, type TScrollRootQuery } from "./scroll.js";
 import { SepoliaRootQuery, type TSepoliaRootQuery } from "./sepolia.js";
 
 const CACHE_FILE = path.resolve("./cache/root-query.json");
@@ -71,6 +73,11 @@ export class SubgraphService {
   private mainnetClient: GraphQLClient;
 
   /**
+   * Scroll GraphQL client used to send requests to the subgraph endpoint.
+   */
+  private scrollClient: GraphQLClient;
+
+  /**
    * Sepolia GraphQL client used to send requests to the subgraph endpoint.
    */
   private sepoliaClient: GraphQLClient;
@@ -110,6 +117,7 @@ export class SubgraphService {
     this.arbitrumClient = new GraphQLClient(ARBITRUM_SUBGRAPH_URL);
     this.baseClient = new GraphQLClient(BASE_SUBGRAPH_URL);
     this.mainnetClient = new GraphQLClient(MAINNET_SUBGRAPH_URL);
+    this.scrollClient = new GraphQLClient(SCROLL_SUBGRAPH_URL);
     this.sepoliaClient = new GraphQLClient(SEPOLIA_SUBGRAPH_URL);
     this.cache = new Map<string, ICacheValue>();
   }
@@ -154,6 +162,20 @@ export class SubgraphService {
   @CacheToFile(CACHE_FILE, CACHE_TTL)
   async fetchMainnetRootQueryWithCache(): Promise<TMainnetRootQuery | null> {
     return this.mainnetClient.request<TMainnetRootQuery>(MainnetRootQuery);
+  }
+
+  /**
+   * Fetches the scroll root query from the subgraph and caches the result to disk.
+   *
+   * Cached responses are stored in `CACHE_FILE` and remain valid for `CACHE_TTL`
+   * milliseconds. If a valid cached response exists, it is returned instead of
+   * making a network request.
+   *
+   * @returns A promise that resolves to the root query response, or `null`.
+   */
+  @CacheToFile(CACHE_FILE, CACHE_TTL)
+  async fetchScrollRootQueryWithCache(): Promise<TScrollRootQuery | null> {
+    return this.scrollClient.request<TScrollRootQuery>(ScrollRootQuery);
   }
 
   /**
