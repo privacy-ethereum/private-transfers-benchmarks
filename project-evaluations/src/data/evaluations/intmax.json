@@ -168,10 +168,12 @@
       "needsResearchReview": "Proving system requires citation",
       "citations": [
         {
+          "kind": "l2beat",
           "cited_text": "INTMAX Whitepaper \n\n7\nState validation \n\nINTMAX uses validity proofs to ensure that users cannot withdraw more than they have. For every transfer made, a ZK proof is required to prove the amount that has been transferred to be subtracted from the sender’s balance. ",
           "source": "https://l2beat.com/scaling/projects/intmax"
         },
         {
+          "kind": "l2beat",
           "cited_text": "Sequencer failure\n\nSelf sequence\n\nIn the event of a sequencer failure, users can force transactions to be included in the project’s chain by sending them to L1 . There can be up to a 7d delay on this operation. Proposing new blocks requires creating ZK proofs.\n\n",
           "source": "https://l2beat.com/scaling/projects/intmax"
         }
