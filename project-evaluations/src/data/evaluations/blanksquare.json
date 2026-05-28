@@ -1,13 +1,10 @@
 {
   "id": "blanksquare",
   "title": "Blanksquare",
-  "description": "Blanksquare is a composable privacy stack for EVM wallets and DeFi apps developed by Cardinal Cryptography. The Shielder SDK lets any ERC-20 token be deposited into a shielded pool that uses zk-SNARKs to break linkability between deposit and withdrawal addresses. Designed for integration into wallets and DeFi protocols with 600-800ms proving on consumer hardware.",
+  "description": "Blanksquare is a composable privacy stack for EVM wallets and DeFi apps. The Shielder SDK lets any ERC-20 token be deposited into a shielded pool that uses zk-SNARKs to break linkability between deposit and withdrawal addresses. Designed for integration into wallets and DeFi protocols with 600-800ms proving on consumer hardware.",
   "documentation": "https://docs.blanksquare.io/",
   "status": "complete",
-  "categories": [
-    "Shielded Pool",
-    "Zero Knowledge Proofs (ZKPs)"
-  ],
+  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [
     {
       "name": "Anonymity set size",
@@ -15,13 +12,9 @@
     },
     {
       "name": "Confidentiality",
-      "value": "No",
-      "notes": "The user-facing asset is an unmodified ERC-20: deposits show Alice's account sending a specific amount to the Shielder contract, and withdrawals show some address receiving a specific amount from the Shielder. Internal pool state hides amounts but the entry/exit boundary amounts are public on-chain.",
+      "value": "Yes",
+      "notes": "Blanksquare is a shielded pool — internal Shielder state hides balances and transfer amounts between accounts. A 3rd party observer only sees that some unknown account interacted with the Shielder. Deposit and withdraw boundary amounts to/from the pool are publicly visible at entry/exit, but in-protocol confidentiality holds.",
       "citations": [
-        {
-          "cited_text": "Alice calls the `deposit` method of the `Shielder` contract, sending `100 USDT` along the call.",
-          "source": "https://docs.blanksquare.io/protocol-details/shielder.md"
-        },
         {
           "cited_text": "A 3rd party observer only sees that some unknown account just withdrew `20` USDT from the shielder.",
           "source": "https://docs.blanksquare.io/protocol-details/shielder.md"
@@ -30,8 +23,8 @@
     },
     {
       "name": "Anonymity",
-      "value": "Unlinkability",
-      "notes": "Blanksquare's privacy primitive breaks the link between deposit and withdrawal addresses via the shielded pool — both the depositing wallet and the withdrawing address remain visible on-chain, but observers cannot pair them.",
+      "value": "Yes",
+      "notes": "Blanksquare's shielded pool hides sender and receiver of in-pool transfers — there is no way to link the deposit transaction to the withdraw transaction. Once funds are in the pool, transfers between accounts cannot be linked to the depositing or withdrawing wallets by outside observers.",
       "citations": [
         {
           "cited_text": "There is no way to link the deposit transaction to the withdraw transaction.",
@@ -42,7 +35,7 @@
     {
       "name": "Asset privacy",
       "value": "No",
-      "notes": "Each Shielder note carries a token type, so internal transfers preserve token identity inside the pool. At the entry/exit boundary the deposit/withdraw transaction names the specific ERC-20 contract being moved, making the asset type visible to chain observers.",
+      "notes": "At the entry/exit boundary the deposit/withdraw transaction names the specific ERC-20 contract being moved, making the asset type visible to chain observers. Internal transfers within the pool are token-specific by design (the deposit names the token).",
       "citations": [
         {
           "cited_text": "Alice calls the `deposit` method of the `Shielder` contract, sending `100 USDT` along the call.",
@@ -87,7 +80,7 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "The user holds a single 256-bit master seed. ZK-ID, per-transaction nullifiers, and trapdoors are deterministically derived from it via Poseidon hashing over BN256. The proof system is Ultraplonk with KZG commitments, instantiated via Halo2.",
+      "notes": "The user holds a single 256-bit master seed. ZK-ID, per-transaction nullifiers, and trapdoors are deterministically derived from it. The proof system is Ultraplonk with KZG commitments, instantiated via Halo2 over BN256.",
       "citations": [
         {
           "cited_text": "we introduce a deterministic secret management scheme that allows the user to keep just one secret seed and derive all the remaining secrets out of it.",
@@ -96,6 +89,14 @@
         {
           "cited_text": "The user starts by generating a master seed: `seed` with say 256 bits,",
           "source": "https://docs.blanksquare.io/protocol-details/client-side-components/deterministic-secret-management.md"
+        },
+        {
+          "cited_text": "### Proof System \n\nWe use the Ultraplonk proof system instantiated using a KZG commitment scheme. ",
+          "source": "https://docs.blanksquare.io/protocol-details/cryptography.md"
+        },
+        {
+          "cited_text": "For the time being we decided to use BN256, at least until support for the BLS12 family of curves is added to Halo2. ",
+          "source": "https://docs.blanksquare.io/protocol-details/cryptography.md"
         }
       ]
     },
@@ -137,15 +138,14 @@
     },
     {
       "name": "External network dependence",
-      "value": "Yes, permissionless",
-      "notes": "Blanksquare relies on an off-chain relayer network to broadcast shielder transactions with privacy preserved. The docs describe relayers functionally without naming a curated operator set, and users retain the option to self-broadcast directly.",
+      "value": "No",
+      "notes": "Relayers exist as a convenience broadcasting layer but are optional — users can self-broadcast the signed shielder transaction directly. No external committee, oracle, or staked validator set is required between the user and the host chain.",
       "citations": [
         {
           "cited_text": "parties that post shielder transactions to chain, on behalf of normal users",
           "source": "https://docs.blanksquare.io/protocol-details/relayers.md"
         }
-      ],
-      "needsResearchReview": "relayer operator set composition (open-onboarding vs curated) lacks a cited statement in the docs — the default *.blanksquare.dev relayer URLs are observation only."
+      ]
     },
     {
       "name": "Escape hatch",
@@ -183,7 +183,7 @@
     {
       "name": "Third-party inspectability",
       "value": "No",
-      "notes": "Proving runs in-browser via the WASM engine, so no external prover sees the witness inputs. Relayers receive the signed proof and public inputs but not the private witness. TEE-based proof delegation is listed as a work-in-progress alternative.",
+      "notes": "Proving runs in-browser via the WASM engine, so no external prover sees the witness inputs. Relayers receive the signed proof and public inputs but not the private witness.",
       "citations": [
         {
           "cited_text": "Generates ZK proof client-side using WASM cryptography engine",
@@ -194,7 +194,7 @@
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
-      "notes": "Blanksquare's Shielder contract on Base mainnet was deployed in July 2025, placing it under one year of mainnet operation as of mid-2026. Additional testnet deployments exist on Base Sepolia, Arbitrum Sepolia, and Hyperliquid testnet, but those do not extend the mainnet tenure.",
+      "notes": "Blanksquare's Shielder contract on Base mainnet was deployed in July 2025, placing it under one year of mainnet operation as of mid-2026. Additional testnet deployments exist on Base Sepolia, Arbitrum Sepolia, and Hyperliquid testnet.",
       "citations": [
         {
           "cited_text": "Jul-23-2025 02:51:39 PM +UTC \n308 days ago | Jul-23-2025 02:51:39 PM +UTC",
@@ -252,11 +252,8 @@
     },
     {
       "name": "Type of compliance",
-      "value": [
-        "Other",
-        "Selective disclosure"
-      ],
-      "notes": "Two parallel mechanisms exist. Anonymity Revokers perform governance-triggered involuntary post-hoc deanonymization (Other). The Shielder SDK also exposes voluntary user-controlled viewing keys that grant chosen counterparties read access to past activity (Selective disclosure).",
+      "value": ["Other", "Selective disclosure"],
+      "notes": "Two parallel mechanisms exist. Anonymity Revokers perform governance-triggered involuntary post-hoc deanonymization (Other). The Shielder SDK also exposes voluntary user-controlled viewing keys that grant chosen counterparties read access to activity (Selective disclosure).",
       "citations": [
         {
           "cited_text": "A governance process decides whether to deanonymize the user behind this deposit.",
@@ -270,9 +267,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": [
-        "Deposit"
-      ],
+      "value": ["Deposit"],
       "notes": "The Anonymity Revoker's encrypted commitment is sealed into the account-creation circuit at first deposit, anchoring future deanonymization to that initial proof. Subsequent transfers and withdrawals do not run additional compliance gates.",
       "citations": [
         {
@@ -283,12 +278,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": [
-        "User",
-        "Voluntary third-party disclosure",
-        "Involuntary third-party disclosure",
-        "Protocol"
-      ],
+      "value": ["User", "Voluntary third-party disclosure", "Involuntary third-party disclosure", "Protocol"],
       "notes": "Users can self-view their own past activity using their viewing keys. They can voluntarily share a viewing key with any chosen third party. Governance can additionally invoke the Anonymity Revoker to deanonymize a specific deposit, an involuntary protocol-level disclosure path.",
       "citations": [
         {
@@ -303,7 +293,7 @@
     },
     {
       "name": "Selective disclosure: viewing control",
-      "value": "Programmable",
+      "value": "Pre-defined",
       "notes": "Viewing keys can be granted by the user to any chosen party at any time. The Anonymity Revoker's commitment is sealed at first deposit, but the user-controlled viewing-key channel lets the user grant, withhold, or share viewing material after the fact.",
       "citations": [
         {
@@ -315,7 +305,7 @@
     {
       "name": "Cryptographic verifiability",
       "value": "Yes",
-      "notes": "Shielder verifies zk-SNARK proofs in the on-chain verifier contract on Base mainnet rather than relying on majority vote or social attestation. Inclusion and ordering are inherited from the host chain.",
+      "notes": "Shielder verifies zk-SNARK proofs in the on-chain verifier contract rather than relying on majority vote or social attestation. Inclusion and ordering are inherited from the host chain.",
       "citations": [
         {
           "cited_text": "uses the technology of zk-SNARKs to enable private payments and private interactions with Defi.",
@@ -339,7 +329,7 @@
     {
       "name": "Private State Scalability",
       "value": "Infinity grow",
-      "notes": "The Shielder maintains an append-only Merkle tree of note commitments plus a monotonically growing nullifier set. No pruning mechanism is documented and on-chain state grows with cumulative pool usage.",
+      "notes": "The Shielder maintains an append-only Merkle tree of note commitments plus a growing nullifier set. No pruning mechanism is documented and on-chain state grows with cumulative pool usage.",
       "citations": [
         {
           "cited_text": "set of elements of type `Scalar` whose purpose is to invalidate old notes",
@@ -371,9 +361,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": [
-        "Smart contracts"
-      ],
+      "value": ["Smart contracts"],
       "notes": "The notes Merkle tree, the nullifier set, and the encrypted note payloads are stored in the Shielder smart contract on the host chain. The state is recoverable by any full node.",
       "citations": [
         {
@@ -384,8 +372,9 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
-      "notes": "Shielded balances cannot be plugged into external DeFi protocols from within the pool. To trade, lend, or interact with any DeFi protocol, the user must first withdraw to a public address — at which point ordinary host-chain ERC-20 activity applies. SDK DEX integrations are listed as future work, not live functionality.",
+      "value": "Composable interface, but requires DeFi protocol changes",
+      "notes": "Blanksquare's documented Shielder SDK includes out-of-the-box DEX integration as a composability target. Direct in-pool DeFi access requires the DeFi protocol to integrate with the Shielder SDK — without that integration, the user must first withdraw to a public address to interact with DeFi.",
+      "needsResearchReview": "SDK DEX integration status (live vs work-in-progress) is not unambiguously stated in cited docs.",
       "citations": [
         {
           "cited_text": "out-of-the-box DEX integration",
