@@ -1,10 +1,413 @@
 {
   "id": "umbra-cash",
   "title": "Umbra Cash",
-  "description": "Umbra is a stealth-address protocol for Ethereum. A payer sends funds to a fresh address controlled by the intended recipient. Only the payer and recipient can link that address to the recipient.",
-  "status": "pending",
+  "description": "Umbra is a stealth-address protocol for EVM networks. A payer sends funds to a fresh address controlled by the intended recipient. Only the payer and recipient can link that address to the recipient.",
   "documentation": "https://app.umbra.cash/faq",
+  "status": "complete",
   "categories": ["Stealth Addresses"],
-  "properties": [],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "No",
+      "notes": "Umbra is a stealth-address protocol. Each payment emits an on-chain announcement whose receiver address, amount, and token are visible in clear. Funds rest at one-time stealth externally-owned accounts (for ETH) or in the protocol contract under a public per-stealth-address mapping (for ERC-20). The privacy guarantee is unlinkability of recipient identity.",
+      "citations": [
+        {
+          "cited_text": "Umbra is a stealth address protocol for EVM networks. That means it allows a payer to send funds to a fresh address. That address is controlled by the intended receiver",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        },
+        {
+          "cited_text": "event Announcement(\n    address indexed receiver,",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Unlinkability",
+      "notes": "Sender wallet and recipient stealth address are both visible on-chain — what is broken is the link between the stealth address and the recipient's main identity. The fresh receiving address has never been seen on-chain so outside observers cannot identify who controls it.",
+      "citations": [
+        {
+          "cited_text": "Everyone can see who sent the funds, and everyone can see the address funds were sent to, but that receiving address has never been seen on-chain",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        },
+        {
+          "cited_text": "allow senders of transactions or transfers to non-interactively generate private accounts exclusively accessible by their recipients",
+          "source": "https://eips.ethereum.org/EIPS/eip-5564"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "Each on-chain announcement declares the token address for every payment, so the asset is publicly visible per send. Amount is also visible. Umbra hides only the link between the sender wallet and the recipient's identity — asset type and amount are part of every emitted announcement.",
+      "citations": [
+        {
+          "cited_text": "address indexed token, // token address or ETH placeholder",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Calls to the canonical protocol contract are a distinctive on-chain signature — the send paths emit announcement events whose topic and payload identify the sender as a stealth-payment user. The protocol does not disguise itself as ordinary transfers, so the sender side of a Umbra payment is clearly identifiable.",
+      "citations": [
+        {
+          "cited_text": "Using the Umbra contract, the payer sends funds to the stealth address and the stealth address and encrypted random number are emitted as an Announcement event.",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "Umbra is an application-layer protocol deployed as smart contracts on Ethereum. Finality is inherited from the host chain on which each deployment runs.",
+      "citations": [
+        {
+          "cited_text": "Umbra is a protocol for stealth payments on EVM blockchain networks.",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "Users sign a single wallet message. The hash of that signature deterministically derives both the spending key (controls funds) and the viewing key (identifies incoming payments). Each user therefore stores one root secret — the wallet seed used to produce the message signature — and the two stealth-protocol keys are reproducible from it via secp256k1 derivation.",
+      "citations": [
+        {
+          "cited_text": "users sign a message. The hash of this message is used to generate two private keys—a \"spending key\" and a \"viewing key\".",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "A send is a single host-chain transaction. There is no commitment phase, no queue, no protocol-imposed waiting period — the recipient can scan and use the funds as soon as the transaction is mined.",
+      "citations": [
+        {
+          "cited_text": "Send and announce ETH payment to a stealth address",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "ETH arrives directly at the stealth account at send time — no withdrawal step. ERC-20s sit in the protocol contract under a per-stealth-address mapping until the stealth account (or a sponsored relayer with its signature) calls the withdraw path, which is one host-chain transaction with no protocol-imposed delay.",
+      "citations": [
+        {
+          "cited_text": "Withdraw an ERC20 token payment sent to a stealth address",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "Yes",
+      "notes": "Both core contracts are permissionless. Meta-address publication on the registry has no access control, and the send paths are open to any caller. There is no blocklist, sanctions hook, or per-user filter. The owner role only adjusts the ETH toll parameters and cannot block users or freeze funds. Host-chain censorship resistance applies.",
+      "citations": [
+        {
+          "cited_text": "Sets stealth keys for the caller",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/StealthKeyRegistry.sol"
+        },
+        {
+          "cited_text": "Admin only function to update the toll",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "Core has no external network dependency beyond the host chain. The client library preferentially queries per-chain subgraphs and falls back to RPC log queries on failure, so recipients can scan announcements directly from any node without trusting an indexer. No sequencer, oracle, prover, or relayer is in the trust path.",
+      "citations": [
+        {
+          "cited_text": "Try querying events using a subgraph, fallback to querying logs.",
+          "source": "https://raw.githubusercontent.com/ScopeLift/umbra-protocol/master/umbra-js/src/classes/Umbra.ts"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "N/A",
+      "notes": "There is no shielded pool from which funds could need to escape. ETH lives directly at the stealth account at send time — outside protocol custody. ERC-20s sit in the protocol contract under a per-stealth-address mapping and are withdrawable by the stealth account at any time. No protocol-level lockup, no admin freeze.",
+      "citations": [
+        {
+          "cited_text": "Token payments pending withdrawal; stealth address => token address => amount",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "notes": "Umbra inherits OpenZeppelin Ownable — a single externally-owned account holds the owner role and can call setToll, setTollCollector, setTollReceiver, and transferOwnership. The owner cannot upgrade logic or freeze funds, but can raise the toll to gate sends economically. No proxy, no delegatecall, no logic upgrade path.",
+      "citations": [
+        {
+          "cited_text": "contract Umbra is Ownable",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol",
+          "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401"
+        },
+        {
+          "kind": "explorer",
+          "cited_text": "Contract Creator 0x5777Aa6F...4eD7C7232",
+          "source": "https://etherscan.io/address/0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
+          "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
+          "admin_class": "Single admin"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "N/A",
+      "notes": "Umbra uses elliptic-curve cryptography on secp256k1, not zero-knowledge proofs. The sender computes an ephemeral key and ciphertext that the recipient decrypts off-chain with their viewing key. There is no proving step on either side.",
+      "citations": [
+        {
+          "cited_text": "does not use zero knowledge proofs. Instead, Umbra is based on ordinary elliptic curve cryptography.",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        },
+        {
+          "cited_text": "first implementation of a cryptographic scheme, specifically the SECP256k1 curve",
+          "source": "https://eips.ethereum.org/EIPS/eip-5564"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Outside observers without the recipient's viewing key see only the public announcement fields (stealth address, amount, token, ephemeral pubkey, ciphertext) and cannot link the stealth address to the recipient identity. Sharing the viewing key off-chain lets a delegated party identify which announcements belong to the recipient.",
+      "citations": [
+        {
+          "cited_text": "is a private key that can be used to determine if funds sent to a stealth address belong to the recipient",
+          "source": "https://eips.ethereum.org/EIPS/eip-5564"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "5 : Mainnet for more than 2 years",
+      "notes": "Umbra has been live on Ethereum mainnet since April 2021 and carries a ConsenSys Diligence audit from March 2021. The canonical contract has processed over 22,000 transactions at the time of writing.",
+      "citations": [
+        {
+          "kind": "explorer",
+          "cited_text": "ConsenSys Diligence - March 26th, 2021 - Security Audit Report",
+          "source": "https://etherscan.io/address/0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
+          "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401"
+        },
+        {
+          "kind": "explorer",
+          "cited_text": "Apr-30-2021 08:18:57 PM +UTC",
+          "source": "https://etherscan.io/tx/0x1dbb9dfe4f83466be6ce1cdd19ac690636f02aeb2804785509ead7084fd7134a",
+          "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
+          "date": "2021-04-30"
+        },
+        {
+          "kind": "explorer",
+          "cited_text": "Latest 25 from a total of 22,197 transactions",
+          "source": "https://etherscan.io/address/0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
+          "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Stealth address derivation relies on secp256k1 ECDH and the elliptic-curve discrete-log hardness assumption. There is no post-quantum primitive in either the stealth-address scheme or the on-chain contracts. A quantum adversary capable of breaking the discrete log could derive recipients' viewing and spending keys from their published public keys.",
+      "citations": [
+        {
+          "cited_text": "Initial Implementation of SECP256k1 with View Tags",
+          "source": "https://eips.ethereum.org/EIPS/eip-5564"
+        },
+        {
+          "cited_text": "A shared secret $s$ is computed as $s = p_{ephemeral} \\cdot P_{view}$.",
+          "source": "https://eips.ethereum.org/EIPS/eip-5564"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "Neither core contract contains a compliance check, blocklist, sanctions hook, or selective-disclosure gate. There is no enforcement at the protocol layer — the contracts are permissionless and identical for all callers, so this property has no mechanism to layer on.",
+      "citations": [
+        {
+          "cited_text": "Admin only function to update the toll",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "No enforcement entity is parameterised in either core contract. The owner role exists only to manage the ETH toll parameters and has no power to block, freeze, or filter payments — there is no party whose role is to enforce compliance.",
+      "citations": [
+        {
+          "cited_text": "Admin only function to update the toll",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["None"],
+      "notes": "Umbra has no in-protocol compliance mechanism — no KYC gate, no proof-of-innocence, no association sets, no required selective disclosure. The send and withdraw paths only check toll payments and signature validity. Users self-custody throughout — compliance, if any, is the user's responsibility at the application layer.",
+      "citations": [
+        {
+          "cited_text": "Admin only function to update the toll",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["None"],
+      "notes": "No on-chain enforcement point — neither deposit, withdrawal, nor meta-address registration gate on any compliance condition. Require-checks are limited to toll commitment, sponsor signature validity, and per-stealth-address single-payment uniqueness.",
+      "citations": [
+        {
+          "cited_text": "require(_tollCommitment == toll, \"Umbra: Invalid or outdated toll commitment\");",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User", "Voluntary third-party disclosure"],
+      "notes": "Recipients hold a separate viewing key that lets them detect their own incoming payments. Sharing that key off-chain lets a delegated third party identify which announcements belong to the recipient — voluntary, off-chain disclosure.",
+      "citations": [
+        {
+          "cited_text": "is a private key that can be used to determine if funds sent to a stealth address belong to the recipient",
+          "source": "https://eips.ethereum.org/EIPS/eip-5564"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "The viewing key is fixed off-chain at the time of derivation. Once shared, that disclosure remains valid for all past and future announcements scanned with it — it cannot be cryptographically revoked. Publishing a new meta-address rotates future scanning capability but does not retract prior disclosures.",
+      "citations": [
+        {
+          "cited_text": "is a private key that can be used to determine if funds sent to a stealth address belong to the recipient",
+          "source": "https://eips.ethereum.org/EIPS/eip-5564"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Each announcement event is a public on-chain record of receiver, amount, token, ephemeral pubkey, and ciphertext. Anyone holding the recipient's viewing key can re-derive the stealth address from these fields and check it matches the emitted receiver. Withdrawal authorisation is verified via ECDSA over a signed digest recovered with ecrecover.",
+      "citations": [
+        {
+          "cited_text": "event Announcement(\n    address indexed receiver,",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        },
+        {
+          "cited_text": "address _recoveredAddress = ecrecover(_digest, _v, _r, _s);",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "ScopeLift's umbra-protocol monorepo (contracts-core, contracts-periphery, umbra-js, frontend) is published under the MIT licence. All Solidity sources are on GitHub and verified on Etherscan.",
+      "citations": [
+        {
+          "cited_text": "SPDX-License-Identifier: MIT",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        },
+        {
+          "kind": "explorer",
+          "cited_text": "Source Code Verified Exact Match",
+          "source": "https://etherscan.io/address/0xFb2dc580Eed955B528407b4d36FfaFe3da685401"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Infinity grow",
+      "notes": "Each new payment adds an on-chain announcement that every recipient must consider when scanning. From a receiver's perspective the effective scan set grows monotonically with total protocol use — there is no pruning, no epoch boundary, no compaction. The set is bounded only by the host chain's event history.",
+      "citations": [
+        {
+          "cited_text": "The receiver scans all Announcement events from the Umbra contract.",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Always scanning",
+      "notes": "Recipients must scan every announcement event on the protocol contract and try-decrypt each ciphertext with their viewing key to find payments addressed to them. The client library queries per-chain subgraphs for efficiency, with RPC log queries as the fallback. Indexing is required client-side — there is no in-protocol discovery service.",
+      "citations": [
+        {
+          "cited_text": "The receiver scans all Announcement events from the Umbra contract.",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        },
+        {
+          "cited_text": "Try querying events using a subgraph, fallback to querying logs.",
+          "source": "https://raw.githubusercontent.com/ScopeLift/umbra-protocol/master/umbra-js/src/classes/Umbra.ts"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "Account-based state model",
+      "notes": "Umbra has no protocol-level private state. Funds rest at ordinary EVM stealth accounts (for ETH) or in a public per-stealth-address mapping on the protocol contract (for ERC-20). There is no commitment tree, no nullifier set, no encrypted balance per account. ",
+      "citations": [
+        {
+          "cited_text": "does not use zero knowledge proofs. Instead, Umbra is based on ordinary elliptic curve cryptography.",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Smart contracts"],
+      "notes": "The on-chain part of the per-payment privacy payload — the ephemeral public key and ciphertext fields — is emitted as event logs by the protocol contract on the host chain. The recipient reconstructs the link off-chain by decrypting the ciphertext with their viewing key — there is no off-chain server holding authoritative private state.",
+      "citations": [
+        {
+          "cited_text": "bytes32 pkx, // ephemeral public key x coordinate",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Unlimited access to DeFi applications",
+      "notes": "Umbra is designed for payments, but users can easily use funds in any DeFi application if they so choose. Once funds reach the stealth account, they are ordinary host-chain ETH or ERC-20s that the recipient can use anywhere.",
+      "citations": [
+        {
+          "cited_text": "It’s meant for payments between two entities, and comes with a different set of privacy tradeoffs.",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "Umbra exposes only send and withdraw paths plus a single withdrawal-time callback for atomic post-withdrawal actions. There is no programmable private execution. The protocol is scoped to two-party stealth payments between an existing sender wallet and a fresh stealth recipient account.",
+      "citations": [
+        {
+          "cited_text": "It’s meant for payments between two entities, and comes with a different set of privacy tradeoffs.",
+          "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
+        }
+      ]
+    }
+  ],
   "sourceUrls": []
 }
