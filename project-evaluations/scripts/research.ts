@@ -148,7 +148,8 @@ async function evaluateProperty(
   else
     property.needsResearchReview =
       "Anthropic citations call returned no spans; the value and notes rest on the research summary rather than verifiable source text.";
-  console.log(`= ${value} [${citations.length} citations]\n`);
+  const valueStr = Array.isArray(value) ? value.join(", ") : value;
+  console.log(`= ${valueStr} [${citations.length} citations]\n`);
   return property;
 }
 

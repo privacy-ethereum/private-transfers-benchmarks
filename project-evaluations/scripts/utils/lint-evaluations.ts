@@ -3,6 +3,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { evaluationSchema } from "../../src/data/evaluation-schema";
 import type { Property } from "../../src/types";
+import { readSourceCache, type SourceCache } from "./source-cache.js";
 
 type MaturityProperty = Extract<Property, { name: "Implementation maturity" }>;
 type UpgradeabilityProperty = Extract<Property, { name: "Upgradeability" }>;
@@ -121,7 +122,9 @@ function checkUpgradeability(file: string, property: UpgradeabilityProperty, leg
   }
 }
 
-function checkCitations(file: string, property: Property, legacy: boolean, issues: Issue[]) {
+const normaliseWhitespace = (s: string) => s.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, " ").trim();
+
+function checkCitations(file: string, property: Property, legacy: boolean, sourceCache: SourceCache, issues: Issue[]) {
   if (legacy) return;
   const push = (rule: string, error: string) => issues.push({ file, property: property.name, rule, error });
 
@@ -133,15 +136,22 @@ function checkCitations(file: string, property: Property, legacy: boolean, issue
     }
     if (citedText.includes(" ,")) push("cited-text-punctuation", "space-before-comma");
     if (citedText.includes(" .")) push("cited-text-punctuation", "space-before-period");
+
+    const sourceText = sourceCache[citation.source];
+    if (typeof sourceText === "string" && !normaliseWhitespace(sourceText).includes(normaliseWhitespace(citedText))) {
+      push("cited-text-not-in-source", `cited_text not found in source-cache for ${citation.source}`);
+    }
   }
 }
 
 const issues: Issue[] = [];
 const files = readdirSync(evaluationsDir).filter((filename) => filename.endsWith(".json"));
 for (const file of files) {
-  const legacy = LEGACY_PROTOCOLS.has(file.replace(/\.json$/, ""));
+  const protocolId = file.replace(/\.json$/, "");
+  const legacy = LEGACY_PROTOCOLS.has(protocolId);
   const notesMax = legacy ? NOTES_MAX_LEGACY : NOTES_MAX_NEW;
   const json = JSON.parse(readFileSync(join(evaluationsDir, file), "utf-8"));
+  const sourceCache = legacy ? {} : readSourceCache(protocolId);
 
   parseSchema(file, json, issues);
 
@@ -154,7 +164,16 @@ for (const file of files) {
       checkDescription(file, property.name, property.notes, notesMax, issues);
     }
 
-    checkCitations(file, property, legacy, issues);
+    if (typeof property.needsResearchReview === "string" && property.needsResearchReview.includes(";")) {
+      issues.push({
+        file,
+        property: property.name,
+        rule: "semicolon-in-research-review",
+        error: "use full stop or em-dash",
+      });
+    }
+
+    checkCitations(file, property, legacy, sourceCache, issues);
 
     if (property.name === "Implementation maturity") {
       checkMaturityDate(file, property as MaturityProperty, legacy, issues);
