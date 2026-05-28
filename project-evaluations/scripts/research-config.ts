@@ -7,7 +7,7 @@ export type ProtocolConfig = Omit<Evaluation, "properties"> & {
 };
 
 export const configs: Record<string, ProtocolConfig> = {
-  zcash: {
+  "zcash": {
     id: "zcash",
     title: "ZCash",
     description:
@@ -23,7 +23,7 @@ export const configs: Record<string, ProtocolConfig> = {
       "https://zcash.github.io/",
     ],
   },
-  worm: {
+  "worm": {
     id: "worm",
     title: "WORM",
     description:
@@ -53,7 +53,7 @@ export const configs: Record<string, ProtocolConfig> = {
       "additional reading and background context on the proof-of-burn concept. Always prefer the " +
       "WORM whitepaper and GitHub repos as primary sources.",
   },
-  zerc20: {
+  "zerc20": {
     id: "zerc20",
     title: "zERC20",
     description:
@@ -63,7 +63,7 @@ export const configs: Record<string, ProtocolConfig> = {
     categories: ["Zero-Knowledge Wormholes"],
     sourceUrls: ["https://zerc20.gitbook.io/zerc20"],
   },
-  curvy: {
+  "curvy": {
     id: "curvy",
     title: "Curvy",
     description:
@@ -84,7 +84,7 @@ export const configs: Record<string, ProtocolConfig> = {
       "https://docs.curvy.box/faq.html",
     ],
   },
-  nullmask: {
+  "nullmask": {
     id: "nullmask",
     title: "Nullmask",
     description:
@@ -99,7 +99,7 @@ export const configs: Record<string, ProtocolConfig> = {
       "https://hackmd.io/@krnak/r1W6uGUsZe",
     ],
   },
-  houdiniswap: {
+  "houdiniswap": {
     id: "houdiniswap",
     title: "Houdini Swap",
     status: "pending",
@@ -121,7 +121,7 @@ export const configs: Record<string, ProtocolConfig> = {
     context:
       "Houdini Swap is explicitly NOT a mixer and NOT a zero-knowledge privacy protocol. Its privacy model is 'knowledge partitioning across off-chain CEX hops and multiple blockchains': two non-custodial CEX partners and three blockchains are used so no single party sees the full source-to-destination path. Do not describe Houdini as a shielded pool, ZK rollup, or anonymity-set protocol. There are no on-chain privacy contracts, no notes, and no nullifiers — routing and compliance happen off-chain via CEX partners and a proprietary routing engine.",
   },
-  mirage: {
+  "mirage": {
     id: "mirage",
     title: "Mirage",
     description:
@@ -147,7 +147,7 @@ export const configs: Record<string, ProtocolConfig> = {
     context:
       "Mirage's privacy model is NOT a shielded pool, mixer, or ZK rollup. It avoids pooled funds entirely. Each private transfer deploys a transaction-specific escrow contract; Azoth obfuscates the bytecode so the contract is indistinguishable from any other unverified deployment. A decentralised Nomad network settles transfers against the escrow using time-bonded execution. As of April 2026 the protocol is in closed alpha, with a public test environment in preparation — do not report it as mainnet-live. SGX is used by Nomad operators for node-side key handling.",
   },
-  aztec: {
+  "aztec": {
     id: "aztec",
     title: "Aztec",
     description:
@@ -174,5 +174,24 @@ export const configs: Record<string, ProtocolConfig> = {
     ],
     context:
       "CRITICAL: 'Aztec' here means the Aztec Network zkRollup L2 — Alpha mainnet on Ethereum went live in early 2026 atop the Aztec Ignition Chain which launched in November 2025 — NOT the deprecated 'Aztec Connect' shielded-pool product (shut down in 2024). Do not cite Aztec Connect docs, contracts, or design as if they describe the current protocol. Aztec smart contracts are written in Noir; private execution happens client-side in the PXE (Private Execution Environment) and produces a ZK proof that is verified by the sequencer/prover network. Private state uses note commitments + nullifiers; public state uses an account-based store; both live in the same rollup. Alpha is presented as the operational mainnet in its initial phase — early, with known critical bugs — so treat maturity / live-deployment claims accordingly and prefer dated docs / blog posts as evidence.",
+  },
+  "umbra-cash": {
+    id: "umbra-cash",
+    title: "Umbra Cash",
+    description:
+      "Umbra is a stealth-address protocol for Ethereum. A payer sends funds to a fresh address controlled by the intended recipient. Only the payer and recipient can link that address to the recipient.",
+    status: "pending",
+    documentation: "https://app.umbra.cash/faq",
+    categories: ["Stealth Addresses"],
+    sourceUrls: [
+      "https://app.umbra.cash/faq",
+      "https://github.com/ScopeLift/umbra-protocol",
+      "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/README.md",
+      "https://github.com/ScopeLift/umbra-protocol/tree/master/contracts-core/contracts",
+      "https://eips.ethereum.org/EIPS/eip-5564",
+      "https://www.scopelift.co/blog/announcing-umbra",
+    ],
+    context:
+      "CRITICAL: 'Umbra Cash' is the ScopeLift Ethereum stealth-address protocol at app.umbra.cash — NOT the Solana protocol 'Umbra Privacy' tracked under id 'umbra'. Privacy model: stealth addresses on L1 Ethereum (also deployed on several EVM L2s). A payer sends funds to a one-time stealth address derived from the recipient's published stealth meta-address; the recipient discovers the address by scanning Announcement events with their viewing key. No shielded pool, no zk runtime — privacy is unlinkability via fresh per-payment addresses. Two protocol contracts on each chain: StealthKeyRegistry (publishes meta-addresses) and Umbra (sends funds + emits Announcement events). Contracts are typically immutable. EIP-5564 standardizes the stealth-address scheme that post-dates Umbra; use it for design context, not as the deployment claim.",
   },
 };
