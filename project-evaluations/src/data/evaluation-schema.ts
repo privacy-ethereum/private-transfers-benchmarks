@@ -7,9 +7,9 @@ const categoryEnum = z.enum(CATEGORIES);
 const evaluationStatusEnum = z.enum(["complete", "pending"]);
 
 /** Citation accepted on every property. `kind` defaults to "standard" when absent —
- *  only typed citations (explorer, docs, l2beat) need to set it explicitly. */
+ *  only typed citations (explorer, docs, l2beat, license) need to set it explicitly. */
 const baseCitation = z.strictObject({
-  kind: z.enum(["docs", "explorer", "l2beat", "standard"]).optional(),
+  kind: z.enum(["docs", "explorer", "l2beat", "license", "standard"]).optional(),
   cited_text: z.string().optional(),
   source: z.string(),
 });

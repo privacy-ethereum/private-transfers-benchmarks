@@ -15,11 +15,13 @@ Pick the strongest applicable enum. "Yes" = sender and receiver are both private
 
 For protocols that use standard ERC-20 (or any unmodified public-ledger token) as the user-facing balance, the value is No. The token contract leaks per-address balances and transfer amounts regardless of how private movement between addresses is.
 
+**Shielded-pool protocols default to Yes.** When the protocol category includes "Shielded Pool" (or the docs describe note commitments + nullifiers + ZK-proven in-pool transfers), the default Confidentiality is Yes — internal pool state hides balances and amounts between accounts. The fact that deposit/withdraw entry amounts are publicly visible at the pool boundary does NOT make Confidentiality No; that's a property of the deposit/withdraw step, not of the in-pool transfer surface. To override the Yes default, cite explicit evidence that in-pool transfers leak amounts (e.g. a public-amount transfer mode, an unblinded notes structure).
+
 ## Asset privacy
 
 For single-asset protocols (e.g. a chain with only one native currency, or a single wrapped token per asset), the value is No.
 
-Do not infer asset privacy from architectural similarity to other shielded-pool protocols. RAILGUN being multi-asset does not prove a derivative protocol is. The value requires explicit citation evidence: a contract source showing one pool address handling multiple ERC-20s, an SDK reference to a singular `config.pool` (not per-token pools), a circuit definition treating the token as a hidden input, or docs that state the pool is multi-asset. Without that, the docs-only answer is No (assets distinguishable by which pool address they enter) — even when the protocol bundles forks of multi-asset upstream protocols as libraries.
+A shielded pool that holds assets as encrypted notes normally rates Yes: when the amount and the asset behind a note are hidden in shielded state so that internal transfers reveal them only to the counterparties, asset privacy holds. The deposit and withdrawal boundary exposing which token is wrapped (per-token forwarders, or per-asset pool addresses) is inherent to entering or leaving any shielded pool and does not by itself force No — it bears on boundary anonymity, not on the asset privacy of shielded balances. Reserve No for single-asset protocols and for pools that keep funds in a transparent per-token mapping with no note-level encryption of the asset. Credit explicit evidence that notes encrypt the asset or amount (a circuit treating the token as a hidden input, docs stating values are encrypted in shielded state, an SDK referencing a singular multi-asset pool); but do not infer multi-asset shielding from mere architectural similarity to RAILGUN.
 
 ## Plausible deniability
 

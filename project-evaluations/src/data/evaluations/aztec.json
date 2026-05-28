@@ -264,7 +264,7 @@
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         }
       ],
-      "needsResearchReview": "Aztec L1 Governance contract address not classified on-chain — the typed citation pair (docs naming the admin + explorer page with admin_class) needs the verified address before it can be populated."
+      "needsResearchReview": "Aztec L1 Governance contract address not classified on-chain — typed citation pair (docs + explorer) unpopulated."
     },
     {
       "name": "Client-side proving",

@@ -21,7 +21,9 @@ The protocol name is passed as an argument (e.g. `/review-evaluation-final railg
    - **NOT include the first review's report or any conclusions from it.** Anchoring is the failure mode this skill exists to defeat — the subagent must see only the rules + the file + the sources, and form its own opinions.
    - Ask the subagent to return its issues table in the same format as `/review-evaluation`, plus a Rule gap candidates section.
 
-3. **Wait for the subagent to return.** Do not race or pre-summarise. Treat the returned report as Report B.
+2.5. **Citation-strictness pass (mandatory).** Spawn a second sub-agent (`general-purpose`) whose only job is to map each property's load-bearing factual claims to its citation `cited_text` spans — the same mechanism Phase C runs. This catches claims that Phase D's edits introduced or paraphrased away from the cited evidence. Give it the eval JSON path, the source cache path, and the patterns list from `/review-evaluation` step 6 (operation enumerations, internal subsystem names, inferred consequences, self-hosted claims, quantitative specifics, specific dates). Ask for a Markdown table `Property | Claim | Supported? (Y/N) | Suggested action`. Each unsupported claim joins Report B as an additional issue with rule `REVIEW_ONLY_RULES #12`.
+
+3. **Wait for both sub-agents to return.** Do not race or pre-summarise. Merge the second-pass review and the citation-strictness output into Report B.
 
 4. **Diff Report A (first pass) against Report B (second pass).**
    - **Agreement set:** issues that both reports flag for the same property/rule. High confidence — these are the real issues.
