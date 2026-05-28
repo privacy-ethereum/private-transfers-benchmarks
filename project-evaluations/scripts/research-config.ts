@@ -194,6 +194,26 @@ export const configs: Record<string, ProtocolConfig> = {
     context:
       "CRITICAL: 'Umbra Cash' is the ScopeLift Ethereum stealth-address protocol at app.umbra.cash — NOT the Solana protocol 'Umbra Privacy' tracked under id 'umbra'. Privacy model: stealth addresses on L1 Ethereum (also deployed on several EVM L2s). A payer sends funds to a one-time stealth address derived from the recipient's published stealth meta-address; the recipient discovers the address by scanning Announcement events with their viewing key. No shielded pool, no zk runtime — privacy is unlinkability via fresh per-payment addresses. Two protocol contracts on each chain: StealthKeyRegistry (publishes meta-addresses) and Umbra (sends funds + emits Announcement events). Contracts are typically immutable. EIP-5564 standardizes the stealth-address scheme that post-dates Umbra; use it for design context, not as the deployment claim.",
   },
+  "blanksquare": {
+    id: "blanksquare",
+    title: "Blanksquare",
+    description:
+      "Blanksquare is a composable privacy stack for EVM wallets and DeFi apps developed by Cardinal Cryptography. The Shielder SDK lets any ERC-20 token be deposited into a shielded pool that uses zk-SNARKs to break linkability between deposit and withdrawal addresses. Designed for integration into wallets and DeFi protocols with 600-800ms proving on consumer hardware.",
+    status: "pending",
+    documentation: "https://docs.blanksquare.io/",
+    categories: ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
+    sourceUrls: [
+      "https://blanksquare.io/",
+      "https://docs.blanksquare.io/",
+      "https://docs.blanksquare.io/protocol-details/shielder",
+      "https://docs.blanksquare.io/integration-guides/quickstart",
+      "https://docs.blanksquare.io/protocol-details/design-against-bad-actors/anonymity-revokers",
+      "https://github.com/Cardinal-Cryptography/blanksquare-monorepo",
+      "https://reports.zksecurity.xyz/reports/aleph-zero-shielder/",
+    ],
+    context:
+      "CRITICAL: Blanksquare is the rebranded / EVM-targeted version of the Aleph Zero Shielder, developed by Cardinal Cryptography. It is a shielded-pool protocol for ERC-20 tokens with zk-SNARK proofs using Halo2 (600-800ms client-side). Three core circuits: Deposit, Withdraw, New Account. Anonymity-Revoking is the built-in selective-disclosure / compliance mechanism — governance-triggered deanonymization of specific deposits (NOT user-discretionary; user encrypts key(id) to the AR's public key at first deposit). Apache-2.0 licensed core, GPL-3.0-with-Classpath-exception for circuits. Audited by zkSecurity (report at reports.zksecurity.xyz/reports/aleph-zero-shielder). Deployed on Base Sepolia testnet (Shielder contract 0x2098a5f59DAB63F1a2aB7C0715DA437D1efB012B). Light WASM client marked as alpha. No mainnet as of mid-2026.",
+  },
   "anoma-pay": {
     id: "anoma-pay",
     title: "Anoma Pay",
