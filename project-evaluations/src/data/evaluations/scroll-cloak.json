@@ -2,9 +2,528 @@
   "id": "scroll-cloak",
   "title": "Scroll Cloak",
   "description": "Scroll Cloak is a ZK-based privacy execution layer on Scroll L2 targeted at on-chain finance. Each transaction is processed inside a private ledger with hidden balances and details, while ZK proofs guarantee integrity publicly. Includes full EVM support for private smart contracts plus KYB/KYC hooks, real-time monitoring, and selective-disclosure APIs for compliance. The first version is live on Scroll's testnet.",
-  "status": "pending",
-  "documentation": "",
-  "categories": ["Private Validium", "Zero Knowledge Proofs (ZKPs)"],
-  "properties": [],
-  "sourceUrls": []
+  "documentation": "https://scroll.io/cloak",
+  "status": "complete",
+  "categories": [
+    "Private Validium",
+    "Zero Knowledge Proofs (ZKPs)"
+  ],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Cloak achieves confidentiality via fine-grained access control, with only chain operators and regulators able to access the data and users restricted to their own accounts. By default, user tokens stay in confidential accounts and cannot be queried by others, and the token transfer between two confidential accounts is not visible to any unauthorized 3rd-parties.",
+      "citations": [
+        {
+          "cited_text": "Cloak achieves confidentiality via fine-grained access control.\n  This allows only chain operators and regulators to access the data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+        },
+        {
+          "cited_text": "By default, the user's tokens are in their confidential account, and cannot be queried by others.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/use-cases.md"
+        },
+        {
+          "cited_text": "the token transfer takes place between two confidential accounts on Cloak.\n   This transfer is not visible to any unauthorized 3rd-parties.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/use-cases.md"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "From outside observers both parties to an L3 transfer are hidden — by default a transaction and its receipt can only be queried by the sender, the recipient, and the chain admins, and other users cannot access this information. Stealth deposits further break the L2↔L3 link: the deposit flow encrypts and randomizes the recipient at L2 (0x456 → 0x789) before relay, then decrypts back to 0x456 on Cloak. Operator visibility is captured under Third-party inspectability.",
+      "citations": [
+        {
+          "cited_text": "By default, this transaction and transaction receipt can only be queried by the sender and the recipient, as well as the chain admins.\nOther users cannot access this information.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/transfers.md"
+        },
+        {
+          "cited_text": "Note over Scroll: Encrypt & randomize recipient<br/>0x456 -> 0x789\n         Scroll-->>Cloak: Lock token & relay deposit event \"to 0x789\"\n         Note over Cloak: Decrypt 0x789 -> 0x456",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/use-cases.md"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "Each ERC20 bridged into Cloak maps to a distinct L3 contract address — the bridge deterministically computes the corresponding L3 token address, which does not change after the first deposit, and L2 ETH is bridged into L3 Wrapped ETH. Transfers call the specific token contract's transfer function on L3, so within the access-controlled visibility scope (sender, recipient, chain admins) the asset moved is identifiable from which contract address is invoked.",
+      "citations": [
+        {
+          "cited_text": "The bridge will deterministically compute the corresponding L3 token address, which will not change after the first deposit.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/deposits.md"
+        },
+        {
+          "cited_text": "L2 ETH is bridged into L3 Wrapped ETH.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/deposits.md"
+        },
+        {
+          "cited_text": "To make ERC20 transfers (for L3 WETH or any other deposited token), simply call the token contract `transfer` function, just like you would on other EVM chains.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/transfers.md"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Depositing to Cloak calls dedicated Cloak bridge contracts on Scroll L2 — the user calls one of the token gateway contracts to initiate the deposit. These contracts are distinctive Cloak bridge endpoints, so any L2 observer can identify the transaction as a Cloak deposit. The Cloak bridge uses stealth deposits to keep the L3 confidential identity off L2, so the recipient address is hidden, but the act of depositing to Cloak is not.",
+      "citations": [
+        {
+          "cited_text": "The user calls one of the token gateway contracts to initiate the deposit: `HostERC20Gateway.depositERC20` or `HostETHGateway.depositETH`.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/deposits.md"
+        },
+        {
+          "cited_text": "the Cloak bridge uses *stealth deposits*, meaning that the deposit target address is encrypted.\nThis is necessary, so that the L3 confidential identity is not exposed publicly on L2.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/deposits.md"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "Cloak is an L3 validium appchain that proves every transaction using Scroll's zkEVM technology, so finality is inherited from the host chain (Scroll L2) and ultimately Ethereum L1. Validium chains post validity proofs to their host chain but do not post data, so finality of an L3 transaction follows once the validity proof is verified on Scroll and Scroll's own batch is finalised on Ethereum. No independent L3 settlement layer exists.",
+      "citations": [
+        {
+          "cited_text": "Cloak proves every transaction using Scroll's [zkEVM](glossary#zkevm) technology, ensuring that state can only be updated according to the protocol rules.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+        },
+        {
+          "cited_text": "validiums do not post data, so 3rd-parties cannot independently rebuild the validium state.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/glossary.md"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "End users hold a single Ethereum wallet keypair that signs both L2/L3 transactions and the Sign-In with Ethereum (SIWE) challenge. The SIWE flow requires the user to sign a message proving access to their private key — the RPC endpoint then issues a scoped JWT for read access. The JWT is a per-session bearer credential rather than an independently custodied secret, and the deposit-encryption key is fetched from the L2 contract rather than user-held.",
+      "citations": [
+        {
+          "cited_text": "Cloak supports [Sign-In with Ethereum](https://docs.login.xyz) (SIWE), which allows users to authenticate using their wallet.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "After verifying the signature, the RPC endpoint issues a scoped [JWT token](https://auth0.com/docs/secure/tokens/json-web-tokens).",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "Encrypt the target address using the encryption key.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/deposits.md"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Deposits cross from Scroll L2 into Cloak L3 through a token gateway contract, after which the L3 sequencer relays the message and credits the account. There is no protocol-imposed queue, challenge window, or time-lock on the deposit path — host-chain block latency is the only wait, which does not count as a deposit waiting period.",
+      "citations": [
+        {
+          "cited_text": "The user calls one of the token gateway contracts to initiate the deposit: `HostERC20Gateway.depositERC20` or `HostETHGateway.depositETH`.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/deposits.md"
+        },
+        {
+          "cited_text": "The L3 sequencer node picks up the message and relays it to Cloak via `ValidiumERC20Gateway`.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/deposits.md"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Cloak offers two withdrawal paths. The fast path routes through the sequencer-maintained liquidity bridge: the user submits a withdraw transaction to the host FastWithdrawVault contract, the sequencer checks validity, and if checks pass the sequencer immediately releases funds to the user on L2. The slow path waits for the L3 validity proof to be submitted on the host chain and then claims on L2 with a Merkle proof, inheriting Scroll L2's finalization window.",
+      "citations": [
+        {
+          "cited_text": "The Cloak sequencer checks that the transaction is valid.\n   If the checks are passed, the sequencer immediately releases funds to the user on L2.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/withdrawals.md"
+        },
+        {
+          "cited_text": "The user submits a withdraw transaction on L3, waits for it to be finalized (validity proof submitted on the host chain), then claims on L2 using a Merkle proof.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/withdrawals.md"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Access to the Cloak RPC is bearer-token gated — clients must present a bearer token to access data, and the token scope determines what data the client can or cannot access. Without an operator-issued token, RPC methods are token-gated and an unauthenticated request returns an unauthorized error. The roadmap also lists Contract admin management and Production deployment as unfinished items, leaving no documented permissionless inclusion path.",
+      "citations": [
+        {
+          "cited_text": "clients must present a [bearer token](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#bearer) to access data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "The RPC method `eth_getBalance` is token-gated.\n   We did not specify a bearer token, so we get an `unauthorized` error.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "- [ ] Contract admin management.\n- [ ] Production deployment.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Every transaction passes through Cloak's authenticated RPC proxy gate, and the L3 chain depends on the operator-run authenticated RPC gateway, sequencer, indexer, and prover stack listed as delivered Validium components. None of these are run by Scroll L2 validators or Ethereum consensus, so users carry an additional trust assumption on the operator's permissioned infrastructure.",
+      "citations": [
+        {
+          "cited_text": "clients must present a [bearer token](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#bearer) to access data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "- [x] Validium sequencer.\n- [x] Validium contracts.\n- [x] Validium provers.\n- [x] Stealth deposits.\n- [X] Sequencer key rotations.\n- [x] Fast withdrawal service.\n- [x] Authenticated RPC gateway.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Both documented withdrawal paths require sequencer cooperation. The slow path requires submitting a withdraw transaction on L3, waiting for finalization, then claiming on L2 with a Merkle proof — driven by the operator's batcher and prover. The fast path runs through the sequencer-maintained liquidity bridge where the sequencer checks validity and releases funds. No consensus-only bypass independent of the operator is documented.",
+      "citations": [
+        {
+          "cited_text": "The user submits a withdraw transaction on L3, waits for it to be finalized (validity proof submitted on the host chain), then claims on L2 using a Merkle proof.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/withdrawals.md"
+        },
+        {
+          "cited_text": "The user submits a withdraw transaction to the host `FastWithdrawVault` contract.\n   The Cloak sequencer checks that the transaction is valid.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/withdrawals.md"
+        },
+        {
+          "cited_text": "As of October 2025, Cloak is still experimental, unaudited software.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "needsResearchReview": "Contract admin management is listed as an unticked TODO on the Cloak roadmap, and the on-chain admin slot of the deployed Sepolia devnet contracts is not classified in cited sources. The conservative Single admin placeholder needs verification once the admin scheme ships.",
+      "notes": "Contract administration for Cloak is an unresolved roadmap item — Contract admin management is listed as a pending TODO. As of October 2025, Cloak is still experimental, unaudited software.",
+      "citations": [
+        {
+          "cited_text": "- [ ] Contract admin management.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        },
+        {
+          "cited_text": "As of October 2025, Cloak is still experimental, unaudited software.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "No",
+      "notes": "Proof generation for Cloak runs as a server-side service rather than on user devices. The roadmap lists Validium sequencer, Validium contracts, and Validium provers as delivered basic features, with no client-side proving path among them and no client-side or decentralised proving among upcoming items.",
+      "citations": [
+        {
+          "cited_text": "| Circuits                 | [https://github.com/scroll-tech/zkvm-prover](https://github.com/scroll-tech/zkvm-prover)                     |",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/source-code.md"
+        },
+        {
+          "cited_text": "- [x] Validium sequencer.\n- [x] Validium contracts.\n- [x] Validium provers.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "Transaction data and receipts are queryable by the sender, the recipient, and the chain admins by default, while other users cannot access this information. Admin-token holders therefore have full visibility into user activity, and requests using an admin token can access all data — a structurally privileged third-party position relative to end users.",
+      "citations": [
+        {
+          "cited_text": "By default, this transaction and transaction receipt can only be queried by the sender and the recipient, as well as the chain admins.\nOther users cannot access this information.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/transfers.md"
+        },
+        {
+          "cited_text": "Requests using an admin token can access all data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "2 : Public testnet",
+      "notes": "Cloak's public devnet addresses cover an instance on the Scroll Sepolia testnet, dated 2025-09-12. The Scroll mainnet entry in the address book is marked \"Coming soon\". As of October 2025, Cloak is still experimental, unaudited software, and Production deployment, Detailed documentation, and Audit remain unticked on the roadmap.",
+      "citations": [
+        {
+          "cited_text": "Below you can find the public devnet addresses for a Cloak instance on the Scroll Sepolia testnet, and on Scroll mainnet.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/address-book.md"
+        },
+        {
+          "cited_text": "Deployment on 2025-09-12 with salt `sepolia-test-004`.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/address-book.md"
+        },
+        {
+          "cited_text": "Sep-12-2025 05:01:40 PM +UTC",
+          "source": "https://sepolia.scrollscan.com/tx/0x2d812eff282151b4d3ffd7f14c57b34e53205d1d7bcc364edfe2190ed4a02da8",
+          "contract_address": "0x230451558C226FC8a179F99F8D04C702dcf0341D",
+          "date": "2025-09-12",
+          "kind": "explorer"
+        },
+        {
+          "cited_text": "As of October 2025, Cloak is still experimental, unaudited software.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        },
+        {
+          "cited_text": "- [ ] Production deployment.\n- [ ] Detailed documentation.\n- [ ] Audit.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "needsResearchReview": "Underlying SNARK proof system (Groth16/Halo2/Plonky2 etc.) and elliptic curve are not named in cited Cloak sources — the No verdict rests on inheriting Scroll zkEVM defaults rather than a primitive-naming citation.",
+      "notes": "Cloak's proof system inherits Scroll's zkEVM stack, where succinct validity proofs attest that the chain operator executed all transactions correctly, following the EVM protocol rules. The default zkEVM and Ethereum wallet primitives in use today are pre-quantum, so the design is not post-quantum secure.",
+      "citations": [
+        {
+          "cited_text": "Succinct validity proofs (also known as ZK proofs) attest that the chain operator executed all transactions correctly, following the EVM protocol rules.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/glossary.md"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "App",
+      "notes": "Compliance gating runs at the authenticated RPC layer rather than inside the L3 contracts. Clients must present a bearer token to access data, and the token scope determines what data the client can or cannot access. The Cloak product layer also exposes a Compliance Suite — KYB/KYC hook support, real-time monitoring, and selective-disclosure APIs — to integrators above the chain. The L3 contracts themselves run stock Scroll-EVM with no per-contract compliance hook.",
+      "citations": [
+        {
+          "cited_text": "clients must present a [bearer token](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#bearer) to access data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "Compliance Suite: KYB/KYC hook support, real-time monitoring, and selective-disclosure APIs satisfy regulatory needs without exposing full data to the public.",
+          "source": "https://scroll.io/blog/introducing-cloak"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Admin",
+      "notes": "Compliance enforcement on Cloak rests with the deploying chain operator, who controls the bearer-token gate to the RPC. Cloak achieves confidentiality via fine-grained access control, allowing only chain operators and regulators to access the data, while users are restricted to their own accounts. Admin tokens, issued by the operator, allow access to sensitive data and grant unrestricted visibility. Per-instance deployments mean each enterprise customer curates its own access policy.",
+      "citations": [
+        {
+          "cited_text": "Cloak achieves confidentiality via fine-grained access control.\n  This allows only chain operators and regulators to access the data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+        },
+        {
+          "cited_text": "Admin tokens allow access to sensitive data. It is important that they are stored securely and rotated regularly.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": [
+        "Selective disclosure",
+        "KYC/KYB"
+      ],
+      "notes": "Cloak's Compliance Suite provides KYB/KYC hook support, real-time monitoring, and selective-disclosure APIs to integrators. At the chain layer, fine-grained access control allows only chain operators and regulators to access the data — a viewing-key-style selective disclosure model rather than per-transaction screening or association-set proofs. The KYB/KYC layer sits above the chain via hooks that integrators wire into onboarding.",
+      "citations": [
+        {
+          "cited_text": "Compliance Suite: KYB/KYC hook support, real-time monitoring, and selective-disclosure APIs satisfy regulatory needs without exposing full data to the public.",
+          "source": "https://scroll.io/blog/introducing-cloak"
+        },
+        {
+          "cited_text": "Cloak achieves confidentiality via fine-grained access control.\n  This allows only chain operators and regulators to access the data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": [
+        "Deposit",
+        "Transfer",
+        "Withdrawal"
+      ],
+      "notes": "Every RPC interaction with the chain — read or write — is bearer-token gated. Clients must present a bearer token to access data, and the token scope determines what data the client can or cannot access. Because the same RPC carries deposit, transfer, and withdrawal traffic, the access-control plus integrator-supplied KYB/KYC hooks gate the entire user lifecycle. The L3 smart contracts underneath run stock Scroll-EVM with no per-contract compliance check.",
+      "citations": [
+        {
+          "cited_text": "clients must present a [bearer token](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#bearer) to access data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "Compliance Suite: KYB/KYC hook support, real-time monitoring, and selective-disclosure APIs satisfy regulatory needs without exposing full data to the public.",
+          "source": "https://scroll.io/blog/introducing-cloak"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": [
+        "User",
+        "Involuntary third-party disclosure"
+      ],
+      "notes": "Cloak's access control issues SIWE-based JWT tokens after the user signs a message with their wallet, scoping data access to that user's own account. Operators with backend access hold admin tokens, and requests using an admin token can access all data — chain operators have involuntary visibility into user balances and transactions. The chain layer also names regulators as a permitted viewer class via the same access-control model.",
+      "citations": [
+        {
+          "cited_text": "After verifying the signature, the RPC endpoint issues a scoped [JWT token](https://auth0.com/docs/secure/tokens/json-web-tokens).",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "Requests using an admin token can access all data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "Cloak achieves confidentiality via fine-grained access control.\n  This allows only chain operators and regulators to access the data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "Viewing access on Cloak is mediated by the operator's token-issuance layer, not by cryptographic keys bound to past transactions. Token scopes are set at issuance time: SIWE-signed messages produce scoped JWTs granting access to the signer's own account, and admin tokens grant operator-wide access. No documented mechanism lets users grant, revoke, or update viewing permissions retroactively over already-recorded data — disclosure scope is fixed at the moment a token is minted.",
+      "citations": [
+        {
+          "cited_text": "clients must present a [bearer token](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Authentication#bearer) to access data.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "After verifying the signature, the RPC endpoint issues a scoped [JWT token](https://auth0.com/docs/secure/tokens/json-web-tokens).",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes, with L1 consensus",
+      "notes": "Cloak proves L3 batches with Scroll's zkEVM. Succinct validity proofs attest that the chain operator executed all transactions correctly, following the EVM protocol rules. The validity proofs are then verified by Scroll L2 contracts, which post their own proofs to Ethereum L1 — per-transaction correctness rests on zk proof verification, while finality of the verification rests on the L1 chain's consensus.",
+      "citations": [
+        {
+          "cited_text": "Succinct validity proofs (also known as ZK proofs) attest that the chain operator executed all transactions correctly, following the EVM protocol rules.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/glossary.md"
+        },
+        {
+          "cited_text": "Cloak proves every transaction using Scroll's [zkEVM](glossary#zkevm) technology, ensuring that state can only be updated according to the protocol rules.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "Cloak's roadmap lists Open-source as an outstanding unticked item, meaning no OSI licence covers the protocol as a whole today. The source-code page describes the constituent codebases as a mix of existing Scroll components with some modifications and others newly developed for Cloak — some are publicly viewable on GitHub, but the product itself has not been released under an OSI licence per its own roadmap.",
+      "citations": [
+        {
+          "cited_text": "- [ ] Open-source.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        },
+        {
+          "cited_text": "Some of these are existing Scroll components with some modifications, while others were newly developed for Cloak.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/source-code.md"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Infinity grow",
+      "needsResearchReview": "Validium-state pruning / compaction / epoch-reset policy is not classified in cited Cloak sources — the Infinity-grow verdict follows from the account-based EVM default for L3 validiums.",
+      "notes": "Each Cloak instance maintains its own isolated account-based EVM ledger — state accumulates per-transaction as on any other EVM chain. The delivered Validium feature set does not include a pruning, epoch-reset, or compaction mechanism.",
+      "citations": [
+        {
+          "cited_text": "Cloak proves every transaction using Scroll's [zkEVM](glossary#zkevm) technology, ensuring that state can only be updated according to the protocol rules.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+        },
+        {
+          "cited_text": "- [x] Validium sequencer.\n- [x] Validium contracts.\n- [x] Validium provers.\n- [x] Stealth deposits.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No scanning",
+      "notes": "Account holders retrieve their data via authenticated JSON-RPC calls to the operator's gateway, with a SIWE-derived JWT scoping access to their own account. Balances and transactions come from the operator's permissioned RPC rather than being reconstructed from on-chain commitments — the client does not trial-decrypt or sweep the chain.",
+      "citations": [
+        {
+          "cited_text": "After verifying the signature, the RPC endpoint issues a scoped [JWT token](https://auth0.com/docs/secure/tokens/json-web-tokens).",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/auth.md"
+        },
+        {
+          "cited_text": "By default, this transaction and transaction receipt can only be queried by the sender and the recipient, as well as the chain admins.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/transfers.md"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "Account-based state model",
+      "notes": "Cloak is an exact copy of Scroll's EVM, a full fledged EVM execution environment supporting ERC20 token transfers and smart-contract interactions. Confidential holdings are ordinary ERC20 balances inside the access-controlled chain — transfers call the token contract `transfer` function, just like on other EVM chains. Confidentiality comes from RPC-level access control over per-account state, not from a commitment-and-nullifier tree.",
+      "citations": [
+        {
+          "cited_text": "Cloak is an exact copy of Scroll's EVM.\nAs it is a full fledged EVM execution environment, one can do ERC20 token transfers or interact with smart contracts.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/transfers.md"
+        },
+        {
+          "cited_text": "To make ERC20 transfers (for L3 WETH or any other deposited token), simply call the token contract `transfer` function, just like you would on other EVM chains.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/transfers.md"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": [
+        "Off-chain storage with on-chain commitment"
+      ],
+      "notes": "Cloak's authoritative state lives off-chain in the operator's infrastructure. Validium chains post validity proofs to their host chain but do not post data, so 3rd-parties cannot independently rebuild the validium state. The host chain stores data commitments and verifies the proofs — the underlying data is never settled on-chain.",
+      "citations": [
+        {
+          "cited_text": "Cloak proves every transaction using Scroll's [zkEVM](glossary#zkevm) technology, ensuring that state can only be updated according to the protocol rules.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+        },
+        {
+          "cited_text": "validiums do not post data, so 3rd-parties cannot independently rebuild the validium state.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/glossary.md"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "No access to DeFi",
+      "notes": "Cloak does not host its own DeFi venue — it is not recommended to deploy a DEX on Cloak because of liquidity constraints. The recommended composition pattern fast-withdraws funds to a fresh single-use address on Scroll, swaps there, then deposits the received tokens back to Cloak. Shielded balances themselves never interact with DeFi contracts — each composition step exits to the public L2 surface and breaks confidentiality there.",
+      "citations": [
+        {
+          "cited_text": "It is not recommended to deploy a DEX on Cloak because of liquidity constraints.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/use-cases.md"
+        },
+        {
+          "cited_text": "Fast-withdraw some funds to a new address on Scroll.\n   It is recommended to use a new, single-use address to avoid linkability with the users previous L2 and L3 identities.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/use-cases.md"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Full programmability with public and private state",
+      "notes": "Cloak is an exact copy of Scroll's EVM, a full fledged EVM execution environment supporting ERC20 token transfers and smart-contract interactions. Any Solidity contract deployable on Scroll runs on a Cloak instance, with execution and state held privately at the L3 layer. Public state on the host chain coexists with private state inside the Cloak instance, gated by fine-grained access control.",
+      "citations": [
+        {
+          "cited_text": "Cloak is an exact copy of Scroll's EVM.\nAs it is a full fledged EVM execution environment, one can do ERC20 token transfers or interact with smart contracts.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/integration/transfers.md"
+        },
+        {
+          "cited_text": "You can deploy new, isolated instances of Cloak on Scroll or any other EVM chain.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+        }
+      ]
+    }
+  ]
 }
