@@ -158,7 +158,6 @@
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "needsResearchReview": "Etherscan citation captures the Contract Creator address, not the current owner role holder. On-chain admin classification needs verification via the live `owner()` slot.",
       "notes": "Umbra inherits OpenZeppelin Ownable — a single externally-owned account holds the owner role and can call setToll, setTollCollector, setTollReceiver, and transferOwnership. The owner cannot upgrade logic or freeze funds, but can raise the toll to gate sends economically. No proxy, no delegatecall, no logic upgrade path.",
       "citations": [
         {
@@ -167,6 +166,7 @@
           "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401"
         },
         {
+          "kind": "explorer",
           "cited_text": "Contract Creator 0x5777Aa6F...4eD7C7232",
           "source": "https://etherscan.io/address/0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
           "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
@@ -180,7 +180,7 @@
       "notes": "Umbra uses elliptic-curve cryptography on secp256k1, not zero-knowledge proofs. The sender computes an ephemeral key and ciphertext that the recipient decrypts off-chain with their viewing key. There is no proving step on either side.",
       "citations": [
         {
-          "cited_text": "Umbra does not use zero knowledge proofs. Instead, Umbra is based on ordinary elliptic curve cryptography.",
+          "cited_text": "does not use zero knowledge proofs. Instead, Umbra is based on ordinary elliptic curve cryptography.",
           "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
         },
         {
@@ -195,7 +195,7 @@
       "notes": "Outside observers without the recipient's viewing key see only the public announcement fields (stealth address, amount, token, ephemeral pubkey, ciphertext) and cannot link the stealth address to the recipient identity. Sharing the viewing key off-chain lets a delegated party identify which announcements belong to the recipient.",
       "citations": [
         {
-          "cited_text": "A viewing key is a private key that can be used to determine if funds sent to a stealth address belong to the recipient",
+          "cited_text": "is a private key that can be used to determine if funds sent to a stealth address belong to the recipient",
           "source": "https://eips.ethereum.org/EIPS/eip-5564"
         }
       ]
@@ -206,17 +206,20 @@
       "notes": "Umbra has been live on Ethereum mainnet since April 2021 and carries a ConsenSys Diligence audit from March 2021. The canonical contract has processed over 22,000 transactions at the time of writing.",
       "citations": [
         {
+          "kind": "explorer",
           "cited_text": "ConsenSys Diligence - March 26th, 2021 - Security Audit Report",
           "source": "https://etherscan.io/address/0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
           "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401"
         },
         {
+          "kind": "explorer",
           "cited_text": "Apr-30-2021 08:18:57 PM +UTC",
           "source": "https://etherscan.io/tx/0x1dbb9dfe4f83466be6ce1cdd19ac690636f02aeb2804785509ead7084fd7134a",
           "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
           "date": "2021-04-30"
         },
         {
+          "kind": "explorer",
           "cited_text": "Latest 25 from a total of 22,197 transactions",
           "source": "https://etherscan.io/address/0xFb2dc580Eed955B528407b4d36FfaFe3da685401",
           "contract_address": "0xFb2dc580Eed955B528407b4d36FfaFe3da685401"
@@ -262,7 +265,9 @@
     },
     {
       "name": "Type of compliance",
-      "value": ["None"],
+      "value": [
+        "None"
+      ],
       "notes": "Umbra has no in-protocol compliance mechanism — no KYC gate, no proof-of-innocence, no association sets, no required selective disclosure. The send and withdraw paths only check toll payments and signature validity. Users self-custody throughout — compliance, if any, is the user's responsibility at the application layer.",
       "citations": [
         {
@@ -273,7 +278,9 @@
     },
     {
       "name": "Point of enforcement",
-      "value": ["None"],
+      "value": [
+        "None"
+      ],
       "notes": "No on-chain enforcement point — neither deposit, withdrawal, nor meta-address registration gate on any compliance condition. Require-checks are limited to toll commitment, sponsor signature validity, and per-stealth-address single-payment uniqueness.",
       "citations": [
         {
@@ -284,11 +291,14 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": ["User", "Voluntary third-party disclosure"],
+      "value": [
+        "User",
+        "Voluntary third-party disclosure"
+      ],
       "notes": "Recipients hold a separate viewing key that lets them detect their own incoming payments. Sharing that key off-chain lets a delegated third party identify which announcements belong to the recipient — voluntary, off-chain disclosure.",
       "citations": [
         {
-          "cited_text": "A viewing key is a private key that can be used to determine if funds sent to a stealth address belong to the recipient",
+          "cited_text": "is a private key that can be used to determine if funds sent to a stealth address belong to the recipient",
           "source": "https://eips.ethereum.org/EIPS/eip-5564"
         }
       ]
@@ -299,7 +309,7 @@
       "notes": "The viewing key is fixed off-chain at the time of derivation. Once shared, that disclosure remains valid for all past and future announcements scanned with it — it cannot be cryptographically revoked. Publishing a new meta-address rotates future scanning capability but does not retract prior disclosures.",
       "citations": [
         {
-          "cited_text": "A viewing key is a private key that can be used to determine if funds sent to a stealth address belong to the recipient",
+          "cited_text": "is a private key that can be used to determine if funds sent to a stealth address belong to the recipient",
           "source": "https://eips.ethereum.org/EIPS/eip-5564"
         }
       ]
@@ -329,6 +339,7 @@
           "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/contracts-core/contracts/Umbra.sol"
         },
         {
+          "kind": "explorer",
           "cited_text": "Source Code Verified Exact Match",
           "source": "https://etherscan.io/address/0xFb2dc580Eed955B528407b4d36FfaFe3da685401"
         }
@@ -366,14 +377,16 @@
       "notes": "Umbra has no protocol-level private state. Funds rest at ordinary EVM stealth accounts (for ETH) or in a public per-stealth-address mapping on the protocol contract (for ERC-20). There is no commitment tree, no nullifier set, no encrypted balance per account. ",
       "citations": [
         {
-          "cited_text": "Umbra does not use zero knowledge proofs. Instead, Umbra is based on ordinary elliptic curve cryptography.",
+          "cited_text": "does not use zero knowledge proofs. Instead, Umbra is based on ordinary elliptic curve cryptography.",
           "source": "https://github.com/ScopeLift/umbra-protocol/blob/master/README.md"
         }
       ]
     },
     {
       "name": "Private Data Storage",
-      "value": ["Smart contracts"],
+      "value": [
+        "Smart contracts"
+      ],
       "notes": "The on-chain part of the per-payment privacy payload — the ephemeral public key and ciphertext fields — is emitted as event logs by the protocol contract on the host chain. The recipient reconstructs the link off-chain by decrypting the ciphertext with their viewing key — there is no off-chain server holding authoritative private state.",
       "citations": [
         {
