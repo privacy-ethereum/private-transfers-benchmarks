@@ -194,4 +194,25 @@ export const configs: Record<string, ProtocolConfig> = {
     context:
       "CRITICAL: 'Umbra Cash' is the ScopeLift Ethereum stealth-address protocol at app.umbra.cash — NOT the Solana protocol 'Umbra Privacy' tracked under id 'umbra'. Privacy model: stealth addresses on L1 Ethereum (also deployed on several EVM L2s). A payer sends funds to a one-time stealth address derived from the recipient's published stealth meta-address; the recipient discovers the address by scanning Announcement events with their viewing key. No shielded pool, no zk runtime — privacy is unlinkability via fresh per-payment addresses. Two protocol contracts on each chain: StealthKeyRegistry (publishes meta-addresses) and Umbra (sends funds + emits Announcement events). Contracts are typically immutable. EIP-5564 standardizes the stealth-address scheme that post-dates Umbra; use it for design context, not as the deployment claim.",
   },
+  "anoma-pay": {
+    id: "anoma-pay",
+    title: "Anoma Pay",
+    description:
+      "AnomaPay is a private payments application built on the Anoma distributed operating system. Users wrap any ERC-20 token into Anoma resources via the EVM Protocol Adapter and send shielded transfers settled back on the host chain. Privacy is enforced by zero-knowledge proofs over the Anoma Resource Machine.",
+    status: "pending",
+    documentation: "https://docs.anoma.net/",
+    categories: ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
+    sourceUrls: [
+      "https://anomapay.app/",
+      "https://docs.anoma.net/",
+      "https://github.com/anoma/anomapay-erc20-forwarder",
+      "https://github.com/anoma/pa-evm",
+      "https://github.com/anoma/anoma-app-sdk",
+      "https://anoma.net/",
+      "https://anoma.foundation/press/anomapaybeta",
+      "https://anoma.net/blog/the-anomapay-public-beta-is-live-on-bnb-chain",
+    ],
+    context:
+      "CRITICAL: 'Anoma Pay' (AnomaPay) is the private-payments app at anomapay.app built atop the Anoma distributed OS — NOT the broader Anoma intent architecture and NOT the Namada chain. AnomaPay specifically wraps host-chain ERC-20s into Anoma Resource Machine 'resources' via the anomapay-erc20-forwarder Solidity contract, settles ZK-proven shielded transfers through the pa-evm Protocol Adapter, and unwraps back into ERC-20s on the host chain. Address format: Base64URL-encoded 135-byte tuple of Authority pubkey + Discovery pubkey + Encryption pubkey + Nullifier Key Commitment + CRC32 checksum (per anoma-app-sdk). Audited by Informal Systems (Oct-Nov 2025) and Nethermind (Oct-Nov 2025). Public beta launched 2 April 2026 on BNB Chain, preceded by a private beta on Base. Anoma DOS itself is live on Ethereum mainnet, Base, Arbitrum, Optimism, and Aurora. ZK proving ~15 seconds; client-side proving in development. Selective disclosure for auditors/regulators. Closed-source compliance: 'Compliance primitives are built into the protocol, not bolted on top'.",
+  },
 };
