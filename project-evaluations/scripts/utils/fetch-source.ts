@@ -1,4 +1,6 @@
 const FETCH_TIMEOUT_MS = 15_000;
+const JINA_TIMEOUT_MS = 30_000;
+const SPA_FALLBACK_MIN_CHARS = 500;
 const GITHUB_ROOT_URL = /^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/;
 const GITHUB_BLOB_URL = /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)$/;
 
@@ -12,6 +14,9 @@ export interface FetchedSource {
  * PDFs → swapped for `.html`. github.com pages → rewritten to raw.githubusercontent.com
  * (the github HTML viewer serves chrome instead of file content). github.com blob URLs are
  * kept as the citation source so humans land on the readable viewer.
+ * Client-rendered SPAs (Next.js, etc.) whose plain HTML strips to <500 chars are retried
+ * via the r.jina.ai reader proxy, which runs a headless browser server-side. The citation
+ * `source` field stays the canonical URL — only the cached content comes from Jina.
  */
 export async function fetchTextFromUrl(url: string): Promise<FetchedSource | null> {
   if (url.endsWith(".pdf")) return fetchTextFromUrl(url.replace(/\.pdf$/, ".html"));
@@ -21,8 +26,8 @@ export async function fetchTextFromUrl(url: string): Promise<FetchedSource | nul
     const base = url.replace("github.com", "raw.githubusercontent.com").replace(/\/$/, "");
     for (const branch of ["main", "master"]) {
       const rawUrl = `${base}/${branch}/README.md`;
-      const r = await fetch(rawUrl, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }).catch(() => null);
-      if (r?.ok) return { text: stripHtml(await r.text()), sourceUrl: rawUrl };
+      const rawResponse = await fetch(rawUrl, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }).catch(() => null);
+      if (rawResponse?.ok) return { text: stripHtml(await rawResponse.text()), sourceUrl: rawUrl };
     }
     return null;
   }
@@ -31,12 +36,32 @@ export async function fetchTextFromUrl(url: string): Promise<FetchedSource | nul
   const blob = GITHUB_BLOB_URL.exec(url);
   if (blob) {
     const rawUrl = `https://raw.githubusercontent.com/${blob[1]}/${blob[2]}/${blob[3]}`;
-    const r = await fetch(rawUrl, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }).catch(() => null);
-    return r?.ok ? { text: (await r.text()).trim(), sourceUrl: url } : null;
+    const rawResponse = await fetch(rawUrl, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }).catch(() => null);
+    return rawResponse?.ok ? { text: (await rawResponse.text()).trim(), sourceUrl: url } : null;
   }
 
   const response = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }).catch(() => null);
-  return response?.ok ? { text: stripHtml(await response.text()), sourceUrl: url } : null;
+  const stripped = response?.ok ? stripHtml(await response.text()) : "";
+  // A failed request or a near-empty body — a client-rendered SPA shell, or a blocked page —
+  // means the direct fetch did not return the real content. Retry once via the Jina reader
+  // (which renders the page server-side), falling back to whatever the direct fetch yielded.
+  if (stripped.length < SPA_FALLBACK_MIN_CHARS) {
+    return (await fetchViaJina(url)) ?? (stripped ? { text: stripped, sourceUrl: url } : null);
+  }
+  return { text: stripped, sourceUrl: url };
+}
+
+/**
+ * Fetch via r.jina.ai reader proxy. Used as a fallback when the direct fetch returns
+ * a near-empty SPA shell or fails. The proxy returns markdown — we strip it the same way
+ * so the cached text and any cited spans round-trip through the same normalisation.
+ */
+async function fetchViaJina(url: string): Promise<FetchedSource | null> {
+  const proxyUrl = `https://r.jina.ai/${url}`;
+  const jinaResponse = await fetch(proxyUrl, { signal: AbortSignal.timeout(JINA_TIMEOUT_MS) }).catch(() => null);
+  if (!jinaResponse?.ok) return null;
+  const text = (await jinaResponse.text()).trim();
+  return text.length >= SPA_FALLBACK_MIN_CHARS ? { text, sourceUrl: url } : null;
 }
 
 /**

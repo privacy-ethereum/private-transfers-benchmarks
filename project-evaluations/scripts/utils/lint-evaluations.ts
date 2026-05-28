@@ -34,6 +34,7 @@ const LEGACY_PROTOCOLS = new Set([
 const NOTES_MAX_LEGACY = 700;
 const NOTES_MAX_NEW = 500;
 const CITED_TEXT_MAX = 200;
+const RESEARCH_REVIEW_MAX = 120;
 
 const PROPERTIES_ALLOWING_FILENAMES = new Set(["Upgradeability", "Open source"]);
 const VAGUE_PHRASES = ["we assume", "it appears that", "the document", "prior research"];
@@ -124,13 +125,25 @@ function checkUpgradeability(file: string, property: UpgradeabilityProperty, leg
 
 const normaliseWhitespace = (s: string) => s.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, " ").trim();
 
+const BARE_SOURCE_EXEMPT_KINDS = new Set(["explorer", "license"]);
+
 function checkCitations(file: string, property: Property, legacy: boolean, sourceCache: SourceCache, issues: Issue[]) {
   if (legacy) return;
   const push = (rule: string, error: string) => issues.push({ file, property: property.name, rule, error });
 
   for (const citation of property.citations ?? []) {
     const citedText = citation.cited_text;
-    if (typeof citedText !== "string") continue;
+    if (typeof citedText !== "string") {
+      // Bare `{source}` is only permitted for explorer pages (on-chain admin / date) and
+      // licence files (the file IS the content). Everything else must carry cited_text.
+      if (!BARE_SOURCE_EXEMPT_KINDS.has(citation.kind ?? "")) {
+        push(
+          "bare-source-citation",
+          `citation has no cited_text — add a verbatim span or set kind="explorer"/"license" (source: ${citation.source})`,
+        );
+      }
+      continue;
+    }
     if (citedText.length > CITED_TEXT_MAX) {
       push("cited-text-too-long", `${citedText.length} chars (max ${CITED_TEXT_MAX})`);
     }
@@ -164,13 +177,23 @@ for (const file of files) {
       checkDescription(file, property.name, property.notes, notesMax, issues);
     }
 
-    if (typeof property.needsResearchReview === "string" && property.needsResearchReview.includes(";")) {
-      issues.push({
-        file,
-        property: property.name,
-        rule: "semicolon-in-research-review",
-        error: "use full stop or em-dash",
-      });
+    if (typeof property.needsResearchReview === "string") {
+      if (property.needsResearchReview.includes(";")) {
+        issues.push({
+          file,
+          property: property.name,
+          rule: "semicolon-in-research-review",
+          error: "use full stop or em-dash",
+        });
+      }
+      if (!legacy && property.needsResearchReview.length > RESEARCH_REVIEW_MAX) {
+        issues.push({
+          file,
+          property: property.name,
+          rule: "research-review-too-long",
+          error: `${property.needsResearchReview.length} chars (max ${RESEARCH_REVIEW_MAX})`,
+        });
+      }
     }
 
     checkCitations(file, property, legacy, sourceCache, issues);
