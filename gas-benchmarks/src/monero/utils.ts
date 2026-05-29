@@ -1,10 +1,10 @@
 import type { FeeMetrics } from "../utils/types.js";
 
-import { BLOCK_WINDOW_MONERO } from "../utils/constants.js";
+import { BLOCK_WINDOW_MONERO, MONERO_FAIL_NODES_API_URL } from "../utils/constants.js";
 
-import { MAX_TXS_PER_BATCH, MONERO_FAIL_NODES_API_URL, XMR_DECIMALS } from "./constants.js";
+import { MAX_TXS_PER_BATCH, XMR_DECIMALS } from "./constants.js";
 
-export interface MoneroTransaction {
+export interface IMoneroTransaction {
   txHash: string;
   blockHeight: number;
   blockTimestamp: number;
@@ -75,7 +75,7 @@ const tryWithMoneroNodes = async <T>(operation: (node: string) => Promise<T>): P
  * @param txHashes batch of transaction hashes to fetch
  * @returns array of Monero transactions with its data
  */
-const getTransactionsInBatch = async (node: string, txHashes: string[]): Promise<MoneroTransaction[]> => {
+const getTransactionsInBatch = async (node: string, txHashes: string[]): Promise<IMoneroTransaction[]> => {
   const response = await fetch(`${node}/get_transactions`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -96,7 +96,7 @@ const getTransactionsInBatch = async (node: string, txHashes: string[]): Promise
       txHash: tx.tx_hash,
       blockHeight: tx.block_height,
       blockTimestamp: tx.block_timestamp,
-      data: JSON.parse(tx.as_json) as MoneroTransaction["data"],
+      data: JSON.parse(tx.as_json) as IMoneroTransaction["data"],
     }));
 };
 
@@ -130,7 +130,7 @@ const getBlock = async (node: string, height: number): Promise<{ tx_hashes?: str
  * @see https://docs.getmonero.org/rpc-library/monerod-rpc/#get_block
  * @see https://docs.getmonero.org/rpc-library/monerod-rpc/#get_transactions
  */
-const getTransactionsInBlockWindow = async (node: string, startBlock: number): Promise<MoneroTransaction[]> => {
+const getTransactionsInBlockWindow = async (node: string, startBlock: number): Promise<IMoneroTransaction[]> => {
   const heights = Array.from({ length: BLOCK_WINDOW_MONERO }, (_, i) => startBlock + i);
   const blocks = await Promise.all(heights.map((height) => getBlock(node, height)));
   const txHashes = blocks.map((block) => block.tx_hashes ?? []).flat();
@@ -174,7 +174,7 @@ export const getLatestBlockHeight = async (node: string): Promise<number> => {
  * Txs explorer:
  * https://monerohash.com/explorer/
  */
-export const getOneInputTwoOutputsTransactions = async (): Promise<MoneroTransaction[]> =>
+export const getOneInputTwoOutputsTransactions = async (): Promise<IMoneroTransaction[]> =>
   tryWithMoneroNodes(async (node) => {
     const latestBlock = await getLatestBlockHeight(node);
     const startBlock = latestBlock - BLOCK_WINDOW_MONERO;
@@ -188,15 +188,11 @@ export const getOneInputTwoOutputsTransactions = async (): Promise<MoneroTransac
  * Calculate gas metrics for Monero transactions
  * @param transactions array of Monero transactions
  */
-export const getMoneroMetrics = (transactions: MoneroTransaction[]): FeeMetrics => {
+export const getMoneroMetrics = (transactions: IMoneroTransaction[]): FeeMetrics => {
   const { length } = transactions;
 
   if (length === 0) {
-    return {
-      averageGasUsed: "no-data",
-      averageGasPrice: "no-data",
-      averageTxFee: "no-data",
-    };
+    return {};
   }
 
   const averageTxFee =
@@ -206,5 +202,5 @@ export const getMoneroMetrics = (transactions: MoneroTransaction[]): FeeMetrics 
       return sum + fee;
     }, 0) / length;
 
-  return { averageGasUsed: "no-data", averageGasPrice: "no-data", averageTxFee };
+  return { averageTxFee };
 };

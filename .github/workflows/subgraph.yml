@@ -38,6 +38,12 @@ jobs:
           NETWORK=sepolia pnpm run build
         working-directory: subgraph
 
+      - name: Codegen and build (scroll)
+        run: |-
+          NETWORK=scroll pnpm run codegen
+          NETWORK=scroll pnpm run build
+        working-directory: subgraph
+
       - name: Codegen and build (arbitrum)
         run: |-
           NETWORK=arbitrum pnpm run codegen

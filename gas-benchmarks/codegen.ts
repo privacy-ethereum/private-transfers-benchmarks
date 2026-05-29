@@ -9,6 +9,7 @@ const schemas = {
   arbitrum: process.env.ARBITRUM_SUBGRAPH_URL,
   base: process.env.BASE_SUBGRAPH_URL,
   mainnet: process.env.MAINNET_SUBGRAPH_URL,
+  scroll: process.env.SCROLL_SUBGRAPH_URL,
   sepolia: process.env.SEPOLIA_SUBGRAPH_URL,
 } as const;
 
@@ -42,15 +43,20 @@ const codegenConfig: CodegenConfig = {
 
     "src/generated/mainnet/": {
       ...sharedConfig(schemas.mainnet!, [
+        "src/subgraph/fluidkey.ts",
+        "src/subgraph/hinkal.ts",
+        "src/subgraph/intmax.ts",
+        "src/subgraph/privacy-pools.ts",
         "src/subgraph/railgun.ts",
         "src/subgraph/tornado-cash.ts",
-        "src/subgraph/hinkal.ts",
-        "src/subgraph/fluidkey.ts",
-        "src/subgraph/privacy-pools.ts",
         "src/subgraph/worm.ts",
         "src/subgraph/zerc20.ts",
         "src/subgraph/mainnet.ts",
       ]),
+    },
+
+    "src/generated/scroll/": {
+      ...sharedConfig(schemas.scroll!, ["src/subgraph/intmax.ts", "src/subgraph/scroll.ts"]),
     },
 
     "src/generated/sepolia/": {

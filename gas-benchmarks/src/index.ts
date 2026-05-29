@@ -1,13 +1,11 @@
 import { Fluidkey } from "./fluidkey/index.js";
 import { Houdiniswap } from "./houdiniswap/index.js";
-import { Intmax } from "./intmax/index.js";
 import { Monero } from "./monero/index.js";
 import { SubgraphService } from "./subgraph/index.js";
 import { db } from "./utils/db.js";
 
 const fluidkey = new Fluidkey();
 const houdiniswap = new Houdiniswap();
-const intmax = new Intmax();
 const monero = new Monero();
 
 await db.read();
@@ -15,20 +13,24 @@ await db.read();
 const start = Date.now();
 
 const subgraphService = await SubgraphService.getInstance();
-const [arbitrumRoot, mainnetRoot, sepoliaRoot] = await Promise.all([
+const [arbitrumRoot, baseRoot, mainnetRoot, scrollRoot, sepoliaRoot] = await Promise.all([
   subgraphService.fetchArbitrumRootQueryWithCache(),
+  subgraphService.fetchBaseRootQueryWithCache(),
   subgraphService.fetchMainnetRootQueryWithCache(),
+  subgraphService.fetchScrollRootQueryWithCache(),
   subgraphService.fetchSepoliaRootQueryWithCache(),
 ]);
 
-const [fluidkeyMetrics, houdiniswapMetrics, intmaxMetrics, moneroMetrics] = await Promise.all([
+const [fluidkeyMetrics, houdiniswapMetrics, moneroMetrics] = await Promise.all([
   fluidkey.benchmark(),
   houdiniswap.benchmark(),
-  intmax.benchmark(),
   monero.benchmark(),
 ]);
 
 await db.update((data) => {
+  // eslint-disable-next-line no-param-reassign
+  data.blanksquare = baseRoot?.blanksquareProtocolStats;
+
   // eslint-disable-next-line no-param-reassign
   data.curvy = arbitrumRoot?.fluidkeyProtocolStats;
 
@@ -54,13 +56,22 @@ await db.update((data) => {
   data.redact = sepoliaRoot?.redactProtocolStats;
 
   // eslint-disable-next-line no-param-reassign
-  data.intmax = intmaxMetrics;
+  data.intmax = {
+    mainnet: mainnetRoot?.intmaxMainnetProtocolStats,
+    scroll: scrollRoot?.intmaxScrollProtocolStats,
+  };
 
   // eslint-disable-next-line no-param-reassign
   data.monero = moneroMetrics;
 
   // eslint-disable-next-line no-param-reassign
   data.houdiniswap = houdiniswapMetrics;
+
+  // eslint-disable-next-line no-param-reassign
+  data.worm = mainnetRoot?.wormProtocolStats;
+
+  // eslint-disable-next-line no-param-reassign
+  data.zerc20 = mainnetRoot?.zerc20ProtocolStats;
 });
 
 const end = Date.now();

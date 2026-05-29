@@ -217,6 +217,31 @@ dataSources:
           receipt: true
       file: ../src/zerc20/zerc20.ts
 
+  - kind: ethereum
+    name: LiquidityV2
+    network: mainnet
+    source:
+      address: "0xF65e73aAc9182e353600a916a6c7681F810f79C3"
+      abi: LiquidityV2
+      startBlock: 22752152
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - IntmaxScrollProtocolStats
+        - IntmaxScrollOperationStats
+        - IntmaxScrollDepositStats
+        - IntmaxScrollDeposit
+      abis:
+        - name: LiquidityV2
+          file: ../abis/intmax/LiquidityV2.json
+      eventHandlers:
+        - event: Deposited(indexed uint256,indexed address,indexed bytes32,uint32,uint256,bool,uint256)
+          handler: handleDeposit
+          receipt: true
+      file: ../src/intmax/liquidity-v2.ts
+
 templates:
   - kind: ethereum
     name: TornadoInstance
