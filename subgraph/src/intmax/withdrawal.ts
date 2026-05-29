@@ -1,4 +1,4 @@
-import { BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 import {
   IntmaxScrollWithdrawal,
@@ -7,6 +7,8 @@ import {
   IntmaxScrollProtocolStats,
 } from "../../generated/schema";
 import { DirectWithdrawalQueued } from "../../generated/Withdrawal/Withdrawal";
+
+import { calculateDirectWithdrawalQueuedEvents } from "./utils";
 
 function createOrLoadProtocolStats(): IntmaxScrollProtocolStats {
   const id = "intmax-scroll-protocol-stats";
@@ -49,26 +51,6 @@ function createOrLoadWithdrawalStats(tokenIndex: BigInt, operationStatsId: strin
   }
 
   return stats;
-}
-
-export const DIRECT_WITHDRAWAL_QUEUED_TOPIC = Bytes.fromHexString(
-  "0xdbe674c66915823ad8cb90cac7eb482e951adec0311c9cf091da19de527ee935",
-);
-
-export function calculateDirectWithdrawalQueuedEvents(logs: ethereum.Log[]): number {
-  let count = 0;
-
-  for (let i = 0; i < logs.length; i += 1) {
-    const log = logs[i];
-
-    if (log.topics.length > 0) {
-      if (log.topics[0].equals(DIRECT_WITHDRAWAL_QUEUED_TOPIC)) {
-        count += 1;
-      }
-    }
-  }
-
-  return count;
 }
 
 export function handleWithdrawal(event: DirectWithdrawalQueued): void {
