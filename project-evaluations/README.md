@@ -44,3 +44,12 @@ Behavior:
 - Pending projects are visible in Category Browser and Protocol Profiles.
 - Pending projects are excluded from Comparison Table until analyzed.
 - Once analysis is ready, change `status` to `complete` (or remove it, defaults to `complete`) and populate `properties`.
+
+# Sync benchmark values
+
+To copy latest benchmark gas values from `gas-benchmarks/benchmarks.json` into each evaluation file:
+
+```bash
+cd project-evaluations
+pnpm run sync:benchmarks
+```

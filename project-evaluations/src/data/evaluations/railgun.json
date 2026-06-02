@@ -191,6 +191,18 @@
       "value": "Yes",
       "notes": "When a user sends a transaction using Railgun, they consume their available UTXOs (notes) by adding a nullifier to the on-chain state. In the same step new UTXOs belonging to the recipient are generated and added to the commitments merkle tree. These new UTXOs are encrypted and only the recipient has the ability to check their values and aggregate their total balance. An outside on-chain observer can see commitments added (notes generated) and nullifiers (notes consumed) but cannot link the sender or recipient with a specific transaction.",
       "url": "https://docs.railgun.org/wiki/learn/using-private-tokens"
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": "814238.1362179487"
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": "1476883.8231748159"
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": "632886.0111559916"
     }
   ]
 }

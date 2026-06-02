@@ -6,11 +6,10 @@ import { Withdrawal } from "../../generated/WETH/WETH";
 export function createWithdrawEvent(hash: Bytes, to: Address, wad: BigInt): Withdrawal {
   const event = changetype<Withdrawal>(newMockEvent());
   event.transaction.hash = hash;
-  event.transaction.to = to;
 
   event.parameters = [];
 
-  event.parameters.push(new ethereum.EventParam("src", ethereum.Value.fromAddress(Address.zero())));
+  event.parameters.push(new ethereum.EventParam("src", ethereum.Value.fromAddress(to)));
   event.parameters.push(new ethereum.EventParam("wad", ethereum.Value.fromUnsignedBigInt(wad)));
 
   return event;

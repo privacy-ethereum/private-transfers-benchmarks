@@ -9,6 +9,7 @@
     "build": "tsc && pnpm lint:evaluations && vite build",
     "preview": "vite preview",
     "research": "tsx scripts/research.ts",
+    "sync:benchmarks": "tsx scripts/sync-benchmarks/index.ts",
     "lint:evaluations": "tsx scripts/utils/lint-evaluations.ts",
     "generate:markdown-report": "tsx report/1_generate-markdown-report.ts && prettier --write ./report/report.md",
     "generate:pdf-report": "tsx report/2_convert-markdown-to-pdf-report.ts",

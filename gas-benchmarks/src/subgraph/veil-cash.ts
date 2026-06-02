@@ -11,28 +11,24 @@ export const VeilCashProtocolStatsFragment = graphql(/* GraphQL */ `
         id
         totalCount
         totalGasUsed
-        totalValue
       }
 
       depositAccepted {
         id
         totalCount
         totalGasUsed
-        totalValue
       }
 
       withdraw {
         id
         totalCount
         totalGasUsed
-        totalValue
       }
 
       transfer {
         id
         totalCount
         totalGasUsed
-        totalValue
       }
     }
   }
