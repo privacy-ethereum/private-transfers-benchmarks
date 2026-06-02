@@ -1,7 +1,7 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { assert, afterAll, describe, beforeAll, clearStore, test } from "matchstick-as/assembly/index";
 
-import { BETH_CONTRACT_ADDRESS, handleWithdrawal } from "../../src/worm/weth";
+import { BETH_TO_ETH_CONTRACT_ADDRESS, handleWithdrawal } from "../../src/worm/weth";
 
 import { createWithdrawEvent } from "./utils";
 
@@ -14,7 +14,7 @@ const WITHDRAW_OPERATION_ID = `${PROTOCOL_ID}-withdraw`;
 describe("WORM withdraw tests", () => {
   describe("1 event 1 tx", () => {
     beforeAll(() => {
-      const event = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_CONTRACT_ADDRESS, AMOUNT);
+      const event = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_TO_ETH_CONTRACT_ADDRESS, AMOUNT);
 
       handleWithdrawal(event);
     });
@@ -45,8 +45,8 @@ describe("WORM withdraw tests", () => {
 
   describe("2 events 1 tx", () => {
     beforeAll(() => {
-      const event1 = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_CONTRACT_ADDRESS, AMOUNT);
-      const event2 = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_CONTRACT_ADDRESS, AMOUNT);
+      const event1 = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_TO_ETH_CONTRACT_ADDRESS, AMOUNT);
+      const event2 = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_TO_ETH_CONTRACT_ADDRESS, AMOUNT);
 
       handleWithdrawal(event1);
       handleWithdrawal(event2);
@@ -71,10 +71,10 @@ describe("WORM withdraw tests", () => {
 
   describe("2 events 2 txs", () => {
     beforeAll(() => {
-      const event1 = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_CONTRACT_ADDRESS, AMOUNT);
+      const event1 = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_TO_ETH_CONTRACT_ADDRESS, AMOUNT);
       const event2 = createWithdrawEvent(
         Bytes.fromHexString("0xb16081f360e3847006db660bae1c6d1b2e17ec3b"),
-        BETH_CONTRACT_ADDRESS,
+        BETH_TO_ETH_CONTRACT_ADDRESS,
         AMOUNT,
       );
 

@@ -38,7 +38,11 @@ const codegenConfig: CodegenConfig = {
     },
 
     "src/generated/base/": {
-      ...sharedConfig(schemas.base!, ["src/subgraph/blanksquare.ts", "src/subgraph/base.ts"]),
+      ...sharedConfig(schemas.base!, [
+        "src/subgraph/blanksquare.ts",
+        "src/subgraph/veil-cash.ts",
+        "src/subgraph/base.ts",
+      ]),
     },
 
     "src/generated/mainnet/": {

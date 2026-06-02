@@ -8,6 +8,9 @@
 - **WETH:** is the canonical WETH contract used in Ethereum mainnet. WORM uses this contract to swap BETH to WETH and then withdraw WETH to ETH when users want to withdraw their funds from WORM.
   - Address: 0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
   - Contract: [WETH](https://github.com/gnosis/canonical-weth/blob/master/contracts/WETH9.sol)
+- **BETH to ETH contract:** is a WORM deployed contract that swaps BETH to WETH and then withdraws WETH to ETH.
+  - Address: 0xbA5A285806c343AaD955a40FE4b6e5e607B752b6
+  - Contract: [BETH to ETH](https://github.com/worm-privacy/worm/blob/main/src/hooks/cypher-eth/BETHToETH.sol)
 
 ## Deposit (public to burn)
 

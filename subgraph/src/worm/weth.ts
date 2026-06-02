@@ -3,7 +3,7 @@ import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { WormOperationStats, WormProtocolStats, WormWithdraw } from "../../generated/schema";
 import { Withdrawal as WithdrawalEvent } from "../../generated/WETH/WETH";
 
-export const BETH_CONTRACT_ADDRESS = Address.fromString("0x5624344235607940d4d4ee76bf8817d403eb9cf8");
+export const BETH_TO_ETH_CONTRACT_ADDRESS = Address.fromString("0xbA5A285806c343AaD955a40FE4b6e5e607B752b6");
 
 function createOrLoadProtocolStats(): WormProtocolStats {
   const id = "worm-protocol-stats";
@@ -44,8 +44,8 @@ export function handleWithdrawal(event: WithdrawalEvent): void {
     return; // contract creation tx, not a withdrawal from existing contract
   }
 
-  if (!event.transaction.to!.equals(BETH_CONTRACT_ADDRESS)) {
-    return; // not a withdrawal from BETH contract
+  if (!event.params.src.equals(BETH_TO_ETH_CONTRACT_ADDRESS)) {
+    return; // not a withdrawal from BETH to ETH contract
   }
 
   withdraw = new WormWithdraw(id);

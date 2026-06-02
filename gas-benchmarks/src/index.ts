@@ -1,12 +1,16 @@
+import { Curvy } from "./curvy.index.js";
 import { Fluidkey } from "./fluidkey/index.js";
 import { Houdiniswap } from "./houdiniswap/index.js";
 import { Monero } from "./monero/index.js";
 import { SubgraphService } from "./subgraph/index.js";
 import { db } from "./utils/db.js";
+import { Worm } from "./worm/index.js";
 
+const curvy = new Curvy();
 const fluidkey = new Fluidkey();
 const houdiniswap = new Houdiniswap();
 const monero = new Monero();
+const worm = new Worm();
 
 await db.read();
 
@@ -21,10 +25,12 @@ const [arbitrumRoot, baseRoot, mainnetRoot, scrollRoot, sepoliaRoot] = await Pro
   subgraphService.fetchSepoliaRootQueryWithCache(),
 ]);
 
-const [fluidkeyMetrics, houdiniswapMetrics, moneroMetrics] = await Promise.all([
+const [curvyMetrics, fluidkeyMetrics, houdiniswapMetrics, moneroMetrics, wormMetrics] = await Promise.all([
+  curvy.benchmark(),
   fluidkey.benchmark(),
   houdiniswap.benchmark(),
   monero.benchmark(),
+  worm.benchmark(),
 ]);
 
 await db.update((data) => {
@@ -32,7 +38,10 @@ await db.update((data) => {
   data.blanksquare = baseRoot?.blanksquareProtocolStats;
 
   // eslint-disable-next-line no-param-reassign
-  data.curvy = arbitrumRoot?.fluidkeyProtocolStats;
+  data.curvy = {
+    ...(arbitrumRoot?.curvyProtocolStats ?? {}),
+    ...curvyMetrics,
+  };
 
   // eslint-disable-next-line no-param-reassign
   data.railgun = mainnetRoot?.railgunProtocolStats;
@@ -68,7 +77,13 @@ await db.update((data) => {
   data.houdiniswap = houdiniswapMetrics;
 
   // eslint-disable-next-line no-param-reassign
-  data.worm = mainnetRoot?.wormProtocolStats;
+  data.veilCash = baseRoot?.veilCashProtocolStats;
+
+  // eslint-disable-next-line no-param-reassign
+  data.worm = {
+    ...(mainnetRoot?.wormProtocolStats ?? {}),
+    ...wormMetrics,
+  };
 
   // eslint-disable-next-line no-param-reassign
   data.zerc20 = mainnetRoot?.zerc20ProtocolStats;
