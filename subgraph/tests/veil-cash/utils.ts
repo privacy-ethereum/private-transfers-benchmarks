@@ -3,7 +3,6 @@ import { newMockEvent } from "matchstick-as";
 
 import { NewNullifier } from "../../generated/VeilETHPool/VeilETHPool";
 import { DepositAccepted, DepositQueued } from "../../generated/VeilETHQueueV3/VeilETHQueueV3";
-import { Withdrawal } from "../../generated/WETH/WETH";
 
 export const PROTOCOL_STATS_ID = "veil-cash-protocol-stats";
 export const VEIL_ETH_POOL_ADDRESS = Address.fromString("0x293dcda114533ff8f477271c5ca517209ffdeee7");
@@ -55,18 +54,6 @@ export function createNewNullifierEvent(hash: Bytes): NewNullifier {
       ),
     ),
   );
-
-  return event;
-}
-
-export function createWithdrawalEvent(hash: Bytes, to: Address, src: Address, wad: BigInt): Withdrawal {
-  const event = changetype<Withdrawal>(newMockEvent());
-  event.transaction.hash = hash;
-  event.transaction.to = to;
-  event.parameters = [];
-
-  event.parameters.push(new ethereum.EventParam("src", ethereum.Value.fromAddress(src)));
-  event.parameters.push(new ethereum.EventParam("wad", ethereum.Value.fromUnsignedBigInt(wad)));
 
   return event;
 }

@@ -5,12 +5,10 @@ export const WormProtocolStatsFragment = graphql(/* GraphQL */ `
     wormProtocolStats(id: "worm-protocol-stats") {
       id
       totalTxCount
-      totalGasUsed
 
       withdraw {
         id
         totalCount
-        totalGasUsed
       }
     }
   }
