@@ -412,7 +412,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "A separate chain-state service periodically downloads the most recent chain state via scheduled GitHub Actions, producing pre-indexed snapshots that the SDK ingests. The client SDK runs a single bootstrap synchronization step that loads this snapshot before performing ZK proving, rather than scanning every block itself. The indexing work is performed by the chain-state crawler service so the end user devices do not need to be constantly scanning on-chain events.",
       "citations": [
         {

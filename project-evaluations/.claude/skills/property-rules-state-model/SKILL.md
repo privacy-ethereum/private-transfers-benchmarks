@@ -21,7 +21,12 @@ For services with no protocol contracts at all — off-chain routing aggregators
 
 ## Client-side indexing
 
-(no property-specific rule yet — apply cross-cutting rules)
+Options: `Scanning`, `No Scanning`. Binary, and device-centric: must the user's own device scan the chain (trial-decrypting notes / outputs) to discover its funds?
+
+- `Scanning` — the device scans, whether full-chain or reduced with view-tags / filters (Monero, Zcash, Railgun, Aztec, stealth-address wallets watching for incoming payments).
+- `No Scanning` — the device does not scan. different cases qualify: secret-note recall (Tornado, Privacy Pools), direct account / balance lookup (encrypted-ERC20 and account-based ledgers — redact, tongo, scroll-cloak), and discovery delegated to an off-chain indexer / service that scans on the device's behalf (anoma-pay, bermudabay).
+
+Delegated / indexer-assisted discovery is `No Scanning` because the property asks what the _device_ does — but note it, since delegation adds a trust dependency (the indexer may see the user's discovery / viewing key) that the binary label does not capture. Do NOT use the old `Always scanning` / `Partial scanning` / `No scanning` wording.
 
 ## Private State Scalability
 

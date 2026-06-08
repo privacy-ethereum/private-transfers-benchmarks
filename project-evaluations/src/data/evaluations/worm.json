@@ -256,7 +256,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "WORM ERC20 tokens (BETH and WORM) have balances tracked on-chain through the Ethereum state so there is no need for client-side scanning. When users want to mint BETH through private proof-of-burn proofs, they generate the zk-proof on the UI using their recovery file containing their burnKey and receiver address. These process has to be performed per burn transaction. There is no mechanism to show privately burn balances on the WORM UI so there is no client-side indexing or scanning. Users have to keep track of their burn transaction data on their own.",
       "citations": [
         {

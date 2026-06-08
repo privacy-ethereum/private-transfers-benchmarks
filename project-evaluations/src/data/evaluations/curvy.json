@@ -414,7 +414,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "The Curvy App, using the open-source Curvy SDK, starts syncing notes from the public Notes Registry immediately upon starting, and the SDK simultaneously scans the synced notes with the user's private keys to detect which notes are secretly in their ownership and to decrypt their balances. Note ownership is completely hidden from on-chain observers, which means continuous scanning with private keys is required to identify which notes belong to the user. The SDK must attempt decryption on all notes because there is no public index by recipient address.",
       "citations": [
         {

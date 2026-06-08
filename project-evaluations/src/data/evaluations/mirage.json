@@ -404,7 +404,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "No scanning is required on the client side. Recipients receive funds through a direct on-chain token transfer from a node created wallet, which appears as a regular address sending them tokens, so their wallet picks it up as any ordinary incoming transfer.",
       "citations": [
         {

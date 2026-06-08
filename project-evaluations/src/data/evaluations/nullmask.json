@@ -410,7 +410,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "User devices (via the RPC proxy) must continuously scan the chain to identify incoming notes, since ownership is not indexed by recipient address. The RPC proxy handles balance tracking by scanning the blockchain for new notes, trial-decrypting them, and maintaining shielded balances, with a dedicated notes scanner service that monitors blockchain events for incoming notes.",
       "citations": [
         {

@@ -351,7 +351,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "Recipients must scan every announcement event on the protocol contract and try-decrypt each ciphertext with their viewing key to find payments addressed to them. The client library queries per-chain subgraphs for efficiency, with RPC log queries as the fallback. Indexing is required client-side — there is no in-protocol discovery service.",
       "citations": [
         {

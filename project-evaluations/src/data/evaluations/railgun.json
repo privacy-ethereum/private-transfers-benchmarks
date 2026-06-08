@@ -24,7 +24,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Partial scanning",
+      "value": "Scanning",
       "notes": "While generating the most up-to-date merkle tree, each commitment leaf (which represents a transaction) must be synced and decrypted in order to build a RAILGUN wallet’s private balance. This syncing process can take a few minutes. Once the sync is complete, UTXO token balances are aggregated into a user’s balance.",
       "url": "https://docs.railgun.org/developer-guide/wallet/private-balances"
     },

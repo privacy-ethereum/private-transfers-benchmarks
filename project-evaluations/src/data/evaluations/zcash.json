@@ -390,7 +390,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "Shielded transactions reveal no metadata about the sender or receiver, users must scan the block chain for relevant transactions using viewing keys. Every valid block with non-coinbase transactions will need to be checked and its transactions trial-decrypted with registered incoming viewing keys to see if any notes have been received by the key's owner and if any notes have already been spent elsewhere. Unlike a transparent blockchain with public transactions, a full node must have online access to viewing keys to scan the chain.",
       "citations": [
         {
