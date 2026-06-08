@@ -175,7 +175,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Fluidkey is deployed on Ethereum mainnet, Base, Optimism, Arbitrum, Polygon, and Gnosis. Time to finality is inherited from the underlying blockchain.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },

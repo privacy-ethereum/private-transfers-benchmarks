@@ -32,7 +32,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Tornado Cash is deployed on Ethereum, BNB Chain, Polygon, Arbitrum, Optimism, Avalanche, and Gnosis. Finality is inherited from each underlying chain.",
       "url": "https://docs.tornadocash.eth.limo/general/deployments.html"
     },

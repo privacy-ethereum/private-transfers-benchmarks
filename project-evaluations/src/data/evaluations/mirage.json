@@ -88,7 +88,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Mirage is an application-layer protocol that settles on host chains and inherits their finality guarantees, so finality is determined by the underlying chain's consensus rather than by anything Mirage adds. The design targets Ethereum, with adaptations for L2s such as Arbitrum and Base, and L1s like Solana. Quoted node-settlement latencies (~90s on Ethereum, ~6s on L2s, ~4s on Tempo testnet) describe the time for a Nomad-network TEE node to process a transfer, not cryptographic finality.",
       "citations": [
         {

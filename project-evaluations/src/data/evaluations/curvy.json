@@ -84,7 +84,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Curvy is currently available on Arbitrum, Base, Ethereum, Optimism, Polygon, Binance Smart Chain, Linea, and Gnosis, with the privacy aggregator deployed on Arbitrum. Because Curvy is deployed as a set of smart contracts on these existing blockchains rather than operating as an independent chain, it does not define its own finality time. Transactions inherit the finality characteristics of whichever underlying chain they settle on—Arbitrum for aggregated private transactions, and each respective chain for portal operations.",
       "citations": [
         {

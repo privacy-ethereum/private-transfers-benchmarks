@@ -42,7 +42,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Tongo is deployed on the Starknet L2, a ZK-rollup on Ethereum. Finality is inherited from the underlying chain. Starknet's time to L1 finality at the time of writing is around 29 minutes. Finality is dependent on the sequencer submitting proofs to the L1. After proof submissions, SHARP (StarkWare's proof aggregator) consolidates all proofs into a single STARK proof that gets posted and verified on Ethereum L1.",
       "url": "https://l2beat.com/scaling/projects/starknet#liveness",
       "needsResearchReview": "Finality figure requires citation"
