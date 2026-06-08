@@ -1,17 +1,19 @@
-import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
-import { newMockEvent } from "matchstick-as";
+import { Address, Bytes, BigInt, ethereum } from "@graphprotocol/graph-ts";
+import { newMockCall } from "matchstick-as";
 
-import { Withdrawal } from "../../generated/WETH/WETH";
+import { SwapBethWithEthCall } from "../../generated/BETHToETH/BETHToETH";
 
-export function createWithdrawEvent(hash: Bytes, to: Address, wad: BigInt): Withdrawal {
-  const event = changetype<Withdrawal>(newMockEvent());
-  event.transaction.hash = hash;
-  event.transaction.to = to;
+export function createSwapBethWithEthCall(txHash: Bytes, swapAmount: BigInt, recipient: Address): SwapBethWithEthCall {
+  const mockCall = newMockCall();
 
-  event.parameters = [];
+  const call = changetype<SwapBethWithEthCall>(mockCall);
 
-  event.parameters.push(new ethereum.EventParam("src", ethereum.Value.fromAddress(Address.zero())));
-  event.parameters.push(new ethereum.EventParam("wad", ethereum.Value.fromUnsignedBigInt(wad)));
+  call.transaction.hash = txHash;
 
-  return event;
+  call.inputValues = [
+    new ethereum.EventParam("_swapAmount", ethereum.Value.fromUnsignedBigInt(swapAmount)),
+    new ethereum.EventParam("_recipient", ethereum.Value.fromAddress(recipient)),
+  ];
+
+  return call;
 }

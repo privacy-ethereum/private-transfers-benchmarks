@@ -22,12 +22,20 @@
 
 1. Sender [deposit funds](https://basescan.org/tx/0xb4fa5d5e243ebb74212f6753b69bff0972ee16278a6c3b2e9ed65898e3ce5132) into the entry contract. This action is called queue because the funds are not yet in the private pool, they are being scanned and waiting for compliance checks. The following event is emitted `DepositQueued(uint256 indexed nonce,address indexed sender,uint256 amount,bytes)` by the VeilETHQueueV3 contract which gets called by the VeilWalletEntryV11 inside the transaction.
 
-2. Sender [accepts the deposit](https://basescan.org/tx/0xd7af83ab0e841f92cb35b7b2ebae6d28dfe2bda6d7bfd7f22a189bad79dc625d) after it has passed the compliance checks. These two steps are separated because some of the compliance checks are done off-chain and they can take some time. When the sender accepts the deposit, the funds are moved to the private pool and the following event is emitted `DepositAccepted(uint256 indexed nonce,address indexed operator,address indexed veilEntry,uint256 amount)` from the `VeilETHQueueV3` contract.
+2. Veil Operator [accepts the deposit](https://basescan.org/tx/0xd7af83ab0e841f92cb35b7b2ebae6d28dfe2bda6d7bfd7f22a189bad79dc625d) after it has passed the compliance checks. These two steps are separated because some of the compliance checks are done off-chain and they can take some time. When the operator accepts the deposit, the funds are moved to the private pool and the following event is emitted `DepositAccepted(uint256 indexed nonce,address indexed operator,address indexed veilEntry,uint256 amount)` from the `VeilETHQueueV3` contract.
 
 ## Transfer
 
-1. User can [transfer notes inside the shielded pool](https://basescan.org/tx/0xb855d19f636916da99a41ad1c055be60dd99f9092731f58aa85bb95914337d90). A note transfer involves creating new commitments (notes) for the recipient and nullifying the sender's notes. A transaction can have multiple commitments and nullifiers, therefore a private transfer can be considered any transaction that calls the [`withdrawETH`](https://github.com/veildotcash/veil_pool_contracts/blob/2ee84b126f44e330365d559f66acfcc8ce2de118/src/VeilPool/VeilETHPool.sol#L108) and emits one or more `NewNullifier(bytes32 nullifier)`. If only commitments are emitted, then the transaction would be considered a deposit/mint action.
+1. User can [transfer notes inside the shielded pool](https://basescan.org/tx/0xb855d19f636916da99a41ad1c055be60dd99f9092731f58aa85bb95914337d90). A note transfer involves creating new commitments (notes) for the recipient and nullifying the sender's notes. A transaction can have multiple commitments and nullifiers, therefore a private transfer can be considered any transaction that calls the [`transactETH`](https://github.com/veildotcash/veil_pool_contracts/blob/2ee84b126f44e330365d559f66acfcc8ce2de118/src/VeilPool/VeilETHPool.sol#L108) and emits one or more `NewNullifier(bytes32 nullifier)`. If only commitments are emitted, then the transaction would be considered a deposit/mint action.
 
 ## Withdraw
 
 1. User [withdraws](https://basescan.org/tx/0xd1ab273564036293c18791266223f51882ed3e2c249d32450da73fefd975c2da) funds from the shielded pool contract. The transaction emits `Withdraw(address indexed,uint256)` from the Wrapped ETH (WETH) contract with the src (first parameter) being the shielded pool contract address and the value (second parameter) being the amount withdrawn.
+
+# Important notes
+
+We are having some issues when syncing the subgraph, specifically we have found the following transactions that are throwing Out of Bounds errors:
+
+- [Contract ETHPool emits `NewNullifier(bytes32)` at block 31476880](https://basescan.org/tx/0xccf77764e49f82bf7450986d100bd218588067ebb6fca1557f63032c256e9d2a)
+- [Contract ETHPool emits `NewNullifier(bytes32)` at block 37986022](https://basescan.org/tx/0x03847ced58eaa28fbb67c9ce2933013c3fdd5fa0fc93d9583b6b622280200ae9)
+- [Contract ETHPool emits `NewNullifier(bytes32)` at block 38025331](https://basescan.org/tx/0xc1f0971f0da2a08917e4fc88db3cf3a82ed316b78fc75fb604f6a1ac76d699d6)

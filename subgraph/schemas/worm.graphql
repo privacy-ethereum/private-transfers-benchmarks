@@ -1,7 +1,6 @@
 type WormProtocolStats @entity(immutable: false) {
   id: ID!
   totalTxCount: BigInt!
-  totalGasUsed: BigInt!
 
   withdraw: WormOperationStats!
 }
@@ -9,7 +8,6 @@ type WormProtocolStats @entity(immutable: false) {
 type WormOperationStats @entity(immutable: false) {
   id: ID!
   totalCount: BigInt!
-  totalGasUsed: BigInt!
 }
 
 type WormWithdraw @entity(immutable: true) {
@@ -19,6 +17,5 @@ type WormWithdraw @entity(immutable: true) {
   blockNumber: BigInt!
   timestamp: BigInt!
   txHash: Bytes!
-  gasUsed: BigInt!
   gasPrice: BigInt!
 }

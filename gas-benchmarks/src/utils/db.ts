@@ -13,7 +13,12 @@ import { BENCHMARKS_OUTPUT_PATH } from "./constants.js";
 
 export interface IBenchmarkDb {
   blanksquare: TBaseRootQuery["blanksquareProtocolStats"] | null;
-  curvy: TArbitrumRootQuery["fluidkeyProtocolStats"] | null;
+  curvy: Partial<TArbitrumRootQuery["curvyProtocolStats"]> & {
+    publicToStealthETH: FeeMetrics;
+    publicToStealthWETH: FeeMetrics;
+    publicToStealthUSDC: FeeMetrics;
+    publicToStealthUSDT: FeeMetrics;
+  };
   railgun: TMainnetRootQuery["railgunProtocolStats"] | null;
   tornadoCash: TMainnetRootQuery["tornadoCashProtocolStats"] | null;
   privacyPools: TMainnetRootQuery["privacyPoolsProtocolStats"] | null;
@@ -42,7 +47,10 @@ export interface IBenchmarkDb {
     publicToCEXUSDT: FeeMetrics;
     CEXToPublicUSDT: FeeMetrics;
   };
-  worm: TMainnetRootQuery["wormProtocolStats"] | null;
+  veilCash: TBaseRootQuery["veilCashProtocolStats"] | null;
+  worm: Partial<TMainnetRootQuery["wormProtocolStats"]> & {
+    publicToBurnETH: FeeMetrics;
+  };
   zerc20: TMainnetRootQuery["zerc20ProtocolStats"] | null;
 }
 
