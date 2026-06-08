@@ -427,8 +427,8 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
-      "notes": "Each Cloak instance keeps its own isolated account-based EVM ledger, so state accumulates per transaction as on any other EVM chain, growing monotonically as commitments and account balances are added over the life of the chain.",
+      "value": "Per Account",
+      "notes": "Each Cloak instance is an isolated account-based EVM ledger, so private state is keyed per account like a standard EVM state trie rather than appended per transaction. Balances are updated in place, so the state footprint scales with the number of accounts that hold funds rather than with cumulative transaction count.",
       "citations": [
         {
           "cited_text": "Cloak proves every transaction using Scroll's [zkEVM](glossary#zkevm) technology, ensuring that state can only be updated according to the protocol rules.",

@@ -466,7 +466,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Aztec's private state lives in two append-only Merkle trees — a note hash tree for commitments and a nullifier tree for spent notes — both accumulating leaves monotonically with usage. Private state uses an append-only data structure since updating records directly would leak information about the transaction graph, and modifying state means nullifying the existing record and creating a new one. Every transfer therefore adds at least one note commitment plus one nullifier, with no pruning path.",
       "citations": [
         {

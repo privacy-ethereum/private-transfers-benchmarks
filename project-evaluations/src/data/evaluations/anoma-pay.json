@@ -373,7 +373,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "The protocol adapter maintains state via an append-only commitment tree and a nullifier set, both updated on every shielded transaction. After verifying the delta and optional aggregation proofs, the executor stores the final commitment tree root. Consumed resources add their tag to the nullifier set while created resources append a commitment to the tree. Neither structure has a pruning path, so on-chain private state grows monotonically with transaction count.",
       "citations": [
         {

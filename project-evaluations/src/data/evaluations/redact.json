@@ -185,8 +185,8 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Stateless",
-      "notes": "Redact's onchain private state does not grow with usage. Each ERC20 token's balance is kept as an encrypted ciphertext, with on-chain storage holding per-address ciphertext handles updated in place while the full encrypted state lives off-chain on the Fhenix CoFHE coprocessor. The on-chain mapping scales with the number of accounts rather than transactions.",
+      "value": "Per Account",
+      "notes": "Redact's on-chain private state grows with the number of accounts, not with transactions. Each ERC20 token balance is an encrypted ciphertext handle stored per address and updated in place: a new holder adds one mapping entry, while transfers between existing holders rewrite entries without enlarging the set. The full encrypted state lives off-chain on the Fhenix CoFHE coprocessor.",
       "citations": [
         {
           "cited_text": "hashtag \n\nConcepts\n\nhashtag \n\nEncrypted Balances\n\nUtilizing the Fhenix CoFHE coprocessor, Fully Homomorphic Encryption (FHE) operations are integrated into the blockchain environment. This ensures that an ERC20 token&#x27;s balance is maintained in an encrypted state, accessible only under specific conditions as:\n\nhashtag \n\nManually decrypted \n\nA user or contract can request to decrypt their own balance. ",

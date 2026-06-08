@@ -338,7 +338,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "The Shielder maintains an append-only Merkle tree of note commitments plus a growing nullifier set. No pruning mechanism is documented and on-chain state grows with cumulative pool usage.",
       "citations": [
         {
