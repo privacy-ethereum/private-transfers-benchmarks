@@ -92,7 +92,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "25",
+      "value": "1500",
       "notes": "Zcash typically requires 10+ blocks for a transaction to be treated as secure. New blocks are mined roughly every 2.5 minutes on average, so 10 blocks take approximately 25 minutes (10 × 2.5 minutes per block).",
       "citations": [
         {
@@ -327,7 +327,7 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": ["User"],
+      "value": ["User", "Voluntary third-party disclosure"],
       "notes": "Zcash supports selective disclosure controlled by the user. The owner of a z-address can share its transaction details with trusted third parties via a view key–a key that grants read access but not spend authority over the address. This allows for selective disclosure where transactions are auditable but disclosure is under the participant's control. The user decides whether and with whom to share viewing keys, enabling voluntary disclosure for compliance, auditing, or tax purposes without protocol-level enforcement.",
       "citations": [
         {
