@@ -165,7 +165,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "You need to manually input your private note in order to be able to withdraw funds. In case of using a Note Account, the encrypted backup is stored in a smart contract storage so it is easily accessible without scanning past transactions",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },

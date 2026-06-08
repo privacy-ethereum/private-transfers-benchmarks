@@ -166,7 +166,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "Because Tongo uses an account-based model with balances stored directly as contract state, users can retrieve their encrypted balance directly from the contract without scanning past blockchain events or transactions.",
       "url": "https://docs.tongo.cash/sdk/accounts.html"
     },

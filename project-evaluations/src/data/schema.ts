@@ -310,9 +310,9 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Client-side indexing",
     group: "State",
     description: "Whether user devices must continuously scan the chain to track balances or accounts",
-    metric: "Always scanning / Partial scanning / No scanning",
+    metric: "Scanning / No Scanning",
     inputType: "select",
-    options: ["Always scanning", "Partial scanning", "No scanning"],
+    options: ["Scanning", "No Scanning"],
   },
   {
     name: "Private state model",

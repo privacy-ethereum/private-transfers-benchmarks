@@ -170,7 +170,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "Users withdraw funds by providing their secret note directly, without needing to scan the blockchain. The official UI displays the user's deposits and amounts, but this is based on locally stored note data rather than scanning.",
       "url": "https://docs.privacypools.com/protocol/withdrawal#withdrawal-steps"
     },

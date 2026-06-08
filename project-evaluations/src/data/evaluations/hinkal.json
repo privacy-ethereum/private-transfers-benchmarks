@@ -201,7 +201,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Partial scanning",
+      "value": "Scanning",
       "notes": "Users must scan chain events to discover incoming stealth transfers and reconstruct their shielded balance. Hinkal provides tooling (Hinkal Receive) for SDK integrators to build this scanning component. The wallet performs scanning internally for events related to the user's stealth addresses.",
       "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-receive/features"
     },

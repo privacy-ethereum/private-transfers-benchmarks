@@ -442,7 +442,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "Account holders retrieve their data via authenticated JSON-RPC calls to the operator's gateway, with a SIWE-derived JWT scoping access to their own account. Balances and transactions come from the operator's permissioned RPC rather than being reconstructed from on-chain commitments — the client does not trial-decrypt or sweep the chain.",
       "citations": [
         {

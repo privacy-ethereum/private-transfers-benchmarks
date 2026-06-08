@@ -158,7 +158,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Partial scanning",
+      "value": "Scanning",
       "notes": "Stealth addresses mean every transaction output is sent to a unique one-time public key. To detect incoming funds, wallets must scan each block and test every transaction output against the user's private view key and public spend key. This scanning occurs when the wallet is online and syncing  - if offline, the wallet must catch up on missed blocks when it reconnects.",
       "url": "https://www.getmonero.org/resources/moneropedia/transaction.html"
     },
