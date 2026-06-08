@@ -28,7 +28,7 @@ export const IntmaxMainnetProtocolStatsFragment = graphqlMainnet(/* GraphQL */ `
 
 export const IntmaxScrollProtocolStatsFragment = graphqlScroll(/* GraphQL */ `
   fragment IntmaxScrollProtocolStatsFragment on Query {
-    intmaxScrollProtocolStats(id: "intmax-protocol-stats") {
+    intmaxScrollProtocolStats(id: "intmax-scroll-protocol-stats") {
       id
       totalTxCount
       totalGasUsed

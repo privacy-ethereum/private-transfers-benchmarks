@@ -76,8 +76,9 @@ await db.update((data) => {
   // eslint-disable-next-line no-param-reassign
   data.houdiniswap = houdiniswapMetrics;
 
+  // TODO: return back when subgraph deployment is fixed
   // eslint-disable-next-line no-param-reassign
-  data.veilCash = baseRoot?.veilCashProtocolStats;
+  data.veilCash = null;
 
   // eslint-disable-next-line no-param-reassign
   data.worm = {
