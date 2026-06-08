@@ -164,7 +164,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "RAILGUN is deployed on Ethereum mainnet (as well as BSC, Polygon, and Arbitrum). Time to finality is based on the underlying blockchain finality.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },

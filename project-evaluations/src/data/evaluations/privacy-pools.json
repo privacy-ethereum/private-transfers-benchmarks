@@ -38,7 +38,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Privacy Pools is deployed on Ethereum mainnet. Finality is inherited from the underlying chains.",
       "url": "https://docs.privacypools.com/deployments"
     },

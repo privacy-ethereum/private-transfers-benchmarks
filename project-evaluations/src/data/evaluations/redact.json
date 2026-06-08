@@ -54,7 +54,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Redact is deployed on Ethereum mainnet. Finality is inherited from the underlying chain. The roadmap mentions future expansion to additional blockchains.",
       "url": "https://docs.redact.money/roadmap"
     },

@@ -89,7 +89,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Nullmask is an application-layer protocol with no independent consensus, so finality is inherited from whichever underlying chain a user transacts on. It is deployed on Ethereum Mainnet, MegaETH, Arbitrum One, Base, and BSC, with Ethereum Sepolia as the testnet.",
       "citations": [
         {

@@ -88,7 +88,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "zERC20 is an application-layer token, so finality is inherited from each underlying chain rather than introduced by the protocol itself. Per-chain transaction finality is determined by Ethereum, Arbitrum, Base, and BNB Chain respectively. Cross-chain transfers add LayerZero-relayed root aggregation on top, but the local finality of any single chain transaction is the host chain's.",
       "citations": [
         {

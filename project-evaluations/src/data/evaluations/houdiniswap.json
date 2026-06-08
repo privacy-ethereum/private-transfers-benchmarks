@@ -84,7 +84,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Houdini Swap is a routing service rather than its own chain or rollup, so finality is inherited from whichever source and destination networks a given swap touches. Houdini does not execute swaps itself. Each route is handled by the underlying protocol or exchange partner selected for that transaction. Bridging or swaps are offered between most EVM chains, Bitcoin, Solana and SUI. Effective finality therefore varies per swap and equals the slower of the two endpoint chains' finality plus off-chain CEX-hop latency.",
       "citations": [
         {

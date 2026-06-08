@@ -84,7 +84,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Bermuda is an application-layer protocol deployed on host EVM chains, so transaction finality is inherited from the underlying network rather than imposed by Bermuda itself.",
       "citations": [
         {
