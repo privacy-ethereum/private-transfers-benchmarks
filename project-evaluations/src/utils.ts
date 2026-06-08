@@ -3,8 +3,28 @@ import type { Evaluation } from "./types.js";
 const NUMBER_OF_SECRETS_REGEX = /number of secrets/i;
 const PROJECT_README_PATH_REGEX = /subgraph\/src\/([^/]+)\/README\.md$/;
 
-/** Properties shown without a yes/no colour — the answer is contextual, not better or worse. */
-const NEUTRAL_TONE_PROPERTIES = new Set(["Plausible deniability"]);
+/** Formats seconds, or a "min-max" range, into readable parts, e.g. "9000" → "2 hours, 30 minutes", "15-30" → "15 seconds - 30 seconds". */
+function formatDuration(secondsValue: string): string {
+  const seconds = secondsValue.split("-").map(Number);
+  if (seconds.some(Number.isNaN)) return secondsValue;
+  return seconds.map(formatSeconds).join(" - ");
+}
+
+/** Formats a whole number of seconds into its non-zero parts, e.g. 9000 → "2 hours, 30 minutes". */
+function formatSeconds(totalSeconds: number): string {
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days} day${days === 1 ? "" : "s"}`);
+  if (hours > 0) parts.push(`${hours} hour${hours === 1 ? "" : "s"}`);
+  if (minutes > 0) parts.push(`${minutes} minute${minutes === 1 ? "" : "s"}`);
+  if (seconds > 0) parts.push(`${seconds} second${seconds === 1 ? "" : "s"}`);
+
+  return parts.join(", ") || "0 seconds";
+}
 
 interface IValueForParams {
   evaluations: Evaluation;
@@ -26,7 +46,15 @@ export function valueFor({ evaluations, propertyName }: IValueForParams): IValue
     return { value: "—", notes: "", url: "", needsResearchReview: "" };
   }
 
-  const value = Array.isArray(property.value) ? property.value.join(", ") : property.value;
+  let value = Array.isArray(property.value) ? property.value.join(", ") : property.value;
+
+  const nonDurationValues = new Set(["", "N/A", "Underlying chain"]);
+  const timeProperties = new Set(["Time-to-finality", "Deposit time", "Withdraw time"]);
+
+  const timeRequiresFormat = timeProperties.has(propertyName) && !nonDurationValues.has(value);
+  if (timeRequiresFormat) {
+    value = formatDuration(value);
+  }
 
   return {
     value: value || "—",
@@ -48,7 +76,8 @@ type CellTone = "yes" | "no" | "warn" | "";
  * @dev it is currently used to mark as yellow if number of secrets is 2 or greater
  */
 export function cellTone({ value, propertyName }: ICellToneParams): CellTone {
-  if (NEUTRAL_TONE_PROPERTIES.has(propertyName)) {
+  const neutralToneProperties = new Set(["Plausible deniability"]);
+  if (neutralToneProperties.has(propertyName)) {
     return "";
   }
 

@@ -115,7 +115,7 @@
     },
     {
       "name": "Deposit time",
-      "value": "15-30 seconds",
+      "value": "15-30",
       "notes": "When the user makes a deposit, the funds are held by the contract and a pending event is emitted. A guard service then screens the depositor address and either accepts or rejects it. This screening gates acceptance into the Merkle tree. It usually takes 15-30 seconds but it depends on the guard service.",
       "citations": [
         {
