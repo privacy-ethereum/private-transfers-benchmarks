@@ -349,7 +349,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "The client syncs the latest Shielder state and constructs proofs locally. No server-side index keyed to the user is documented. The WASM cryptography engine drives both proving and chain scanning.",
       "citations": [
         {

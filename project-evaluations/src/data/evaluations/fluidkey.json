@@ -145,7 +145,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "Continuous blockchain scanning is required because funds arrive at unlinkable stealth addresses. Fluidkey performs this scanning server-side using the shared viewing key node and notifies users when funds arrive.",
       "url": "https://docs.fluidkey.com/technical-documentation/ens-offchain-resolver#detailed-privacy-implications"
     },

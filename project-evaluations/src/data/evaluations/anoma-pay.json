@@ -388,7 +388,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Partial scanning",
+      "value": "No Scanning",
       "notes": "Balance discovery relies on an off-chain indexer service rather than full local chain scanning. The client submits its discovery private key with a list of contracts to the indexer, which returns the resources and tags addressed to that key across the requested chain IDs and contract addresses. The device runs no continuous block-by-block scan itself, but it must still poll the indexer per contract to assemble its resource set, making discovery server-assisted rather than trustless.",
       "citations": [
         {

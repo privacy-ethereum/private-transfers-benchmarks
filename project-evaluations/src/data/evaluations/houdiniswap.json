@@ -412,7 +412,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "Houdini Swap requires no client-side chain scanning. Balances on the source and destination accounts are held in standard wallet addresses readable by any block explorer or wallet software. with no notes, commitments, or encrypted state to decrypt or track.",
       "citations": [
         {
