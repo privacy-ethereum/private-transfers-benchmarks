@@ -109,7 +109,7 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Time-to-finality",
     group: "Cost and Performance",
     description: "The time it takes for a transaction to be considered irreversible (in seconds).",
-    metric: "Seconds or N/A",
+    metric: "Seconds or Underlying chain",
     inputType: "text",
   },
 

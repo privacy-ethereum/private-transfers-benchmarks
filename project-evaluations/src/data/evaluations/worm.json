@@ -62,7 +62,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "WORM is an ERC-20 token created through the destruction of Ethereum (ETH) in a privacy-preserving manner. As an application-layer smart contract protocol deployed on Ethereum mainnet, WORM inherits the finality characteristics of the underlying Ethereum mainnet network.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },

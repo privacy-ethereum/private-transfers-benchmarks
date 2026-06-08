@@ -76,7 +76,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Umbra is an application-layer protocol deployed as smart contracts on Ethereum. Finality is inherited from the host chain on which each deployment runs.",
       "citations": [
         {

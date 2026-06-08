@@ -9,9 +9,9 @@ Apply the rule for the property currently being evaluated. Cross-cutting rules i
 
 ## Time-to-finality
 
-For pure application-layer contracts deployed on an existing chain (no protocol-level settlement step of their own), the value is N/A and finality is inherited from the underlying chain. List the deployed networks in the notes.
+For pure application-layer contracts deployed on an existing chain (no protocol-level settlement step of their own), the value is "Underlying chain" — finality is inherited from the host chain rather than added by the protocol. List the deployed networks in the notes.
 
-For zkRollups, validity-proof rollups, and any L2/L3 with its own settlement cadence — an Aztec transaction, for example, is not final until its epoch proof is verified on L1 — the value is the worst-case time to L1 verification (in seconds): one epoch length is the usual upper bound for the rollup's own delay. Add Ethereum L1 finality (~13 minutes) as a separate note since the proof transaction's own inclusion also needs to finalise. Use N/A only when the protocol genuinely has no settlement step distinct from its host chain.
+For zkRollups, validity-proof rollups, and any L2/L3 with its own settlement cadence — an Aztec transaction, for example, is not final until its epoch proof is verified on L1 — the value is the worst-case time to L1 verification (in seconds): one epoch length is the usual upper bound for the rollup's own delay. Add Ethereum L1 finality (~13 minutes) as a separate note since the proof transaction's own inclusion also needs to finalise. Use "Underlying chain" only when the protocol genuinely has no settlement step distinct from its host chain.
 
 ## Deposit time
 

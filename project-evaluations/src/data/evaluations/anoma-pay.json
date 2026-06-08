@@ -88,7 +88,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "AnomaPay inherits finality from its host chain. The public beta runs on BNB Chain through the Protocol Adapter contract, so a transaction is irreversible once the host-chain block containing the adapter call reaches BNB Chain finality.",
       "citations": [
         {

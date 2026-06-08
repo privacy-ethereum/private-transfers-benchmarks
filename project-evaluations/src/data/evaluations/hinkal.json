@@ -54,7 +54,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Hinkal is deployed on Solana, Tron, Ethereum, Polygon, Arbitrum, Optimism, Base, and Arc. Time to finality is inherited from the underlying blockchain.",
       "url": "https://hinkal-team.gitbook.io/hinkal/faq#q-is-hinkal-on-mainnet"
     },
