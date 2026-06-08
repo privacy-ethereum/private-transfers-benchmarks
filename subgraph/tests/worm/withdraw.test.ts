@@ -1,12 +1,13 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { assert, afterAll, describe, beforeAll, clearStore, test } from "matchstick-as/assembly/index";
 
-import { BETH_TO_ETH_CONTRACT_ADDRESS, handleWithdrawal } from "../../src/worm/weth";
+import { handleSwapBethWithEth } from "../../src/worm/beth-to-eth";
 
-import { createWithdrawEvent } from "./utils";
+import { createSwapBethWithEthCall } from "./utils";
 
 const WITHDRAW_TRANSACTION_HASH = Bytes.fromHexString("0xa16081f360e3847006db660bae1c6d1b2e17ec2a");
 const AMOUNT = BigInt.fromI32(1000);
+const RECIPIENT = Address.fromString("0x0000000000000000000000000000000000000001");
 
 const PROTOCOL_ID = "worm-protocol-stats";
 const WITHDRAW_OPERATION_ID = `${PROTOCOL_ID}-withdraw`;
@@ -14,9 +15,9 @@ const WITHDRAW_OPERATION_ID = `${PROTOCOL_ID}-withdraw`;
 describe("WORM withdraw tests", () => {
   describe("1 event 1 tx", () => {
     beforeAll(() => {
-      const event = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_TO_ETH_CONTRACT_ADDRESS, AMOUNT);
+      const event = createSwapBethWithEthCall(WITHDRAW_TRANSACTION_HASH, AMOUNT, RECIPIENT);
 
-      handleWithdrawal(event);
+      handleSwapBethWithEth(event);
     });
 
     afterAll(() => {
@@ -45,11 +46,11 @@ describe("WORM withdraw tests", () => {
 
   describe("2 events 1 tx", () => {
     beforeAll(() => {
-      const event1 = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_TO_ETH_CONTRACT_ADDRESS, AMOUNT);
-      const event2 = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_TO_ETH_CONTRACT_ADDRESS, AMOUNT);
+      const call1 = createSwapBethWithEthCall(WITHDRAW_TRANSACTION_HASH, AMOUNT, RECIPIENT);
+      const call2 = createSwapBethWithEthCall(WITHDRAW_TRANSACTION_HASH, AMOUNT, RECIPIENT);
 
-      handleWithdrawal(event1);
-      handleWithdrawal(event2);
+      handleSwapBethWithEth(call1);
+      handleSwapBethWithEth(call2);
     });
 
     afterAll(() => {
@@ -71,15 +72,15 @@ describe("WORM withdraw tests", () => {
 
   describe("2 events 2 txs", () => {
     beforeAll(() => {
-      const event1 = createWithdrawEvent(WITHDRAW_TRANSACTION_HASH, BETH_TO_ETH_CONTRACT_ADDRESS, AMOUNT);
-      const event2 = createWithdrawEvent(
+      const call1 = createSwapBethWithEthCall(WITHDRAW_TRANSACTION_HASH, AMOUNT, RECIPIENT);
+      const call2 = createSwapBethWithEthCall(
         Bytes.fromHexString("0xb16081f360e3847006db660bae1c6d1b2e17ec3b"),
-        BETH_TO_ETH_CONTRACT_ADDRESS,
         AMOUNT,
+        RECIPIENT,
       );
 
-      handleWithdrawal(event1);
-      handleWithdrawal(event2);
+      handleSwapBethWithEth(call1);
+      handleSwapBethWithEth(call2);
     });
 
     afterAll(() => {
@@ -96,34 +97,6 @@ describe("WORM withdraw tests", () => {
 
     test("Withdraw operation stats updated twice", () => {
       assert.fieldEquals("WormOperationStats", WITHDRAW_OPERATION_ID, "totalCount", "2");
-    });
-  });
-
-  describe("event not from BETH contract", () => {
-    beforeAll(() => {
-      const event = createWithdrawEvent(
-        WITHDRAW_TRANSACTION_HASH,
-        Address.fromString("0x0000000000000000000000000000000000000002"),
-        AMOUNT,
-      );
-
-      handleWithdrawal(event);
-    });
-
-    afterAll(() => {
-      clearStore();
-    });
-
-    test("No WormWithdraw created", () => {
-      assert.entityCount("WormWithdraw", 0);
-    });
-
-    test("No Protocol stats created", () => {
-      assert.entityCount("WormProtocolStats", 0);
-    });
-
-    test("No Withdraw operation stats created", () => {
-      assert.entityCount("WormOperationStats", 0);
     });
   });
 });
