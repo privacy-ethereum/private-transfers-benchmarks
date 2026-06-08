@@ -160,8 +160,8 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Stateless",
-      "notes": "Tongo uses an account-based model where each user's encrypted balance is stored as a mapping within the smart contract storage. New users add entries to the contract's account mapping, and the state grows proportionally to the number of accounts rather than to the number of transactions.",
+      "value": "Per Account",
+      "notes": "Tongo uses an account-based model where each user's encrypted balance is stored as a mapping within the smart contract storage. A new user adds one entry to the contract's account mapping, while transfers between existing users update entries in place. On-chain state therefore grows proportionally to the number of accounts rather than to the number of transactions.",
       "url": "https://docs.tongo.cash/protocol/storage.html"
     },
     {

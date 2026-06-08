@@ -379,7 +379,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "ZCash uses a single global commitment tree of fixed depth 32 where note commitments are appended in-order and never pruned. The nullifier set similarly accumulates permanently to prevent double-spending, requiring full nodes to maintain the complete history. This represents an unbounded growth model where protocol-specific private state expands continuously with blockchain activity.",
       "citations": [
         {

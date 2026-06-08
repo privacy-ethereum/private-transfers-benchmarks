@@ -379,7 +379,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Protocol-specific data accumulates without bound across several structures. Every transfer appends to the on-chain SHA-256 hash chain, and the indexer maintains a Poseidon Merkle tree it periodically proves on-chain via IVC. Both extend per transfer with no documented pruning. The verifier also persists a per-recipient running total of the amount already withdrawn, keyed forever by recipient. Cross-chain operation also use a Merkle tree — each chain's verifier sends its local root to a hub that builds a global Merkle tree.",
       "citations": [
         {

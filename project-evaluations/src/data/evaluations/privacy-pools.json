@@ -164,7 +164,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "When a user deposits funds, a new commitment is registered in the smart contract. All commitments are inserted in a Lean Incremental Merkle Tree (LeanIMT), which grows indefinitely as new deposits are made. Withdrawal function calls add nullifier hashes to the smart contract to prevent double-spending. These nullifiers must be stored permanently to mark which commitments have been spent.",
       "url": "https://docs.privacypools.com/layers/zk"
     },
