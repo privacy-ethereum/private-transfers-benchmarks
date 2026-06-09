@@ -331,4 +331,37 @@ export const configs: Record<string, ProtocolConfig> = {
       "Treat maturity as early testnet. Open source: the fluton-relayer repo is public; the SDK is unpublished. " +
       "Prefer docs.fluton.io pages as primary sources.",
   },
+  "fairblock": {
+    id: "fairblock",
+    title: "Fairblock",
+    description:
+      "Fairblock is a decentralized cryptographic computer with its own execution layer for confidential computing. Confidential apps (cApps) run on Fairblock's native chain, FairyRing, and are accessible from major ecosystems, so users can use them without bridging funds or switching wallets.",
+    status: "pending",
+    documentation: "https://docs.fairblock.network/docs/welcome/vision",
+    categories: [
+      "Zero Knowledge Proofs (ZKPs)",
+      "Homomorphic Encryption (HE)",
+      "Multi Party Computation (MPC)",
+      "Decentralised Network",
+    ],
+    sourceUrls: [
+      "https://docs.fairblock.network/docs/welcome/vision",
+      "https://www.fairblock.network/how-it-works",
+      "https://www.fairblock.network/capps",
+      "https://stabletrust.io/",
+    ],
+    context:
+      "CRITICAL: For 'The State of Private Transfers', the load-bearing product is STABLETRUST — Fairblock's " +
+      "confidential stablecoin cApp that lets users 'send and receive stablecoins with encrypted amounts and " +
+      "balances on public chains'. Evaluate the private-transfer experience through Stabletrust, with Fairblock / " +
+      "FairyRing as the underlying confidential-computing network. Fairblock uses 'multimodal cryptography' — it " +
+      "selects the scheme per use case (identity-based encryption / threshold IBE, homomorphic encryption, MPC, " +
+      "and lightweight ZK), NOT a single primitive; do not describe it as a pure-FHE or pure-ZK system. cApps run " +
+      "on FairyRing (Fairblock's native chain) and are reachable from EVM, Solana, and Stellar without bridging. " +
+      "Key design point: amounts and balances are encrypted but ADDRESSES REMAIN TRANSPARENT for DeFi composability " +
+      "and traceability — so Confidentiality is high while Anonymity is not provided. Correctness and validity are " +
+      "verified on-chain rather than by an opaque off-chain processor. Prefer docs.fairblock.network and the " +
+      "Stabletrust product docs as primary sources; stabletrust.io is the canonical product page. Distinguish live " +
+      "features from roadmap during Phase A.",
+  },
 };
