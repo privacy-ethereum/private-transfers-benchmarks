@@ -364,4 +364,39 @@ export const configs: Record<string, ProtocolConfig> = {
       "Stabletrust product docs as primary sources; stabletrust.io is the canonical product page. Distinguish live " +
       "features from roadmap during Phase A.",
   },
+  "merces": {
+    id: "merces",
+    title: "Merces",
+    description:
+      "Merces by TACEO is an implementation of Private Shared State (PSS), providing a confidential stablecoin transfer system. It is deployed on Base and the Arc testnet.",
+    status: "pending",
+    documentation: "https://docs.taceo.io/docs/finance-solutions/overview/",
+    categories: ["CoSNARKs", "Zero Knowledge Proofs (ZKPs)", "Multi Party Computation (MPC)"],
+    sourceUrls: [
+      "https://docs.taceo.io/docs/finance-solutions/overview/",
+      "https://core.taceo.io/articles/merces-deep-dive/",
+      "https://core.taceo.io/articles/merces-onchain-finance/",
+      "https://github.com/TaceoLabs/co-snarks",
+    ],
+    context:
+      "CRITICAL: Merces is TACEO's confidential token-transfer protocol implementing 'Private Shared State' " +
+      "(PSS). It wraps ERC-20 tokens into a private virtual account that sits alongside the user's normal public " +
+      "wallet. Architecture: the on-chain smart contract is the ground truth — it holds the actual ERC-20 tokens " +
+      "backing all private balances, stores a commitment (Merkle root) to an encrypted balance tree, and maintains " +
+      "an ACTION QUEUE where users register intents. Users register intents ON-CHAIN; the TACEO MPC NETWORK (a set " +
+      "of THREE computing nodes that jointly hold secret shares of every balance) EXECUTES them OFF-CHAIN; the smart " +
+      "contract VERIFIES the result on-chain via CoSNARKs (collaborative SNARKs). No single node knows any balance, " +
+      "and no single party (including TACEO) sees what anyone holds or sends. Client-side: the user's wallet builds " +
+      "commitments to sender/receiver/amount, encrypted secret shares for the MPC network, and a ZK proof — so " +
+      "PROVING IS CLIENT-SIDE and sender/receiver are HIDDEN (a commitment/nullifier shielded model, so Anonymity " +
+      "is high, unlike address-transparent confidential-ERC20 systems). On-chain: action queue, commitments, " +
+      "nullifiers, encrypted ciphertexts, Merkle roots, ZK proofs. Off-chain: plaintext balances, history, secret " +
+      "shares (so Private Data Storage = off-chain storage with on-chain commitment). Compliance: a regulator can " +
+      "request revelation — with a signed warrant, the MPC network runs an MPC linear scan over history and opens " +
+      "the matching transaction's shares to the regulator (involuntary, warrant-gated selective disclosure). STATUS " +
+      "as of 2026: TESTNET — demonstrated on Arc, Base, and Plasma testnets (~5M demo transactions, ~300 TPS); live " +
+      "demo app at merces.taceo.io; NO mainnet date documented. The co-snarks library is open source at " +
+      "github.com/TaceoLabs/co-snarks. The eprint paper 2026/850 is a PDF — use the core.taceo.io articles and " +
+      "docs.taceo.io instead as primary HTML sources.",
+  },
 };

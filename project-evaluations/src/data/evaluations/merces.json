@@ -2,9 +2,522 @@
   "id": "merces",
   "title": "Merces",
   "description": "Merces by TACEO is an implementation of Private Shared State (PSS), providing a confidential stablecoin transfer system. It is deployed on Base and the Arc testnet.",
+  "documentation": "https://docs.taceo.io/docs/finance-solutions/overview/",
   "status": "pending",
-  "documentation": "https://merces-dashboard.taceo.io/base/introduction/overview",
-  "categories": ["CoSNARKs", "Zero Knowledge Proofs (ZKPs)", "Multi Party Computation (MPC)"],
-  "properties": [],
-  "sourceUrls": []
+  "categories": [
+    "CoSNARKs",
+    "Zero Knowledge Proofs (ZKPs)",
+    "Multi Party Computation (MPC)"
+  ],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Balances are held as secret shares spread across the three-node TACEO MPC network, with state transitions verified on-chain via CoSNARKs, so no single party including TACEO can observe what an account holds. Transfer amounts are posted only as commitments alongside encrypted ciphertexts for the MPC nodes, with the plaintext value never exposed on-chain. Sender, receiver, and amount are each hidden behind commitments that the MPC-produced proof later verifies.",
+      "citations": [
+        {
+          "cited_text": "Balances are held as secret shares across the TACEO Network, state\ntransitions are verified onchain via CoSNARKs, and no single party (including TACEO) sees what\nanyone holds or sends. ",
+          "source": "https://docs.taceo.io/docs/finance-solutions/overview/"
+        },
+        {
+          "cited_text": "Since the sender, receiver and actual token amount is hidden, they are only given as a commitment, which later will be used to verify the ZK proof produced by the MPC network.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Fully private transfers conceal sender, receiver, and amount, each supplied only as a commitment that the MPC-produced proof later verifies. Balances are encrypted, transfers hide all parties and amounts, and every state transition is checked by an on-chain zero-knowledge proof.",
+      "citations": [
+        {
+          "cited_text": "Since the sender, receiver and actual token amount is hidden, they are only given as a commitment, which later will be used to verify the ZK proof produced by the MPC network.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Balances are encrypted, transfers hide all parties and amounts, and every state transition is verified by a zero-knowledge proof onchain. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "Each deployment wraps one specific ERC-20, and the contract holds the actual tokens backing every private balance, so observers see which token is wrapped even though balances are encrypted. The encrypted Merkle tree tracks a single token type. Supporting multiple assets within the same encrypted tree is named as future work, not a live capability.",
+      "citations": [
+        {
+          "cited_text": "It holds the actual ERC-20 tokens backing all private balances, stores the current commitment (Merkle root) to the encrypted balance tree",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "supporting multiple assets within the same encrypted Merkle tree, enabling private interactions with external DeFi contracts while preserving the proof model",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Interacting with Merces is detectable on-chain. The entry path is a deposit registered in the contract's action queue rather than an ordinary token transfer, so the user posts commitments and encrypted data to a protocol-specific contract. That registration is visibly distinct from a standard ERC-20 transaction, marking the address as a Merces user.",
+      "citations": [
+        {
+          "cited_text": "stores the current commitment (Merkle root) to the encrypted balance tree, and maintains an action queue where users register intents: deposits, transfers, withdrawals.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "A user registers an intent, such as a private transfer, by posting commitments and encrypted data onchain. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "Underlying chain",
+      "notes": "Merces runs as a standard Solidity contract on existing EVM chains with no settlement step of its own, so finality is inherited from the host chain. It is deployed on the Plasma testnet, with finality cadence set by whichever network hosts the contract rather than by any protocol-imposed waiting period.",
+      "citations": [
+        {
+          "cited_text": "The system runs as a standard Solidity contract, no protocol-level modifications, no custom chain, deployable wherever the EVM does.\n\n",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "The system is deployed on the Plasma testnet. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "The user stores one secret: the sender secret key for their private account, whose public key is registered in the on-chain ID registry. Spends are authorised by proving knowledge of this key against the registry root via a Merkle-tree proof during withdraw and transfer. Per-transfer encryption keypairs are sampled fresh through ECDH against the MPC nodes' public keys and are not persisted.",
+      "citations": [
+        {
+          "cited_text": "The client knows the sender secret key, for which the corresponding public key is stored at the sender index in the ID-registry.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "the smart contract holds a public key for each MPC party, and the user samples a fresh",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Depositing takes one host-chain transaction with no protocol-imposed waiting period. The deposit call triggers an ERC-20 payment from the user to the contract and registers a deposit in the action queue on success. The MPC network later processes the queued intent off-chain, but no challenge window or time-lock gates the deposit.",
+      "citations": [
+        {
+          "cited_text": "this function triggers a ERC-20 payment from the user to the on-chain contract, and upon success, registers a deposit in the action queue.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Withdrawing is an ordinary on-chain action with no protocol-imposed waiting period. The user registers a withdraw intent in the action queue, and the MPC network verifies it and, if valid, triggers an ERC-20 transfer to the chosen receiver. The contract uses an asynchronous queue where the user posts the intent and the network calls back with a proof and updated state, so latency is the register-execute-verify round rather than a queue, challenge window, or time-lock.",
+      "citations": [
+        {
+          "cited_text": "A withdraw only registers the intent in the action queue since we are only allowed to pay out the actual tokens if the user has enough balance.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "the contract uses an asynchronous queue. A user registers an intent, such as a private transfer, by posting commitments and encrypted data onchain. The MPC network reads the queue",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Each intent is executed by the fixed three-node MPC committee, which updates balances, computes the new Merkle root, and produces the validity proof. If that committee refuses an intent, the contract cannot settle it, since a withdraw only registers the intent and is verified once the network processes it. No permissionless fallback lets a user bypass the fixed executor set.",
+      "citations": [
+        {
+          "cited_text": "The MPC network is a set of three computing nodes that jointly hold secret shares of every user’s balance in a Merkle tree",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "When an action appears in the queue, the nodes collaboratively update the relevant balances, compute the new Merkle root, and produce a zero-knowledge proof that the update was done correctly. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "A withdraw only registers the intent in the action queue since we are only allowed to pay out the actual tokens if the user has enough balance.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Merces depends on the TACEO MPC network, three nodes that jointly hold secret shares of every user's balance and execute every transfer off-chain before the contract verifies the result. When an action appears in the queue the nodes update balances, compute the new Merkle root, and produce a validity proof, after which one node posts the proof and root on-chain. The committee is a fixed three-party set with no mechanism for open participation, so the partner set is curated rather than open.",
+      "citations": [
+        {
+          "cited_text": "The MPC network is a set of three computing nodes that jointly hold secret shares of every user’s balance in a Merkle tree",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "produce a zero-knowledge proof that the update was done correctly. One node then posts the proof and new root onchain.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "The MPC network produces a ZK proof attesting for correct evaluation of the next item in the action queue.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Withdrawals depend entirely on the three-node MPC network to process the queued intent and produce the validity proof. A withdraw only registers the intent in the action queue, and the tokens are paid out only once the MPC network verifies the request. The contract cannot release the backing ERC-20 without that proof, and no permissionless forced-exit path independent of the three nodes exists. If the operators stall or refuse, users have no fallback relying only on the host chain's consensus.",
+      "citations": [
+        {
+          "cited_text": "A withdraw only registers the intent in the action queue since we are only allowed to pay out the actual tokens if the user has enough balance.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "The MPC network produces a ZK proof attesting for correct evaluation of the next item in the action queue.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "notes": "Merces runs as a standard Solidity contract deployable on any EVM chain, with the current deployment on the Plasma testnet rather than a canonical mainnet address that could be inspected for an admin slot.",
+      "needsResearchReview": "on-chain admin slot not classified — testnet-only, application contract source unpublished, EOA vs multisig unverified",
+      "citations": [
+        {
+          "cited_text": "The system runs as a standard Solidity contract, no protocol-level modifications, no custom chain, deployable wherever the EVM does.\n\n",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "The system is deployed on the Plasma testnet. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "The Merces client builds each action's cryptographic material locally: commitments to sender, receiver, and amount, encrypted secret shares for the MPC nodes, and a proof that everything was constructed honestly. These client proofs are written in Circom and evaluated with SNARKjs, so proof generation runs on the user's device rather than a hosted prover. The separate MPC proofs attest to correct state updates over secret-shared balances and are distinct from the user-authored proofs.",
+      "citations": [
+        {
+          "cited_text": "The user’s client (wallet or frontend) constructs the cryptographic material needed to register an action: commitments to sender, receiver, and amount",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "The client proofs are purely written in Circom and evaluated using SNARKjs.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Balances are split into secret shares across three MPC nodes, no single node knows any balance, and computation runs jointly over shares. The contract never sees plaintext balances or counterparty relationships and only verifies proofs, with proving client-side so no external prover sees plaintext. Revelation occurs only through the warrant-gated regulator flow, where an MPC scan opens a matching transaction's shares. The answer holds while fewer than the threshold of nodes collude.",
+      "citations": [
+        {
+          "cited_text": "The MPC network is a set of three computing nodes that jointly hold secret shares of every user’s balance in a Merkle tree",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "It never sees plaintext balances or counterparty relationships. It only verifies proofs.\n\n",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Whenever a match is found, the corresponding shares of the transaction details are opened (i.e., revealed) to the regulator.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "2 : Public testnet",
+      "notes": "Merces operates across the Arc, Base, and Plasma testnets, where the confidential payments network has processed roughly 5 million demo transactions at about 300 TPS with single-digit-cent gas per transfer on L2. Custom deployments are available on request.",
+      "needsResearchReview": "testnet-only — no dated mainnet deployment, tier 2 rests on Arc/Base/Plasma testnet activity",
+      "citations": [
+        {
+          "cited_text": "The system is deployed on the Plasma testnet. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "The confidential payments network has processed ~5M demo transactions across Arc and Base testnets, sustaining ~300 TPS with single-digit-cents gas per transfer on L2.",
+          "source": "https://docs.taceo.io/docs/finance-solutions/overview/"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Merces relies on Groth16 proofs over pairing-friendly elliptic curves for both client and MPC proofs, which Shor's algorithm breaks on a capable quantum computer. The client proofs use Circom and SNARKjs. Encrypted secret shares use Poseidon2 symmetric encryption with keys derived by elliptic-curve Diffie-Hellman between a fresh user keypair and the MPC nodes' public keys. Settlement depends on host-chain ECDSA, and no post-quantum alternatives are deployed.",
+      "citations": [
+        {
+          "cited_text": "The client proofs are purely written in Circom and evaluated using SNARKjs.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Since each Groth16 proof requires a large proving key, we embed the proofs for registering a deposit or a withdraw into the transfer proof",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Encryption is done using symmetric encryption (using Poseidon2 in duplex mode for ZK friendliness) where the encryption key is derived from the receiving MPC nodes public key.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "Compliance in Merces is warrant-gated selective disclosure carried out by the MPC network, not a transfer-blocking gate at any layer. Regulators can request revelation of transactions belonging to specific addresses, served by the MPC network retaining secret-shared history that it searches on request and opening matching shares to the regulator. No allowlist, blocklist, or screening hook filters transfers at the asset, contract, or chain level.",
+      "citations": [
+        {
+          "cited_text": "we give “regulators” the possibility to request revealing transactions which belong to specific user addresses.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Whenever a match is found, the corresponding shares of the transaction details are opened (i.e., revealed) to the regulator.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "No standing entity enforces compliance restrictions on Merces transfers. Regulators can request revelation of transactions belonging to specific addresses, served by the MPC network retaining secret-shared history searched on request, but this is reactive disclosure rather than enforcement. A real setup requires authentication such as a signed warrant so the service cannot be misused. No admin, governance, or issuer mechanism gates transfers at the protocol layer.",
+      "citations": [
+        {
+          "cited_text": "we give “regulators” the possibility to request revealing transactions which belong to specific user addresses.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "in a real setup, some form of authentication (e.g., a signed warrant from the regulator) must be provided to the MPC network, such that no-one can misuse this compliance service.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": [
+        "Selective disclosure"
+      ],
+      "notes": "Merces implements warrant-gated selective disclosure through its MPC network: regulators request revelation of transactions for specific addresses, the network keeps the secret-shared history, runs a linear-scan protocol on request, and opens the matching shares to the regulator. A signed warrant must be provided so the service cannot be misused. The broader compliance offering covers KYC, AML, sanctions, and Travel Rule via selective disclosure through MPC rather than surveillance.",
+      "citations": [
+        {
+          "cited_text": "the MPC network keeping the history of the transactions (in secret-shared form) such that it can be searched on request.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "in a real setup, some form of authentication (e.g., a signed warrant from the regulator) must be provided to the MPC network, such that no-one can misuse this compliance service.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Privacy-preserving KYC, AML, sanctions, and Travel Rule. Selective disclosure via MPC, not\nsurveillance infrastructure.",
+          "source": "https://docs.taceo.io/docs/finance-solutions/overview/"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": [
+        "None"
+      ],
+      "notes": "Compliance in Merces is after-the-fact selective disclosure, not a gate within the transfer lifecycle. Regulators request revelation of transactions for specific addresses, served by the MPC network retaining secret-shared history searched on request, with matching shares opened to the regulator. No screening, allowlist, or blocklist check runs at deposit, transfer, or withdraw registration — those paths verify only zero-knowledge proofs, nullifiers, and Merkle roots.",
+      "citations": [
+        {
+          "cited_text": "we give “regulators” the possibility to request revealing transactions which belong to specific user addresses.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Whenever a match is found, the corresponding shares of the transaction details are opened (i.e., revealed) to the regulator.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": [
+        "User",
+        "Involuntary third-party disclosure"
+      ],
+      "notes": "Users retrieve their own balance and history by querying the MPC network directly, which returns the encrypted shares the user combines. For involuntary access, regulators request revelation of transactions for specific addresses, served by the network's secret-shared history searched on demand, with matching shares opened to the regulator and a real setup requiring a signed warrant. No viewing-key delegation to a voluntary third party is part of the construction.",
+      "citations": [
+        {
+          "cited_text": "Reading balance \n\nTo read the current balance, a user directly queries the MPC network which responds with the (encrypted) secret-shares of the balance, which can be combined by the users. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Transaction History \n\nSimilar to the compliance service, users can request their transaction history from the MPC network. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "we give “regulators” the possibility to request revealing transactions which belong to specific user addresses.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "in a real setup, some form of authentication (e.g., a signed warrant from the regulator) must be provided to the MPC network",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Programmable",
+      "notes": "Viewing access is granted retroactively per request rather than fixed at transfer time. Regulators request revelation of transactions for specific addresses, served by the MPC network's secret-shared history searched on request, and whenever a match is found the matching shares are opened to the regulator. Users likewise pull their own history on demand via authenticated requests to the MPC nodes, so permissions are evaluated at query time rather than baked into proofs at transfer time.",
+      "citations": [
+        {
+          "cited_text": "we give “regulators” the possibility to request revealing transactions which belong to specific user addresses.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Whenever a match is found, the corresponding shares of the transaction details are opened (i.e., revealed) to the regulator.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Transaction correctness rests on zero-knowledge proof verification. Every state transition is verified by an on-chain proof, with the system running as a standard Solidity contract. The MPC network executes intents off-chain, then submits a proof attesting to correct evaluation of the next queued item with the new Merkle root, which the contract re-checks against the old and new roots. Client intents use Groth16 proofs over Circom, verifiable by any observer from the published verifier.",
+      "citations": [
+        {
+          "cited_text": "every state transition is verified by a zero-knowledge proof onchain. The system runs as a standard Solidity contract, no protocol-level modifications, no custom chain",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "The MPC network produces a ZK proof attesting for correct evaluation of the next item in the action queue. Once done, it calls processMPC with the new commitment to the Merkle-tree",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "The co-snarks proving stack used by Merces is dual-licensed under Apache-2.0 or MIT at the user's choice, both OSI-approved, with the co-circom and circom-mpc-compiler sub-libraries under GPL-3.0. The Merces application smart contracts and the MPC node software running the encrypted balance tree are not published in that repository, so the components that implement the protocol itself are unavailable.",
+      "citations": [
+        {
+          "cited_text": "This project is licensed under either the [MIT License](LICENSE-MIT) or the\n[Apache](LICENSE-APACHE), at your choice.",
+          "source": "https://github.com/TaceoLabs/co-snarks"
+        },
+        {
+          "cited_text": "- **co-circom**: Licensed under [GPL-3.0](LICENSE-GPL) `SPDX-License-Identifier: GPL-3.0-only`.",
+          "source": "https://github.com/TaceoLabs/co-snarks"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Transaction",
+      "notes": "The on-chain footprint grows per transaction: each deposit, withdrawal, or transfer is registered in the action queue alongside the Merkle root, and every action attaches a fresh nullifier plus an encrypted ciphertext for the MPC nodes. After execution the network posts a new commitment, so the chain accumulates a new root and proof per intent, not a fixed per-account slot. Plaintext balances live off-chain, but queue entries, nullifiers, and root updates accrue with transaction count.",
+      "citations": [
+        {
+          "cited_text": "stores the current commitment (Merkle root) to the encrypted balance tree, and maintains an action queue where users register intents: deposits, transfers, withdrawals.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Once done, it calls processMPC with the new commitment to the Merkle-tree holding all balances, as well as a flag indicating if a proof is valid. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No Scanning",
+      "notes": "The device does not scan the chain. A user discovers their balance by querying the MPC network directly, which returns the encrypted shares the user combines, and transaction history is fetched on request via a linear scan the network performs. Accounts are keyed by an incrementing ID-registry index tied to the user's public key, so lookup is account-keyed. This delegation means the MPC network learns which account is querying, a trust dependency the label does not capture.",
+      "citations": [
+        {
+          "cited_text": "Reading balance \n\nTo read the current balance, a user directly queries the MPC network which responds with the (encrypted) secret-shares of the balance, which can be combined by the users. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "The MPC network, on request, will thus perform a linear scan of the transactions to be able to reveal the right transactions to the user.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "Private shared state model",
+      "notes": "Balances are held as secret shares of a Merkle tree jointly maintained by the three-node MPC committee, with the contract storing only the Merkle root as the on-chain commitment. The network is built on TACEO's Oblivious Map. Updates follow a per-account model — a transfer deducts the sender's balance and adds it to the receiver — not a note-commitment spend graph, and the committee's shared secret state distinguishes it from a plain encrypted-balance design.",
+      "citations": [
+        {
+          "cited_text": "three computing nodes that jointly hold secret shares of every user’s balance in a Merkle tree, built on TACEO’s Oblivious Map (OMap)",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "stores the current commitment (Merkle root) to the encrypted balance tree, and maintains an action queue where users register intents: deposits, transfers, withdrawals.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "We deduct the balance of the sender and add them to the receiver",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": [
+        "Off-chain storage with on-chain commitment"
+      ],
+      "notes": "The contract stores only a commitment to the encrypted balance tree, keeping the current Merkle root and running an action queue for user intents. The authoritative plaintext lives off-chain with the MPC nodes: each party holds secret shares of the full balance Merkle tree, and transaction history is likewise retained off-chain in secret-shared form. On-chain artefacts are limited to commitments, nullifiers, ciphertexts for the nodes, Merkle roots, and proofs registered through the queue.",
+      "citations": [
+        {
+          "cited_text": "stores the current commitment (Merkle root) to the encrypted balance tree, and maintains an action queue where users register intents: deposits, transfers, withdrawals.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Each party of the MPC network holds secret shares of the full Merkle tree which hold the balances of all users. ",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "No access to DeFi",
+      "notes": "Merces wraps ERC-20 tokens into private virtual accounts with no composability hook for shielded balances to interact with external DeFi. Extending to swaps, lending, and yield is named as future work that requires enabling private interactions with external DeFi contracts while preserving the proof model. A private-DeFi extension is in active development but not live. To touch DeFi today a user must withdraw back to the public ERC-20, at which point the funds are no longer protocol-protected.",
+      "citations": [
+        {
+          "cited_text": "enabling private interactions with external DeFi contracts while preserving the proof model",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Brings the private-balance model to swap routers, intent flows, and DeFi composability",
+          "source": "https://docs.taceo.io/docs/finance-solutions/overview/"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "Merces is a confidential token-transfer protocol with a fixed operation set — deposits, transfers, and withdrawals of wrapped ERC-20 balances — rather than a general smart-contract platform. The contract keeps the Merkle root and runs an action queue for those three intents. Extending to swaps, lending, and yield is named as future work requiring private interactions with external DeFi contracts, and a private-DeFi extension is in active development but not yet live.",
+      "citations": [
+        {
+          "cited_text": "stores the current commitment (Merkle root) to the encrypted balance tree, and maintains an action queue where users register intents: deposits, transfers, withdrawals.",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Extending this to the full range of onchain finance operations (swaps, lending, yield) means solving a set of concrete technical problems",
+          "source": "https://core.taceo.io/articles/merces-deep-dive/"
+        },
+        {
+          "cited_text": "Brings the private-balance model to swap routers, intent flows, and DeFi composability",
+          "source": "https://docs.taceo.io/docs/finance-solutions/overview/"
+        }
+      ]
+    }
+  ]
 }
