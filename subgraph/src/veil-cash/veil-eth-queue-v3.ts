@@ -13,7 +13,7 @@ import {
   DepositQueued as DepositQueuedEvent,
 } from "../../generated/VeilETHQueueV3/VeilETHQueueV3";
 
-function createOrLoadProtocolStats(): VeilCashProtocolStats {
+export function createOrLoadProtocolStats(): VeilCashProtocolStats {
   const id = "veil-cash-protocol-stats";
   let stats = VeilCashProtocolStats.load(id);
 
@@ -54,7 +54,7 @@ function createOrLoadProtocolStats(): VeilCashProtocolStats {
   return stats;
 }
 
-function saveProtocolStats(event: ethereum.Event): void {
+export function saveProtocolStats(event: ethereum.Event): void {
   const stats = createOrLoadProtocolStats();
 
   stats.totalTxCount = stats.totalTxCount.plus(BigInt.fromI32(1));
@@ -98,7 +98,7 @@ function createOrLoadDepositAcceptedStats(operationStatsId: string): VeilCashDep
   return stats;
 }
 
-function saveOperationStats(operationId: string, event: ethereum.Event): void {
+export function saveOperationStats(operationId: string, event: ethereum.Event): void {
   const operationStats = VeilCashOperationStats.load(operationId);
 
   if (operationStats !== null) {

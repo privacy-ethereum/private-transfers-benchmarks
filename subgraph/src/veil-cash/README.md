@@ -30,12 +30,4 @@
 
 ## Withdraw
 
-1. User [withdraws](https://basescan.org/tx/0xd1ab273564036293c18791266223f51882ed3e2c249d32450da73fefd975c2da) funds from the shielded pool contract. The transaction emits `Withdraw(address indexed,uint256)` from the Wrapped ETH (WETH) contract with the src (first parameter) being the shielded pool contract address and the value (second parameter) being the amount withdrawn.
-
-# Important notes
-
-We are having some issues when syncing the subgraph, specifically we have found the following transactions that are throwing Out of Bounds errors:
-
-- [Contract ETHPool emits `NewNullifier(bytes32)` at block 31476880](https://basescan.org/tx/0xccf77764e49f82bf7450986d100bd218588067ebb6fca1557f63032c256e9d2a)
-- [Contract ETHPool emits `NewNullifier(bytes32)` at block 37986022](https://basescan.org/tx/0x03847ced58eaa28fbb67c9ce2933013c3fdd5fa0fc93d9583b6b622280200ae9)
-- [Contract ETHPool emits `NewNullifier(bytes32)` at block 38025331](https://basescan.org/tx/0xc1f0971f0da2a08917e4fc88db3cf3a82ed316b78fc75fb604f6a1ac76d699d6)
+1. User [withdraws](https://basescan.org/tx/0xd1ab273564036293c18791266223f51882ed3e2c249d32450da73fefd975c2da) funds from the shielded pool contract. The transaction emits `Withdrawal(address indexed,uint256)` from the Wrapped ETH (WETH) contract with the src (first parameter) being the shielded pool contract address and the value (second parameter) being the amount withdrawn.
