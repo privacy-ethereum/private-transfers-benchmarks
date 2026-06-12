@@ -1,10 +1,465 @@
 {
   "id": "anoma-pay",
   "title": "Anoma Pay",
-  "description": "AnomaPay is a privacy-preserving payments network built on the Anoma Distributed Operating System that enables shielded transfers of any ERC20 token on EVM-compatible blockchains.",
-  "status": "pending",
-  "documentation": "https://docs.anoma.net/anoma-pay-introduction",
+  "description": "AnomaPay is a private payments application built on the Anoma distributed operating system. Users wrap any ERC-20 token into Anoma resources via the EVM Protocol Adapter and send shielded transfers which are settled back on the host chain. Privacy is enforced by zero-knowledge proofs over the Anoma Resource Machine.",
+  "documentation": "https://docs.anoma.net/",
+  "status": "complete",
   "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
-  "properties": [],
-  "sourceUrls": []
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "AnomaPay extends privacy-preserving transfers to ERC-20 assets. It uses a shielded pool to hide payments, balances, and histories on public blockchains. Depositing to AnomaPay breaks linkability with the original wallet so balances and transaction values become private.",
+      "citations": [
+        {
+          "cited_text": "Building on the cryptographic innovations pioneered by Zcash, AnomaPay expands privacy-preserving transfers to any existing ERC-20 asset",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        },
+        {
+          "cited_text": "Depositing to AnomaPay breaks linkability with your original wallet, enabling you to use your assets privately.",
+          "source": "https://anoma.net/blog/the-anomapay-public-beta-is-live-on-bnb-chain"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "AnomaPay shields sender and recipient inside a the shielded pool over the Anoma Resource Machine. Payments are addressed by payment links instead of hexadecimal addresses, so external observers cannot tie an on-chain recipient to a wallet address.",
+      "citations": [
+        {
+          "cited_text": "AnomaPay expands privacy-preserving transfers to any existing ERC-20 asset, enabling users to shield their payments, balances, and histories on public blockchains.",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        },
+        {
+          "cited_text": "send payments with payment links instead of hexadecimal addresses, with fast Zero-Knowledge (ZK) proving times of around 15 seconds.",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "AnomaPay shields assets into Anoma Resource Machine state, so the amount and the asset carried by a note are encrypted and visible only to the parties of an internal transfer. The deposit and withdrawal boundary, where funds cross between a per-token forwarder and the shielded pool, does expose which token is touched, but that boundary visibility is inherent to entering or leaving any shielded pool and does not extend to shielded balances or transfers between users.",
+      "citations": [
+        {
+          "cited_text": "Shielding/Unshielding: When you move funds into or out of the system, the initial deposit or final withdrawal address is visible on-chain.",
+          "source": "https://docs.anoma.net/anoma-pay-privacy-guarantees"
+        },
+        {
+          "cited_text": "Transaction Amount: The values are encrypted within the Anoma Resource Machine state.\n\n",
+          "source": "https://docs.anoma.net/anoma-pay-privacy-guarantees"
+        },
+        {
+          "cited_text": "Privacy-Preserving: Once assets are shielded, internal transfers between AnomaPay users are only visible to the involved users.\n\n",
+          "source": "https://docs.anoma.net/anoma-pay-introduction"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Entering the shielded pool requires calling the AnomaPay ERC-20 Forwarder, a Solidity contract dedicated to wrapping and unwrapping arbitrary ERC-20 tokens for the AnomaPay application. Settlement of shielded transfers also flows through the Protocol Adapter contract. Both contract interactions are AnomaPay-specific and distinguishable from a plain ERC-20 transfer.",
+      "citations": [
+        {
+          "cited_text": "A forwarder contract written in Solidity that enables wrapping and unwrapping of arbitrary ERC20 tokens on the [AnomaPay application](https://anomapay.app/) using the [Anoma EVM protocol adapter]",
+          "source": "https://github.com/anoma/anomapay-erc20-forwarder"
+        },
+        {
+          "cited_text": "A protocol adapter (PA) contract written in Solidity enabling Anoma Resource Machine transaction settlement on EVM-compatible chains.",
+          "source": "https://github.com/anoma/pa-evm"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "N/A",
+      "notes": "AnomaPay inherits finality from its host chain. The public beta runs on BNB Chain through the Protocol Adapter contract, so a transaction is irreversible once the host-chain block containing the adapter call reaches BNB Chain finality.",
+      "citations": [
+        {
+          "cited_text": "launched its private payments application AnomaPay on BNB Chain today.",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "A user stores one root seed from which all four components derive, so there is a single secret. The pay address packs an Authority public key, Discovery public key, Encryption public key, and a Nullifier Key Commitment into a Base64URL string. The Authority, Discovery, and Encryption keys are secp256k1 keypairs from HMAC-SHA256 PRF expansion of the root seed under per-key domain separation. The nullifier key pair is a private key (nk) and its commitment (cnk), the SHA-256 hash of that key.",
+      "citations": [
+        {
+          "cited_text": "Anoma Pay uses a custom address format that encodes multiple public keys into a single Base64URL string:",
+          "source": "https://github.com/anoma/anoma-app-sdk/blob/main/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Depositing wraps ERC-20s via the forwarder contract on the host chain in a single transaction with no protocol-imposed queue, challenge window, or time-lock. Host-chain block latency is not a deposit waiting period.",
+      "citations": [
+        {
+          "cited_text": "A forwarder contract written in Solidity that enables wrapping and unwrapping of arbitrary ERC20 tokens on the [AnomaPay application]",
+          "source": "https://github.com/anoma/anomapay-erc20-forwarder"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Unwrapping calls the AnomaPay ERC-20 Forwarder on the host chain in a single transaction with no challenge window, exit queue, or time-lock imposed by the protocol. Host-chain block latency is not a withdraw waiting period.",
+      "citations": [
+        {
+          "cited_text": "A forwarder contract written in Solidity that enables wrapping and unwrapping of arbitrary ERC20 tokens on the [AnomaPay application]",
+          "source": "https://github.com/anoma/anomapay-erc20-forwarder"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Beta transactions route through a permissioned proving service operator that runs KYC and AML checks, so the operator can refuse to craft or relay a transfer it deems non-compliant. On-chain funds are governed by the smart contract and move only against a valid proof, and any user can in principle run the off-chain infrastructure with client-side proofs. That path is not yet shipped, leaving the operator-run route as the only practical one and the multisig adapter owner holding a pause lever.",
+      "citations": [
+        {
+          "cited_text": "Compliance: AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        },
+        {
+          "cited_text": "Any user can decide to run the off-chain infrastructure themselves and execute AnomaPay transactions powered by fully client-side proofs.",
+          "source": "https://docs.anoma.net/anoma-pay-protocol-adapter"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "The transfer flow depends on two operator-run off-chain services beyond the host EVM chain: a Transaction Service that receives the user's intent and crafts the on-chain transaction, and a Proving Service that generates Anoma Resource Machine proofs. These run on a curated operator stack, with Vast.ai datacenters temporarily seeing unencrypted witness data and providing ISO certifications. The proving operator applies consistent KYC and AML checks, so the partner set is curated.",
+      "citations": [
+        {
+          "cited_text": "The Transaction Service acts as the coordinator. It receives Alice’s simple intent and uses it to craft the appropriate transaction to be executed on-chain.",
+          "source": "https://docs.anoma.net/anoma-pay-architecture"
+        },
+        {
+          "cited_text": "The Proving Service receives the request from the Transaction Service.\n\nIt performs the computationally intensive work to generate Anoma Resource Machine Proofs.",
+          "source": "https://docs.anoma.net/anoma-pay-architecture"
+        },
+        {
+          "cited_text": "Vast.ai Datacenters: Sees (temporarily) the unencrypted witness data. Vast.ai datacenters provide ISO certifications. ",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        },
+        {
+          "cited_text": "Compliance: AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "notes": "Users hold shielded resources backed by host-chain ERC-20s and can call the forwarder contract at any time to unwrap and reclaim the underlying tokens. No protocol-imposed timelock, queue, or admin gate runs on user withdrawal. Exit depends on the verifier — a contract upgrade could affect it but does not prevent an exit in the default case.",
+      "citations": [
+        {
+          "cited_text": "A forwarder contract written in Solidity that enables wrapping and unwrapping of arbitrary ERC20 tokens on the [AnomaPay application]",
+          "source": "https://github.com/anoma/anomapay-erc20-forwarder"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Multi-sig",
+      "notes": "Neither the Protocol Adapter nor the ERC-20 Forwarder is an upgradeable proxy: both are fixed-logic contracts with no implementation slot or upgrade path. The Protocol Adapter inherits Ownable and Pausable and exposes a one-way emergencyStop pause held by a 3-of-5 multisig, while the Forwarder holds the adapter address as immutable and permits a single emergency migration gated by an immutable committee. No party can replace the settlement logic.",
+      "citations": [
+        {
+          "kind": "explorer",
+          "source": "https://bscscan.com/address/0xFC44b66a39fe6923Ad8d3c93bFeC369728862B68",
+          "contract_address": "0xFC44b66a39fe6923Ad8d3c93bFeC369728862B68",
+          "admin_class": "Multi-sig"
+        },
+        {
+          "cited_text": "function emergencyStop() external override onlyOwner whenNotPaused {",
+          "source": "https://github.com/anoma/pa-evm/blob/main/contracts/src/ProtocolAdapter.sol",
+          "contract_address": "0xFC44b66a39fe6923Ad8d3c93bFeC369728862B68"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "No",
+      "notes": "Proof generation runs on a hosted Proving Service rather than the user's device. The Proving Service receives the request from the Transaction Service and performs the computationally intensive work to generate Anoma Resource Machine proofs. Hardware abstraction is a stated design goal, with no powerful GPU needed in the wallet because the services handle it. Moving ZK proof generation to the user's device is listed as in-development, not live in the April 2026 BNB Chain beta.",
+      "citations": [
+        {
+          "cited_text": "The Proving Service receives the request from the Transaction Service.\n\nIt performs the computationally intensive work to generate Anoma Resource Machine Proofs.",
+          "source": "https://docs.anoma.net/anoma-pay-architecture"
+        },
+        {
+          "cited_text": "You don’t need a powerful GPU to generate proofs, and you don’t need ETH in your wallet to pay for gas —the services handle this for you.\n\n",
+          "source": "https://docs.anoma.net/anoma-pay-architecture"
+        },
+        {
+          "cited_text": "Client-side proving : moving ZK proof generation to the user's device for even stronger privacy guarantees",
+          "source": "https://anoma.net/blog/the-anomapay-public-beta-is-live-on-bnb-chain"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "An external prover that produces ZK proofs for the user receives the spent notes and amounts as plaintext witness inputs, so the prover operator is structurally positioned to inspect transaction details that are otherwise hidden from the public. Client-side proving islisted as an upcoming roadmap item. An off-chain indexer service can also leak user privacy.",
+      "citations": [
+        {
+          "cited_text": "Client-side proving : moving ZK proof generation to the user's device for even stronger privacy guarantees",
+          "source": "https://anoma.net/blog/the-anomapay-public-beta-is-live-on-bnb-chain"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "AnomaPay's public beta is live on Ethereum Mainnet and BNB Chain. Deposits are capped at $500 per user during the beta period, supporting payments in ETH, USDC, USDT, and XAN. The Anoma Protocol Adapter has been deployed more widely and for longer.",
+      "citations": [
+        {
+          "cited_text": "It is live on Ethereum Mainnet and BNB Chain",
+          "source": "https://docs.anoma.net/anoma-pay-introduction"
+        },
+        {
+          "cited_text": "The public beta supports payments in ETH, USDC, USDT, and XAN, with a deposit cap of $500.",
+          "source": "https://anoma.net/blog/the-anomapay-public-beta-is-live-on-bnb-chain"
+        },
+        {
+          "kind": "explorer",
+          "date": "2026-03-05",
+          "source": "https://bscscan.com/address/0xFC44b66a39fe6923Ad8d3c93bFeC369728862B68",
+          "contract_address": "0xFC44b66a39fe6923Ad8d3c93bFeC369728862B68"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "AnomaPay's cryptography relies on elliptic-curve cryptography that Shor's algorithm breaks. The shielded pool is therefore not post-quantum secure.",
+      "citations": [
+        {
+          "cited_text": "Building on the cryptographic innovations pioneered by Zcash, AnomaPay expands privacy-preserving transfers to any existing ERC-20 asset",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "App",
+      "notes": "Compliance is enforced off-chain by the proving service operator, part of AnomaPay's service infrastructure, not by the on-chain Protocol Adapter contract or the asset. The operator temporarily sees plaintext witness data (sender, receiver, asset, amount) while generating proofs and relaying the transaction, and runs KYC/AML checks at that step.",
+      "citations": [
+        {
+          "cited_text": "AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        },
+        {
+          "cited_text": "This is required to generate the zero-knowledge proofs and relay the transaction on your behalf. Witness data includes information about sender, receiver, asset, and amount.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Admin",
+      "notes": "The proving service operator runs the KYC/AML checks that gate AnomaPay transactions. The docs name no external compliance vendor, so enforcement sits with the operator of the hosted proving service.",
+      "citations": [
+        {
+          "cited_text": "AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["KYC/KYB", "Selective disclosure"],
+      "notes": "The proving service operator runs KYC and AML checks to keep AnomaPay compliant with applicable laws. Separately, users can voluntarily reveal transaction data to chosen parties for auditing or compliance, which is the user-discretionary selective-disclosure mechanism.",
+      "citations": [
+        {
+          "cited_text": "AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        },
+        {
+          "cited_text": "enable users to selectively disclose transaction data with specific parties as necessary for auditing or compliance needs.",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["Deposit", "Transfer", "Withdrawal"],
+      "notes": "The proving service operator's checks run at the step where it generates the zero-knowledge proof and relays the transaction. Every shielded operation routed through the hosted prover passes that step, so the gate covers the wrap, shielded transfer, and unwrap paths.",
+      "citations": [
+        {
+          "cited_text": "AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        },
+        {
+          "cited_text": "This is required to generate the zero-knowledge proofs and relay the transaction on your behalf. Witness data includes information about sender, receiver, asset, and amount.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User", "Voluntary third-party disclosure"],
+      "notes": "AnomaPay users hold their own keys and can view their own balances and transaction history through their wallet or passkey-based account. They can also voluntarily share viewing material with a chosen counterparty such as an auditor.",
+      "citations": [
+        {
+          "cited_text": "enable users to selectively disclose transaction data with specific parties as necessary for auditing or compliance needs.",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "The pay address embeds a Discovery Public Key and an Encryption Public Key fixed at address-generation time. Selective disclosure shares viewing material derived from those keys with chosen counterparties at transfer time.",
+      "citations": [
+        {
+          "cited_text": "enable users to selectively disclose transaction data with specific parties as necessary for auditing or compliance needs.",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        },
+        {
+          "cited_text": "Anoma Pay uses a custom address format that encodes multiple public keys into a single Base64URL string",
+          "source": "https://github.com/anoma/anoma-app-sdk"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes",
+      "notes": "Transfers are authorized by zero-knowledge proofs verified on-chain by the Anoma Protocol Adapter contract, the anchor that controls shielded funds via deployed forwarder contracts and verifies the proofs authorizing transfers. Even if the off-chain services go down, on-chain funds move only against a valid proof. The adapter aggregates Anoma Resource Machine proofs (RISC Zero zkVM), and any observer can re-check them against the deployed verifier. Ordering and inclusion fall under finality.",
+      "citations": [
+        {
+          "cited_text": "It acts as the “anchor” for the system, controlling shielded funds via deployed forwarder contracts and verifying the cryptographic proofs that authorize transfers.",
+          "source": "https://docs.anoma.net/anoma-pay-introduction"
+        },
+        {
+          "cited_text": "Even if the off-chain services go down, the funds on-chain are governed by the smart contract, which guarantees funds can only be moved with a valid proof. ",
+          "source": "https://docs.anoma.net/anoma-pay-protocol-adapter"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The Protocol Adapter and ERC-20 Forwarder, the Solidity components mediating wrapping, unwrapping, and shielded settlement on the host chain, publish their source under the MIT licence. The anoma-app-sdk TypeScript client is public on GitHub but unlicensed.",
+      "citations": [
+        {
+          "kind": "license",
+          "source": "https://github.com/anoma/pa-evm/blob/main/contracts/LICENSE"
+        },
+        {
+          "kind": "license",
+          "source": "https://github.com/anoma/anomapay-erc20-forwarder/blob/main/contracts/LICENSE"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Infinity grow",
+      "notes": "The protocol adapter maintains state via an append-only commitment tree and a nullifier set, both updated on every shielded transaction. After verifying the delta and optional aggregation proofs, the executor stores the final commitment tree root. Consumed resources add their tag to the nullifier set while created resources append a commitment to the tree. Neither structure has a pruning path, so on-chain private state grows monotonically with transaction count.",
+      "citations": [
+        {
+          "cited_text": "// Store the final commitment tree root.\n            _addCommitmentTreeRoot(vars.latestCommitmentTreeRoot);",
+          "source": "https://github.com/anoma/pa-evm/blob/main/contracts/src/ProtocolAdapter.sol"
+        },
+        {
+          "cited_text": "_addNullifier(tag);\n        } else {\n            // `_addCommitment` does not error if a repeating leaf is added to the tree.",
+          "source": "https://github.com/anoma/pa-evm/blob/main/contracts/src/ProtocolAdapter.sol"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Partial scanning",
+      "notes": "Balance discovery relies on an off-chain indexer service rather than full local chain scanning. The client submits its discovery private key with a list of contracts to the indexer, which returns the resources and tags addressed to that key across the requested chain IDs and contract addresses. The device runs no continuous block-by-block scan itself, but it must still poll the indexer per contract to assemble its resource set, making discovery server-assisted rather than trustless.",
+      "citations": [
+        {
+          "cited_text": "contracts.map(({ chain_id, contract_address }) =>\n        this.get<IndexerResourceResponse>(\n          `${IndexerPaths.Tags}/${chain_id}/${contract_address}/${discoveryPrivateKey}`",
+          "source": "https://github.com/anoma/anoma-app-sdk/blob/main/src/api/IndexerClient.ts"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "AnomaPay uses a UTXO-based shielded state model built on the Anoma Resource Machine. Shielded notes (resources) are consumed by publishing nullifiers and producing new commitments. The pay address carries a separate nullifier key commitment, matching the standard shielded-UTXO pattern.",
+      "citations": [
+        {
+          "cited_text": "A protocol adapter (PA) contract written in Solidity enabling Anoma Resource Machine transaction settlement on EVM-compatible chains.",
+          "source": "https://github.com/anoma/pa-evm"
+        },
+        {
+          "cited_text": "Anoma Pay uses a custom address format that encodes multiple public keys into a single Base64URL string",
+          "source": "https://github.com/anoma/anoma-app-sdk"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Smart contracts"],
+      "notes": "Private state lives on-chain inside the Protocol Adapter contract, which holds the commitment tree and nullifier set and verifies RISC Zero proofs for each shielded transaction. Executing a transaction adds commitments and nullifiers to those structures, and encrypted app-data payloads are emitted as event logs (ResourcePayload, DiscoveryPayload, ExternalPayload, ApplicationPayload) tagged to each resource. Off-chain proving services hold only transient witness data.",
+      "citations": [
+        {
+          "cited_text": "function _execute(Transaction calldata transaction, bool skipRiscZeroProofVerification)\n        internal\n        nonReentrant\n        whenNotPaused",
+          "source": "https://github.com/anoma/pa-evm/blob/main/contracts/src/ProtocolAdapter.sol"
+        },
+        {
+          "cited_text": "emit ResourcePayload({tag: tag, index: i, blob: payload[i].blob});\n            }\n        }\n\n        payload = input.appData.discoveryPayload;",
+          "source": "https://github.com/anoma/pa-evm/blob/main/contracts/src/ProtocolAdapter.sol"
+        },
+        {
+          "cited_text": "Transaction Amount: The values are encrypted within the Anoma Resource Machine state.\n\n",
+          "source": "https://docs.anoma.net/anoma-pay-privacy-guarantees"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "No access to DeFi",
+      "notes": "AnomaPay's shielded balances cannot be plugged into external DeFi protocols — the forwarder contract allows wrapping and unwrapping ERC-20s, and the beta exposes only payment primitives over ETH, USDC, USDT, and XAN. Once unwrapped, downstream DeFi use is ordinary host-chain ERC-20 activity, not a feature of the shielded surface.",
+      "citations": [
+        {
+          "cited_text": "AnomaPay is a non-custodial application offering private payments using ETH, USDC, USDT, and XAN, with support for additional assets forthcoming.",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        },
+        {
+          "cited_text": "A forwarder contract written in Solidity that enables wrapping and unwrapping of arbitrary ERC20 tokens on the [AnomaPay application]",
+          "source": "https://github.com/anoma/anomapay-erc20-forwarder"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "AnomaPay's product surface is bounded to private payments — wrapping host-chain ERC-20s, internal shielded transfer, and unwrapping. The broader Anoma SDK supports other private-rail use cases (confidential trading, payroll, treasury, asset issuance, AI agent payments) but those flows belong to Anoma DOS, not the AnomaPay app itself.",
+      "citations": [
+        {
+          "cited_text": "AnomaPay is a non-custodial application offering private payments using ETH, USDC, USDT, and XAN",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        },
+        {
+          "cited_text": "developers can now incorporate private ERC-20 rails into their applications natively on BNB Chain and other supported chains.",
+          "source": "https://anoma.foundation/press/anomapaybeta"
+        }
+      ]
+    }
+  ]
 }
