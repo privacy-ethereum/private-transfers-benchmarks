@@ -228,7 +228,7 @@
     {
       "name": "Client-side proving",
       "value": "No",
-      "notes": "Proof generation for Cloak runs as a server-side service rather than on user devices. The roadmap lists Validium sequencer, Validium contracts, and Validium provers as delivered basic features, with no client-side proving path among them and no client-side or decentralised proving among upcoming items.",
+      "notes": "Proof generation for Cloak runs as a server-side service rather than on user devices. The roadmap lists Validium sequencer, Validium contracts, and Validium provers as delivered basic features, with no client-side proving path among them and no client-side or decentralised proving among upcoming items. It is worth pointing out that Cloak uses a zkEVM which requires considerable hardware resources to generate proofs.",
       "citations": [
         {
           "cited_text": "| Circuits                 | [https://github.com/scroll-tech/zkvm-prover](https://github.com/scroll-tech/zkvm-prover)                     |",
