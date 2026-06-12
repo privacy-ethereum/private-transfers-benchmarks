@@ -100,7 +100,7 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "A user stores a single root secret from which all four address components derive. The pay address packs an Authority public key, Discovery public key, Encryption public key, and a Nullifier Key Commitment into a Base64URL string. The Authority, Discovery, and Encryption keys are secp256k1 keypairs from HMAC-SHA256 PRF expansion of the root seed under per-key domain separation, and the nullifier key's public half is the SHA-256 of its secret half. Every key descends from one seed.",
+      "notes": "A user stores one root seed from which all four components derive, so there is a single secret. The pay address packs an Authority public key, Discovery public key, Encryption public key, and a Nullifier Key Commitment into a Base64URL string. The Authority, Discovery, and Encryption keys are secp256k1 keypairs from HMAC-SHA256 PRF expansion of the root seed under per-key domain separation. The nullifier key pair is a private key (nk) and its commitment (cnk), the SHA-256 hash of that key.",
       "citations": [
         {
           "cited_text": "Anoma Pay uses a custom address format that encodes multiple public keys into a single Base64URL string:",
@@ -219,7 +219,7 @@
     {
       "name": "Third-party inspectability",
       "value": "Yes",
-      "notes": "AnomaPay's live proving path runs on Anoma DOS off the user's device, with client-side proving listed as an in-development roadmap item. An external prover that produces ZK proofs for the user receives the spent notes and amounts as plaintext witness inputs, so the prover operator is structurally positioned to inspect transaction details that are otherwise hidden from the public.",
+      "notes": "An external prover that produces ZK proofs for the user receives the spent notes and amounts as plaintext witness inputs, so the prover operator is structurally positioned to inspect transaction details that are otherwise hidden from the public. Client-side proving islisted as an upcoming roadmap item. An off-chain indexer service can also leak user privacy.",
       "citations": [
         {
           "cited_text": "Client-side proving : moving ZK proof generation to the user's device for even stronger privacy guarantees",
@@ -230,11 +230,11 @@
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
-      "notes": "AnomaPay's public beta is live on BNB Chain, following a private beta phase. Deposits are capped at $500 per user during the beta period, supporting payments in ETH, USDC, USDT, and XAN.",
+      "notes": "AnomaPay's public beta is live on Ethereum Mainnet and BNB Chain. Deposits are capped at $500 per user during the beta period, supporting payments in ETH, USDC, USDT, and XAN. The Anoma Protocol Adapter has been deployed more widely and for longer.",
       "citations": [
         {
-          "cited_text": "the AnomaPay public beta is now live on BNB Chain, making easy private payments accessible to anyone",
-          "source": "https://anoma.net/blog/the-anomapay-public-beta-is-live-on-bnb-chain"
+          "cited_text": "It is live on Ethereum Mainnet and BNB Chain",
+          "source": "https://docs.anoma.net/anoma-pay-introduction"
         },
         {
           "cited_text": "The public beta supports payments in ETH, USDC, USDT, and XAN, with a deposit cap of $500.",
@@ -261,31 +261,39 @@
     },
     {
       "name": "Layer of enforcement",
-      "value": "None",
-      "notes": "No protocol-enforced compliance mechanism gates AnomaPay transfers. Protocol Adapter settles ZK-proven shielded transfers without an active filter, and the user-discretionary selective-disclosure does not constitute layer-level enforcement.",
+      "value": "App",
+      "notes": "Compliance is enforced off-chain by the proving service operator, part of AnomaPay's service infrastructure, not by the on-chain Protocol Adapter contract or the asset. The operator temporarily sees plaintext witness data (sender, receiver, asset, amount) while generating proofs and relaying the transaction, and runs KYC/AML checks at that step.",
       "citations": [
         {
-          "cited_text": "Developers can customize Anoma's programmable privacy according to the requirements of specific jurisdictions, and enable users to selectively disclose transaction data with specific parties",
-          "source": "https://anoma.foundation/press/anomapaybeta"
+          "cited_text": "AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        },
+        {
+          "cited_text": "This is required to generate the zero-knowledge proofs and relay the transaction on your behalf. Witness data includes information about sender, receiver, asset, and amount.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
         }
       ]
     },
     {
       "name": "Enforcement entities",
-      "value": "None",
-      "notes": "No admin role, governance body, third-party screening vendor, or asset-issuer blocklist gates transfers at the AnomaPay protocol layer. Selective disclosure is user-discretionary — the user chooses who to share viewing material with, so no entity enforces it.",
+      "value": "Admin",
+      "notes": "The proving service operator runs the KYC/AML checks that gate AnomaPay transactions. The docs name no external compliance vendor, so enforcement sits with the operator of the hosted proving service.",
       "citations": [
         {
-          "cited_text": "Developers can customize Anoma's programmable privacy according to the requirements of specific jurisdictions, and enable users to selectively disclose transaction data with specific parties",
-          "source": "https://anoma.foundation/press/anomapaybeta"
+          "cited_text": "AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
         }
       ]
     },
     {
       "name": "Type of compliance",
-      "value": ["Selective disclosure"],
-      "notes": "AnomaPay supports selective disclosure — users can voluntarily reveal transaction data to specific parties for auditing or compliance purposes. The mechanism is user-discretionary rather than an entity-enforced policy, so per the selective-disclosure carveout the rest of the compliance quartet stays None.",
+      "value": ["KYC/KYB", "Selective disclosure"],
+      "notes": "The proving service operator runs KYC and AML checks to keep AnomaPay compliant with applicable laws. Separately, users can voluntarily reveal transaction data to chosen parties for auditing or compliance, which is the user-discretionary selective-disclosure mechanism.",
       "citations": [
+        {
+          "cited_text": "AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        },
         {
           "cited_text": "enable users to selectively disclose transaction data with specific parties as necessary for auditing or compliance needs.",
           "source": "https://anoma.foundation/press/anomapaybeta"
@@ -294,19 +302,23 @@
     },
     {
       "name": "Point of enforcement",
-      "value": ["None"],
-      "notes": "Per the selective-disclosure carveout, no enforcement point exists anywhere in the transfer lifecycle — the wrap, shielded transfer, and unwrap paths all run without an active compliance check at any stage.",
+      "value": ["Deposit", "Transfer", "Withdrawal"],
+      "notes": "The proving service operator's checks run at the step where it generates the zero-knowledge proof and relays the transaction. Every shielded operation routed through the hosted prover passes that step, so the gate covers the wrap, shielded transfer, and unwrap paths.",
       "citations": [
         {
-          "cited_text": "enable users to selectively disclose transaction data with specific parties as necessary for auditing or compliance needs.",
-          "source": "https://anoma.foundation/press/anomapaybeta"
+          "cited_text": "AnomaPay is fully compliant with applicable laws and regulations (such as KYC and AML rules). The proving service operator implements consistent checks in order to ensure full compliance.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
+        },
+        {
+          "cited_text": "This is required to generate the zero-knowledge proofs and relay the transaction on your behalf. Witness data includes information about sender, receiver, asset, and amount.",
+          "source": "https://docs.anoma.net/anoma-pay-trust-model"
         }
       ]
     },
     {
       "name": "Selective disclosure: viewing entity",
       "value": ["User", "Voluntary third-party disclosure"],
-      "notes": "AnomaPay users hold their own keys and can view their own balances and transaction history through their wallet or passkey-based account. They can also voluntarily share viewing material with a chosen counterparty such as an auditor. No designated entity can access transaction data without the user's consent.",
+      "notes": "AnomaPay users hold their own keys and can view their own balances and transaction history through their wallet or passkey-based account. They can also voluntarily share viewing material with a chosen counterparty such as an auditor.",
       "citations": [
         {
           "cited_text": "enable users to selectively disclose transaction data with specific parties as necessary for auditing or compliance needs.",
