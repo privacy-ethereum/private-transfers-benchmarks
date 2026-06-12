@@ -12,7 +12,7 @@ export const RailgunProtocolStatsFragment = graphql(/* GraphQL */ `
         totalCount
         totalGasUsed
 
-        shieldTokenStats {
+        shieldTokenStats(first: $first) {
           id
           tokenAddress
           totalCount
@@ -26,7 +26,7 @@ export const RailgunProtocolStatsFragment = graphql(/* GraphQL */ `
         totalCount
         totalGasUsed
 
-        unshieldTokenStats {
+        unshieldTokenStats(first: $first) {
           id
           tokenAddress
           totalCount

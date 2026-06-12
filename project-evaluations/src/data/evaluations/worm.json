@@ -54,7 +54,8 @@
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": ""
+      "value": "",
+      "notes": "There are no internal private transactions in the WORM protocol. The deposit operation is a standard transfer to a burn address and the withdrawal operation is minting BETH using a ZK proof. There is no internal private transfer operation in the protocol, users can transfer BETH as any other ERC-20 token so the transfer is public."
     },
     {
       "name": "On-chain gas cost: withdraw",

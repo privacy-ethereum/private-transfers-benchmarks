@@ -40,7 +40,8 @@
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": ""
+      "value": "",
+      "notes": "Internal private transfers could involve ETH or any shielded ERC20 token."
     },
     {
       "name": "On-chain gas cost: withdraw",
