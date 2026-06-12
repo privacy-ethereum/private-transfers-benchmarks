@@ -72,15 +72,16 @@
     },
     {
       "name": "On-chain gas cost: deposit",
-      "value": ""
+      "value": "There is no deposit operation because Houdiniswap users sends funds to a CEX address as the first step of the routing. The whole operation is a private transfer in itself."
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": ""
+      "value": "~0.000210 ETH / $0.35",
+      "notes": "Computed average with ETH = $1,676 on 2026-06-12."
     },
     {
       "name": "On-chain gas cost: withdraw",
-      "value": ""
+      "value": "There is no withdraw operation because the Houdini routing will send the funds directly to the receipient at the end of the process."
     },
     {
       "name": "Time-to-finality",

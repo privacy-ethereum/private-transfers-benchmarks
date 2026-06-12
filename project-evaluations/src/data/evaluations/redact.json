@@ -36,7 +36,8 @@
     },
     {
       "name": "On-chain gas cost: deposit",
-      "value": ""
+      "value": "~0.004136 ETH / $6.93",
+      "notes": "Computed average with ETH = $1,676 on 2026-06-12. "
     },
     {
       "name": "On-chain gas cost: transfer",
@@ -44,7 +45,8 @@
     },
     {
       "name": "On-chain gas cost: withdraw",
-      "value": ""
+      "value": "~0.005508 ETH / $9.23",
+      "notes": "Computed average with ETH = $1,676 on 2026-06-12. "
     },
     {
       "name": "Number of secrets",

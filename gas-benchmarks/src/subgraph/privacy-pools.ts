@@ -13,7 +13,7 @@ export const PrivacyPoolsProtocolStatsFragment = graphql(/* GraphQL */ `
         totalGasUsed
         totalValue
 
-        shieldTokenStats {
+        shieldTokenStats(first: $first) {
           id
           tokenAddress
           totalCount
@@ -28,7 +28,7 @@ export const PrivacyPoolsProtocolStatsFragment = graphql(/* GraphQL */ `
         totalGasUsed
         totalValue
 
-        unshieldTokenStats {
+        unshieldTokenStats(first: $first) {
           id
           tokenAddress
           totalCount

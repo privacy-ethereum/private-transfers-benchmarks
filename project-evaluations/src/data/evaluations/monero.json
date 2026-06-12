@@ -184,6 +184,11 @@
       "name": "Programmability / Generality",
       "value": "Only payments",
       "notes": "Monero is a payment-only blockchain with no programmability features. There are no plans to implement smart contract logic."
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": "0.00023796130434782612",
+      "notes": "Monero transaction fees units are XMR (Monero native token). There is no concept of deposit and withdraw operations."
     }
   ]
 }
