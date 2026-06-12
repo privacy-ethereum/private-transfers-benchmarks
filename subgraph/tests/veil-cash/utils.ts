@@ -1,11 +1,13 @@
-import { Address, BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt, ByteArray, Bytes, crypto as graphCrypto, ethereum } from "@graphprotocol/graph-ts";
 import { newMockEvent } from "matchstick-as";
 
 import { NewNullifier } from "../../generated/VeilETHPool/VeilETHPool";
 import { DepositAccepted, DepositQueued } from "../../generated/VeilETHQueueV3/VeilETHQueueV3";
 
 export const PROTOCOL_STATS_ID = "veil-cash-protocol-stats";
-export const VEIL_ETH_POOL_ADDRESS = Address.fromString("0x293dcda114533ff8f477271c5ca517209ffdeee7");
+
+export const WITHDRAW_AMOUNT = Bytes.fromI32(4);
+const WITHDRAW_TOPIC = Bytes.fromUint8Array(graphCrypto.keccak256(ByteArray.fromUTF8("Withdrawal(address,uint256)")));
 
 export function createDepositQueuedEvent(
   nonce: BigInt,
@@ -54,6 +56,28 @@ export function createNewNullifierEvent(hash: Bytes): NewNullifier {
       ),
     ),
   );
+
+  return event;
+}
+
+export function createWithdrawalLog(): ethereum.Log {
+  const log = changetype<ethereum.Log>(newMockEvent());
+
+  log.topics = [WITHDRAW_TOPIC, Bytes.fromHexString("0x0000000000000000000000000000000000000000")];
+  log.data = WITHDRAW_AMOUNT;
+
+  return log;
+}
+
+export function createWithdrawEvent(hash: Bytes): NewNullifier {
+  const event = createNewNullifierEvent(hash);
+  const receipt = changetype<ethereum.TransactionReceipt>(newMockEvent());
+
+  receipt.logs = [createWithdrawalLog()];
+  receipt.gasUsed = BigInt.fromI32(1);
+
+  event.receipt = receipt;
+  event.transaction.gasPrice = BigInt.fromI32(1);
 
   return event;
 }

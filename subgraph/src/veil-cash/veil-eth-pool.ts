@@ -1,55 +1,15 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 import {
-  VeilCashOperationStats,
-  VeilCashProtocolStats,
   VeilCashTransfer,
   VeilCashTransferStats,
+  VeilCashWithdraw,
+  VeilCashWithdrawStats,
 } from "../../generated/schema";
 import { NewNullifier as NewNullifierEvent } from "../../generated/VeilETHPool/VeilETHPool";
 
-export const VEIL_ETH_POOL_ADDRESS = Address.fromString("0x293dcda114533ff8f477271c5ca517209ffdeee7");
-
-export function createOrLoadProtocolStats(): VeilCashProtocolStats {
-  const id = "veil-cash-protocol-stats";
-  let stats = VeilCashProtocolStats.load(id);
-
-  if (stats === null) {
-    stats = new VeilCashProtocolStats(id);
-    stats.totalTxCount = BigInt.zero();
-    stats.totalGasUsed = BigInt.zero();
-
-    const queueStats = new VeilCashOperationStats(`${id}-deposit-queued`);
-    const acceptedStats = new VeilCashOperationStats(`${id}-deposit-accepted`);
-    const transferStats = new VeilCashOperationStats(`${id}-transfer`);
-    const withdrawStats = new VeilCashOperationStats(`${id}-withdraw`);
-
-    stats.depositQueued = queueStats.id;
-    stats.depositAccepted = acceptedStats.id;
-    stats.transfer = transferStats.id;
-    stats.withdraw = withdrawStats.id;
-
-    queueStats.totalCount = BigInt.zero();
-    queueStats.totalGasUsed = BigInt.zero();
-
-    acceptedStats.totalCount = BigInt.zero();
-    acceptedStats.totalGasUsed = BigInt.zero();
-
-    transferStats.totalCount = BigInt.zero();
-    transferStats.totalGasUsed = BigInt.zero();
-
-    withdrawStats.totalCount = BigInt.zero();
-    withdrawStats.totalGasUsed = BigInt.zero();
-
-    queueStats.save();
-    acceptedStats.save();
-    transferStats.save();
-    withdrawStats.save();
-    stats.save();
-  }
-
-  return stats;
-}
+import { getWithdrawalEvent } from "./utils";
+import { createOrLoadProtocolStats, saveOperationStats, saveProtocolStats } from "./veil-eth-queue-v3";
 
 function createOrLoadTransferStats(operationStatsId: string): VeilCashTransferStats {
   const id = "veil-cash-transfer-native-eth";
@@ -67,12 +27,66 @@ function createOrLoadTransferStats(operationStatsId: string): VeilCashTransferSt
   return stats;
 }
 
+function createOrLoadWithdrawStats(operationStatsId: string): VeilCashWithdrawStats {
+  const id = "veil-cash-withdraw-native-eth";
+  let stats = VeilCashWithdrawStats.load(id);
+
+  if (stats === null) {
+    stats = new VeilCashWithdrawStats(id);
+    stats.totalCount = BigInt.zero();
+    stats.totalGasUsed = BigInt.zero();
+    stats.totalValue = BigInt.zero();
+    stats.operationStats = operationStatsId;
+    stats.save();
+  }
+
+  return stats;
+}
+
 export function handleNewNullifier(event: NewNullifierEvent): void {
   const txId = event.transaction.hash.toHex();
+  const stats = createOrLoadProtocolStats();
 
   const receipt = event.receipt;
 
   if (receipt === null) {
+    return;
+  }
+
+  const withdrawalEvent = getWithdrawalEvent(receipt.logs);
+
+  if (withdrawalEvent !== null) {
+    const existingWithdraw = VeilCashWithdraw.load(txId);
+
+    if (existingWithdraw !== null) {
+      return;
+    }
+
+    const withdraw = new VeilCashWithdraw(txId);
+    const value = BigInt.fromUnsignedBytes(withdrawalEvent.data);
+
+    withdraw.blockNumber = event.block.number;
+    withdraw.timestamp = event.block.timestamp;
+    withdraw.txHash = event.transaction.hash;
+    withdraw.value = value;
+    withdraw.gasUsed = receipt.gasUsed;
+    withdraw.gasPrice = event.transaction.gasPrice;
+
+    withdraw.save();
+
+    const withdrawOperationId = stats.withdraw;
+
+    saveProtocolStats(event);
+    saveOperationStats(withdrawOperationId, event);
+
+    const withdrawStats = createOrLoadWithdrawStats(withdrawOperationId);
+
+    withdrawStats.totalCount = withdrawStats.totalCount.plus(BigInt.fromI32(1));
+    withdrawStats.totalGasUsed = withdrawStats.totalGasUsed.plus(receipt.gasUsed);
+    withdrawStats.totalValue = withdrawStats.totalValue.plus(value);
+    withdrawStats.operationStats = withdrawOperationId;
+    withdrawStats.save();
+
     return;
   }
 
@@ -92,23 +106,15 @@ export function handleNewNullifier(event: NewNullifierEvent): void {
 
   transfer.save();
 
-  const stats = createOrLoadProtocolStats();
+  const transferOperationId = stats.transfer;
 
-  stats.totalTxCount = stats.totalTxCount.plus(BigInt.fromI32(1));
-  stats.totalGasUsed = stats.totalGasUsed.plus(receipt.gasUsed);
-  stats.save();
+  saveProtocolStats(event);
+  saveOperationStats(transferOperationId, event);
 
-  const operationStats = VeilCashOperationStats.load(stats.transfer);
-
-  if (operationStats !== null) {
-    operationStats.totalCount = operationStats.totalCount.plus(BigInt.fromI32(1));
-    operationStats.totalGasUsed = operationStats.totalGasUsed.plus(receipt.gasUsed);
-    operationStats.save();
-  }
-
-  const transferStats = createOrLoadTransferStats(stats.transfer);
+  const transferStats = createOrLoadTransferStats(transferOperationId);
 
   transferStats.totalCount = transferStats.totalCount.plus(BigInt.fromI32(1));
   transferStats.totalGasUsed = transferStats.totalGasUsed.plus(receipt.gasUsed);
+  transferStats.operationStats = transferOperationId;
   transferStats.save();
 }
