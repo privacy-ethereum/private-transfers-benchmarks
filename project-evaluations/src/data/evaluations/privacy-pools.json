@@ -203,6 +203,16 @@
       "value": "0",
       "notes": "There is no private transfer inside the Privacy Pools v1 protocol. Users are only able to deposit funds using one address and withdrawing those funds to another unlinked address. The Privacy Pools v2 protocol would allow internal private transfers using a UTXO note-based architecture.",
       "url": "https://docs.privacypools.com/#privacy-pools-offers-a-solution"
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": "~0.047421 ETH / $79.48",
+      "notes": "Computed average with ETH = $1,676 on 2026-06-12. "
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": "~0.006077 ETH / $10.19",
+      "notes": "Computed average with ETH = $1,676 on 2026-06-12. "
     }
   ]
 }

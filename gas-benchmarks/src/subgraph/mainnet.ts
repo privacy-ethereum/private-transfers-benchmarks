@@ -21,7 +21,7 @@ export type TMainnetRootQuery = RailgunProtocolStatsFragmentFragment &
   Zerc20ProtocolStatsFragmentFragment;
 
 export const MainnetRootQuery = graphql(/* GraphQL */ `
-  query MainnetRootQuery {
+  query MainnetRootQuery($first: Int = 1000) {
     ...RailgunProtocolStatsFragment
     ...TornadoCashProtocolStatsFragment
     ...HinkalProtocolStatsFragment

@@ -12,7 +12,7 @@ export const HinkalProtocolStatsFragment = graphql(/* GraphQL */ `
         totalCount
         totalGasUsed
 
-        shieldERC20TokenStats {
+        shieldERC20TokenStats(first: $first) {
           id
           tokenAddress
           totalCount
@@ -26,7 +26,7 @@ export const HinkalProtocolStatsFragment = graphql(/* GraphQL */ `
         totalCount
         totalGasUsed
 
-        unshieldERC20TokenStats {
+        unshieldERC20TokenStats(first: $first) {
           id
           tokenAddress
           totalCount
