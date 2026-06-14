@@ -235,4 +235,16 @@ export const configs: Record<string, ProtocolConfig> = {
     context:
       "CRITICAL: 'Anoma Pay' (AnomaPay) is the private-payments app at anomapay.app built atop the Anoma distributed OS — NOT the broader Anoma intent architecture and NOT the Namada chain. AnomaPay specifically wraps host-chain ERC-20s into Anoma Resource Machine 'resources' via the anomapay-erc20-forwarder Solidity contract, settles ZK-proven shielded transfers through the pa-evm Protocol Adapter, and unwraps back into ERC-20s on the host chain. Address format: Base64URL-encoded 135-byte tuple of Authority pubkey + Discovery pubkey + Encryption pubkey + Nullifier Key Commitment + CRC32 checksum (per anoma-app-sdk). Audited by Informal Systems (Oct-Nov 2025) and Nethermind (Oct-Nov 2025). Public beta launched 2 April 2026 on BNB Chain, preceded by a private beta on Base. Anoma DOS itself is live on Ethereum mainnet, Base, Arbitrum, Optimism, and Aurora. ZK proving ~15 seconds; client-side proving in development. Selective disclosure for auditors/regulators. Closed-source compliance: 'Compliance primitives are built into the protocol, not bolted on top'.",
   },
+  "scroll-cloak": {
+    id: "scroll-cloak",
+    title: "Scroll Cloak",
+    description:
+      "Scroll Cloak is a ZK-based privacy execution layer on Scroll L2 targeted at on-chain finance. Each transaction is processed inside a private ledger with hidden balances and details, while ZK proofs guarantee integrity publicly. Includes full EVM support for private smart contracts plus KYB/KYC hooks, real-time monitoring, and selective-disclosure APIs for compliance. The first version is live on Scroll's testnet.",
+    status: "pending",
+    documentation: "https://scroll.io/cloak",
+    categories: ["Private Validium", "Zero Knowledge Proofs (ZKPs)"],
+    sourceUrls: ["https://scroll.io/cloak", "https://scroll.io/blog/introducing-cloak"],
+    context:
+      "CRITICAL: 'Scroll Cloak' (or 'Cloak') is Scroll's enterprise zk-validium privacy execution layer for on-chain finance, announced August 2025. NOT Ten Protocol's 'Cloak' feature, NOT zCloak Network. Architecture: per-instance deployment with private RPC gateway (authenticates + access control), app-specific sequencer (cloud or on-prem), private indexer, dedicated zk provers, and bridge contracts on Scroll L2 that settle proofs+state-roots to Ethereum L1 (only proofs + state roots posted — validium data availability). Enterprise customer retains sovereignty: controls bridge contracts, sequencer (if self-hosted), and admin rights. Full EVM compatibility for private smart contracts. KYB/KYC hooks, real-time monitoring, and selective-disclosure APIs are bundled. First version on Scroll testnet as of announcement; check current status during Phase A. Compliance is built-in (regulator-friendly) and the design explicitly targets enterprises rather than retail users.",
+  },
 };
