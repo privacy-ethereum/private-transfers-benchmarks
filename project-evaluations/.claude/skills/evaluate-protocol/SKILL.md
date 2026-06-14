@@ -58,6 +58,8 @@ Invoke `/challenger-pass <protocol> [--only …]`. The skill spawns a fresh sub-
 
 ### Phase D — Auto-patch rules
 
+**Edit tool only — no Write rewrites.** Edit `src/data/evaluations/{id}.json` using the Edit tool with targeted `old_string`/`new_string` pairs. Do NOT use the Write tool to rewrite the whole file in one shot. Write produces paraphrased content (especially in `cited_text` fields) that doesn't match the source cache and gets caught by the cited-text-verbatim lint at best, slips through at worst. If a Phase D pass touches 50+ properties, that's 50+ Edit calls — accept the verbosity. Targeted Edits also let the AI verify each `old_string` exactly matches the file before changing, which prevents the silent paraphrasing the Write tool enables.
+
 For each item in the review output:
 
 1. **Evaluation bug** — a property value or note that violates an existing rule. Do NOT edit `research-prompts.ts`. Edit `src/data/evaluations/{id}.json` directly: update the property `value` and `notes`, and set `needsResearchReview` to a reason string only if the edit leaves factual uncertainty per `REVIEW_ONLY_RULES #7` (cosmetic / stylistic cleanup never flags; a substantive correction that is fully grounded in a cited source also does not flag — the manual `{ source }` citation is the verification).

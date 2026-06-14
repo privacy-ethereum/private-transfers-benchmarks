@@ -84,7 +84,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Bermuda is an application-layer protocol deployed on host EVM chains, so transaction finality is inherited from the underlying network rather than imposed by Bermuda itself.",
       "citations": [
         {
@@ -397,7 +397,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Bermuda's shielded pool stores encrypted UTXOs on-chain, and the pool contract holds all shielded funds across deposits, transfers, and withdrawals. Each spend adds new commitments and consumes nullifiers held by the pool. There is no mention of a pruning mechanism.",
       "citations": [
         {
@@ -412,7 +412,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "A separate chain-state service periodically downloads the most recent chain state via scheduled GitHub Actions, producing pre-indexed snapshots that the SDK ingests. The client SDK runs a single bootstrap synchronization step that loads this snapshot before performing ZK proving, rather than scanning every block itself. The indexing work is performed by the chain-state crawler service so the end user devices do not need to be constantly scanning on-chain events.",
       "citations": [
         {

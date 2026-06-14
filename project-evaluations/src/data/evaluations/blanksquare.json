@@ -68,7 +68,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Application-layer Solidity contracts deployed on host chains. Mainnet on Base, with testnets on Base Sepolia, Arbitrum Sepolia, and Hyperliquid testnet (HyperEVM). Finality inherits from each host chain.",
       "citations": [
         {
@@ -338,7 +338,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "The Shielder maintains an append-only Merkle tree of note commitments plus a growing nullifier set. No pruning mechanism is documented and on-chain state grows with cumulative pool usage.",
       "citations": [
         {
@@ -349,7 +349,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "The client syncs the latest Shielder state and constructs proofs locally. No server-side index keyed to the user is documented. The WASM cryptography engine drives both proving and chain scanning.",
       "citations": [
         {

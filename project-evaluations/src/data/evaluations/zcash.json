@@ -379,7 +379,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "ZCash uses a single global commitment tree of fixed depth 32 where note commitments are appended in-order and never pruned. The nullifier set similarly accumulates permanently to prevent double-spending, requiring full nodes to maintain the complete history. This represents an unbounded growth model where protocol-specific private state expands continuously with blockchain activity.",
       "citations": [
         {
@@ -390,7 +390,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "Shielded transactions reveal no metadata about the sender or receiver, users must scan the block chain for relevant transactions using viewing keys. Every valid block with non-coinbase transactions will need to be checked and its transactions trial-decrypted with registered incoming viewing keys to see if any notes have been received by the key's owner and if any notes have already been spent elsewhere. Unlike a transparent blockchain with public transactions, a full node must have online access to viewing keys to scan the chain.",
       "citations": [
         {

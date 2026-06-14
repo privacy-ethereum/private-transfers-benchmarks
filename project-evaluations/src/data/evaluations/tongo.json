@@ -42,7 +42,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Tongo is deployed on the Starknet L2, a ZK-rollup on Ethereum. Finality is inherited from the underlying chain. Starknet's time to L1 finality at the time of writing is around 29 minutes. Finality is dependent on the sequencer submitting proofs to the L1. After proof submissions, SHARP (StarkWare's proof aggregator) consolidates all proofs into a single STARK proof that gets posted and verified on Ethereum L1.",
       "url": "https://l2beat.com/scaling/projects/starknet#liveness",
       "needsResearchReview": "Finality figure requires citation"
@@ -160,13 +160,13 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Stateless",
-      "notes": "Tongo uses an account-based model where each user's encrypted balance is stored as a mapping within the smart contract storage. New users add entries to the contract's account mapping, and the state grows proportionally to the number of accounts rather than to the number of transactions.",
+      "value": "Per Account",
+      "notes": "Tongo uses an account-based model where each user's encrypted balance is stored as a mapping within the smart contract storage. A new user adds one entry to the contract's account mapping, while transfers between existing users update entries in place. On-chain state therefore grows proportionally to the number of accounts rather than to the number of transactions.",
       "url": "https://docs.tongo.cash/protocol/storage.html"
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "Because Tongo uses an account-based model with balances stored directly as contract state, users can retrieve their encrypted balance directly from the contract without scanning past blockchain events or transactions.",
       "url": "https://docs.tongo.cash/sdk/accounts.html"
     },

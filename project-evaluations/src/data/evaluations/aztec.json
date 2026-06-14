@@ -466,7 +466,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Aztec's private state lives in two append-only Merkle trees — a note hash tree for commitments and a nullifier tree for spent notes — both accumulating leaves monotonically with usage. Private state uses an append-only data structure since updating records directly would leak information about the transaction graph, and modifying state means nullifying the existing record and creating a new one. Every transfer therefore adds at least one note commitment plus one nullifier, with no pruning path.",
       "citations": [
         {
@@ -485,7 +485,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Partial scanning",
+      "value": "Scanning",
       "notes": "The PXE performs targeted tag-based lookups rather than scanning every log. The contract calls fetchTaggedLogs, and the PXE computes tags for every (sender, recipient) pair it knows about and queries the node for matching logs. Discovery is bounded by a sliding window with scanning extending from the aged index to a short range beyond the finalized index. Coverage is limited to registered counterparties: the PXE must know the sender's address in advance to compute the shared tagging secret.",
       "citations": [
         {
