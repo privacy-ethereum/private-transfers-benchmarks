@@ -152,7 +152,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Each spent output publishes a key image, a cryptographic one-time token that prevents double-spending. Key images accumulate on-chain indefinitely  - every transaction adds new key images to the protocol state. Ring signature data and encrypted output amounts also grow with each transaction.",
       "url": "https://docs.getmonero.org/cryptography/asymmetric/key-image/"
     },

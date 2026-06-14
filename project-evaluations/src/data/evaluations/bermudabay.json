@@ -397,7 +397,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Bermuda's shielded pool stores encrypted UTXOs on-chain, and the pool contract holds all shielded funds across deposits, transfers, and withdrawals. Each spend adds new commitments and consumes nullifiers held by the pool. There is no mention of a pruning mechanism.",
       "citations": [
         {

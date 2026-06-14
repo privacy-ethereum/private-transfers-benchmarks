@@ -300,11 +300,11 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
   {
     name: "Private State Scalability",
     group: "State",
-    description: "How protocol-specific private data grows over time.",
+    description: "How protocol-specific private state stored on-chain grows over time.",
     metric:
-      "Infinity grow (nullifier/note trees grow forever) / Temporal grow (state pruned at epochs, stored offchain) / Stateless (state updated but does not grow)",
+      "Per Transaction (on-chain state grows per transaction) / Per Account (on-chain state grows per account) / Stateless (no on-chain growth)",
     inputType: "select",
-    options: ["Infinity grow", "Temporal grow", "Stateless"],
+    options: ["Per Transaction", "Per Account", "Stateless"],
   },
   {
     name: "Client-side indexing",

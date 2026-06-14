@@ -139,8 +139,8 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Stateless",
-      "notes": "Fluidkey stealth accounts are counterfactually instantiated and each payment creates an independent smart account. There is no global shared state accumulation (no Merkle tree or registry that grows with usage). There could be a potential issue on deploying independent smart accounts every time a transaction is performed.",
+      "value": "Per Transaction",
+      "notes": "Fluidkey generates a fresh stealth Safe account for every incoming payment. There is no shared Merkle tree or registry, but each claimed payment deploys an independent smart account, leaving permanent on-chain bytecode and storage. That per-payment contract deployment accumulates with the number of transactions rather than the number of distinct users.",
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-3.b.-counterfactual-instantiation"
     },
     {

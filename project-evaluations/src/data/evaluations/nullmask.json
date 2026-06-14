@@ -391,7 +391,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Private state grows without bound with usage. Every shielded action appends a new note commitment to an on-chain Merkle tree and publishes a nullifier that is permanently retained. The contract maintains a set of all spent nullifiers and rejects any transaction that attempts to spend a note whose nullifier has already been recorded.",
       "citations": [
         {

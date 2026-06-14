@@ -340,7 +340,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Each new payment adds an on-chain announcement that every recipient must consider when scanning. From a receiver's perspective the effective scan set grows monotonically with total protocol use — there is no pruning, no epoch boundary, no compaction. The set is bounded only by the host chain's event history.",
       "citations": [
         {
