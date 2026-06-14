@@ -373,7 +373,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "The protocol adapter maintains state via an append-only commitment tree and a nullifier set, both updated on every shielded transaction. After verifying the delta and optional aggregation proofs, the executor stores the final commitment tree root. Consumed resources add their tag to the nullifier set while created resources append a commitment to the tree. Neither structure has a pruning path, so on-chain private state grows monotonically with transaction count.",
       "citations": [
         {
@@ -388,7 +388,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Partial scanning",
+      "value": "No Scanning",
       "notes": "Balance discovery relies on an off-chain indexer service rather than full local chain scanning. The client submits its discovery private key with a list of contracts to the indexer, which returns the resources and tags addressed to that key across the requested chain IDs and contract addresses. The device runs no continuous block-by-block scan itself, but it must still poll the indexer per contract to assemble its resource set, making discovery server-assisted rather than trustless.",
       "citations": [
         {

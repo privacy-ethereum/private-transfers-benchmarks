@@ -395,7 +395,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Notes and nullifiers are each arranged into a Sparse Merkle Tree, and each proof submitted to the Aggregator emits new notes and/or nullifiers through events and updates the SMT roots on-chain. New notes are created during shielding and aggregation, while aggregation also consumes input notes. The trees accumulate entries monotonically as users shield and transfer, with no pruning mechanism for historical nullifiers or notes. Clients need the full note and nullifier data to verify the SMTs and prove ownership of the notes they wish to spend.",
       "citations": [
         {
@@ -414,7 +414,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "The Curvy App, using the open-source Curvy SDK, starts syncing notes from the public Notes Registry immediately upon starting, and the SDK simultaneously scans the synced notes with the user's private keys to detect which notes are secretly in their ownership and to decrypt their balances. Note ownership is completely hidden from on-chain observers, which means continuous scanning with private keys is required to identify which notes belong to the user. The SDK must attempt decryption on all notes because there is no public index by recipient address.",
       "citations": [
         {

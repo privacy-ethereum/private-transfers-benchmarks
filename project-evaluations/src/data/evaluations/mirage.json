@@ -389,7 +389,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Although Mirage maintains no growing Merkle tree, note set, or nullifier registry, each transfer deploys a fresh per-transaction escrow contract that persists on-chain after the funds are drained. The on-chain bytecode and contract-storage footprint accumulates indefinitely with usage.",
       "citations": [
         {
@@ -404,7 +404,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "No scanning is required on the client side. Recipients receive funds through a direct on-chain token transfer from a node created wallet, which appears as a regular address sending them tokens, so their wallet picks it up as any ordinary incoming transfer.",
       "citations": [
         {

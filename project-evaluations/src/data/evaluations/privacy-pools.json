@@ -164,13 +164,13 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "When a user deposits funds, a new commitment is registered in the smart contract. All commitments are inserted in a Lean Incremental Merkle Tree (LeanIMT), which grows indefinitely as new deposits are made. Withdrawal function calls add nullifier hashes to the smart contract to prevent double-spending. These nullifiers must be stored permanently to mark which commitments have been spent.",
       "url": "https://docs.privacypools.com/layers/zk"
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "Users withdraw funds by providing their secret note directly, without needing to scan the blockchain. The official UI displays the user's deposits and amounts, but this is based on locally stored note data rather than scanning.",
       "url": "https://docs.privacypools.com/protocol/withdrawal#withdrawal-steps"
     },
