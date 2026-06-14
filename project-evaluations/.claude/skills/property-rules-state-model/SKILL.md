@@ -21,10 +21,23 @@ For services with no protocol contracts at all — off-chain routing aggregators
 
 ## Client-side indexing
 
-(no property-specific rule yet — apply cross-cutting rules)
+Options: `Scanning`, `No Scanning`. Binary, and device-centric: must the user's own device scan the chain (trial-decrypting notes / outputs) to discover its funds?
+
+- `Scanning` — the device scans, whether full-chain or reduced with view-tags / filters (Monero, Zcash, Railgun, Aztec, stealth-address wallets watching for incoming payments).
+- `No Scanning` — the device does not scan. different cases qualify: secret-note recall (Tornado, Privacy Pools), direct account / balance lookup (encrypted-ERC20 and account-based ledgers — redact, tongo, scroll-cloak), and discovery delegated to an off-chain indexer / service that scans on the device's behalf (anoma-pay, bermudabay).
+
+Delegated / indexer-assisted discovery is `No Scanning` because the property asks what the _device_ does — but note it, since delegation adds a trust dependency (the indexer may see the user's discovery / viewing key) that the binary label does not capture. Do NOT use the old `Always scanning` / `Partial scanning` / `No scanning` wording.
 
 ## Private State Scalability
 
-A component that grows monotonically with usage and is never pruned makes the value the growing variant ("Infinity grow"): an append-only commitment tree, an ever-growing nullifier set, or an off-chain coprocessor / data-availability layer whose encrypted state accumulates with every operation — the last counts even when the protocol's own on-chain state is just an in-place-updated account-balance mapping. Pick the stateless or bounded variant only when no component, on-chain or operator-side, grows without bound in the number of transactions. A bounded root-history ring buffer does not bound the underlying tree.
+Options: `Per Transaction`, `Per Account`, `Stateless`. The property is scoped to **on-chain** protocol-specific private state — what accumulates in chain-visible storage / event history. Off-chain or client-side growth does NOT set the value; mention it in the notes instead (see Stateless below).
 
-Per-transaction contract deployment is also state growth. Designs that deploy a fresh escrow / handler / one-shot contract per transfer (Mirage-style) leave a permanent on-chain bytecode + contract-storage footprint after each transfer, even when each contract is inert post-settlement. That accumulation across many transfers is "Infinity grow" — do NOT mark such designs "Stateless" on the grounds that no protocol-managed state machine grows. The growth is in dead per-transfer contracts rather than in an active state machine, but it is still unbounded on-chain growth and should be characterised as such. "Stateless" requires that no on-chain object (live, dead, or derived) accumulates with transaction count.
+Decide with this test:
+
+- **Per Transaction** — an on-chain object grows monotonically with the number of transactions and is never pruned: an append-only commitment / note / nullifier tree (Zcash-style pools, Railgun, Privacy Pools, Tornado), an ever-growing on-chain hash chain (zerc20), a per-payment announcement log (Umbra-style stealth addresses), or a fresh escrow / handler / one-shot contract deployed per transfer (Mirage, Fluidkey). Per-transaction contract deployment counts even when each contract is inert post-settlement — the permanent bytecode + storage footprint still accumulates per transaction. A bounded root-history ring buffer does not bound the underlying tree.
+
+- **Per Account** — on-chain state is keyed per account and updated in place, so it grows with the number of distinct accounts, NOT with transaction count: an encrypted-balance-per-address mapping (encrypted-ERC20 / FHE-balance designs — redact, tongo; access-controlled EVM ledgers — scroll-cloak). Adding a holder adds one entry; transfers between existing holders rewrite entries without enlarging the set.
+
+- **Stateless** — no on-chain object (live, dead, or derived) accumulates with usage. Use this only when the on-chain footprint is genuinely flat. When the protocol pushes unbounded state off-chain or onto clients (Plasma-style data availability — intmax; off-chain coprocessor state), the value is still `Stateless` because on-chain state does not grow, but the notes MUST say where the growth actually lives (off-chain DA, client-held UTXO history, coprocessor) so the picture is not misleading.
+
+Disambiguation: the _Private state model_ value ("Account-based" vs "UTXO-based") does NOT determine this property. An account-based token layer can still be `Per Transaction` when the protocol adds an append-only privacy structure on top (zerc20's hash chain, worm's nullifier set). Categorise by what actually accumulates on-chain, not by the conceptual model.

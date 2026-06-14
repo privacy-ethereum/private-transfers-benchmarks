@@ -194,7 +194,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "Transactions are shared peer-to-peer from the sender to the recipient. The recipient needs to verify a ZK proof in order to update its own client-side state. Only salted hashes of the transactions are published on-chain in order to help receivers get track of the global state and the unused notes (UTXOS).",
       "url": "https://docs.network.intmax.io/developers-hub/core-concepts/rollup-architecture#zk-proof-propagation-p2p"
     },

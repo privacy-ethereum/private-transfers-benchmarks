@@ -88,7 +88,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "zERC20 is an application-layer token, so finality is inherited from each underlying chain rather than introduced by the protocol itself. Per-chain transaction finality is determined by Ethereum, Arbitrum, Base, and BNB Chain respectively. Cross-chain transfers add LayerZero-relayed root aggregation on top, but the local finality of any single chain transaction is the host chain's.",
       "citations": [
         {
@@ -379,7 +379,7 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Protocol-specific data accumulates without bound across several structures. Every transfer appends to the on-chain SHA-256 hash chain, and the indexer maintains a Poseidon Merkle tree it periodically proves on-chain via IVC. Both extend per transfer with no documented pruning. The verifier also persists a per-recipient running total of the amount already withdrawn, keyed forever by recipient. Cross-chain operation also use a Merkle tree — each chain's verifier sends its local root to a hub that builds a global Merkle tree.",
       "citations": [
         {
@@ -402,7 +402,7 @@
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "Users must scan the chain to reconstruct the off-chain Merkle tree from on-chain hash chain commitments. The protocol uses gas-efficient hash chains on-chain and requires off-chain Poseidon-based Merkle tree reconstruction to generate withdrawal proofs. No alternative mechanism for balance tracking without chain scanning is described in the protocol design.",
       "citations": [
         {

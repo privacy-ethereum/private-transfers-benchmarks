@@ -32,7 +32,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Tornado Cash is deployed on Ethereum, BNB Chain, Polygon, Arbitrum, Optimism, Avalanche, and Gnosis. Finality is inherited from each underlying chain.",
       "url": "https://docs.tornadocash.eth.limo/general/deployments.html"
     },
@@ -159,13 +159,13 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Each deposit generates a commitment that is stored in a Merkle tree. As more transactions happen, more commitments are added as leaves. Every withdrawal transaction stores a nullifier hash on-chain to signal that a specific note has been spent. Both data structures grow with the number of transactions.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },
     {
       "name": "Client-side indexing",
-      "value": "No scanning",
+      "value": "No Scanning",
       "notes": "You need to manually input your private note in order to be able to withdraw funds. In case of using a Note Account, the encrypted backup is stored in a smart contract storage so it is easily accessible without scanning past transactions",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },

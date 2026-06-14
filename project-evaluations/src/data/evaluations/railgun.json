@@ -18,13 +18,13 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "The RAILGUN system contains an efficient internal implementation of a batch-incremental Merkle tree. Each shielded interaction generates a new note which takes the form of a new root or leaf on the Merkle tree. All tokens within the RAILGUN system share the same Merkle tree. Every interaction that updates the state of the Merkle tree will generate a new Merkle root or leaf that is hashed and secured by the zk-SNARK circuits.",
       "url": "https://docs.railgun.org/wiki/learn/shielding-tokens#private-pools-and-merkle-trees"
     },
     {
       "name": "Client-side indexing",
-      "value": "Partial scanning",
+      "value": "Scanning",
       "notes": "While generating the most up-to-date merkle tree, each commitment leaf (which represents a transaction) must be synced and decrypted in order to build a RAILGUN wallet’s private balance. This syncing process can take a few minutes. Once the sync is complete, UTXO token balances are aggregated into a user’s balance.",
       "url": "https://docs.railgun.org/developer-guide/wallet/private-balances"
     },
@@ -164,7 +164,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "RAILGUN is deployed on Ethereum mainnet (as well as BSC, Polygon, and Arbitrum). Time to finality is based on the underlying blockchain finality.",
       "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     },

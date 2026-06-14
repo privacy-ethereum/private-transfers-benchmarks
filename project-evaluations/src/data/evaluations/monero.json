@@ -152,13 +152,13 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Each spent output publishes a key image, a cryptographic one-time token that prevents double-spending. Key images accumulate on-chain indefinitely  - every transaction adds new key images to the protocol state. Ring signature data and encrypted output amounts also grow with each transaction.",
       "url": "https://docs.getmonero.org/cryptography/asymmetric/key-image/"
     },
     {
       "name": "Client-side indexing",
-      "value": "Partial scanning",
+      "value": "Scanning",
       "notes": "Stealth addresses mean every transaction output is sent to a unique one-time public key. To detect incoming funds, wallets must scan each block and test every transaction output against the user's private view key and public spend key. This scanning occurs when the wallet is online and syncing  - if offline, the wallet must catch up on missed blocks when it reconnects.",
       "url": "https://www.getmonero.org/resources/moneropedia/transaction.html"
     },

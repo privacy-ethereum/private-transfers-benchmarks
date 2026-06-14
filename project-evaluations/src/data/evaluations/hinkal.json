@@ -54,7 +54,7 @@
     },
     {
       "name": "Time-to-finality",
-      "value": "N/A",
+      "value": "Underlying chain",
       "notes": "Hinkal is deployed on Solana, Tron, Ethereum, Polygon, Arbitrum, Optimism, Base, and Arc. Time to finality is inherited from the underlying blockchain.",
       "url": "https://hinkal-team.gitbook.io/hinkal/faq#q-is-hinkal-on-mainnet"
     },
@@ -195,13 +195,13 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Hinkal uses an append-only Merkle tree to store UTXO commitments and nullifiers. Every shielded operation adds new leaves, so state grows unboundedly over time. A removal-supporting Merkle tree variant is supported for certain interactions.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/merkle-trees#summary-of-trade-offs"
     },
     {
       "name": "Client-side indexing",
-      "value": "Partial scanning",
+      "value": "Scanning",
       "notes": "Users must scan chain events to discover incoming stealth transfers and reconstruct their shielded balance. Hinkal provides tooling (Hinkal Receive) for SDK integrators to build this scanning component. The wallet performs scanning internally for events related to the user's stealth addresses.",
       "url": "https://hinkal-team.gitbook.io/hinkal/hinkal-receive/features"
     },
