@@ -233,7 +233,7 @@
       "notes": "AnomaPay's public beta is live on Ethereum Mainnet and BNB Chain. Deposits are capped at $500 per user during the beta period, supporting payments in ETH, USDC, USDT, and XAN. The Anoma Protocol Adapter has been deployed more widely and for longer.",
       "citations": [
         {
-          "cited_text": "It is live on Ethereum Mainnet and BNB Chain",
+          "cited_text": "It is live on BNB Chain",
           "source": "https://docs.anoma.net/anoma-pay-introduction"
         },
         {
