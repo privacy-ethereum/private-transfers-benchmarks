@@ -247,4 +247,35 @@ export const configs: Record<string, ProtocolConfig> = {
     context:
       "CRITICAL: 'Scroll Cloak' (or 'Cloak') is Scroll's enterprise zk-validium privacy execution layer for on-chain finance, announced August 2025. NOT Ten Protocol's 'Cloak' feature, NOT zCloak Network. Architecture: per-instance deployment with private RPC gateway (authenticates + access control), app-specific sequencer (cloud or on-prem), private indexer, dedicated zk provers, and bridge contracts on Scroll L2 that settle proofs+state-roots to Ethereum L1 (only proofs + state roots posted — validium data availability). Enterprise customer retains sovereignty: controls bridge contracts, sequencer (if self-hosted), and admin rights. Full EVM compatibility for private smart contracts. KYB/KYC hooks, real-time monitoring, and selective-disclosure APIs are bundled. First version on Scroll testnet as of announcement; check current status during Phase A. Compliance is built-in (regulator-friendly) and the design explicitly targets enterprises rather than retail users.",
   },
+  "coti": {
+    id: "coti",
+    title: "Coti",
+    description:
+      "COTI is a blockchain network designed to enable computation on encrypted data through the use of Garbled Circuits. COTI can be used under the hood to build private ERC20 tokens and deploy it on any EVM-compatible chain.",
+    status: "pending",
+    documentation: "https://docs.coti.io/coti-documentation/",
+    categories: ["Garbled Circuits", "Multi Party Computation (MPC)", "Private L2"],
+    sourceUrls: [
+      "https://coti.io/files/coti_v2_whitepaper.pdf",
+      "https://docs.coti.io/coti-documentation/",
+      "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/garbled-circuits",
+      "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20",
+      "https://github.com/coti-io/documentation",
+    ],
+    context:
+      "CRITICAL: This evaluation is about COTI V2 — the 'Confidential Computing Ethereum Layer 2' that brings " +
+      "on-chain confidentiality to EVM smart contracts using Garbled Circuits (GC) and secure multi-party " +
+      "computation (MPC). It is NOT COTI V1, which was a DAG-based (Trustchain) payment network with a different " +
+      "architecture; the COTI token migrated from V1 to V2. Privacy on COTI V2 comes from Garbled Circuits + MPC, " +
+      "NOT from FHE and NOT from zero-knowledge proofs — COTI explicitly positions GC against FHE (claiming ~1000x " +
+      "faster compute, ~100x lower latency, ~250x smaller storage). The execution environment is the gcEVM, which " +
+      "adds confidential data types (e.g. ctUint / garbled ciphertext types) and a privacy precompile so Solidity " +
+      "contracts can compute over encrypted values. The flagship application primitive is the private ERC-20 " +
+      "(gcERC20 / 'PrivateERC20'), where balances and transfer amounts are encrypted on-chain; users hold an " +
+      "AES key (derived via onboarding to the network MPC) that lets them decrypt their own values, and selective " +
+      "disclosure is possible by sharing that key or re-encrypting to a viewer. Computation is performed by a " +
+      "committee of MPC nodes that jointly evaluate the garbled circuit without any single node learning the " +
+      "cleartext. Prefer the COTI V2 whitepaper (coti.io/files/coti_v2_whitepaper.pdf) and docs.coti.io as primary " +
+      "sources. Do NOT attribute V1 DAG/Trustchain mechanisms to V2, and do NOT describe COTI as an FHE or ZK system.",
+  },
 };

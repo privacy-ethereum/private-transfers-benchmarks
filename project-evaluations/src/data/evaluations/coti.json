@@ -1,10 +1,490 @@
 {
   "id": "coti",
   "title": "Coti",
-  "description": "COTI is a blockchain network designed to enable computation on encrypted data through the use of Garbled Circuits. COTI can be used under the hood to build private ERC20 tokens and deploy it on any EVM-compatible chain.",
+  "description": "COTI is a confidential EVM Layer 2 that runs computation over encrypted data using garbled circuits and multi-party computation (MPC). Its contract libraries let developers build applications such as private ERC-20 tokens whose balances and transfer amounts stay encrypted on-chain.",
+  "documentation": "https://docs.coti.io/coti-documentation/",
   "status": "pending",
-  "documentation": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20",
   "categories": ["Garbled Circuits", "Multi Party Computation (MPC)", "Private L2"],
-  "properties": [],
-  "sourceUrls": []
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Garbled circuits keep values marked private encrypted throughout execution, so amounts never appear in the clear while contracts compute on them. The private ERC-20 token stores each account's balance as encrypted ciphertext and accepts transfer amounts as encrypted inputs, leaving both holdings and amounts confidential on-chain.",
+      "citations": [
+        {
+          "cited_text": "an abstract implementation of a privacy-enhanced ERC20 token. It introduces mechanisms for handling encrypted balances, allowing for more secure and private token transfers.",
+          "source": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+        },
+        {
+          "cited_text": "This synergy not only enhances privacy by ensuring inputs remain encrypted throughout the computation process, but also significantly reduces the risk of data exposure",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/garbled-circuits"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "No",
+      "notes": "Transfers move between ordinary, visible EVM addresses, and the token's transfer event emits the sender and receiver addresses in the clear alongside the encrypted amounts. Only the value is hidden — the full graph of who paid whom stays public on the confidential L2, so participant identities are not protected.",
+      "citations": [
+        {
+          "cited_text": "event Transfer(address indexed from, address indexed to, ctUint64 senderValue, ctUint64 receiverValue);",
+          "source": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "Each private token is deployed as its own contract with a public on-chain address, so an observer sees exactly which token contract a transfer touches. Only the per-account balance and the amount are encrypted — the identity of the asset being moved is not concealed.",
+      "citations": [
+        {
+          "cited_text": "an abstract implementation of a privacy-enhanced ERC20 token. It introduces mechanisms for handling encrypted balances, allowing for more secure and private token transfers.",
+          "source": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+        },
+        {
+          "cited_text": "├── storage: \n│ ├── _balances: per-account encrypted balance (MPC ciphertext + user ciphertext) \n│ ├── _allowances: mapping(address => mapping(address => Allowance)) \n│ ├── _totalSupply: ctUint256",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/developer-guide/architecture"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Private transfers call dedicated confidential-token contracts whose encrypted-value entry points differ from ordinary token calldata, so the activity is trivially identifiable as privacy-protocol usage. COTI is itself a dedicated confidential L2, so any transaction on it is observably an interaction with the privacy network.",
+      "citations": [
+        {
+          "cited_text": "an abstract implementation of a privacy-enhanced ERC20 token. It introduces mechanisms for handling encrypted balances, allowing for more secure and private token transfers.",
+          "source": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+        },
+        {
+          "cited_text": "function balanceOf(address account) view returns (ctUint64) \n\nCopy \n\nfunction balanceOf() returns (gtUint64) \n\nCopy \n\nfunction setAccountEncryptionAddress(address addr) returns (bool)",
+          "source": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "768",
+      "notes": "COTI is an EVM Layer 2 that settles to Ethereum and produces its own blocks every five seconds. A transaction is final once its state is finalised on Ethereum L1.",
+      "needsResearchReview": "Finality has not been verified. L1 finality assumed, but COTI's finality to L1 is undocumented and it is not on L2BEAT.",
+      "citations": [
+        {
+          "cited_text": "Built as a Layer 2 over Ethereum, COTI V2 leverages advanced cryptographic techniques like Garbled Circuits to enable Private Computation",
+          "source": "https://docs.coti.io/coti-documentation/networks/mainnet"
+        },
+        {
+          "cited_text": "Blocks are generated every 5 seconds.",
+          "source": "https://docs.coti.io/coti-documentation/networks"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "2",
+      "notes": "The user holds two independently stored secrets. Their existing wallet key signs onboarding and every transaction, while a separate per-user AES key encrypts and decrypts their confidential values. The network generates that AES key during onboarding and returns it encrypted so only that user can read it, transported by a throwaway RSA keypair. It is retained by the user rather than re-derived from the wallet.",
+      "citations": [
+        {
+          "cited_text": "The gcEVM utilizes AES keys, unique to each user, for encrypting and decrypting their data.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        },
+        {
+          "cited_text": "generate an RSA key pair, as RSA encryption is used to securely transmit AES keys. Next, sign the generated RSA public key using your account&#x27;s private key with the ECDSA signing scheme.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "120-240",
+      "notes": "Getting funds onto COTI from Ethereum goes through the token bridge, which takes roughly two to four minutes once the source-chain transfer is included.",
+      "needsResearchReview": "Bridge time is a docs operational estimate (2-4 min), not a guaranteed window. COTI is not tracked on L2BEAT.",
+      "citations": [
+        {
+          "cited_text": "Processing times between 2-4 minutes are normal during regular network load.",
+          "source": "https://docs.coti.io/coti-documentation/coti-bridge"
+        },
+        {
+          "cited_text": "After the spending approval is processed on-chain, click the Portal In button.",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/user-guide/convert-to-private-tokens"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "120-240",
+      "notes": "Moving funds from COTI back to Ethereum goes through the same token bridge, roughly two to four minutes once the COTI-side transfer is included.",
+      "needsResearchReview": "Bridge time is a docs operational estimate (2-4 min), not a guaranteed window. COTI is not tracked on L2BEAT.",
+      "citations": [
+        {
+          "cited_text": "Processing times between 2-4 minutes are normal during regular network load.",
+          "source": "https://docs.coti.io/coti-documentation/coti-bridge"
+        },
+        {
+          "cited_text": "The private tokens are burned on the private side and the corresponding public tokens return to your wallet.",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/user-guide/convert-to-public-tokens"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "A single sequencer orders every transaction and assembles blocks, while full nodes only validate and cannot produce blocks or force inclusion. That one operator can drop or delay otherwise-valid transactions, and no permissionless path lets a user bypass it for ordinary transfers.",
+      "citations": [
+        {
+          "cited_text": "Sequencer : This component processes transactions (TXs) and organizes them into blocks. It coordinates transaction flow and ensures orderly addition to the chain.\n\n",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/introduction/coti-architecture"
+        },
+        {
+          "cited_text": "Full Nodes : These nodes are responsible for validating transactions and ensuring the integrity of the COTI blockchain network. They act as the decentralized foundation of the network.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/introduction/coti-architecture"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "Confidential execution runs entirely on COTI's own native stack rather than an outside committee. A sequencer orders transactions, a garbler generates the circuits, and two executors evaluate each block under multi-party computation. Security rests on a these components in the COTI stack, not on any external network.",
+      "citations": [
+        {
+          "cited_text": "Executors : Two separate executors that process blocks in a MPC manner:\n\nRed Blocks : incoming blocks processed from the sequencer to the executors.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/introduction/coti-architecture"
+        },
+        {
+          "cited_text": "Garbler : Generates garbled circuits that are stored into the DB Manager to be used later on during on-chain computation.\n\n",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/introduction/coti-architecture"
+        },
+        {
+          "cited_text": "When it comes to the security of the network, COTI V2 is predicated on the fact that a threshold of the network nodes operate faithfully. ",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/garbled-circuits"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Can exit in a time period",
+      "notes": "Documentation states holders can withdraw directly to L1 without the L2's permission, which would let a user exit even if the sequencer and executor committee stop cooperating.",
+      "needsResearchReview": "Docs assert direct L1 withdrawal but describe no force-exit mechanism or timing.",
+      "citations": [
+        {
+          "cited_text": "this design allows users to withdraw directly from L1 without needing L2’s permission, further emphasizing the secure nature of COTI V2.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/garbled-circuits"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Network upgrade (hard/soft fork)",
+      "notes": "Chain-level changes are rolled out through coordinated network hard forks, with named upgrades activated at scheduled blocks (Hydrogen on 2025-10-19, Helium on 2026-01-11). The reference private-token contract inherits OpenZeppelin AccessControl and ReentrancyGuard with a deployer admin role and a minter role, gating privileges rather than exposing a contract code-upgrade path.",
+      "citations": [
+        {
+          "cited_text": "It inherits from standard OpenZeppelin contracts for access control and reentrancy protection, and delegates all encrypted arithmetic to the MPC precompile via the MpcCore library.\n\n",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/developer-guide/architecture"
+        },
+        {
+          "cited_text": "├── roles: \n│ ├── DEFAULT_ADMIN_ROLE → deployer \n│ └── MINTER_ROLE → bridges, vesting contracts, etc.",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/developer-guide/architecture"
+        },
+        {
+          "cited_text": "Hard Forks \n\nVersion\n\nHard Fork\n\nBlock #\n\nv.1.1.4 \n\nhydrogen\n\n3,640,378\n\nOctober 19, 2025 at 12:00 PM UTC\n\nv.1.2.0 \n\nhelium\n\n5,098,638\n\nJanuary 11, 2026 at 10:00 PM UTC",
+          "admin_class": "Network upgrade (hard/soft fork)",
+          "source": "https://docs.coti.io/coti-documentation/networks/mainnet"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "N/A",
+      "notes": "Privacy comes from server-side multi-party computation over garbled circuits, not from client-generated proofs. The user device only encrypts inputs locally with its AES key before submitting them, while the heavy cryptographic evaluation runs on the executor network.",
+      "citations": [
+        {
+          "cited_text": "What sets COTI V2 apart is its unique integration of a garbling protocol within a larger MPC solution to facilitate confidential transactions and smart contract interactions on a layer 2 platform.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/garbled-circuits"
+        },
+        {
+          "cited_text": "The encryption process involves generating a random number, encrypting it with your AES key, and then applying a bitwise XOR operation between the input value and the encrypted random number.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Computation runs over garbled values across an executor committee, and the network key is split by threshold cryptography so each node holds only an encrypted share and none can reconstruct it. User data is sealed under a per-user AES key delivered so that only that user can decrypt it, so no single operator sees plaintext. The guarantee holds only while fewer than the threshold of committee nodes collude.",
+      "citations": [
+        {
+          "cited_text": "an AES encryption key fragmented using advanced crptographic techniques (e.g., threshold cryptography) so that each node in the network stores only an encrypted or protected portion.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        },
+        {
+          "cited_text": "The gcEVM utilizes AES keys, unique to each user, for encrypting and decrypting their data.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        },
+        {
+          "cited_text": "The precompiled contract will respond (using an event on the blockchain) with your AES key, encrypted in a way that only your RSA private key could decrypt.\n\n",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "4 : Mainnet for more than 1 year",
+      "notes": "COTI V2 mainnet has run since March 2025, and has executed scheduled hard forks in October 2025 and January 2026. Independent audits cover live components, including a multi-party-computation review and a go-ethereum review in 2025 and a private-token review in 2026. The user-facing private-transfer portal is newer than the base chain, launching in 2026.",
+      "citations": [
+        {
+          "cited_text": "Hard Forks \n\nVersion\n\nHard Fork\n\nBlock #\n\nv.1.1.4 \n\nhydrogen\n\n3,640,378\n\nOctober 19, 2025 at 12:00 PM UTC\n\nv.1.2.0 \n\nhelium\n\n5,098,638\n\nJanuary 11, 2026 at 10:00 PM UTC",
+          "source": "https://docs.coti.io/coti-documentation/networks/mainnet"
+        },
+        {
+          "cited_text": "2025 - 3\n\nHacken\n\nMPC\n\n2025_Hacken \n\n2025 - 8\n\nHacken\n\nGoEthereum\n\n2025_Hacken \n\n2025 - 11\n\nSayfer\n\nRedeemer\n\n2025_Sayfer \n\n2026 - 3\n\nSayfer\n\nPrivate ERC20",
+          "source": "https://docs.coti.io/coti-documentation/security/audit-reports"
+        },
+        {
+          "kind": "explorer",
+          "source": "https://mainnet.cotiscan.io/block/1",
+          "date": "2025-03-22"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Deployed onboarding transports the AES key with classical RSA, which a quantum adversary running Shor's algorithm would break, so the live system is not quantum-safe. COTI describes a migration path — key distribution via a post-quantum key-encapsulation mechanism, doubled symmetric key sizes, and a larger-key PRF for garbled-circuit evaluation — but that path is not yet the deployed default.",
+      "citations": [
+        {
+          "cited_text": "*   COTI is aiming to achieve quantum resistance in early 2025 by doubling symmetric encryption key lengths and using post quantum secure asymmetric encryption schemes.\n",
+          "source": "https://medium.com/cotinetwork/technical-deep-dive-cotis-answer-to-quantum-computing-ee05ad9814dc"
+        },
+        {
+          "cited_text": "key distribution is done via a key-encapsulation mechanism ([KEM](https://en.wikipedia.org/wiki/Key_encapsulation_mechanism)), which can be any post-quantum asymmetric encryption scheme",
+          "source": "https://medium.com/cotinetwork/technical-deep-dive-cotis-answer-to-quantum-computing-ee05ad9814dc"
+        },
+        {
+          "cited_text": "To begin, you must generate an RSA key pair, as RSA encryption is used to securely transmit AES keys. ",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "No compliance gate is enforced at the chain, contract, or asset layer. Privacy operates at the application level through encrypted values whose decryption is gated solely by user-held AES keys. No blocklist, allowlist, KYC gate, or sanctions filter sits in the transaction path.",
+      "citations": [
+        {
+          "cited_text": "The gcEVM utilizes AES keys, unique to each user, for encrypting and decrypting their data.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        },
+        {
+          "cited_text": "Furthermore, COTI strengthens privacy by securely re-encrypting decrypted data with the user’s AES key before returning it, eliminating the need for manual access control configurations. ",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/coti-vs-others"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "No protocol admin, governance body, third party, or asset issuer can compel disclosure or block a confidential transfer. Each user alone holds the AES key needed to decrypt their values, and no compliance gate such as a blocklist or screening hook operates over private transfers at the protocol layer.",
+      "citations": [
+        {
+          "cited_text": "The gcEVM utilizes AES keys, unique to each user, for encrypting and decrypting their data.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        },
+        {
+          "cited_text": "Furthermore, COTI strengthens privacy by securely re-encrypting decrypted data with the user’s AES key before returning it, eliminating the need for manual access control configurations. ",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/coti-vs-others"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["None"],
+      "notes": "COTI documents no compliance mechanism. Privacy rests on per-user AES keys that gate decryption, with no blocklist, allowlist, KYC step, sanctions screen, or attestation oracle anywhere in the transaction path.",
+      "citations": [
+        {
+          "cited_text": "The gcEVM utilizes AES keys, unique to each user, for encrypting and decrypting their data.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        },
+        {
+          "cited_text": "To retrieve the decrypted value, the user must first encrypt the random number using their AES key.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["None"],
+      "notes": "No compliance check gates deposits, transfers, or withdrawals. Confidentiality rests on per-user AES keys, and disclosure is a user-initiated act of sharing key material out-of-band rather than a protocol-enforced checkpoint, so there is no enforcement point anywhere in the transfer lifecycle.",
+      "citations": [
+        {
+          "cited_text": "The gcEVM utilizes AES keys, unique to each user, for encrypting and decrypting their data.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        },
+        {
+          "cited_text": "To retrieve the decrypted value, the user must first encrypt the random number using their AES key.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User"],
+      "notes": "A user reads their own confidential values with their personal AES key, giving self-view of their balances and history. Decryption is gated entirely by that user-held key, and the network key is split across nodes so no operator can reconstruct it to view on a user's behalf.",
+      "citations": [
+        {
+          "cited_text": "The gcEVM utilizes AES keys, unique to each user, for encrypting and decrypting their data.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        },
+        {
+          "cited_text": "an AES encryption key fragmented using advanced crptographic techniques (e.g., threshold cryptography) so that each node in the network stores only an encrypted or protected portion.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "None",
+      "notes": "Decryption is governed solely by each user's own AES key, which provides self-view only. The protocol has no viewing-key delegation, so there are no third-party viewing permissions to set, update, or revoke.",
+      "citations": [
+        {
+          "cited_text": "The gcEVM utilizes AES keys, unique to each user, for encrypting and decrypting their data.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "No",
+      "notes": "Correctness rests on an honest-threshold assumption over the multi-party-computation committee rather than a re-checkable proof: results are trusted when enough executor nodes behave faithfully. Secure enclaves are floated only as optional extra protection, not the root of trust, and no succinct on-chain proof attests that the encrypted operations were evaluated correctly.",
+      "citations": [
+        {
+          "cited_text": "When it comes to the security of the network, COTI V2 is predicated on the fact that a threshold of the network nodes operate faithfully. ",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/garbled-circuits"
+        },
+        {
+          "cited_text": "While COTI plans to use secure enclaves for an additional layer of protection, they are not a necessity for the integrity of the system. ",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/garbled-circuits"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The COTI smart-contract library — the multi-party-computation contract and the private ERC-20 and ERC-721 implementations — is published on GitHub under the Apache-2.0 licence.",
+      "citations": [
+        {
+          "cited_text": "Welcome to COTI Contracts, a library of smart contracts for COTI's GC technology, including MPC contract for secure computations, private ERC20 and ERC721 contracts, and test mocks for validation.",
+          "source": "https://github.com/coti-io/coti-contracts"
+        },
+        {
+          "kind": "license",
+          "source": "https://github.com/coti-io/coti-contracts/blob/main/LICENSE"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Account",
+      "notes": "Encrypted balances live in a per-account mapping alongside a single encrypted total-supply value, so on-chain state grows with the number of token holders. Transfers between existing holders overwrite their entries in place, and only a new holder adds a slot, so repeated activity among existing accounts does not enlarge the set.",
+      "citations": [
+        {
+          "cited_text": "├── storage: \n│ ├── _balances: per-account encrypted balance (MPC ciphertext + user ciphertext) \n│ ├── _allowances: mapping(address => mapping(address => Allowance)) \n│ ├── _totalSupply: ctUint256",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/developer-guide/architecture"
+        },
+        {
+          "cited_text": "function balanceOf(address account) view returns (ctUint64) \n\nCopy \n\nfunction balanceOf() returns (gtUint64) \n\nCopy \n\nfunction setAccountEncryptionAddress(address addr) returns (bool)",
+          "source": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No Scanning",
+      "notes": "Balances are stored per-account on-chain as ciphertext, so a holder reads their own encrypted balance with a direct account lookup rather than trial-decrypting outputs. Decryption is a single local operation using the wallet's AES key, so tracking funds needs one keyed read, not a continuous chain scan.",
+      "citations": [
+        {
+          "cited_text": "├── storage: \n│ ├── _balances: per-account encrypted balance (MPC ciphertext + user ciphertext) \n│ ├── _allowances: mapping(address => mapping(address => Allowance)) \n│ ├── _totalSupply: ctUint256",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/developer-guide/architecture"
+        },
+        {
+          "cited_text": "The gcEVM utilizes AES keys, unique to each user, for encrypting and decrypting their data.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/aes-keys"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "Account-based state model",
+      "notes": "Each account carries a single encrypted balance held in a per-account mapping, mirroring the standard account model rather than a note and nullifier set. Transfers debit and credit these encrypted account balances through the multi-party-computation precompile, with no commitment tree or nullifier publication involved.",
+      "citations": [
+        {
+          "cited_text": "├── storage: \n│ ├── _balances: per-account encrypted balance (MPC ciphertext + user ciphertext) \n│ ├── _allowances: mapping(address => mapping(address => Allowance)) \n│ ├── _totalSupply: ctUint256",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/developer-guide/architecture"
+        },
+        {
+          "cited_text": "It inherits from standard OpenZeppelin contracts for access control and reentrancy protection, and delegates all encrypted arithmetic to the MPC precompile via the MpcCore library.\n\n",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/developer-guide/architecture"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Smart contracts"],
+      "notes": "Encrypted balances and total supply are held directly in the token contract's storage as ciphertext, with stored values typed as on-chain ciphertext. The authoritative private state therefore lives inside the confidential contract on the L2, not in any off-chain note database.",
+      "citations": [
+        {
+          "cited_text": "├── storage: \n│ ├── _balances: per-account encrypted balance (MPC ciphertext + user ciphertext) \n│ ├── _allowances: mapping(address => mapping(address => Allowance)) \n│ ├── _totalSupply: ctUint256",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/developer-guide/architecture"
+        },
+        {
+          "cited_text": "ctUint256 \n\nCiphertext uint256 — an encrypted value stored on-chain",
+          "source": "https://docs.coti.io/coti-documentation/coti-privacy-portal/developer-guide/architecture"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Unlimited access to DeFi applications",
+      "notes": "COTI is a general-purpose confidential EVM where any DeFi application can be deployed and compose with the network's private tokens, so shielded assets reach the full set of apps built for the chain. As on other private smart-contract rollups, those apps must be written for the confidential token interface — private tokens are not consumed unchanged by plaintext-ERC-20 logic — but the on-chain DeFi surface itself is unrestricted.",
+      "citations": [
+        {
+          "cited_text": "COTI V2, powered by Garbled Circuits (GC), offers unmatched capabilities in privacy-preserving computation, setting a new standard for building multi-party applications like privacy DEXs.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/coti-vs-others"
+        },
+        {
+          "cited_text": "function balanceOf(address account) view returns (ctUint64) \n\nCopy \n\nfunction balanceOf() returns (gtUint64) \n\nCopy \n\nfunction setAccountEncryptionAddress(address addr) returns (bool)",
+          "source": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Full programmability with public and private state",
+      "notes": "COTI exposes a general-purpose confidential EVM where developers write arbitrary Solidity contracts that compute over encrypted values through a multi-party-computation precompile and confidential data types. The private ERC-20 is one library example rather than a fixed application, and the same primitive supports encrypted arithmetic, comparisons, conditional transfers, and re-encryption of outputs within ordinary contract logic, enabling private state and confidential application logic.",
+      "citations": [
+        {
+          "cited_text": "an abstract implementation of a privacy-enhanced ERC20 token. It introduces mechanisms for handling encrypted balances, allowing for more secure and private token transfers.",
+          "source": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+        },
+        {
+          "cited_text": "This contract integrates with the MPC Core library for secure multiparty computation (MPC).\n\n",
+          "source": "https://docs.coti.io/coti-documentation/build-on-coti/tools/contracts-library/tokens/private-erc20"
+        }
+      ]
+    }
+  ]
 }
