@@ -16,11 +16,11 @@
       "notes": "Aleo provides full confidentiality for all addresses, where both balances and transaction amounts remain private through zero-knowledge proofs.  A single Aleo addresses can hold both shielded and unshielded funds.  Shielded transactions keeps the addresses and transaction data shielded from the public. Unshielded transactions work similarly to Ethereum and do not offer privacy, with addresses and values publicly visible.  Users can convert between shielded/unshielded funds at any time.",
       "citations": [
         {
-          "cited_text": "`transfer_private`: Fully private — sender, receiver, and amount are all hidden. `transfer_private` consumes a record from the sender and produces two new records: one for the recipient and one for the sender's change. No public information is revealed.",
+          "cited_text": "`transfer_private` consumes a record from the sender and produces two new records: one for the recipient and one for the sender's change. No public information is revealed.",
           "source": "https://docs.aleo.org/learn/core-concepts/credits-and-transfers"
         },
         {
-          "cited_text": "Records are Aleo's approach to private state. They are units of encrypted data owned by a specific user. Records work similarly to Bitcoin's UTXO model; when you \"spend\" a record, it's consumed and a new one is created.  Only the owner (and anyone with their view key) can decrypt a record's contents. Records are stored onchain in encrypted form, [and] executed and produced offchain as part of a transition, with a ZK proof submitted for verification",
+          "cited_text": "Only the owner (and anyone with their view key) can decrypt a record's contents.",
           "source": "https://docs.aleo.org/learn/core-concepts/public-and-private-state"
         }
       ]
@@ -28,14 +28,14 @@
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "Aleo supports full anonymity for both sender and receiver when performing shielded transactions. A shielded transaction keeps the addresses and transaction amounts shielded from the public using zero-knowledge proofs to allow transaction data to be encrypted but remain verifiable by network nodes.  While Aleo also supports unshielded transactions that work like Ethereum with public visibility, the availability of fully shielded transactions means the protocol supports sender and receiver anonymity relative to any uninvolved parties.",
+      "notes": "Aleo supports full anonymity for both sender and receiver when performing shielded transactions. A shielded transaction keeps addresses and transaction amounts hidden from the public using zero-knowledge proofs, while remaining verifiable by network nodes. While Aleo also supports unshielded transactions that work like Ethereum with public visibility, the availability of fully shielded transactions means the protocol supports sender and receiver anonymity relative to any uninvolved parties.",
       "citations": [
         {
-          "cited_text": "`transfer_private`: Fully private — sender, receiver, and amount are all hidden. `transfer_private` consumes a record from the sender and produces two new records: one for the recipient and one for the sender's change. No public information is revealed.",
+          "cited_text": "`transfer_private` consumes a record from the sender and produces two new records: one for the recipient and one for the sender's change. No public information is revealed.",
           "source": "https://docs.aleo.org/learn/core-concepts/credits-and-transfers"
         },
         {
-          "cited_text": "Records also include an encrypted sender_ciphertext field (as of Consensus V8), which stores the address of the transaction signer who created the record. This is encrypted alongside the record data, so only the record owner can see who sent it. This allows recipients to identify the sender of a private transfer without that information being publicly visible onchain.",
+          "cited_text": "Records also include an encrypted sender_ciphertext field (as of Consensus V8), which stores the address of the transaction signer who created the record.",
           "source": "https://docs.aleo.org/learn/core-concepts/public-and-private-state"
         }
       ]
@@ -50,7 +50,7 @@
           "source": "https://docs.aleo.org/learn/core-concepts/credits-and-transfers"
         },
         {
-          "cited_text": "https://explorer.provable.com/program/usad_stablecoin.aleo , https://explorer.provable.com/program/usdcx_stablecoin.aleo",
+          "cited_text": "https://explorer.provable.com/program/usad_stablecoin.aleo, https://explorer.provable.com/program/usdcx_stablecoin.aleo",
           "source": "https://docs.aleo.org/build/common-uses/private_stablecoins"
         }
       ]
@@ -61,7 +61,7 @@
       "notes": "Aleo does not have plausible deniability because it 1) it is a known privacy L1 and 2) it differentiates between unshielded and shielded transactions. Shielded transactions use zero-knowledge proofs to encrypt transaction data and are listed onchain as such, making them clearly identifiable as privacy-focused transactions.",
       "citations": [
         {
-          "cited_text": "credits.aleo provides five transfer functions, each with different privacy properties: ... `transfer_private` consumes a credit record from the sender and produces two new records: one for the recipient and one for the sender's change. No public information is revealed.  `transfer_public` updates the account mapping directly — deducting from the sender and adding to the receiver. Both addresses and the amount are visible onchain.  ",
+          "cited_text": "`transfer_private` consumes a credit record from the sender and produces two new records: one for the recipient and one for the sender's change. No public information is revealed.",
           "source": "https://docs.aleo.org/learn/core-concepts/credits-and-transfers"
         }
       ]
@@ -84,7 +84,7 @@
       "notes": "Aleo's consensus protocol is DAG-based and inspired by the Narwhal mempool and Bullshark ordering protocols. It provides instant finality: once a block is committed, it is final and cannot be reverted.  Consequently, block time is equal to finality time (~3 seconds at the time of writing).",
       "citations": [
         {
-          "cited_text": "Aleo's consensus protocol is called AleoBFT — a DAG-based Byzantine Fault Tolerant (BFT) system inspired by the Narwhal mempool and Bullshark ordering protocols. It provides instant finality: once a block is committed, it is final and cannot be reverted.  AleoBFT achieves instant finality because the DAG structure guarantees that if any honest validator commits an anchor, all future anchors will have a path to at least one vertex that voted for it. There is no possibility of forks or chain reorganizations.",
+          "cited_text": "It provides instant finality: once a block is committed, it is final and cannot be reverted.",
           "source": "https://docs.aleo.org/learn/network/consensus"
         },
         {
@@ -117,14 +117,14 @@
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "notes": "Yes, Aleo has censorship resistance. Aleo operates as a permissionless, decentralized blockchain where the network is a peer-to-peer network of client and validator nodes that removes the need for a trusted regulating central party. The protocol has no mechanism to prevent valid transactions from being included, and validators are economically incentivized to behave honestly via staking requirements and block rewards.  Any validator can include any valid transaction in a block, ensuring that no entity can permanently prevent valid transactions from being confirmed on the chain.",
+      "notes": "Aleo operates as a permissionless, decentralized blockchain with no mechanism to prevent valid transactions from being included. Validators are economically incentivized to behave honestly via staking requirements and block rewards. Any validator can include any valid transaction in a block, so no entity can permanently prevent valid transactions from being finalized.",
       "citations": [
         {
           "cited_text": "AleoBFT tolerates up to f Byzantine validators where f < n/3. As long as more than 2/3 of the committee (by stake weight) is honest, the network continues producing blocks and maintaining consensus.",
           "source": "https://docs.aleo.org/learn/network/consensus"
         },
         {
-          "cited_text": "Validators are the nodes that produce blocks, verify zero-knowledge proofs, and participate in AleoBFT consensus. They are the backbone of the Aleo network. Validators are responsible for: Verifying ZK proofs — Checking that transitions were executed correctly without seeing the underlying data, Executing async functions — Running onchain logic (mapping updates) after proof verification, Producing blocks — Participating in AleoBFT consensus to commit transactions, Maintaining state — Storing the ledger, mappings, and encrypted records.  Validators receive 1/3 of coinbase rewards as block rewards, distributed proportionally to their stake within the committee.",
+          "cited_text": "Validators produce blocks, verify ZK proofs, and participate in AleoBFT consensus. They receive 1/3 of coinbase rewards, distributed proportionally to their stake within the committee.",
           "source": "https://docs.aleo.org/learn/network/nodes/validators"
         }
       ]
@@ -143,24 +143,24 @@
     {
       "name": "Escape hatch",
       "value": "N/A",
-      "notes": "Aleo is a standalone Layer 1 blockchain where assets can be sent both shielded and unshielded through standard onchain transactions.  There is no separate system from which users need to 'exit' - users can move native or ARC-20 funds at any time.  The exception to this rule is for ARC-22 (Compliant Token Standard) tokens such as USDCx and USAD.  These tokens enforce a privacy-preserving freezelist mechanism, which prevents blocked addresses from sending, receiving, shielding, or unshielding any tokens. There is no escape hatch or ragequit functionality for blocked addresses. This does not apply to the native asset ALEO.",
+      "notes": "Aleo is a standalone Layer 1 blockchain where users can move native or ARC-20 funds at any time without a withdrawal mechanism. The exception is ARC-22 (Compliant Token Standard) tokens such as USDCx and USAD, which enforce a privacy-preserving freezelist that prevents blocked addresses from sending, receiving, shielding, or unshielding tokens. There is no escape hatch or ragequit functionality for blocked addresses.",
       "needsResearchReview": "Needs explicit source once ARC-20 and ARC-22 standards are finalized"
     },
     {
       "name": "Upgradeability",
       "value": ["Network upgrade (hard/soft fork)"],
-      "notes": "Aleo has several different mechanism to upgrade both the protocol as well as asset-specific smart contracts. At the network level, governance of the Aleo network is driven by Aleo Request for Comments (ARCs) — formal proposals for protocol, network, application, and meta-level changes. ARCs are discussed on GitHub, voted on through stake-weighted governance, and implemented in snarkVM, snarkOS, or Leo.  Once changes are implemented, the network uses an upgrade mechanism coordinated through hard forks activated at predetermined block heights.  At the application level, smart contracts (like tokens) can be upgraded via a fully programmable constructor method.  Several different upgrade patterns are unlocked by having programmable upgradability, including multisig-based, DAO-based, and timelock-based.  There is also a configuration to make smart contracts immutable. ",
+      "notes": "Aleo supports two levels of upgrades. At the network level, governance is driven by Aleo Request for Comments (ARCs) — formal proposals discussed on GitHub, voted through stake-weighted governance, and implemented via hard forks at predetermined block heights. At the application level, smart contracts can be upgraded via a programmable constructor method supporting multisig, DAO, timelock, and immutable configurations.",
       "citations": [
         {
-          "cited_text": "Governance of the Aleo network is driven by Aleo Request for Comments (ARCs) — formal proposals for protocol, network, application, and meta-level changes. ARCs are discussed on GitHub, voted on through stake-weighted governance, and implemented in snarkVM, snarkOS, or Leo.",
+          "cited_text": "Governance is driven by Aleo Request for Comments (ARCs) — formal proposals discussed on GitHub, voted through stake-weighted governance, and implemented in snarkVM, snarkOS, or Leo.",
           "source": "https://docs.aleo.org/participate/governance"
         },
         {
-          "cited_text": "Your program's upgrade policy is defined by an annotation on a constructor in the Leo program. The Leo compiler reads the annotation to understand your intent and generates the appropriate underlying code.  There are four primary upgrade modes:  @noupgrade The program is not upgradable.  @admin: Upgrades are controlled by a single, hardcoded admin address.  @checksum: Upgrades are governed by an onchain checksum, often managed by a separate program (e.g., a DAO).  @custom: You write the entire upgrade logic from scratch in the constructor. ",
+          "cited_text": "There are four primary upgrade modes: @noupgrade The program is not upgradable. @admin: Upgrades are controlled by a single, hardcoded admin address.",
           "source": "https://docs.aleo.org/build/leo/guides/upgradability"
         },
         {
-          "cited_text": "Source code",
+          "cited_text": "/// The consensus version height for `MainnetV0`.",
           "source": "https://github.com/ProvableHQ/snarkVM/blob/1c7bce51fdeb3a27662c54cca93de448ab729a94/console/network/src/consensus_heights.rs#L129"
         }
       ]
@@ -168,14 +168,14 @@
     {
       "name": "Client-side proving",
       "value": "No",
-      "notes": "Shield, developed by Provable (an Aleo Labs company), is the most actively maintained wallet in the Aleo ecosystem and the recommended default for Aleo users. Shield features a privacy-preserving delegated proving service where proof generation is offloaded to a third-party prover while the user's private inputs remain encrypted throughout — the delegated prover never sees the underlying data. Beyond proving, Shield offers a feemaster service (sponsored transaction fees), a privacy-preserving record scanning service, cross-chain swaps, and on/off ramps. Users may also opt to generate proofs locally on their own device.",
+      "notes": "Shield (developed by Provable, an Aleo Labs company) offers a privacy-preserving delegated proving service where proof generation is offloaded to a third-party prover while private inputs remain encrypted throughout — the delegated prover never sees the underlying data. Beyond proving, Shield offers a feemaster service, privacy-preserving record scanning, cross-chain swaps, and on/off ramps. Users may also opt to generate proofs locally.",
       "citations": [
         {
-          "cited_text": "A program runs locally on the user's device (or a delegated prover).  The execution produces a zero-knowledge proof that the program ran correctly with valid inputs.  Only the proof — not the inputs or execution trace — is submitted to the network.",
+          "cited_text": "A program runs locally on the user's device (or a delegated prover). The execution produces a zero-knowledge proof that the program ran correctly with valid inputs.",
           "source": "https://docs.aleo.org/learn/what-is-aleo/how-aleo-works"
         },
         {
-          "cited_text": "Generating zero-knowledge proofs is computationally intensive. Delegated proving allows users to offload proof generation to a third-party prover — without giving up control of their funds or exposing their private key. ",
+          "cited_text": "Delegated proving allows users to offload proof generation to a third-party prover without giving up control of their funds or exposing their private key.",
           "source": "https://docs.aleo.org/learn/advanced/delegated-proving"
         }
       ]
@@ -183,19 +183,19 @@
     {
       "name": "Third-party inspectability",
       "value": "No",
-      "notes": "Aleo shielded transactions remain encrypted onchain and cannot be inspected by third parties. Shield wallet (developed by Provable, an Aleo Labs company) implements both privacy-preserving delegated proving and privacy-preserving record scanning, meaning that even when proof generation or chain scanning is offloaded to a third-party service, the user's private inputs stay encrypted throughout — the delegated prover and scanning service never see the underlying data. Users may voluntarily share view keys to grant read-only access to their transaction history, with account-level and transaction-level granularity, but this is strictly opt-in.",
+      "notes": "Aleo shielded transactions remain encrypted onchain and cannot be inspected by third parties. Even when proof generation or chain scanning is offloaded to a third-party service (Shield wallet), user private inputs stay encrypted — the delegated prover and scanning service never see the underlying data. Users may voluntarily share view keys to grant read-only access to their transaction history, but this is strictly opt-in.",
       "needsResearchReview": "Needs explicit citations once ARC-22 standard is finalized",
       "citations": [
         {
-          "cited_text": "Records are Aleo's approach to private state. They are units of encrypted data owned by a specific user. Records work similarly to Bitcoin's UTXO model; when you \"spend\" a record, it's consumed and a new one is created.  Only the owner (and anyone with their view key) can decrypt a record's contents",
+          "cited_text": "Only the owner (and anyone with their view key) can decrypt a record's contents.",
           "source": "https://docs.aleo.org/learn/core-concepts/public-and-private-state"
         },
         {
-          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery scenarios. A user can share their view key with an auditor to prove transaction history without giving up control of their funds.  The account view key decrypts all records and transactions for the account. For more granular access, Aleo also provides record view keys (scoped to a single record) and transition view keys (scoped to a single transition).",
+          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery.",
           "source": "https://docs.aleo.org/learn/core-concepts/accounts-and-keys"
         },
         {
-          "cited_text": "Every operation that crosses the public/private boundary (mint_private, burn_private, and transfer_public_to_private) emits a ComplianceRecord to a designated compliance officer address. This gives the issuer an audit trail for regulatory purposes without exposing information publicly onchain.",
+          "cited_text": "Every operation that crosses the public/private boundary (mint_private, burn_private, and transfer_public_to_private) emits a ComplianceRecord to a designated compliance officer address.",
           "source": "https://docs.aleo.org/build/common-uses/private_stablecoins"
         }
       ]
@@ -207,22 +207,23 @@
       "citations": [
         {
           "cited_text": "timestamp: 1725462000 (UNIX Timestamp on Genesis Block)",
-          "source": "https://api.provable.com/v2/mainnet/block/0"
+          "source": "https://api.provable.com/v2/mainnet/block/0",
+          "date": "2024-09-04"
         },
         {
-          "cited_text": "Today, we’re proud to announce that Aleo Mainnet is officially live, enabling developers to build the next generation of decentralized applications powered by zero-knowledge cryptography. ",
+          "cited_text": "Today, we’re proud to announce that Aleo Mainnet is officially live, enabling developers to build the next generation of decentralized applications powered by zero-knowledge cryptography.",
           "source": "https://aleo.org/post/announcing-aleo-mainnet/"
         },
         {
-          "cited_text": "The use of zero knowledge cryptography in Aleo enables a highly scalable blockchain network. However, those scalability benefits have not translated into low fees on the Aleo network - yet. Because of a large focus on security, high fees have served as an additional layer of defense against Denial of Service attacks. The time has come to deliver on the promise of zero-knowledge proofs, and to make transactions cheap. Technically, this will soon be possible because of the spend limits which are introduced, acting as another layer of defense against high compute. As such, this ARC proposes to reduce compute-related costs by a factor of 25x, which will significantly bring down average transaction costs by up to 92%.",
+          "cited_text": "This ARC proposes to reduce compute-related costs by a factor of 25x, which will significantly bring down average transaction costs by up to 92%.",
           "source": "https://vote.aleo.org/p/arc-0005"
         },
         {
-          "cited_text": "As the Aleo ecosystem matures, it is apparent that applications will need to be upgraded over their lifetime. The Aleo Virtual Machine (AVM) provides a method for program-driven upgrades. This method, while sound, has properties that may be undesirable for some applications. This proposal offers a new method for program upgrades that seeks to be timely and cost-effective, while preventing fragmentation of application state.",
+          "cited_text": "This proposal offers a new method for program upgrades that seeks to be timely and cost-effective, while preventing fragmentation of application state.",
           "source": "https://vote.aleo.org/p/arc-0006"
         },
         {
-          "cited_text": "Static function calls in the Aleo Virtual Machine (AVM) require programs to know at compile time which functions they will invoke. While this provides strong guarantees, it limits the expressiveness of Aleo programs and prevents common smart contract patterns found in other ecosystems.  This proposal introduces dynamic dispatch to the AVM, enabling programs to invoke functions determined at runtime. Dynamic dispatch unlocks powerful programming paradigms including interfaces, plugin architectures and upgradeable libraries—while maintaining the security and privacy guarantees that define Aleo.",
+          "cited_text": "This proposal introduces dynamic dispatch to the AVM, enabling programs to invoke functions determined at runtime.",
           "source": "https://vote.aleo.org/p/arc-0009"
         }
       ]
@@ -233,7 +234,7 @@
       "notes": "Aleo is not fully quantum-resistant. Its zk-SNARK proofs still rely on elliptic-curve primitives that would lose soundness once quantum hardware becomes powerful enough. Components such as signatures and proof verification and record encryption still depend on pre-quantum primitives that could eventually be broken. Mitigation and post-quantum migration strategies are being actively researched.",
       "citations": [
         {
-          "cited_text": "Aleo uses Varuna, a zkSNARK proof system based on Algebraic Holographic Proofs (AHP), evolved from the Marlin proof system. Varuna is designed for batching multiple circuits efficiently — critical for Aleo, where a single transaction can contain many transitions, each requiring its own proof.  Varuna uses SonicKZG10 as its polynomial commitment scheme (a KZG-based scheme with pairings over BLS12-377).",
+          "cited_text": "Varuna uses SonicKZG10 as its polynomial commitment scheme (a KZG-based scheme with pairings over BLS12-377).",
           "source": "https://docs.aleo.org/learn/advanced/cryptography/zksnarks"
         },
         {
@@ -245,14 +246,14 @@
     {
       "name": "Layer of enforcement",
       "value": "None",
-      "notes": "Compliance lives in ARC-22 compliant token contracts, which implement both a privacy-preserving freezelist and emit a compliance record for each transaction, maintained by a designated compliance officer address. Enforcement is therefore at the asset (token) layer rather than at an application contract or the chain consensus, with the host chain remaining permissionless.  Any tokens that do not follow the ARC-22 standard are not required to implement the compliance checks, and thus are permissionless.  While view keys exist to allow owners to share transaction details with third parties for auditing, tax regulations, or anti-money laundering compliance, these are optional disclosure tools under user control, not enforcement mechanisms. The consensus rules validate cryptographic correctness of transactions but do not filter or restrict based on compliance criteria.",
+      "notes": "ARC-22 compliant token contracts implement a privacy-preserving freezelist and emit a compliance record per transaction maintained by a designated compliance officer. Enforcement is at the asset (token) layer, with the host chain remaining permissionless. Tokens not following ARC-22 are permissionless. View keys are optional disclosure tools under user control, not enforcement mechanisms.",
       "citations": [
         {
-          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery scenarios. A user can share their view key with an auditor to prove transaction history without giving up control of their funds.  The account view key decrypts all records and transactions for the account. For more granular access, Aleo also provides record view keys (scoped to a single record) and transition view keys (scoped to a single transition).",
+          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery.",
           "source": "https://docs.aleo.org/learn/core-concepts/accounts-and-keys"
         },
         {
-          "cited_text": "Addresses on the freeze list are blocked from all public transfers. Private transfers enforce the same restriction without revealing the sender's address: the sender supplies a Merkle non-membership proof demonstrating their address is not a leaf in the freeze list tree.  Every operation that crosses the public/private boundary (mint_private, burn_private, and transfer_public_to_private) emits a ComplianceRecord to a designated compliance officer address. This gives the issuer an audit trail for regulatory purposes without exposing information publicly onchain.",
+          "cited_text": "Addresses on the freeze list are blocked from all public transfers.",
           "source": "https://docs.aleo.org/build/common-uses/private_stablecoins"
         }
       ]
@@ -266,14 +267,14 @@
     {
       "name": "Type of compliance",
       "value": ["Selective disclosure", "Programmatic policies"],
-      "notes": "Aleo supports both selective disclosure and programmatic policies as compliance mechanisms. Addresses can share transaction details with trusted third parties via a view key, which grants read access but not spend authority, enabling selective disclosure where transactions are auditable but disclosure is under the participant's control, allowing compliance with payment auditing, tax regulations, or anti-money laundering rules. All compliance features are optional and configured per-instance at deployment.  Additionally, programmatic compliance features can be optionally configured per-instance at deployment.  Advanced features such as privacy-preserving non-inclusion proof of existing in a freezelist Merkle tree become possible with the programmability of Aleo.",
+      "notes": "Aleo supports selective disclosure and programmatic policies. Via a view key, users can grant third-party read access without spend authority, enabling auditable transactions under participant control. Programmatic compliance features can be optionally configured per deployment. Advanced features such as privacy-preserving non-inclusion proofs against a freezelist Merkle tree become possible with Aleo's programmability.",
       "citations": [
         {
-          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery scenarios. A user can share their view key with an auditor to prove transaction history without giving up control of their funds.  The account view key decrypts all records and transactions for the account. For more granular access, Aleo also provides record view keys (scoped to a single record) and transition view keys (scoped to a single transition).",
+          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery.",
           "source": "https://docs.aleo.org/learn/core-concepts/accounts-and-keys"
         },
         {
-          "cited_text": "Addresses on the freeze list are blocked from all public transfers. Private transfers enforce the same restriction without revealing the sender's address: the sender supplies a Merkle non-membership proof demonstrating their address is not a leaf in the freeze list tree.  Every operation that crosses the public/private boundary (mint_private, burn_private, and transfer_public_to_private) emits a ComplianceRecord to a designated compliance officer address. This gives the issuer an audit trail for regulatory purposes without exposing information publicly onchain.",
+          "cited_text": "Addresses on the freeze list are blocked from all public transfers.",
           "source": "https://docs.aleo.org/build/common-uses/private_stablecoins"
         }
       ]
@@ -284,7 +285,7 @@
       "notes": "ARC-22 compliant tokens allow the designated compliance officer to examine amounts and participants at all stages of the transaction lifecycle: deposits (funding), internal transfers, and withdrawals.  Non ARC-22 tokens are not required to implement any compliance mechanisms.",
       "citations": [
         {
-          "cited_text": "Every operation that crosses the public/private boundary (mint_private, burn_private, and transfer_public_to_private) emits a ComplianceRecord to a designated compliance officer address. This gives the issuer an audit trail for regulatory purposes without exposing information publicly onchain.",
+          "cited_text": "Every operation that crosses the public/private boundary (mint_private, burn_private, and transfer_public_to_private) emits a ComplianceRecord to a designated compliance officer address.",
           "source": "https://docs.aleo.org/build/common-uses/private_stablecoins"
         }
       ]
@@ -295,11 +296,11 @@
       "notes": "Aleo supports selective disclosure controlled by the user. Users can share shielded transaction details with trusted third parties via a view key – a key that grants read access but not spend authority over the address. Aleo supports both account-level and transaction-level view keys, allowing for maximum granularity when selectively disclosing transaction history. View keys provide read access but not spend authority, enabling optional auditability while keeping transactions private by default.",
       "citations": [
         {
-          "cited_text": "Records are Aleo's approach to private state. They are units of encrypted data owned by a specific user. Records work similarly to Bitcoin's UTXO model; when you \"spend\" a record, it's consumed and a new one is created.  Only the owner (and anyone with their view key) can decrypt a record's contents",
+          "cited_text": "Only the owner (and anyone with their view key) can decrypt a record's contents.",
           "source": "https://docs.aleo.org/learn/core-concepts/public-and-private-state"
         },
         {
-          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery scenarios. A user can share their view key with an auditor to prove transaction history without giving up control of their funds.  The account view key decrypts all records and transactions for the account. For more granular access, Aleo also provides record view keys (scoped to a single record) and transition view keys (scoped to a single transition).",
+          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery.",
           "source": "https://docs.aleo.org/learn/core-concepts/accounts-and-keys"
         }
       ]
@@ -307,14 +308,14 @@
     {
       "name": "Selective disclosure: viewing control",
       "value": "Pre-defined",
-      "notes": "Aleo implements pre-defined selective disclosure viewing control through the view key mechanism. Addresses can share transaction details with trusted third parties via a view key, which grants read access but not spend authority, enabling selective disclosure where transactions are auditable but disclosure is under the participant's control, allowing compliance with payment auditing, tax regulations, or anti-money laundering rules. The view key mechanism is a fixed feature of the protocol rather than a programmable system with conditional logic.",
+      "notes": "Aleo implements pre-defined selective disclosure through the view key mechanism. Users can share transaction details with third parties via a view key — granting read access but not spend authority — enabling auditable transactions while keeping disclosure under participant control. The view key mechanism is a fixed protocol feature rather than a programmable system with conditional logic.",
       "citations": [
         {
-          "cited_text": "Records are Aleo's approach to private state. They are units of encrypted data owned by a specific user. Records work similarly to Bitcoin's UTXO model; when you \"spend\" a record, it's consumed and a new one is created.  Only the owner (and anyone with their view key) can decrypt a record's contents",
+          "cited_text": "Only the owner (and anyone with their view key) can decrypt a record's contents.",
           "source": "https://docs.aleo.org/learn/core-concepts/public-and-private-state"
         },
         {
-          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery scenarios. A user can share their view key with an auditor to prove transaction history without giving up control of their funds.  The account view key decrypts all records and transactions for the account. For more granular access, Aleo also provides record view keys (scoped to a single record) and transition view keys (scoped to a single transition).",
+          "cited_text": "The view key is derived from the private key and allows read-only access to an account's private records and transaction history. View keys are useful for compliance, auditing, and wallet recovery.",
           "source": "https://docs.aleo.org/learn/core-concepts/accounts-and-keys"
         }
       ]
@@ -325,11 +326,11 @@
       "notes": "Aleo is an L1 blockchain whose individual transaction correctness is enforced by zk-SNARK verification (Varuna), while block ordering and inclusion are decided by a decentralized validator set using a supermajority-based PoS model. Shielded transactions are fully encrypted on-chain yet still verifiable as valid under the network's consensus rules. Per the rule, L1 protocols with cryptographic transaction correctness plus consensus-based ordering take \"Yes, with L1 consensus\".",
       "citations": [
         {
-          "cited_text": "Aleo uses Varuna, a zkSNARK proof system based on Algebraic Holographic Proofs (AHP), evolved from the Marlin proof system. Varuna is designed for batching multiple circuits efficiently — critical for Aleo, where a single transaction can contain many transitions, each requiring its own proof.  Varuna uses SonicKZG10 as its polynomial commitment scheme (a KZG-based scheme with pairings over BLS12-377).",
+          "cited_text": "Varuna uses SonicKZG10 as its polynomial commitment scheme (a KZG-based scheme with pairings over BLS12-377).",
           "source": "https://docs.aleo.org/learn/advanced/cryptography/zksnarks"
         },
         {
-          "cited_text": "When the DAG commits, validators produce a block containing: Transactions — Execute and deploy transactions with their ZK proofs. Ratifications — Coinbase reward distributions. Solutions — Accumulated prover puzzle solutions. Header — Previous state root, transaction roots, metadata (height, round, timestamp, supply, proof targets).  Blocks require approval from more than 2/3 of the committee's voting power (weighted by stake).",
+          "cited_text": "Blocks require approval from more than 2/3 of the committee's voting power (weighted by stake).",
           "source": "https://docs.aleo.org/learn/network/consensus"
         },
         {
@@ -362,7 +363,7 @@
     {
       "name": "Client-side indexing",
       "value": "Always scanning",
-      "notes": "Aleo requires Always scanning for shielded transactions. Because shielded transactions reveal no metadata about the sender or receiver, users must scan the chain for relevant transactions using their view key. Every valid block with non-coinbase transactions will need to be checked and its transactions trial-decrypted with registered incoming view keys to see if any records have been received by the key's owner and if any notes have already been spent elsewhere. Unlike a transparent blockchain with public transactions, a full node must have online access to viewing keys to scan the chain. Shield wallet (developed by Provable, an Aleo Labs company) offers a privacy-preserving record scanning service that offloads this scanning while keeping the user's view key encrypted end-to-end — the scanning server never learns the user's transaction history.",
+      "notes": "Aleo requires always-on scanning for shielded transactions. Because shielded transactions reveal no metadata about sender or receiver, users must scan the chain using their view key. Every block must be trial-decrypted to check if any records were received. Shield wallet (developed by Provable, an Aleo Labs company) offers a privacy-preserving record scanning service that offloads this scanning while keeping the view key encrypted end-to-end.",
       "url": "https://docs.aleo.org/learn/advanced/record-scanning"
     },
     {
@@ -371,7 +372,7 @@
       "notes": "Aleo transactions between transparent addresses work just like Ethereum, which uses a account-based model. Shielded transactions use an encrypted UTXO-based model, where transactions consume inputs and create outputs but  the sender and receiver addresses and transaction amount are all encrypted. Encrypted UTXOs verified through zk-SNARKs.",
       "citations": [
         {
-          "cited_text": "Records are Aleo's approach to private state. They are units of encrypted data owned by a specific user. Records work similarly to Bitcoin's UTXO model; when you \"spend\" a record, it's consumed and a new one is created.  Only the owner (and anyone with their view key) can decrypt a record's contents. Records are stored onchain in encrypted form, [and] executed and produced offchain as part of a transition, with a ZK proof submitted for verification.  Public state follows an account-based model, similar to Ethereum.",
+          "cited_text": "Records work similarly to Bitcoin's UTXO model; when you \"spend\" a record, it's consumed and a new one is created.",
           "source": "https://docs.aleo.org/learn/core-concepts/public-and-private-state"
         }
       ]
@@ -379,11 +380,11 @@
     {
       "name": "Private Data Storage",
       "value": ["Protocol state"],
-      "notes": "Aleo stores private transaction data in the protocol state through encrypted commitments and nullifiers. The blockchain stores a cryptographic commitment to the record, not the plaintext. Each time that a record is created, its commitment is added to the commitment tree — a Merkle tree — containing every record commitment ever created on the network. The network maintains a nullifier set, that is, a collection of every nullifier ever published. These commitments and nullifiers are stored as part of the blockchain's state, with nodes maintaining the commitment tree and nullifier set as core protocol data structures.",
+      "notes": "Aleo stores private data through encrypted commitments and nullifiers. Each record commitment is added to a global Merkle tree containing every commitment ever created. The network maintains a nullifier set to prevent double-spending. Both structures are stored as core protocol state maintained by all full nodes.",
       "url": "https://docs.aleo.org/specs/aleovm.pdf",
       "citations": [
         {
-          "cited_text": "Records are Aleo's approach to private state. They are units of encrypted data owned by a specific user. Records work similarly to Bitcoin's UTXO model; when you \"spend\" a record, it's consumed and a new one is created.  Only the owner (and anyone with their view key) can decrypt a record's contents. Records are stored onchain in encrypted form, [and] executed and produced offchain as part of a transition, with a ZK proof submitted for verification.",
+          "cited_text": "Records are stored onchain in encrypted form, executed and produced offchain as part of a transition, with a ZK proof submitted for verification.",
           "source": "https://docs.aleo.org/learn/core-concepts/public-and-private-state"
         }
       ]
@@ -397,7 +398,7 @@
     {
       "name": "Programmability / Generality",
       "value": "Full programmability with public and private state",
-      "notes": "Aleo is a Layer-1 blockchain designed for private, programmable applications. It uses zero-knowledge proofs to let developers build apps where user data stays private, while still allowing the rest of the network to verify that everything is correct. Because execution happens offchain, Aleo programs are private by default. Inputs, outputs, and program logic are never exposed to the network. But privacy isn't all-or-nothing. Developers can selectively make parts of their program public when transparency is needed.  This means a single program can keep user balances private while publishing a total supply publicly, or verify a credential without revealing the underlying data. The developer decides what to reveal and what to keep encrypted, not the protocol.",
+      "notes": "Aleo is a Layer-1 blockchain designed for private, programmable applications using zero-knowledge proofs. Because execution happens offchain, Aleo programs are private by default — inputs, outputs, and program logic are never exposed to the network. Privacy is not all-or-nothing: developers can selectively make parts of their program public, keeping balances private while publishing a total supply publicly, or verifying credentials without revealing underlying data.",
       "url": "https://docs.aleo.org/learn/what-is-aleo/how-aleo-works"
     }
   ]
