@@ -1,13 +1,10 @@
 {
   "id": "fluton",
   "title": "Fluton",
-  "description": "Fluton is a confidential execution layer for blockchains that uses homomorphic encryption. Its intent-based design moves privacy out of individual protocols and chains, treating it as a shared execution primitive.",
+  "description": "Fluton is a confidential execution layer that uses fully homomorphic encryption (FHE) to compute on encrypted data. Users sign encrypted intents that an off-chain solver network fulfils across supported chains.",
   "documentation": "https://docs.fluton.io/introduction",
   "status": "pending",
-  "categories": [
-    "Fully Homomorphic encryption (FHE)",
-    "Decentralised Network"
-  ],
+  "categories": ["Fully Homomorphic encryption (FHE)", "Decentralised Network"],
   "properties": [
     {
       "name": "Anonymity set size",
@@ -16,7 +13,7 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "Confidential ERC-20s wrap public tokens 1:1 into cERC20s, where encrypted handles keep balances and transferred values hidden from public view. Once tokens are shielded, a transfer using them never reveals the amount on-chain, and the ERC-7984 standard underlies these encrypted transfers and shielded balances. FHE execution on Zama and Fhenix coprocessors keeps holdings and per-transfer amounts encrypted, though the initial shielding step exposes the depositor's address and amount.",
+      "notes": "Confidential ERC-20s wrap public tokens 1:1 into cERC20s, where encrypted handles keep balances and transferred values hidden from public view. Once tokens are shielded, a transfer using them never reveals the amount on-chain, and the ERC-7984 standard underlies these encrypted transfers and shielded balances. FHE execution on Zama and Fhenix coprocessors keeps holdings and per-transfer amounts encrypted, although the initial shielding step exposes the depositor's address and amount.",
       "citations": [
         {
           "cited_text": "Confidential ERC20s solve this by using encrypted handles to keep the balances and values hidden from public view.",
@@ -92,7 +89,7 @@
     {
       "name": "Time-to-finality",
       "value": "Underlying chain",
-      "notes": "Fluton is an application-level confidential execution layer with no settlement step of its own, so finality follows whichever host chain settles the intent. Deployments span Ethereum Sepolia, Arbitrum Sepolia, and Base Sepolia, and each intent's irreversibility tracks those chains' block finality rather than any protocol-imposed waiting period.",
+      "notes": "Fluton is an application-level confidential execution layer with no settlement step of its own, so finality follows whichever host chain settles the intent. Deployments span Ethereum Sepolia, Arbitrum Sepolia, and Base Sepolia, and each intent's irreversibility tracks those chains' block finality.",
       "citations": [
         {
           "cited_text": "Ethereum Sepolia (11155111)\n\nArbitrum Sepolia (421614)\n\nBase Sepolia (84532)\n\nToken Address \n\nUSDC 0x24827f35B1a04cC6009adBb207D0415250Fd16da \n\ncUSDC 0xE4Ba3Eb60283A4955DD6Fb1BD1241d9AA8F6e9B3",
@@ -103,14 +100,14 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "Beyond an existing wallet, a user holds one new secret: the FHE encryption and decryption key used to encrypt intents and decrypt their own confidential cERC20 balances. Users express an intent and a network of solvers fulfils it while FHE and ERC-7984 protect amounts and strategies. Fully homomorphic encryption runs logic directly on encrypted data, with only the final result decrypted by authorized parties — that one key encrypts inputs and recovers plaintext from shielded holdings.",
+      "notes": "A single secret is required: the user's Ethereum wallet key, from which the FHE encryption/decryption material for ERC7984 confidential fungible token operations is derived. The same key signs encrypted intents that solvers fulfil, while FHE protects sensitive information such as amounts and strategies, and decrypts the user's own cERC20 balances. No separate spending or viewing key is maintained beyond the wallet signature.",
       "citations": [
         {
-          "cited_text": "A network of solvers fulfills that intent, while ERC7984 and encrypted execution with FHE protect sensitive information such as amounts and strategies.",
+          "cited_text": "We adopt the ERC7984 (Confidential Fungible Token) standart to allow encrypted token transfers and shielded balances. \n\n",
           "source": "https://docs.fluton.io/confidential-architecture"
         },
         {
-          "cited_text": "This means data can stay encrypted while logic is applied to it, and only the final result needs to be decrypted by authorized parties.",
+          "cited_text": "A network of solvers fulfills that intent, while ERC7984 and encrypted execution with FHE protect sensitive information such as amounts and strategies.",
           "source": "https://docs.fluton.io/confidential-architecture"
         }
       ]
@@ -129,7 +126,7 @@
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "Unshielding is an ordinary on-chain settlement with no protocol-imposed queue, challenge window, or time-lock: encrypted balances are settled, funds return to a public ERC-20 representation, and only required settlement data is revealed. Latency is bounded by host-chain inclusion on the Sepolia testnets where the system runs, and adapter batching affects intent execution rather than imposing a fixed exit delay.",
+      "notes": "Unshielding is an ordinary on-chain settlement with no protocol-imposed queue, challenge window, or time-lock: encrypted balances are settled, funds return to a public ERC-20 representation, and only required settlement data is revealed. Latency is bounded by host-chain inclusion where the system runs, and adapter batching affects intent execution rather than imposing a fixed exit delay.",
       "citations": [
         {
           "cited_text": "When users choose to exit confidential execution: \n\nEncrypted balances are settled\n\nFunds return to a public ERC-20 representation\n\nOnly required settlement data is revealed",
@@ -140,7 +137,7 @@
     {
       "name": "Censorship resistance",
       "value": "No",
-      "notes": "Encrypted intents route through a network of solvers that fulfils them, and confidentiality adapters submit actions to underlying protocol contracts, with no forced-inclusion path or permissionless fallback documented if a solver or adapter declines to fill. A proof of innocence is also required on every intent, and an invalid proof blocks intent creation outright. The protocol runs on Sepolia testnets, inheriting host-chain inclusion but adding a discretionary execution and compliance gate.",
+      "notes": "Encrypted intents route through a network of solvers that fulfils them, and confidentiality adapters submit actions to underlying protocol contracts, with no forced-inclusion path or permissionless fallback documented if a solver or adapter declines to fill. A proof of innocence is also required on every intent, and an invalid proof blocks intent creation outright. Fhenix and Zama also represent censorship vectors.",
       "citations": [
         {
           "cited_text": "A network of solvers fulfills that intent, while ERC7984 and encrypted execution with FHE protect sensitive information such as amounts and strategies. \n",
@@ -152,7 +149,6 @@
       "name": "External network dependence",
       "value": "Yes, permissioned",
       "notes": "Confidential execution depends on external FHE coprocessors — specifically Zama and Fhenix — to compute on encrypted data, since fully homomorphic encryption applies logic directly to ciphertext and reveals only the final result to authorized parties. Transfers also depend on an off-chain solver set that fulfils encrypted intents. The protocol relies on these specific named coprocessor networks beyond the host chain to produce and process confidential state.",
-      "needsResearchReview": "solver-set openness undocumented — permissioned on the specific named Zama/Fhenix coprocessor dependency",
       "citations": [
         {
           "cited_text": "This means data can stay encrypted while logic is applied to it, and only the final result needs to be decrypted by authorized parties.",
@@ -167,8 +163,7 @@
     {
       "name": "Escape hatch",
       "value": "No",
-      "notes": "Exiting the shielded state runs through Fluton's own unshielding flow, not an independent host-chain path. Unshielding settles encrypted balances and returns funds to a public ERC-20 representation, depending on the solver, adapter, and FHE coprocessor stack rather than base-chain consensus alone. Privacy is enforced across intent submission, routing, execution, and settlement, so withdrawal cannot proceed without that pipeline. No permissionless forced-exit is offered.",
-      "needsResearchReview": "bridge/pool contract source not published — cannot confirm a base-chain-only operator-bypass exit path",
+      "notes": "Exiting the shielded state runs through Fluton's own unshielding flow, not an independent host-chain path. Unshielding settles encrypted balances and returns funds to a public ERC-20 representation, depending on the solver, adapter, and FHE coprocessor stack rather than base-chain consensus alone. Privacy is enforced across intent submission, routing, execution, and settlement, so withdrawal cannot proceed without that pipeline.",
       "citations": [
         {
           "cited_text": "When users choose to exit confidential execution: \n\nEncrypted balances are settled\n\nFunds return to a public ERC-20 representation\n\nOnly required settlement data is revealed",
@@ -183,23 +178,25 @@
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "notes": "Fluton's bridge, IntentPool, and adapter contracts are deployed across Ethereum Sepolia, Arbitrum Sepolia, and Base Sepolia, and each supported chain hosts a corresponding Bridge and IntentPool contract. No public governance documentation names an upgrade authority or timelock. The smart contracts also rely on Zama and Fhenix coprocessors for FHE operations, each sitting behind its own admin controls outside Fluton's repository.",
-      "needsResearchReview": "on-chain admin slot not classified on Sepolia deployments — EOA vs multisig upgrade authority unverified",
+      "notes": "Fluton's bridge, IntentPool, and adapter contracts are deployed across multiple chains. No public governance documentation names an upgrade authority or timelock. The smart contracts also rely on Zama and Fhenix coprocessors for FHE operations, each sitting behind its own admin controls outside Fluton's repository. Fluton's deployed Bridge contracts are Ownable, with ownership held by a single externally-owned account that also deployed.",
       "citations": [
         {
-          "cited_text": "On each chain supported by Fluton, there is a corresponding Bridge and IntentPool contract. ",
-          "source": "https://docs.fluton.io/smart-contracts"
+          "cited_text": "fhevmBridge: \"0xB8DBD4BFd2741E95E3Ae6BE76a4b8014E409e7ca\",",
+          "contract_address": "0xB8DBD4BFd2741E95E3Ae6BE76a4b8014E409e7ca",
+          "source": "https://github.com/Fluton-io/fluton-relayer/blob/master/src/config/addresses.ts"
         },
         {
-          "cited_text": "Our smart contracts utilize Zama and Fhenix’s coprocessors to perform FHE operations on encrypted data.",
-          "source": "https://docs.fluton.io/smart-contracts"
+          "kind": "explorer",
+          "contract_address": "0xB8DBD4BFd2741E95E3Ae6BE76a4b8014E409e7ca",
+          "admin_class": "Single admin",
+          "source": "https://eth-sepolia.blockscout.com/address/0xB8DBD4BFd2741E95E3Ae6BE76a4b8014E409e7ca"
         }
       ]
     },
     {
       "name": "Client-side proving",
-      "value": "Yes",
-      "notes": "A proof of innocence is generated on the client as part of intent creation — one is automatically produced each time a user creates an intent, and the intent is rejected if the proof is invalid. User inputs are encrypted locally from the moment an intent is created, with results revealed only to authorized parties. Heavy FHE computation runs on Zama and Fhenix coprocessors over already-encrypted data, so the outsourced work operates on blinded inputs rather than cleartext witnesses.",
+      "value": "N/A",
+      "notes": "Fluton uses no proof system for its transfers — confidentiality comes from FHE, which computes on encrypted data and produces no validity proof, so client vs server-side proving does not apply. A client-side Proof of Innocence is generated per intent, but that is a separate compliance proof of blocklist non-membership, not a transfer-validity proof.",
       "citations": [
         {
           "cited_text": "In Fluton, a POI is automatically generated every time the user creates an intent. ",
@@ -234,7 +231,6 @@
       "name": "Implementation maturity",
       "value": "1 : Prototype / devnet",
       "notes": "Fluton is deployed only on testnets — contracts run on Ethereum Sepolia, Arbitrum Sepolia, and Base Sepolia, with no mainnet deployment. The private testnet is closed and a public testnet is being worked on, placing the protocol at an early pre-public-testnet stage.",
-      "needsResearchReview": "no public testnet or mainnet date documented — tier rests on closed-private-testnet evidence",
       "citations": [
         {
           "cited_text": "Ethereum Sepolia (11155111)\n\nArbitrum Sepolia (421614)\n\nBase Sepolia (84532)\n\nToken Address \n\nUSDC 0x24827f35B1a04cC6009adBb207D0415250Fd16da \n\ncUSDC 0xE4Ba3Eb60283A4955DD6Fb1BD1241d9AA8F6e9B3",
@@ -243,27 +239,32 @@
         {
           "cited_text": "Private Testnet is closed. We’re working on the public testnet now.",
           "source": "https://docs.fluton.io/testnet-guide"
+        },
+        {
+          "kind": "explorer",
+          "source": "https://eth-sepolia.blockscout.com/address/0xB8DBD4BFd2741E95E3Ae6BE76a4b8014E409e7ca",
+          "date": "2026-01-08"
         }
       ]
     },
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "Fluton's confidentiality layer uses fully homomorphic encryption, which computes on encrypted data and reveals only final results to authorized parties, and lattice-based FHE is itself quantum-resistant. However, the ERC-7984 confidential token transfers settle on host chains — Ethereum Sepolia, Arbitrum Sepolia, Base Sepolia — whose ECDSA signatures and classical proof systems fall to a quantum adversary. Intent integrity and settlement therefore rest on non-post-quantum primitives.",
+      "notes": "Fluton's confidentiality rests on fully homomorphic encryption, whose LWE (lattice) basis is considered resistant to quantum attacks. FHE decryption is performed by a threshold network of coprocessor nodes. The per-intent Proof of Innocence is a zero-knowledge proof, and a conventional SNARK over a pairing curve would fall to a quantum adversary.",
       "citations": [
         {
-          "cited_text": "This means data can stay encrypted while logic is applied to it, and only the final result needs to be decrypted by authorized parties.",
-          "source": "https://docs.fluton.io/confidential-architecture"
+          "cited_text": "The LWE problem forms the basis of TFHE's security and is considered resistant to quantum attacks.",
+          "source": "https://docs.zama.org/tfhe-rs/get-started/security-and-cryptography"
         },
         {
-          "cited_text": "We adopt the ERC7984 (Confidential Fungible Token) standart to allow encrypted token transfers and shielded balances. \n\n",
-          "source": "https://docs.fluton.io/confidential-architecture"
+          "cited_text": "Proof of Innocence is a privacy-preserving cryptographic proof where someone can prove they are not guilty / not on a blacklist / did not perform a forbidden action without revealing who they are",
+          "source": "https://docs.fluton.io/proof-of-innocence"
         }
       ]
     },
     {
       "name": "Layer of enforcement",
-      "value": "Protocol/chain",
+      "value": "App",
       "notes": "Compliance is enforced at the protocol's intent layer: a proof of innocence is automatically generated every time a user creates an intent, and if the proof is invalid the intent is not created. The check sits in the intent-submission flow itself rather than in the cERC20 asset contracts or the underlying chains, so the application logic gates whether an action proceeds.",
       "citations": [
         {
@@ -280,7 +281,6 @@
       "name": "Enforcement entities",
       "value": "Admin",
       "notes": "Fluton itself runs the compliance gate: a proof of innocence is automatically generated on every intent and an invalid proof blocks intent creation, proving the wallet is not on a blacklist without revealing identity. No external analytics vendor or governance mechanism is named as the decision-maker, so curation of the exclusion set and the policy behind it rests with the core team that operates the protocol.",
-      "needsResearchReview": "on-chain POI exclusion-set curator not named in docs — Admin vs third-party-vendor enforcer unverified",
       "citations": [
         {
           "cited_text": "In Fluton, a POI is automatically generated every time the user creates an intent.",
@@ -294,10 +294,7 @@
     },
     {
       "name": "Type of compliance",
-      "value": [
-        "Proof of innocence (POI) / ASP",
-        "Selective disclosure"
-      ],
+      "value": ["Proof of innocence (POI) / ASP", "Selective disclosure"],
       "notes": "Fluton auto-generates a proof of innocence on every intent — a privacy-preserving proof that the wallet is not on a blacklist without revealing identity or private data — and an invalid proof blocks intent creation, making the exclusion-set check a hard gate. Separately, selective disclosure reveals only specific payment details to authorized parties for tax, audit, or regulatory purposes without exposing them on-chain, giving users a voluntary viewing path.",
       "citations": [
         {
@@ -316,11 +313,7 @@
     },
     {
       "name": "Point of enforcement",
-      "value": [
-        "Deposit",
-        "Transfer",
-        "Withdrawal"
-      ],
+      "value": ["Deposit", "Transfer", "Withdrawal"],
       "notes": "The compliance check fires at intent submission, which covers every action in the protocol rather than only shield-in or unshield-out. A proof of innocence is automatically generated every time a user creates an intent, and an invalid proof blocks that intent. Because shielding and unshielding are themselves expressed as intents in the confidential execution layer, the same gate covers deposit, transfer, and withdrawal alike.",
       "citations": [
         {
@@ -335,11 +328,8 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": [
-        "User",
-        "Voluntary third-party disclosure"
-      ],
-      "notes": "Holders can view their own confidential balances, since the ERC-7984 confidential fungible token standard underlies encrypted transfers and shielded balances and gives owners self-view. Beyond self-view, selective disclosure reveals only specific payment details to authorized parties for tax, audit, or regulatory verification — a user-delegated grant, not standing access. Payroll and contractor payments execute privately while auditors access limited disclosures only when required.",
+      "value": ["User", "Voluntary third-party disclosure"],
+      "notes": "Holders can view their own confidential balances, since the ERC-7984 confidential fungible token standard underlies encrypted transfers and shielded balances and gives owners self-view. Beyond self-view, selective disclosure reveals only specific payment details to authorized parties for tax, audit, or regulatory verification.",
       "citations": [
         {
           "cited_text": "We adopt the ERC7984 (Confidential Fungible Token) standart to allow encrypted token transfers and shielded balances. \n\n",
@@ -388,7 +378,7 @@
     {
       "name": "Open source",
       "value": "No",
-      "notes": "The fluton-relayer backend is published on GitHub and its README references an MIT licence, covering only the relayer and solver component. The protocol's other critical components — the smart contracts, FHE circuits, frontend, and SDK — are not published in accessible repositories under a declared OSI-approved licence. Because the full underlying protocol stack is not openly licensed, the open-source requirement covering contracts, circuits, and SDK is not met.",
+      "notes": "The fluton-relayer backend is published on GitHub and its README references an MIT licence, covering only the relayer and solver component. The protocol's other critical components — the smart contracts, FHE circuits, frontend, and SDK — are not published in accessible repositories under a declared open source licence.",
       "citations": [
         {
           "cited_text": "## License\n\n[MIT](LICENSE)",
@@ -414,7 +404,7 @@
     {
       "name": "Client-side indexing",
       "value": "No Scanning",
-      "notes": "Fluton's confidential token is the cERC20, an account-based ERC-7984 confidential fungible token where encrypted handles keep balances and values hidden from public view. Balance discovery is a direct keyed lookup against the user's own account entry, decrypted with their FHE key, so the wallet does not iterate over a commitment set or trial-decrypt outputs. The account-based model contrasts with a UTXO note set that would require continuous chain scanning.",
+      "notes": "Fluton's confidential token is the cERC20, an account-based ERC-7984 confidential fungible token where encrypted handles keep balances and values hidden from public view. Balance discovery is a direct keyed lookup against the user's own account entry, decrypted with their FHE key, so the wallet does not iterate over a commitment set or trial-decrypt outputs.",
       "citations": [
         {
           "cited_text": "Confidential ERC20s solve this by using encrypted handles to keep the balances and values hidden from public view.",
@@ -443,9 +433,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": [
-        "Smart contracts"
-      ],
+      "value": ["Smart contracts"],
       "notes": "Encrypted cERC20 balances live as ciphertext inside the token contracts themselves, with confidential ERC-20s using encrypted handles to keep balances and values hidden from public view. Intent payloads on the bridge contract follow the same pattern — the bridge contract's confidential path accepts encrypted types that hold no plaintext on-chain but act as handles to encrypted data processed through an FHE system run by Zama and Fhenix coprocessors invoked from the protocol's own contracts.",
       "citations": [
         {
