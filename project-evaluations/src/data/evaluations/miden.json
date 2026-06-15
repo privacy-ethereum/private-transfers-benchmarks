@@ -1,10 +1,531 @@
 {
   "id": "miden",
   "title": "Miden",
-  "description": "Miden is a zero-knowledge rollup with an actor-model architecture. Instead of a single global state updated sequentially, each account is an independent state machine that executes transactions locally and generates validity proofs.",
-  "status": "pending",
+  "description": "Miden is a zero-knowledge rollup focused on programmable privacy applications, spun out of Polygon Labs into an independent network. Accounts and notes are private by default: transactions are executed and proven client-side, producing a STARK proof, and only commitments (not the underlying data) are published to the network. Global state is split across an account database, an append-only note database, and a nullifier database, combining account-based and note-based models. Notes carry spend scripts, enabling expressive, locally-executed private smart contracts. Miden is STARK-based and quantum-resistant.",
   "documentation": "https://docs.miden.xyz/",
+  "status": "pending",
   "categories": ["Private L2", "Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
-  "properties": [],
-  "sourceUrls": []
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Note and account data can be stored privately, with only a commitment hash kept on-chain while the actual note data is communicated off-chain between sender and recipient. Under this mode the network cannot see what assets a note carries, hiding transfer amounts and the balances held inside private accounts. Confidentiality is optional: public notes store full data including assets, script, and inputs on-chain, but the private storage mode covers balances and amounts together.",
+      "citations": [
+        {
+          "cited_text": "Private Only a commitment (hash) is stored on-chain. The actual note data must be communicated off-chain between sender and recipient. \n\n",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        },
+        {
+          "cited_text": "Private notes provide stronger privacy guarantees — the network can&#x27;t even see what assets a note carries",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        },
+        {
+          "cited_text": "Public The note&#x27;s full data (assets, script, inputs) is stored by the Miden network and visible on-chain.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "For private notes only a commitment is stored on-chain and transactions are proved locally, so transaction data is visible only to the direct participants. The network sees notes created and consumed but cannot link sender to recipient because note creation and consumption happen in separate transactions. Relay accounts add a further layer, optionally obscuring the sender even from the receiver. Public notes reveal sender and recipient.",
+      "citations": [
+        {
+          "cited_text": "With private data storage (encrypted or offchain) and local transaction execution, transaction data is visible only to the direct participants.",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        },
+        {
+          "cited_text": "Using relay accounts, for example, could even obscure the sender of an asset from the receiver. This makes absolute privacy possible on Miden.",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        },
+        {
+          "cited_text": "the network sees notes being created and consumed, but it can&#x27;t link sender and recipient accounts because those operations happen in separate transactions.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "Notes carry fungible or non-fungible tokens, and private notes store only a commitment on-chain with the actual data off-chain, so the network cannot see what assets a note carries. Account vaults are similarly concealed: the network stores only cryptographic commitments — hashes of the code, storage, and vault — hiding which holdings sit behind a private account. The specific token transferred is concealed from observers in private mode, while public notes expose asset contents.",
+      "citations": [
+        {
+          "cited_text": "the network can&#x27;t even see what assets a note carries — but they require the sender and recipient to have a communication channel outside the protocol.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        },
+        {
+          "cited_text": "The network doesn&#x27;t store the full account state. Instead, it stores cryptographic commitments — hashes of the code, storage, and vault (see account design ).",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/accounts/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Privacy is a core design goal achieved through client-side proofs and off-chain data storage, so all activity occurs within a known network which supports privacy, rather than blending into ordinary public-chain transfers. Notes are the primary cross-account mechanism, structurally distinct from EVM-style transfers, so interacting with the protocol is inherently observable as Miden usage.",
+      "citations": [
+        {
+          "cited_text": "Miden aims to provide strong privacy rather than pseudonymity. Theoretically, it can provide absolute privacy. It uses client-side proofs and offchain data storage.",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        },
+        {
+          "cited_text": "Notes are Miden&#x27;s primary mechanism for cross-account communication — they carry assets, execute programmable logic, and trigger state changes on the consuming account.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        },
+        {
+          "cited_text": "Private Only a commitment (hash) is stored on-chain. The actual note data must be communicated off-chain between sender and recipient. \n\n",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "768",
+      "notes": "Miden is a ZK rollup that settles on Ethereum, so a transaction is final once its state is finalised on Ethereum L1. Miden produces blocks roughly every two seconds, but that cadence is the operator committing blocks, rather than finalising them.",
+      "needsResearchReview": "Finality has not been verified. L1 finality assumed, but Miden's finality to L1 is undocumented and it is not on L2BEAT.",
+      "citations": [
+        {
+          "cited_text": "Miden will start as a centralized L2 on the Ethereum network. Over time, Miden will decentralize, but this part of the protocol, especially consensus is not yet set.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-base/blockchain/"
+        },
+        {
+          "cited_text": "The default block interval has been reduced from 5 seconds to 2 seconds.",
+          "source": "https://miden.xyz/resource/blog/testnet-v0-13"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "The user stores one secret: the account's private signing key tied to the authentication component, from which all access to the account derives. The default scheme uses Falcon512 signatures verified inside the transaction, so that single stored key authorises account access. Note contents for private notes are off-chain data, not a user-held cryptographic-key secret.",
+      "citations": [
+        {
+          "cited_text": "an auth component (for signature verification), and custom application logic — all in a single account.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/accounts/introduction/"
+        },
+        {
+          "cited_text": "Authentication msg.sender set by protocol Falcon512 signatures verified inside the transaction",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/transactions/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "N/A",
+      "notes": "There is no live cross-chain deposit path: the Agglayer L1 bridge is documented but not yet operational on testnet, so an onboarding cadence does not apply.",
+      "needsResearchReview": "Agglayer L1 bridge is documented but not live on testnet, with no published deposit cadence.",
+      "citations": [
+        {
+          "cited_text": "Each transaction runs against a single account, consumes zero or more input notes, and produces zero or more output notes.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/transactions/introduction/"
+        },
+        {
+          "cited_text": "Build : The client assembles the transaction — which account, which notes to consume, what methods to call.\n\nExecute : The Miden VM runs the transaction locally.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/transactions/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "N/A",
+      "notes": "Releasing funds is an ordinary local transaction with no protocol-imposed wait. The cross-chain Agglayer L1 bridge for exiting to Ethereum is documented but not yet operational on testnet.",
+      "needsResearchReview": "Agglayer L1 bridge is documented but not live on testnet, with no published exit cadence.",
+      "citations": [
+        {
+          "cited_text": "Each transaction runs against a single account, consumes zero or more input notes, and produces zero or more output notes.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/transactions/introduction/"
+        },
+        {
+          "cited_text": "Verify : The network verifies the proof, records the state changes, and includes the transaction in a batch and eventually a block.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/transactions/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Block production runs through a single block-producer that aggregates transactions into a mempool, periodically sampled to form batches, which are proved and committed to the store. The single external-facing RPC component acts as a shielding proxy that filters submissions before block production, giving the operator full discretion over inclusion. With no permissionless ordering path, the operator can withhold any valid transfer.",
+      "citations": [
+        {
+          "cited_text": "The block-producer is responsible for aggregating received transactions into blocks and submitting them to the store.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-node/operator/architecture/"
+        },
+        {
+          "cited_text": "This is the only external facing component and it essentially acts as a shielding proxy that prevents bad requests\nfrom impacting block production.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-node/operator/architecture/"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "Miden operates as an independent rollup where the node's four components — store, block-producer, network transaction builder, and RPC — run on separate instances or as a single process. Block production and proof verification are handled by the operator itself. Miden aims to decentralise additional aspects of it's architecture.",
+      "citations": [
+        {
+          "cited_text": "The node itself consists of four distributed components: store, block-producer, network transaction builder, and RPC.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-node/operator/architecture/"
+        },
+        {
+          "cited_text": "Block production is not parallelizable and must be performed by the Miden operator.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-base/blockchain/"
+        },
+        {
+          "cited_text": "Miden will start as a centralized L2 on the Ethereum network. Over time, Miden will decentralize, but this part of the protocol, especially consensus is not yet set.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-base/blockchain/"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "No force-exit or escape-hatch mechanism to the settlement layer is documented. Block production is not parallelizable and must be performed by the Miden operator, and both public networks run in single-process mode under one operator, so state transitions depend on operator inclusion. There is no permissionless path for users to exit funds independently of that operator, so users depend on the centralized single-operator to process withdrawals.",
+      "citations": [
+        {
+          "cited_text": "Block production is not parallelizable and must be performed by the Miden operator.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-base/blockchain/"
+        },
+        {
+          "cited_text": "At the moment both of Miden&#x27;s public networks (testnet and devnet) are operating in single process\nmode.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-node/operator/architecture/"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "notes": "Miden runs as a single-process deployment under one operator, with consensus not yet live. Protocol changes ship as releases of the node, VM, client, and compiler that the operator coordinates. With a single operator and no validator set, upgrade authority rests entirely with that operator. The L1 Sepolia Agglayer bridge contract is an upgradeable proxy controlled by a single externally-owned account through a short-delay timelock, with no multisig or DAO.",
+      "citations": [
+        {
+          "cited_text": "At the moment both of Miden&#x27;s public networks (testnet and devnet) are operating in single process\nmode.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-node/operator/architecture/"
+        },
+        {
+          "cited_text": "Contract: `0x1348947e282138d8f377b467f7d9c2eb0f335d1f`. Destination network ID: `76`.",
+          "contract_address": "0x1348947e282138d8f377b467f7d9c2eb0f335d1f",
+          "source": "https://github.com/0xMiden/bridge-portal/blob/main/docs/agglayer-bali.md"
+        },
+        {
+          "kind": "explorer",
+          "contract_address": "0x1348947e282138d8f377b467f7d9c2eb0f335d1f",
+          "admin_class": "Single admin",
+          "source": "https://sepolia.etherscan.io/address/0x1348947e282138d8f377b467f7d9c2eb0f335d1f"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Transactions execute locally on the user's machine, with the Miden VM generating a zero-knowledge proof of validity on the user's device. The web SDK exposes this directly in the browser, letting developers generate zero-knowledge proofs locally via the in-browser prover, or offload proving to a remote or delegated prover. Delegated proving is an opt-in alternative, so client-side STARK generation is the standard flow.",
+      "citations": [
+        {
+          "cited_text": "transactions execute locally on the user&#x27;s machine, not on a shared VM. After execution, the Miden VM generates a zero-knowledge proof that the transaction was valid",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/transactions/introduction/"
+        },
+        {
+          "cited_text": "Generate zero-knowledge proofs locally via the in-browser prover, or offload proving to a remote or delegated prover.\n\n",
+          "source": "https://docs.miden.xyz/next/builder/tools/clients/web-client/"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "During the testnet and initial mainnet phase, the operator can inspect all transaction details because clients are required to send all transaction data, along with the proof, to the operator — an interim \"privacy training wheels\" measure offering Web2 privacy. The end-state design relies fully on client-side proving and off-chain storage where users do not disclose details to the network, but that is not yet active. Until then, the operator reads sender, recipient, and amounts.",
+      "citations": [
+        {
+          "cited_text": "In the testnet and initial mainnet of Miden, clients will be required to send all transaction data, along with the transaction proof, to the operator.",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        },
+        {
+          "cited_text": "In doing so, users don’t disclose their transaction details or state to the network, thus remaining private.\n\n",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "2 : Public testnet",
+      "notes": "Miden runs as a public testnet. A dedicated devnet is also available alongside the testnet. Mainnet is planned but is not yet live, so no production deployment exists yet.",
+      "citations": [
+        {
+          "cited_text": "We are excited to announce the v0.12 release of the Miden testnet, which brings improvements across private-note flows, key management and signing, address handling",
+          "source": "https://miden.xyz/resource/blog/testnet-november-2025"
+        },
+        {
+          "cited_text": "v0.14\n\nReleased on\n\nApril 30, 2026\n\nRead full details on the Miden blog",
+          "source": "https://miden.xyz/roadmap",
+          "date": "2026-04-30"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "Yes",
+      "notes": "Miden's core cryptography is post-quantum: every program produces a STARK proof, which is hash-based with no trusted setup, and the VM hashes with Rescue Prime Optimized. Account authentication defaults to Falcon512, a lattice-based post-quantum signature. The deployed standard auth also offers ECDSA over secp256k1 as a selectable scheme, which is not quantum-resistant, so an account can be configured with classical signatures while the rollup's proving and hashing remain post-quantum.",
+      "citations": [
+        {
+          "cited_text": "For any program executed on Miden VM, a STARK-based proof of execution is automatically generated.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-vm/"
+        },
+        {
+          "cited_text": "These instructions use Rescue Prime Optimized hash function (which is the native hash function of the VM).",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-vm/"
+        },
+        {
+          "cited_text": "A single-key authentication method which relies on either ECDSA or Falcon512Poseidon2 signatures.",
+          "source": "https://github.com/0xMiden/miden-base/blob/next/crates/miden-standards/src/auth_method.rs"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "Miden enforces no compliance gate at the chain, app, or asset layer. Any audit trail is produced by the user choosing to reveal their own business-logic data, making compliance a matter of voluntary disclosure rather than active restriction. The Guardian off-chain coordination service is non-custodial and does not gate transfers — the provider cannot move funds unilaterally and users retain cryptographic control. No protocol-level blocklist, allowlist, or KYC mechanism exists to enforce against.",
+      "citations": [
+        {
+          "cited_text": "This means businesses and financial institutions can build and execute their business logic on Miden, keeping their information hidden from competitors but visible to auditors.\n\n",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        },
+        {
+          "cited_text": "Guardian is non-custodial. The provider cannot move funds unilaterally - it stores state and coordinates changes, but users retain cryptographic control over their accounts at all times.\n\n",
+          "source": "https://docs.miden.xyz/next/builder/miden-guardian/"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "No entity enforces compliance restrictions on transfers. The Miden Guardian off-chain coordination service is non-custodial — the provider cannot move funds unilaterally and users retain cryptographic control at all times. No blocklist, allowlist, or transfer gate is curated by an admin, DAO, or asset issuer.",
+      "citations": [
+        {
+          "cited_text": "This means businesses and financial institutions can build and execute their business logic on Miden, keeping their information hidden from competitors but visible to auditors.\n\n",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        },
+        {
+          "cited_text": "Guardian is non-custodial. The provider cannot move funds unilaterally - it stores state and coordinates changes, but users retain cryptographic control over their accounts at all times.\n\n",
+          "source": "https://docs.miden.xyz/next/builder/miden-guardian/"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["Selective disclosure"],
+      "notes": "Compliance is via voluntary selective disclosure. Private note and account data live off-chain with the user, bound by the on-chain commitment, so the holder can reveal verifiable records to a chosen party such as an auditor. There is no dedicated viewing-key protocol — disclosure is sharing the data itself.",
+      "citations": [
+        {
+          "cited_text": "users keep their data locally, and the rollup stores only commitments to that data.",
+          "source": "https://docs.miden.xyz/reference/protocol/state/"
+        },
+        {
+          "cited_text": "businesses and financial institutions can build and execute their business logic on Miden, keeping their information hidden from competitors but visible to auditors.",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["None"],
+      "notes": "No compliance gate runs at deposit, transfer, or withdrawal. The only compliance-adjacent feature is voluntary selective disclosure. Miden Guardian likewise sits outside the transaction flow: it is not a sequencer or rollup, clients still execute locally and submit proofs to Miden.",
+      "citations": [
+        {
+          "cited_text": "businesses and financial institutions can build and execute their business logic on Miden, keeping their information hidden from competitors but visible to auditors.",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        },
+        {
+          "cited_text": "Guardian is not a private execution environment, a sequencer, or a rollup. Clients still execute transactions locally and submit proofs to Miden.",
+          "source": "https://docs.miden.xyz/next/builder/miden-guardian/"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User", "Voluntary third-party disclosure"],
+      "notes": "A user holds their own note and account data off-chain and reads it directly, giving self-view of their balances and history. Because the on-chain commitment binds that data, the holder can also reveal it to a chosen third party — an auditor or counterparty — who can verify it against the commitment. Disclosure is voluntary data-sharing rather than a protocol viewing-key grant.",
+      "citations": [
+        {
+          "cited_text": "users keep their data locally, and the rollup stores only commitments to that data.",
+          "source": "https://docs.miden.xyz/reference/protocol/state/"
+        },
+        {
+          "cited_text": "businesses and financial institutions can build and execute their business logic on Miden, keeping their information hidden from competitors but visible to auditors.",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Programmable",
+      "notes": "Disclosure is at the holder's discretion and not fixed at transfer time. Holding the off-chain data, the user chooses whom to share it with and when, including over past activity, so visibility can be extended to additional parties after the fact. No viewing key is baked into transfers.",
+      "citations": [
+        {
+          "cited_text": "Only the Note's hash is stored publicly. The Note's actual data remains off-chain, enhancing privacy.",
+          "source": "https://docs.miden.xyz/reference/protocol/note/"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes, with L1 consensus",
+      "notes": "Transaction correctness rests on STARK proofs generated client-side: the Miden VM generates a proof that the transaction was valid, and only this proof and the resulting state commitments are submitted to the network. If any assertion fails the proof cannot be generated and the transaction is rejected before it reaches the network. Batches and blocks are aggregated by the operator via recursive proof verification, so ordering sits with the operator while validity is purely cryptographic.",
+      "citations": [
+        {
+          "cited_text": "the Miden VM generates a zero-knowledge proof that the transaction was valid (see transaction design ). Only this proof and the resulting state commitments are submitted to the network.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/transactions/introduction/"
+        },
+        {
+          "cited_text": "If any assertion fails (e.g., insufficient balance, unauthorized caller), the proof cannot be generated — the transaction is rejected before it ever reaches the network.\n\n",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/transactions/introduction/"
+        },
+        {
+          "cited_text": "The Block proof attests to the correct state transition from the previous Block commitment to the next, and therefore to the change in Miden&#x27;s global state.\n\n",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-base/blockchain/"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The Miden stack is open source across all components. The crypto and miden-vm repositories are released under Apache-2.0, while midenup, miden-client, node, and compiler are released under MIT.",
+      "citations": [
+        {
+          "kind": "license",
+          "source": "https://github.com/0xMiden/miden-vm/blob/next/LICENSE-APACHE"
+        },
+        {
+          "kind": "license",
+          "source": "https://github.com/0xMiden/miden-client/blob/next/LICENSE"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Transaction",
+      "notes": "On-chain state grows with transaction activity through an append-only note database and a nullifier database. Each block records the newly created nullifiers and the commitments to newly created notes. A single transaction can consume several notes, each publishing its own nullifier, and create several notes, so the databases accumulate one entry per note created or consumed.",
+      "citations": [
+        {
+          "cited_text": "Nullifiers of newly created notes are added to the Nullifier DB. The Block N+1 Nullifier DB commitment must be authenticated against all new nullifiers to guarantee completeness.",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-base/blockchain/"
+        },
+        {
+          "cited_text": "The newly created nullifiers.\n\nThe commitments to newly created notes.\n\n",
+          "source": "https://docs.miden.xyz/0.13/reference/miden-base/blockchain/"
+        },
+        {
+          "cited_text": "Private Only a commitment (hash) is stored on-chain. The actual note data must be communicated off-chain between sender and recipient. \n\n",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No Scanning",
+      "notes": "Recipients fetch private notes from an off-chain relay since the chain stores only note commitments, so there is no chain to scan. Discovery is delegated to the note-transport service, a Rust gRPC service that stores data in a SQLite DB. Clients fetch notes by tag using a server-assigned seq cursor. The node parses only note headers, and clients choose which tags to monitor and whether to encrypt note details before sending.",
+      "citations": [
+        {
+          "cited_text": "Private note contents are not published on-chain. The chain stores note commitments, while the full note data must reach the recipient through another channel. ",
+          "source": "https://docs.miden.xyz/next/builder/tools/note-transport/"
+        },
+        {
+          "cited_text": "FetchNotes Durable catch-up by tag. Returns notes for one or more tags using a server-assigned seq cursor.",
+          "source": "https://docs.miden.xyz/next/builder/tools/note-transport/"
+        },
+        {
+          "cited_text": "The current node implementation is a Rust gRPC service backed by SQLite.",
+          "source": "https://docs.miden.xyz/next/builder/tools/note-transport/"
+        },
+        {
+          "cited_text": "The node parses note headers only. Clients decide which tags to monitor and whether note details should be encrypted before sending.",
+          "source": "https://docs.miden.xyz/next/builder/tools/note-transport/"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Miden uses a UTXO-style model for private value transfer, where notes carry assets and like UTXOs are created and consumed atomically. Each note is spent by publishing a nullifier, recorded to prevent the same note from being consumed again. Private notes store only a commitment (hash) on-chain, with the actual data off-chain.",
+      "citations": [
+        {
+          "cited_text": "they carry assets, execute programmable logic, and trigger state changes on the consuming account. Like UTXOs, notes are created and consumed atomically.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        },
+        {
+          "cited_text": "A nullifier is recorded to prevent the same note from being consumed again (see note design ).\n\n",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        },
+        {
+          "cited_text": "Private Only a commitment (hash) is stored on-chain. The actual note data must be communicated off-chain between sender and recipient. \n\n",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Protocol state", "Off-chain storage with on-chain commitment"],
+      "notes": "Private data lives off-chain with only certain data kept on-chain: off-chain storage ensures the network only knows a commitment to the real data, with users storing the data elsewhere. For private notes specifically, only a commitment (hash) is stored on-chain, with the actual data off-chain. Public storage of accounts and notes places full data into protocol state visible to everyone.",
+      "citations": [
+        {
+          "cited_text": "offchain storage ensures the network only knows a commitment to the real data, with users storing the data elsewhere. ",
+          "source": "https://miden.xyz/resource/blog/privacy"
+        },
+        {
+          "cited_text": "Private Only a commitment (hash) is stored on-chain. The actual note data must be communicated off-chain between sender and recipient. \n\n",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "Unlimited access to DeFi applications",
+      "notes": "Miden is a generalised smart-contract rollup where every entity on the network — wallets, smart contracts etc. — is an account with the same structure. Public accounts are explicitly suitable for shared protocols like DEXs and faucets, so DeFi applications deploy natively as accounts on the rollup itself. Account components compose freely, letting a single account combine a wallet, an auth component, and custom logic, so private assets can interact with any application on the rollup.",
+      "citations": [
+        {
+          "cited_text": "Every entity on the network — wallets, smart contracts, token faucets — is an account.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/accounts/introduction/"
+        },
+        {
+          "cited_text": "Public Full state is stored on-chain and visible to everyone — suitable for shared protocols like DEXs and faucets",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/accounts/introduction/"
+        },
+        {
+          "cited_text": "a DeFi account might combine a wallet component (for holding assets), an auth component (for signature verification), and custom application logic — all in a single account.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/accounts/introduction/"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Full programmability with public and private state",
+      "notes": "Accounts are programmable state machines composed of reusable components, each contributing storage layout and exported procedures, with persistent storage and an asset vault. Wallets and contracts are all programmable accounts with the same structure. Inter-account communication occurs through notes, each carrying an arbitrary script written in Rust that runs when consumed. Both accounts and notes support public or private storage modes.",
+      "citations": [
+        {
+          "cited_text": "Miden treats them all as programmable accounts with the same structure.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/accounts/introduction/"
+        },
+        {
+          "cited_text": "On Miden, accounts are composed of components — reusable modules that each contribute their own storage layout and exported procedures.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/accounts/introduction/"
+        },
+        {
+          "cited_text": "each Miden note carries an arbitrary executable script — written in Rust — that runs when the note is consumed, enabling programmable conditions far beyond simple locking scripts.",
+          "source": "https://docs.miden.xyz/0.13/builder/smart-contracts/notes/introduction/"
+        }
+      ]
+    }
+  ]
 }
