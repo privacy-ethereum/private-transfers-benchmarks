@@ -356,13 +356,13 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Infinity grow",
+      "value": "Per Transaction",
       "notes": "Aleo uses a single global commitment tree where record commitments are appended in-order and never pruned. The nullifier set similarly accumulates permanently to prevent double-spending, requiring full nodes to maintain the complete history. This represents an unbounded growth model where protocol-specific private state expands continuously with blockchain activity.",
       "url": "https://docs.aleo.org/specs/aleovm.pdf"
     },
     {
       "name": "Client-side indexing",
-      "value": "Always scanning",
+      "value": "Scanning",
       "notes": "Aleo requires always-on scanning for shielded transactions. Because shielded transactions reveal no metadata about sender or receiver, users must scan the chain using their view key. Every block must be trial-decrypted to check if any records were received. Shield wallet (developed by Provable, an Aleo Labs company) offers a privacy-preserving record scanning service that offloads this scanning while keeping the view key encrypted end-to-end.",
       "url": "https://docs.aleo.org/learn/advanced/record-scanning"
     },
