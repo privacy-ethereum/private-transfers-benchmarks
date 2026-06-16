@@ -1,7 +1,7 @@
 {
   "id": "fairblock",
   "title": "Fairblock",
-  "description": "Fairblock is a decentralized cryptographic computer with its own execution layer for confidential computing. Confidential apps (cApps) run on Fairblock's native chain, FairyRing, and are accessible from major ecosystems, so users can use them without bridging funds or switching wallets.",
+  "description": "Fairblock is a decentralized cryptographic computer with its own execution layer for confidential computing. Confidential apps (cApps) run on Fairblock's native chain, FairyRing, and are accessible from major ecosystems without bridging funds or switching wallets. This evaluation assesses the network, in combination with Stabletrust, Fairblock's confidential stablecoin-transfer application built on FairyRing, which keeps balances and amounts encrypted while leaving addresses transparent.",
   "documentation": "https://docs.fairblock.network/docs/welcome/vision",
   "status": "pending",
   "categories": [
@@ -94,7 +94,8 @@
     {
       "name": "Time-to-finality",
       "value": "Underlying chain",
-      "notes": "Finality is inherited from the underlying chains. Confidential transfers settle on FairyRing, a dedicated confidentiality execution layer running CosmWasm contracts over a ledger of encrypted balances, with cross-chain flows anchored to the originating EVM chain through IBC, where each side runs a light client of the other and verifies headers and proofs on incoming packets. No protocol-specific waiting period or challenge window is added on top of host-chain block finality.",
+      "notes": "Confidential transfers settle on FairyRing itself, a sovereign Cosmos chain running CometBFT consensus, so a transfer is final on block commit under that chain's own deterministic finality rather than any EVM host's. The EVM host chains only bound the separate deposit and withdrawal legs, which cross over via IBC light clients that verify headers and proofs on incoming packets. No protocol-specific challenge window is added.",
+      "needsResearchReview": "FairyRing block time not documented in sources — finality in seconds unconfirmed",
       "citations": [
         {
           "cited_text": "maintain a confidential ledger of encrypted balances per account and per asset.",
@@ -109,15 +110,15 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "Onboarding requires the user to hold one new secret, the confidential account they create when first connecting a wallet, after which sending and receiving need no repeated setup. First-time users connect a wallet to create that account and make an initial deposit to fund it. Per-transaction selective disclosure runs through threshold identity-based encryption rather than any additional secret the user must store.",
+      "notes": "Beyond the wallet itself the user stores no new secret. The confidential account's homomorphic-encryption keypair is derived deterministically from a wallet signature, never persisted, and re-derived from that signature each session, so it is not an independently held key. First-time users connect a wallet to create the account and fund it with an initial deposit, after which sending and receiving need no further setup.",
       "citations": [
         {
           "cited_text": "First-time users connect a wallet (creating a confidential account) and make an initial deposit to fund it. ",
           "source": "https://docs.fairblock.network/docs/confidential_transfers/stabletrust"
         },
         {
-          "cited_text": "Fairblock uses identity-based encryption and multiparty computation (IBE-MPC) to enable per-transaction disclosures.",
-          "source": "https://docs.fairblock.network/docs/confidential_transfers/confidential_transactions"
+          "cited_text": "it prompts a wallet signature, derives the HE keypair from that signature, and registers the public key onchain if it does not yet exist.",
+          "source": "https://docs.fairblock.network/docs/confidential_transfers/stabletrust_sdk/building_with_stabletrust"
         }
       ]
     },
@@ -154,7 +155,7 @@
     {
       "name": "Censorship resistance",
       "value": "No",
-      "notes": "The initial release runs as a Proof of Authority chain, so a permissioned validator set produces blocks and can withhold inclusion of valid transactions. Decryption and execution also depend on validator participation, since at least 2/3 + 1 of validators must submit keyshares to form the aggregated keyshare, letting the authority set block execution by refusing to contribute shares. Slashing for misbehaviour exists, but no permissionless fallback lets users bypass the authority set.",
+      "notes": "The initial release runs as a Proof of Authority chain, so a permissioned validator set produces blocks and can withhold inclusion of valid transactions. Decryption and execution also depend on validator participation, since at least 2/3 + 1 of validators must submit keyshares to form the aggregated keyshare, letting the authority set block execution by refusing to contribute shares. Simple slashing mechanisms for misbehaviour exist.",
       "citations": [
         {
           "cited_text": "The initial release will be a Proof of Authority (PoA) chain similar to the approach used by Noble",
@@ -172,8 +173,8 @@
     },
     {
       "name": "External network dependence",
-      "value": "Yes, permissioned",
-      "notes": "Confidential transfers route through FairyRing, a separate Cosmos chain whose validator set generates and aggregates the keyshares. At least 2/3 + 1 of validators must submit keyshares to form the aggregated keyshare, so transfer liveness rests on this external committee's honest-majority assumption beyond the host chain. The initial release is a Proof of Authority chain, so the validator set is curated rather than open, and cross-chain flows additionally use relayers like FairyPort and IBC.",
+      "value": "No",
+      "notes": "No external network with added crypto-economic assumptions. The only cross-chain link, used for deposits and withdrawals, is IBC, which is trust-minimised and permissionless: light clients verify incoming packets, relayers cannot forge them, and security rests on the connected chains' own consensus rather than any custodian. The protocol adds no trusted relayer set, oracle, or external validator network beyond the public chains a user already transacts on.",
       "citations": [
         {
           "cited_text": "Currently, at least 2/3 + 1 of the validators have to submit keyshares to create the aggregated keyshare.\n\n",
@@ -186,6 +187,18 @@
         {
           "cited_text": "Relayers - The communication method that listens and coordinates between the FairyRing and destination chains for transaction decryption and execution. An example of this includes FairyPort and IBC.\n\n",
           "source": "https://docs.fairblock.network/docs/welcome/architecture"
+        },
+        {
+          "cited_text": "Off-chain relayers merely move packets between chains; they do not participate in validation and cannot forge valid headers, tamper with proofs, or undetectably alter packet contents.",
+          "source": "https://docs.fairblock.network/docs/confidential_transfers/technical_overview"
+        },
+        {
+          "cited_text": "the security of cross-chain communication is ultimately anchored in the consensus of the connected chains rather than in any external custodian or relayer.",
+          "source": "https://docs.fairblock.network/docs/confidential_transfers/technical_overview"
+        },
+        {
+          "cited_text": "IBC is secure and permissionless.",
+          "source": "https://docs.cosmos.network/ibc/"
         }
       ]
     },
@@ -237,8 +250,8 @@
     },
     {
       "name": "Third-party inspectability",
-      "value": "No",
-      "notes": "Balances and amounts are encrypted on FairyRing, with only ciphertext on-chain and no plaintext visible. Users decrypt their own balances locally with their own keys, and proof generation runs in the browser rather than through an outsourced prover, so no operator can read transaction details. Disclosure is user-scoped — authorized parties receive scoped decryption keys through threshold identity-based encryption only for specific transaction subsets, avoiding any single persistent audit key.",
+      "value": "Yes",
+      "notes": "Balances are encrypted on FairyRing as ciphertext. Each user's homomorphic-encryption key is derived from their wallet signature and never leaves the browser, so no operator reads balances by default and there is no persistent audit key. But FairyRing's threshold identity-based encryption lets the validator set produce scoped keys that reveal specific accounts or transactions under defined conditions for compliance, audit, or investigation.",
       "citations": [
         {
           "cited_text": "Only encrypted values are recorded on FairyRing. No plaintext balances are visible onchain.\n\n",
@@ -249,8 +262,8 @@
           "source": "https://docs.fairblock.network/docs/confidential_transfers/technical_overview"
         },
         {
-          "cited_text": "No black-box trust : Users are not exposed to unnecessary security risks from single hardware setups (e.g. single-TEE), outsourced ZK provers, or centralized offchain coprocessors.\n\n",
-          "source": "https://docs.fairblock.network/docs/confidential_transfers/confidential_transactions"
+          "cited_text": "When required for compliance, audits, or investigations, authorized parties can be granted access to scoped decryption keys.",
+          "source": "https://docs.fairblock.network/docs/confidential_transfers/technical_overview"
         },
         {
           "cited_text": "This is enabled by FairyRing’s threshold identity-based encryption (IBE), which allows specific accounts or transaction subsets to be revealed under well-defined conditions",
@@ -261,8 +274,7 @@
     {
       "name": "Implementation maturity",
       "value": "2 : Public testnet",
-      "notes": "The network is at an early, pre-production stage. The initial release is structured as a Proof of Authority chain similar to the approach used by Noble, described as a forthcoming release rather than a live permissionless mainnet. The Stabletrust confidential-transfer interface targets host chains that include the newer Tempo and Arc among the EVM targets, with Solana and Stellar listed as upcoming, placing the user-facing product ahead of a proven production deployment.",
-      "needsResearchReview": "no live mainnet confirmed in sources — PoA release is future-tense and no dated launch is cited",
+      "notes": "FairyRing's public testnet has been live since 7 March 2024 and has iterated to fairyring-testnet-3, but no permissionless mainnet exists yet. The initial production release is described as a forthcoming Proof of Authority chain. The Stabletrust confidential-transfer interface targets EVM chains plus FairyRing, with Solana and Stellar listed as upcoming, placing the product ahead of a proven mainnet deployment.",
       "citations": [
         {
           "cited_text": "The initial release will be a Proof of Authority (PoA) chain similar to the approach used by Noble",
@@ -271,13 +283,18 @@
         {
           "cited_text": "Chains: Major EVM chains and payment networks (Ethereum, Arbitrum, Base, Tempo, Arc, Noble AppLayer, Stable), FairyRing, and soon: Solana, Stellar, and others.",
           "source": "https://docs.fairblock.network/docs/confidential_transfers/stabletrust"
+        },
+        {
+          "cited_text": "Fairblock Public Testnet is Now Live",
+          "source": "https://medium.com/@0xfairblock/fairblock-public-testnet-is-now-live-a487f97ea3e0",
+          "date": "2024-03-07"
         }
       ]
     },
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "The cryptographic stack rests on classical hardness assumptions. Confidential transfers use additive homomorphic computation and fast zero-knowledge proof verification, and selective disclosure rests on threshold identity-based encryption, a pairing-based construction. None of these named primitives are lattice- or hash-based post-quantum schemes, so a Shor-capable adversary could break both ciphertext confidentiality and proof soundness.",
+      "notes": "The cryptographic stack rests on classical hardness assumptions. Confidential transfers use additive homomorphic computation and fast zero-knowledge proof verification, and selective disclosure rests on threshold identity-based encryption, a pairing-based construction. None of these named primitives are lattice or hash-based post-quantum schemes, so a Shor-capable adversary could break both ciphertext confidentiality and proof soundness.",
       "citations": [
         {
           "cited_text": "Instead, confidential transfers use lightweight additive homomorphic calculations and fast zero-knowledge (ZK)-proof verification, executed within the protocol flow. ",
@@ -291,9 +308,13 @@
     },
     {
       "name": "Layer of enforcement",
-      "value": "None",
-      "notes": "No active compliance gate operates at the chain, contract, or asset layer in the transfer path. Selective disclosure runs through identity-based encryption and multiparty computation for per-transaction disclosures, with nothing exposed automatically and a scoped view-key issued only for a specific transaction when access is required. AML screening through external services is referenced for flagging risky addresses but is not enforced as a protocol-level transfer gate.",
+      "value": "Protocol/chain",
+      "notes": "Enforcement sits at the chain layer through FairyRing's threshold identity-based encryption. The validator committee can produce scoped decryption keys that reveal specific accounts or transactions under defined conditions for compliance, audit, or investigation — a capability built into the network rather than an individual app or asset. External analytics screening is referenced separately for flagging risky addresses but is not itself a transfer gate.",
       "citations": [
+        {
+          "cited_text": "When required for compliance, audits, or investigations, authorized parties can be granted access to scoped decryption keys.",
+          "source": "https://docs.fairblock.network/docs/confidential_transfers/technical_overview"
+        },
         {
           "cited_text": "Fairblock uses identity-based encryption and multiparty computation (IBE-MPC) to enable per-transaction disclosures.",
           "source": "https://docs.fairblock.network/docs/confidential_transfers/confidential_transactions"
@@ -306,25 +327,23 @@
     },
     {
       "name": "Enforcement entities",
-      "value": "None",
-      "notes": "No protocol-level entity enforces compliance restrictions on confidential transfers. Rather than a single auditor with persistent access, the system uses identity-based encryption and multiparty computation for per-transaction disclosures, leaving disclosure a user-controlled action. External services such as Chainalysis and Range Security flag and block high-risk addresses, but this screening sits upstream of transfers rather than as a governance, admin, or issuer gate over transfers.",
+      "value": "Admin",
+      "notes": "The threshold decryption that enables disclosure is performed by FairyRing's Proof of Authority validator committee, a curated set maintained by the core team rather than open governance or an external vendor. Producing a scoped decryption key requires at least 2/3 + 1 of these validators to submit keyshares, so the enforcing entity is the permissioned operator committee.",
       "citations": [
         {
-          "cited_text": "Fairblock uses identity-based encryption and multiparty computation (IBE-MPC) to enable per-transaction disclosures.",
-          "source": "https://docs.fairblock.network/docs/confidential_transfers/confidential_transactions"
+          "cited_text": "Currently, at least 2/3 + 1 of the validators have to submit keyshares to create the aggregated keyshare.\n\n",
+          "source": "https://docs.fairblock.network/docs/learn/v1/network/keyshares_and_aggregation"
         },
         {
-          "cited_text": "We work with services like Chainalysis and Range Security to flag and block high-risk or sanctioned addresses.",
-          "source": "https://docs.fairblock.network/docs/confidential_transfers/confidential_transactions"
+          "cited_text": "The initial release will be a Proof of Authority (PoA) chain similar to the approach used by Noble",
+          "source": "https://docs.fairblock.network/docs/learn/v1/network/keyshares_and_aggregation"
         }
       ]
     },
     {
       "name": "Type of compliance",
-      "value": [
-        "Selective disclosure"
-      ],
-      "notes": "User-initiated selective disclosure is the compliance mechanism, not a mandatory gate in the transfer path. Per-transaction details can be revealed to auditors, banks, or regulators only when needed, with no single decryption key covering all transactions. Identity-based encryption and multiparty computation enable these disclosures, with a scoped view-key issued per transaction on request. Address screening via external analytics sits outside the transfer validation path.",
+      "value": ["Selective disclosure", "Programmatic policies"],
+      "notes": "Two mechanisms apply. Selective disclosure reveals per-transaction details to auditors, banks, or regulators — sometimes user-initiated, sometimes via the validator committee's threshold decryption under defined conditions — with no single key covering all transactions.",
       "citations": [
         {
           "cited_text": "Disclose per-transaction details to finance, auditors, banks, or regulators only when needed (no single decrytion key for all transactions)",
@@ -338,10 +357,8 @@
     },
     {
       "name": "Point of enforcement",
-      "value": [
-        "None"
-      ],
-      "notes": "No compliance gate is enforced at deposit, transfer, or withdrawal in the confidential-transfer lifecycle. Selective disclosure relies on identity-based encryption and multiparty computation for per-transaction disclosures, which the user issues out-of-band as a scoped view-key rather than at a protocol checkpoint. Address-level AML and sanctions screening runs through external providers, not as a lifecycle-stage gate.",
+      "value": ["Transfer"],
+      "notes": "Disclosure targets the confidential transfer: the threshold decryption reveals specific transactions, and a user can disclose a chosen transaction to an auditor or regulator. Deposits and withdrawals cross the transparent EVM escrow, where addresses are already visible. Address-level AML screening runs through external providers outside this lifecycle.",
       "citations": [
         {
           "cited_text": "Fairblock uses identity-based encryption and multiparty computation (IBE-MPC) to enable per-transaction disclosures.",
@@ -355,16 +372,9 @@
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": [
-        "User",
-        "Voluntary third-party disclosure"
-      ],
-      "notes": "Users hold the decryption capability for their own balances and history, with browser-based encryption, proof generation, and balance decryption performed locally. Sharing is user-initiated — a specific transaction, and only that transaction, can be disclosed to a tax authority, regulator, or auditor without revealing the full history, via a scoped view-key issued per transaction only when access is required. No party holds standing access without the user issuing that key.",
+      "value": ["User", "Voluntary third-party disclosure", "Involuntary third-party disclosure"],
+      "notes": "Users hold the decryption capability for their own balances, with browser-based encryption and decryption performed locally, and can voluntarily disclose a chosen transaction to a tax authority, regulator, or auditor via a scoped view-key. Beyond consent, FairyRing's threshold IBE lets the validator committee grant authorized parties scoped decryption keys under defined conditions for compliance, audit, or investigation.",
       "citations": [
-        {
-          "cited_text": "Local, browser-based, lightweight homomorphic encryption and ZK proof generation",
-          "source": "https://docs.fairblock.network/docs/confidential_transfers/stabletrust"
-        },
         {
           "cited_text": "You can disclose a specific transaction – and only that transaction – to a tax authority, regulator, or auditor without revealing your entire financial history. ",
           "source": "https://docs.fairblock.network/docs/confidential_transfers/confidential_transactions"
@@ -372,6 +382,10 @@
         {
           "cited_text": "If access is required, a scoped view-key can be issued for that specific transaction",
           "source": "https://docs.fairblock.network/docs/confidential_transfers/confidential_transactions"
+        },
+        {
+          "cited_text": "When required for compliance, audits, or investigations, authorized parties can be granted access to scoped decryption keys.",
+          "source": "https://docs.fairblock.network/docs/confidential_transfers/technical_overview"
         }
       ]
     },
@@ -396,8 +410,8 @@
     },
     {
       "name": "Cryptographic verifiability",
-      "value": "Yes",
-      "notes": "Transaction correctness on FairyRing is enforced by on-chain zero-knowledge proof verification in CosmWasm contracts, with each transfer carrying proofs that the sender's balance is sufficient, that total value is preserved, and that no negative balance results. Only valid proofs let FairyRing update the encrypted balances. Correctness rests on the proof math rather than a single TEE or an MPC honest-majority assumption, avoiding off-chain coprocessors and hardware enclaves.",
+      "value": "Yes, with L1 consensus",
+      "notes": "Transaction correctness on FairyRing is enforced by on-chain zero-knowledge proof verification in CosmWasm contracts: each transfer proves the sender's balance is sufficient, total value is preserved, and no negative balance results. Only valid proofs let FairyRing update encrypted balances, so correctness rests on proof math, not a single TEE or an MPC honest-majority assumption. FairyRing is itself a sovereign Cosmos chain, so ordering and inclusion rely on its own CometBFT consensus.",
       "citations": [
         {
           "cited_text": "These proofs attest, among other things, that the sender’s balance is sufficient, that the transfer preserves total value, and that no negative balances are created as a result of the operation.\n\n",
@@ -415,17 +429,12 @@
     },
     {
       "name": "Open source",
-      "value": "Yes",
-      "notes": "The Fairblock and FairyRing codebase is developed publicly under the Fairblock GitHub organisation, covering the Cosmos chain modules, the FairyKit integration packages that plug into external protocols, and the off-chain encryption SDK used to encrypt transactions before submission to the destination chain. These ship as open components alongside the FairyRing node software.",
-      "needsResearchReview": "OSI licence not cited — public repo asserted but no LICENSE-file citation attached",
+      "value": "No",
+      "notes": "The confidential-transfer logic is not openly licensed. FairyRing's core chain is published under Apache-2.0, but the components that implement confidential transfers — the DistributedIBE crypto library and the confidential-transfer CosmWasm contracts — ship without any LICENSE file, leaving them all-rights-reserved by default. The privacy-critical code a user relies on is therefore not open source.",
       "citations": [
         {
-          "cited_text": "FairyKit - Integration packages that plug into any protocol and application to bring one-click confidentiality to any app or user requiring it.\n\n",
-          "source": "https://docs.fairblock.network/docs/welcome/architecture"
-        },
-        {
-          "cited_text": "Encryption SDK - An off-chain software used to encrypt transactions to be submitted to the Destination Chain. ",
-          "source": "https://docs.fairblock.network/docs/welcome/architecture"
+          "kind": "license",
+          "source": "https://github.com/Fairblock/fairyring/blob/main/LICENSE"
         }
       ]
     },
@@ -447,7 +456,7 @@
     {
       "name": "Client-side indexing",
       "value": "No Scanning",
-      "notes": "The confidential ledger stores encrypted balances per account and per asset, with CosmWasm contracts updating entries through ZK proof verification and lightweight homomorphic operations, so a device reads its own account entry rather than trial-decrypting a commitment set. Users decrypt their own balances locally with their own keys against on-chain ciphertext. Discovery is a direct account lookup with no per-output scan.",
+      "notes": "The confidential ledger stores encrypted balances per account and per asset, with CosmWasm contracts updating entries through ZK proof verification and lightweight homomorphic operations, so a device reads its own account entry rather than trial-decrypting a commitment set. Users decrypt their own balances locally with their own keys against on-chain ciphertext.",
       "citations": [
         {
           "cited_text": "maintain a confidential ledger of encrypted balances per account and per asset.",
@@ -476,9 +485,7 @@
     },
     {
       "name": "Private Data Storage",
-      "value": [
-        "Smart contracts"
-      ],
+      "value": ["Smart contracts"],
       "notes": "Encrypted balances live on FairyRing as a confidential ledger held by CosmWasm contracts, with only ciphertext written on-chain — a deposit credits an encrypted balance and no plaintext is visible. The contracts keep these balances per account and per asset, processed through ZK proof verification and homomorphic operations. The host-chain escrow holds a mirrored view after IBC responses, so the authoritative private data sits in smart-contract storage on both sides.",
       "citations": [
         {
@@ -512,8 +519,8 @@
     },
     {
       "name": "Programmability / Generality",
-      "value": "Partial programmability",
-      "notes": "FairyRing is a decentralized cryptographic computer with an execution layer for confidential computing, hosting confidential apps across categories beyond transfers. It supports protected trading with encrypted orders, intents, and bids, enabling price discovery across trading, lending, and token launches, with multimodal cryptography selecting a scheme per use case. Transparent addresses keep this as programmable confidentiality over encrypted values rather than fully private state.",
+      "value": "Full programmability with public and private state",
+      "notes": "FairyRing is a decentralized cryptographic computer with an execution layer for confidential computing, hosting cApps well beyond transfers. Developers build natively — protected trading with encrypted orders, intents, and bids, plus lending and token launches — and the platform selects a cryptographic scheme per use case (HE, IBE, MPC, lightweight ZK). It runs both public and confidential state, a general programmable confidential computer rather than a fixed payment flow.",
       "citations": [
         {
           "cited_text": "Fairblock is a dynamic, decentralized cryptographic computer with its own execution layer purpose-built for confidential computing.",
