@@ -192,6 +192,16 @@
       "value": "Only payments",
       "notes": "Tornado Cash Classic is a set of tools to break the link between deposits and withdrawals. Tornado Cash Nova allows shielded transfers between two users that have an account inside the Tornado Cash ecosystem. There is no programmable logic beyond fixed-denomination deposits, withdrawals, and Nova shielded transfers.",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-nova/shielded-transfers.html"
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": "~0.000271 ETH / $0.48",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": "~0.000119 ETH / $0.21",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
     }
   ]
 }

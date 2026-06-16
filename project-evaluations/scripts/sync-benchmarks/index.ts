@@ -1,22 +1,19 @@
 import { readFile, writeFile } from "fs/promises";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
+import { buildCostValueAndNotes, fetchGasPrices, syncOperation, upsertProperty } from "./utils";
+import { type IBenchmarks } from "./interfaces";
+import { type Evaluation } from "../../src/types";
 import {
-  buildCostValueAndNotes,
   CAMEL_CASE_REGEX,
   DEPOSIT_PROPERTY_NAME,
   ERC_7528_NATIVE_ETH_ADDRESS,
-  ETH_PRIVACY_POOLS_ADDRESS,
-  fetchGasPrices,
-  Protocol,
-  syncOperation,
+  ETH_PRIVACY_POOLS_MAINNET,
   TRANSFER_PROPERTY_NAME,
-  upsertProperty,
   WETH_ADDRESS_IN_MAINNET,
   WITHDRAW_PROPERTY_NAME,
-} from "./utils";
-import { type IBenchmarks } from "./interfaces";
-import { type Evaluation } from "../../src/types";
+} from "./constants";
+import { Network, Protocol } from "./enums";
 
 async function syncBenchmarks() {
   const scriptDirectory = dirname(fileURLToPath(import.meta.url));
@@ -28,7 +25,11 @@ async function syncBenchmarks() {
     fetchGasPrices(),
   ]);
 
-  console.log(`Gas prices: ETH=$${gasPrices.ethInUsd}, gas=${gasPrices.gasPriceInETH} gwei (${gasPrices.date})`);
+  console.log(`Date: ${gasPrices.date}`);
+  console.log(`ETH price: $${gasPrices.ethInUsd}`);
+  Object.values(Network).forEach((network) => {
+    console.log(`Gas price on ${network}: ${gasPrices.inETH[network]} gwei`);
+  });
 
   const keys = Object.keys(benchmarks);
 
@@ -56,8 +57,8 @@ async function syncBenchmarks() {
             (property) => property.id === "blanksquare-withdraw-native-eth",
           );
 
-          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, depositETH!, gasPrices);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, withdrawETH!, gasPrices);
+          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, depositETH!, Network.BASE, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, withdrawETH!, Network.BASE, gasPrices);
           break;
         }
         case Protocol.CURVY: {
@@ -67,7 +68,7 @@ async function syncBenchmarks() {
           const { value, notes } = buildCostValueAndNotes(average, gasPrices);
 
           upsertProperty(evaluation.properties, DEPOSIT_PROPERTY_NAME, value, notes);
-          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, stealthToPublic, gasPrices);
+          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, stealthToPublic, Network.ARBITRUM, gasPrices);
           break;
         }
         case Protocol.FLUIDKEY: {
@@ -77,15 +78,15 @@ async function syncBenchmarks() {
           const { value, notes } = buildCostValueAndNotes(average, gasPrices);
 
           upsertProperty(evaluation.properties, DEPOSIT_PROPERTY_NAME, value, notes);
-          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, stealthToPublic, gasPrices);
+          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, stealthToPublic, Network.MAINNET, gasPrices);
           break;
         }
         case Protocol.HINKAL: {
           const { shieldNative, unshieldNative, transact } = benchmark;
 
-          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shieldNative, gasPrices);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshieldNative, gasPrices);
-          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, transact, gasPrices);
+          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shieldNative, Network.MAINNET, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshieldNative, Network.MAINNET, gasPrices);
+          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, transact, Network.MAINNET, gasPrices);
           break;
         }
         case Protocol.HOUDINISWAP: {
@@ -103,8 +104,8 @@ async function syncBenchmarks() {
           const deposit = mainnet.deposit;
           const withdrawal = scroll.withdrawal;
 
-          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, deposit, gasPrices);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, withdrawal, gasPrices);
+          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, deposit, Network.MAINNET, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, withdrawal, Network.SCROLL, gasPrices);
           break;
         }
         case Protocol.MONERO: {
@@ -119,14 +120,14 @@ async function syncBenchmarks() {
           const { shield, unshield } = benchmark;
 
           const shieldETH = shield.shieldTokenStats.find(
-            (property) => property.tokenAddress === ETH_PRIVACY_POOLS_ADDRESS,
+            (property) => property.tokenAddress === ETH_PRIVACY_POOLS_MAINNET,
           );
           const unshieldETH = unshield.unshieldTokenStats.find(
             (property) => property.tokenAddress === ERC_7528_NATIVE_ETH_ADDRESS,
           );
 
-          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shieldETH!, gasPrices);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshieldETH!, gasPrices);
+          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shieldETH!, Network.MAINNET, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshieldETH!, Network.MAINNET, gasPrices);
           break;
         }
         case Protocol.RAILGUN: {
@@ -139,31 +140,31 @@ async function syncBenchmarks() {
             (property) => property.tokenAddress === WETH_ADDRESS_IN_MAINNET,
           );
 
-          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shieldWETH!, gasPrices);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshieldWETH!, gasPrices);
-          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, transact, gasPrices);
+          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shieldWETH!, Network.MAINNET, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshieldWETH!, Network.MAINNET, gasPrices);
+          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, transact, Network.MAINNET, gasPrices);
           break;
         }
         case Protocol.REDACT: {
           const { shieldedNative, unshielded } = benchmark;
 
-          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shieldedNative, gasPrices);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshielded, gasPrices);
+          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shieldedNative, Network.SEPOLIA, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshielded, Network.SEPOLIA, gasPrices);
           break;
         }
         case Protocol.TORNADO_CASH: {
           const { shield, unshield } = benchmark;
 
-          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shield, gasPrices);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshield, gasPrices);
+          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, shield, Network.MAINNET, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unshield, Network.MAINNET, gasPrices);
           break;
         }
         case Protocol.VEIL_CASH: {
           const { depositQueued, withdraw, transfer } = benchmark;
 
-          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, depositQueued, gasPrices);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, withdraw, gasPrices);
-          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, transfer, gasPrices);
+          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, depositQueued, Network.BASE, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, withdraw, Network.BASE, gasPrices);
+          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, transfer, Network.BASE, gasPrices);
           break;
         }
         case Protocol.WORM: {
@@ -173,15 +174,15 @@ async function syncBenchmarks() {
           const { value, notes } = buildCostValueAndNotes(average, gasPrices);
 
           upsertProperty(evaluation.properties, DEPOSIT_PROPERTY_NAME, value, notes);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, withdraw, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, withdraw, Network.MAINNET, gasPrices);
           break;
         }
         case Protocol.ZERC20: {
           const { wrap, unwrap, teleport } = benchmark;
 
-          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, wrap, gasPrices);
-          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unwrap, gasPrices);
-          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, teleport, gasPrices);
+          syncOperation(evaluation.properties, DEPOSIT_PROPERTY_NAME, wrap, Network.MAINNET, gasPrices);
+          syncOperation(evaluation.properties, WITHDRAW_PROPERTY_NAME, unwrap, Network.MAINNET, gasPrices);
+          syncOperation(evaluation.properties, TRANSFER_PROPERTY_NAME, teleport, Network.MAINNET, gasPrices);
           break;
         }
         default:

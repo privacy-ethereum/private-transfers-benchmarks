@@ -187,7 +187,7 @@
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": "",
+      "value": "0.00015211836734693875",
       "notes": "Monero transaction fees units are XMR (Monero native token). There is no concept of deposit and withdraw operations."
     }
   ]

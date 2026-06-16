@@ -36,16 +36,18 @@
     },
     {
       "name": "On-chain gas cost: deposit",
-      "value": ""
+      "value": "~0.000305 ETH / $0.54",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": "",
-      "notes": "Internal private transfers could involve ETH or any shielded ERC20 token."
+      "value": "~0.000304 ETH / $0.54",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. Internal private transfers could involve ETH or any shielded ERC20 token."
     },
     {
       "name": "On-chain gas cost: withdraw",
-      "value": ""
+      "value": "~0.000156 ETH / $0.28",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
     },
     {
       "name": "Number of secrets",
