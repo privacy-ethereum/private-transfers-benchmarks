@@ -69,4 +69,31 @@ export interface IBenchmarks {
   teleport: IOperationStats & {
     teleportedStats: ISpecificOperationStats[];
   };
+  mainnet: {
+    deposit: IOperationStats & {
+      depositStats: ISpecificOperationStats[];
+    };
+  };
+  scroll: {
+    withdrawal: IOperationStats & {
+      withdrawalStats: ISpecificOperationStats[];
+    };
+  };
+}
+
+export interface IETHPriceInUSD {
+  ethereum: {
+    usd: number;
+  };
+}
+
+export interface IGasPrices {
+  ethInUsd: number;
+  gasPriceInETH: number;
+  date: string;
+}
+
+export interface IValueAndNotes {
+  value: string;
+  notes: string;
 }

@@ -12,6 +12,13 @@ export const BlankSquareProtocolStatsFragment = graphql(/* GraphQL */ `
         totalCount
         totalGasUsed
         totalValue
+
+        depositStats {
+          id
+          totalCount
+          totalGasUsed
+          totalValue
+        }
       }
 
       withdraw {
@@ -19,6 +26,13 @@ export const BlankSquareProtocolStatsFragment = graphql(/* GraphQL */ `
         totalCount
         totalGasUsed
         totalValue
+
+        withdrawStats {
+          id
+          totalCount
+          totalGasUsed
+          totalValue
+        }
       }
     }
   }

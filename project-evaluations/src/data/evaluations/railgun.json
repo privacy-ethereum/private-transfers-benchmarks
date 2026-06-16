@@ -194,15 +194,16 @@
     },
     {
       "name": "On-chain gas cost: deposit",
-      "value": "814238.1362179487"
+      "value": ""
     },
     {
       "name": "On-chain gas cost: withdraw",
-      "value": "1476883.8231748159"
+      "value": ""
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": "632886.0111559916"
+      "value": "",
+      "notes": "Internal private transfers could involve ETH or any shielded ERC20 token."
     }
   ]
 }

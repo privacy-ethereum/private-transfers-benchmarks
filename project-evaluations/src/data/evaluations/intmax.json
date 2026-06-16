@@ -40,11 +40,13 @@
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": ""
+      "value": "",
+      "notes": "There is no internal private transfer benchmark because that happens inside the Intmax network and there is no used gas visible on-chain."
     },
     {
       "name": "On-chain gas cost: withdraw",
-      "value": ""
+      "value": "",
+      "notes": "Withdrawals from Intmax happen on the Scroll L2 network."
     },
     {
       "name": "Number of secrets",

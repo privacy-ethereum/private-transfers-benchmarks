@@ -194,6 +194,11 @@
     {
       "name": "On-chain gas cost: transfer",
       "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": "0",
+      "notes": "There is no withdraw operation because the user can move funds directly from their stealth addresses with a transfer operation."
     }
   ]
 }

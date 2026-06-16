@@ -80,7 +80,8 @@
     },
     {
       "name": "On-chain gas cost: withdraw",
-      "value": ""
+      "value": "0",
+      "notes": "There is no withdraw operation because the user can move funds directly from their stealth addresses with a transfer operation."
     },
     {
       "name": "Time-to-finality",
