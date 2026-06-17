@@ -72,11 +72,13 @@
     },
     {
       "name": "On-chain gas cost: deposit",
-      "value": ""
+      "value": "~0.000006 ETH / $0.01",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. Users can deposit in any supported network (e.g"
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": ""
+      "value": "~0.000007 ETH / $0.01",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. Remember that Curvy's private transfers from stealth addresses to any address happen on Arbitrum"
     },
     {
       "name": "On-chain gas cost: withdraw",

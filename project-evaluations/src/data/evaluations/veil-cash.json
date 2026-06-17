@@ -5,6 +5,22 @@
   "status": "pending",
   "documentation": "https://docs.veil.cash/",
   "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
-  "properties": [],
+  "properties": [
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": "~0.000002 ETH / $0.00",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": "~0.000008 ETH / $0.01",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": "~0.000008 ETH / $0.01",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
+    }
+  ],
   "sourceUrls": []
 }

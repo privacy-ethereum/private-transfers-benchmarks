@@ -36,7 +36,8 @@
     },
     {
       "name": "On-chain gas cost: deposit",
-      "value": ""
+      "value": "~0.000058 ETH / $0.10",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
     },
     {
       "name": "On-chain gas cost: transfer",
@@ -45,8 +46,8 @@
     },
     {
       "name": "On-chain gas cost: withdraw",
-      "value": "",
-      "notes": "Withdrawals from Intmax happen on the Scroll L2 network."
+      "value": "~0.000000 ETH / $0.00",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. Withdrawals from Intmax happen on the Scroll L2 network."
     },
     {
       "name": "Number of secrets",

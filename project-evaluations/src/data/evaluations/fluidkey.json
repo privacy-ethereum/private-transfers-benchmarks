@@ -193,12 +193,18 @@
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": ""
+      "value": "~0.000200 ETH / $0.36",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
     },
     {
       "name": "On-chain gas cost: withdraw",
       "value": "0",
       "notes": "There is no withdraw operation because the user can move funds directly from their stealth addresses with a transfer operation."
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": "~0.000006 ETH / $0.01",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
     }
   ]
 }

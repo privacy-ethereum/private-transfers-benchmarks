@@ -1,3 +1,5 @@
+import { type Network } from "./enums";
+
 export interface IOperationStats {
   id: string;
   totalCount: string;
@@ -89,7 +91,7 @@ export interface IETHPriceInUSD {
 
 export interface IGasPrices {
   ethInUsd: number;
-  gasPriceInETH: number;
+  inETH: Record<Network, bigint>;
   date: string;
 }
 

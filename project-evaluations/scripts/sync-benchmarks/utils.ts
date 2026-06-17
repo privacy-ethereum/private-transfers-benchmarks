@@ -1,72 +1,44 @@
-import { config } from "dotenv";
-
 import { type Property } from "../../src/types";
+import {
+  ARB_RPC_URL,
+  BASE_RPC_URL,
+  ETH_PRICE_IN_USD_API_URL,
+  ETH_RPC_URL,
+  FALLBACK_ETH_USD,
+  FALLBACK_GAS_ETH_ARBITRUM,
+  FALLBACK_GAS_ETH_BASE,
+  FALLBACK_GAS_ETH_MAINNET,
+  FALLBACK_GAS_ETH_SCROLL,
+  FALLBACK_GAS_ETH_SEPOLIA,
+  FALLBACK_GAS_ETH_STARKNET,
+  SCROLL_RPC_URL,
+  SEPOLIA_RPC_URL,
+  STARKNET_RPC_URL,
+} from "./constants";
+import { Network } from "./enums";
 import { type IValueAndNotes, type IGasPrices, type IOperationStats } from "./interfaces";
 import { formatEther, type Hex, hexToBigInt } from "viem";
 
-config();
-
-const { ETHEREUM_RPC_URL, ETH_PRICE_IN_USD_API_URL } = process.env;
-
-const FALLBACK_ETH_USD = 3500;
-const FALLBACK_GAS_ETH_GWEI = 10 * 1e-9; // 10 gwei (not confuse with wei)
-
-export const CAMEL_CASE_REGEX = /([a-z0-9])([A-Z])/g;
-
-export const ERC_7528_NATIVE_ETH_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-export const WETH_ADDRESS_IN_MAINNET = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
-export const ETH_PRIVACY_POOLS_ADDRESS = "0xf241d57c6debae225c0f2e6ea1529373c9a9c9fb";
-
-export const DEPOSIT_PROPERTY_NAME = "On-chain gas cost: deposit";
-export const TRANSFER_PROPERTY_NAME = "On-chain gas cost: transfer";
-export const WITHDRAW_PROPERTY_NAME = "On-chain gas cost: withdraw";
-
-export enum Protocol {
-  BLANKSQUARE = "blanksquare",
-  CURVY = "curvy",
-  FLUIDKEY = "fluidkey",
-  HINKAL = "hinkal",
-  HOUDINISWAP = "houdiniswap",
-  INTMAX = "intmax",
-  MONERO = "monero",
-  PRIVACY_POOLS = "privacy-pools",
-  RAILGUN = "railgun",
-  REDACT = "redact",
-  TORNADO_CASH = "tornado-cash",
-  VEIL_CASH = "veil-cash",
-  WORM = "worm",
-  ZERC20 = "zerc20",
-}
-
 /** Fetch current ETH/USD price from external API*/
 async function fetchEthInUsd(): Promise<number> {
-  if (!ETH_PRICE_IN_USD_API_URL) {
-    throw new Error("ETH_PRICE_IN_USD_API_URL is not set in the environment variables");
-  }
-
   const response = await fetch(ETH_PRICE_IN_USD_API_URL);
   const json = (await response.json()) as { ethereum: { usd: number } };
   return json.ethereum.usd;
 }
 
 /**
- * Fetch current base fee + priority fee from a RPC as an ETH-denominated number.
+ * Fetch current base fee + priority fee from a RPC as wei
  * RPC returns a hex string in wei; we use BigInt to avoid floating-point precision loss
- * during hex parsing, then convert to ETH (1 ETH = 1e18 wei).
  */
-async function fetchGasPriceInETH(): Promise<number> {
-  if (!ETHEREUM_RPC_URL) {
-    throw new Error("ETH_RPC_URL is not set in the environment variables");
-  }
-
-  const response = await fetch(ETHEREUM_RPC_URL, {
+async function fetchGasPriceInETH(rpc: string): Promise<bigint> {
+  const response = await fetch(rpc, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "eth_gasPrice", params: [] }),
   });
   const json = (await response.json()) as { result: Hex };
   const gasPriceWei = hexToBigInt(json.result);
-  return Number(formatEther(gasPriceWei));
+  return gasPriceWei;
 }
 
 /**
@@ -74,13 +46,36 @@ async function fetchGasPriceInETH(): Promise<number> {
  * Falls back to hardcoded defaults if any request fails.
  */
 export async function fetchGasPrices(): Promise<IGasPrices> {
-  const [ethInUsd, gasPriceInETH] = await Promise.all([
+  const [
+    ethInUsd,
+    gasPriceInETHMainnet,
+    gasPriceInETHArbitrum,
+    gasPriceInETHSepolia,
+    gasPriceInETHBase,
+    gasPriceInETHScroll,
+    gasPriceInETHStarknet,
+  ] = await Promise.all([
     fetchEthInUsd().catch(() => FALLBACK_ETH_USD),
-    fetchGasPriceInETH().catch(() => FALLBACK_GAS_ETH_GWEI),
+    fetchGasPriceInETH(ETH_RPC_URL).catch(() => FALLBACK_GAS_ETH_MAINNET),
+    fetchGasPriceInETH(ARB_RPC_URL).catch(() => FALLBACK_GAS_ETH_ARBITRUM),
+    fetchGasPriceInETH(SEPOLIA_RPC_URL).catch(() => FALLBACK_GAS_ETH_SEPOLIA),
+    fetchGasPriceInETH(BASE_RPC_URL).catch(() => FALLBACK_GAS_ETH_BASE),
+    fetchGasPriceInETH(SCROLL_RPC_URL).catch(() => FALLBACK_GAS_ETH_SCROLL),
+    fetchGasPriceInETH(STARKNET_RPC_URL).catch(() => FALLBACK_GAS_ETH_STARKNET),
   ]);
 
   const date = new Date().toISOString().slice(0, 10);
-  return { ethInUsd, gasPriceInETH, date };
+
+  const inETH = {
+    [Network.MAINNET]: gasPriceInETHMainnet,
+    [Network.ARBITRUM]: gasPriceInETHArbitrum,
+    [Network.SEPOLIA]: gasPriceInETHSepolia,
+    [Network.BASE]: gasPriceInETHBase,
+    [Network.SCROLL]: gasPriceInETHScroll,
+    [Network.STARKNET]: gasPriceInETHStarknet,
+  };
+
+  return { ethInUsd, inETH, date };
 }
 
 /**
@@ -91,8 +86,13 @@ export async function fetchGasPrices(): Promise<IGasPrices> {
  * @param gasPrices the current gas prices to use for the calculation
  * @returns an object containing the formatted value and notes
  */
-export function buildCostValueAndNotes(gasUnits: number, gasPrices: IGasPrices): IValueAndNotes {
-  const ethCost = gasUnits * gasPrices.gasPriceInETH;
+export function buildCostValueAndNotes(
+  gasUnits: number,
+  gasPrices: IGasPrices,
+  network: Network = Network.MAINNET,
+): IValueAndNotes {
+  const ethCostInWei = BigInt(Math.trunc(gasUnits)) * gasPrices.inETH[network];
+  const ethCost = Number(formatEther(ethCostInWei));
   const usdCost = ethCost * gasPrices.ethInUsd;
 
   const ethStr = ethCost.toFixed(6);
@@ -146,12 +146,13 @@ export function syncOperation(
   properties: Property[],
   name: string,
   operation: IOperationStats,
+  network?: Network,
   gasPrices?: IGasPrices,
 ) {
   const average = Number(operation.totalGasUsed) / Number(operation.totalCount);
 
   if (gasPrices) {
-    const { value, notes } = buildCostValueAndNotes(average, gasPrices);
+    const { value, notes } = buildCostValueAndNotes(average, gasPrices, network);
     upsertProperty(properties, name, value, notes);
   } else {
     upsertProperty(properties, name, String(average), "");

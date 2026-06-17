@@ -77,7 +77,8 @@
     },
     {
       "name": "On-chain gas cost: transfer",
-      "value": ""
+      "value": "~0.000006 ETH / $0.01",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
     },
     {
       "name": "On-chain gas cost: withdraw",

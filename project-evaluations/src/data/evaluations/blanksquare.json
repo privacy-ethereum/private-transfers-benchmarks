@@ -56,7 +56,8 @@
     },
     {
       "name": "On-chain gas cost: deposit",
-      "value": ""
+      "value": "~0.000011 ETH / $0.02",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
     },
     {
       "name": "On-chain gas cost: transfer",
@@ -64,7 +65,8 @@
     },
     {
       "name": "On-chain gas cost: withdraw",
-      "value": ""
+      "value": "~0.000011 ETH / $0.02",
+      "notes": "Computed average with ETH = $1,775 on 2026-06-17. "
     },
     {
       "name": "Time-to-finality",
