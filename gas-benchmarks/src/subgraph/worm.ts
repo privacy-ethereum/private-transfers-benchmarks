@@ -9,6 +9,8 @@ export const WormProtocolStatsFragment = graphql(/* GraphQL */ `
       withdraw {
         id
         totalCount
+        totalGasUsed
+        totalValue
       }
     }
   }

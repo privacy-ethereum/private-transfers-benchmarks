@@ -4,7 +4,7 @@ Build the required subgraph to fetch metrics data for the benchmarks.
 
 The current versions of the deployed subgraphs are:
 
-- mainnet (private-transfers-mainnet-benchmarks): `v0.0.51`
+- mainnet (private-transfers-mainnet-benchmarks): `v0.0.541`
 - sepolia (private-transfers-sepolia-benchmarks): `v0.0.2`
 - arbitrum (private-transfers-arbitrum-benchmarks): `v0.0.2`
 - base (private-transfers-base-benchmarks): `v0.0.32`

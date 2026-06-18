@@ -11,8 +11,6 @@ export function getWithdrawalEvent(logs: ethereum.Log[]): ethereum.Log | null {
       if (log.topics[0].equals(WITHDRAW_TOPIC)) {
         return log;
       }
-
-      return null;
     }
   }
 
