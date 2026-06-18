@@ -388,7 +388,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["Unlimited access to DeFi applications"],
       "notes": "Umbra is designed for payments, but users can easily use funds in any DeFi application if they so choose. Once funds reach the stealth account, they are ordinary host-chain ETH or ERC-20s that the recipient can use anywhere.",
       "citations": [
         {

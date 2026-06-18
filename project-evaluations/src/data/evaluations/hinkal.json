@@ -222,8 +222,8 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Access to external, but limited choice of DeFi protocols",
-      "notes": "Hinkal supports shielded swaps and interactions with a curated set of DeFi protocols directly from the shielded pool, but the choice is limited to integrations explicitly added by the Hinkal team.",
+      "value": ["Access to external, but limited choice of DeFi protocols"],
+      "notes": "Hinkal supports shielded swaps and interactions with a curated set of DeFi protocols directly from the shielded pool. Swaps route through Odos, Uniswap, and 1inch. Staking and yield go through Curve, Convex, Beefy, and Pendle.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/transactions/swaps"
     },
     {

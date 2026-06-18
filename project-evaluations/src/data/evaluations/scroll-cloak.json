@@ -487,7 +487,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["Access to internal DeFi ecosystem", "Unlimited access to DeFi applications"],
       "notes": "Cloak is a full EVM execution environment, so any Solidity contract that runs on Scroll can be deployed on a Cloak instance. The Cloak docs note it is not recommended to deploy a DEX on Cloak because of liquidity constraints, but generalised DeFi composability is available through the recommended fast-withdraw / swap-on-Scroll / fast-deposit pattern.",
       "citations": [
         {

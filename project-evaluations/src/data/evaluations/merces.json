@@ -518,13 +518,9 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Composable interface, but requires DeFi protocol changes",
-      "notes": "Merces is not plug-and-play with external DeFi, but its design composes by extension. The paper generalises the construction so the MPC network can compute arbitrary functions on private balances — private swaps, lending, yield — each needing a new on-chain verifier and MPC function added to the protocol. Composability therefore exists but requires protocol-level changes per integration and is future work, not live. Touching external DeFi today still means withdrawing back to the public ERC-20.",
+      "value": ["Composable interface, but requires DeFi protocol changes"],
+      "notes": "Merces has a composable interface, but requires DeFi protocol changes to integrate. The deployed contract handles deposits, transfers, and withdrawals of wrapped ERC-20 balances, so reaching external DeFi today means withdrawing back to the public ERC-20. Swaps, lending, and yield — and private interaction with external DeFi contracts, are future extensions.",
       "citations": [
-        {
-          "cited_text": "For example, private swaps: the contract holds, per user, multiple balance commitments for different denominations",
-          "source": "https://eprint.iacr.org/2026/850.pdf"
-        },
         {
           "cited_text": "Extending this to the full range of onchain finance operations (swaps, lending, yield) means solving a set of concrete technical problems",
           "source": "https://core.taceo.io/articles/merces-deep-dive/"

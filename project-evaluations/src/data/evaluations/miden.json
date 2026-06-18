@@ -491,7 +491,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["Unlimited access to DeFi applications", "Access to internal DeFi ecosystem"],
       "notes": "Miden is a generalised smart-contract rollup where every entity on the network — wallets, smart contracts etc. — is an account with the same structure. Public accounts are explicitly suitable for shared protocols like DEXs and faucets, so DeFi applications deploy natively as accounts on the rollup itself. Account components compose freely, letting a single account combine a wallet, an auth component, and custom logic, so private assets can interact with any application on the rollup.",
       "citations": [
         {

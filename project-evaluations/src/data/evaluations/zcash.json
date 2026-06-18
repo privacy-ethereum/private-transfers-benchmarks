@@ -447,7 +447,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
+      "value": ["No access to DeFi"],
       "notes": "Zcash does not support smart contracts or programmable logic on its Layer 1 blockchain. There is no native DeFi ecosystem for shielded or transparent assets. While wrapped ZEC exists on external chains like Ethereum, this requires bridging off the Zcash network entirely and does not constitute native DeFi access.",
       "needsResearchReview": "No-DeFi claim requires citation"
     },

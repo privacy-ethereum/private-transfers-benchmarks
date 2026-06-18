@@ -462,8 +462,8 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Access to internal DeFi ecosystem",
-      "notes": "Curvy supports private send, receive, and a private swap on shielded balances across ETH, WETH, USDT, UNI, WBTC, and USDC. The private swap operates directly on shielded notes inside the privacy aggregator. Arbitrary external DeFi protocols cannot be called while funds are shielded — users must unshield to interact with them — so composability is bounded to the in-protocol swap.",
+      "value": ["Access to external, but limited choice of DeFi protocols"],
+      "notes": "Curvy supports private send, receive, and a private swap on shielded balances across ETH, WETH, USDT, UNI, WBTC, and USDC. The swap is the single existing DeFi feature. Swaps route to external DEX liquidity.",
       "citations": [
         {
           "cited_text": "To access the Curvy's builtin swap feature, click on the Swap button in the bottom right corner of your portfolio balance:\n\nThe swap UI is made to feel familiar to users of the popular DEXs, simply input the amount you want to swap, choose the currencies and click on the Swap button.",
