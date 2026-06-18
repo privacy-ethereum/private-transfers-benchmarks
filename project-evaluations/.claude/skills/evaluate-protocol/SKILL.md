@@ -1,11 +1,11 @@
 ---
 name: evaluate-protocol
-description: End-to-end evaluation pipeline for a single protocol — discover sources, run the citations research script, review the output against rules, auto-patch scripts/research-prompts.ts with any new gaps surfaced by review, run an independent second-pass review, and report.
+description: End-to-end evaluation pipeline for a single protocol — discover sources, run the citations research script, review the output against rules, run an independent second-pass review, and report, applying the qualifying rule-gap improvements to the rule files and leaving them uncommitted for human review.
 ---
 
 # Evaluate Protocol
 
-Wrapper skill that chains the full evaluation pipeline in one command and auto-patches the ruleset based on what review uncovers.
+Wrapper skill that chains the full evaluation pipeline in one command. Rule-gap candidates surfaced by review that clear the Phase E.5 bar are applied to the rule files in that phase and left uncommitted for a human to review and commit — the pipeline edits rule files but never commits them.
 
 ## Arguments
 
@@ -14,7 +14,7 @@ Wrapper skill that chains the full evaluation pipeline in one command and auto-p
 
 ## Task tracking (mandatory)
 
-At the start, create one task per phase via `TaskCreate` (7 tasks: A, B, C, C.5, D, E, F). Mark each task `in_progress` immediately before starting that phase's work, and `completed` immediately after the phase's deliverable is produced — _before_ writing any commentary or starting the next phase.
+At the start, create one task per phase via `TaskCreate` (8 tasks: A, B, C, C.5, D, E, E.5, F). Mark each task `in_progress` immediately before starting that phase's work, and `completed` immediately after the phase's deliverable is produced — _before_ writing any commentary or starting the next phase.
 
 **Common bug to avoid:** when a phase invokes a sub-skill (Phase A → `/research-sources`, Phase C → `/review-evaluation`, Phase C.5 → `/challenger-pass`, Phase E → `/review-evaluation-final`), the sub-skill's return is the phase's deliverable. Do not interpret the sub-skill's output as "review continues" — it is "phase done". Mark the task `completed` _before_ you write your synthesis or proceed to the next phase. If you find yourself summarising review findings while a Phase C, C.5, or Phase E task is still `in_progress`, stop and update it.
 
@@ -72,27 +72,13 @@ For each item in the review output:
 
    The reason string must name the specific open question (e.g. `"on-chain admin slot not classified"`), not a vague placeholder (`"needs review"`, `"TBD"`). The flag is reserved for genuine residual factual uncertainty, not for "I edited this so flag it just in case". Carrying flags forward on resolved properties pollutes the open-items backlog and trains reviewers to ignore the flag.
 
-2. **Rule gap** — review flagged a failure pattern with no matching existing rule. Patch the right place:
-   - **Before adding a new bullet, read the entire target rule block (and adjacent ones) AND the relevant per-group property-rules skill.** Look for a rule that partially covers the gap. If one exists:
-     - **Strengthen or extend the existing rule** rather than adding a new one (e.g. broaden the scope, add a clarifying clause, add the new failure mode to the existing list).
-     - If the existing rule is close but phrased differently, **edit it in place** so the one rule covers both the old and new case.
-     - Only add a new bullet when no existing rule is close — i.e. the new failure mode is orthogonal to everything already written.
-   - **Check for cross-block duplication too.** If the same idea shows up in `WRITING_RULES` and `VALUE_FORMAT_RULES`, consolidate to one block (the most specific one) and delete the duplicate.
-   - When a new bullet really is needed, pick the right destination:
-     - **Property-specific gap** → edit the matching `## {Property name}` section in `.claude/skills/property-rules-{group}/SKILL.md`. Groups: privacy, compliance, trust, cryptography, state-model, timing, composability. Use the exact property name from `schema.ts` as the section header.
-     - **Cross-cutting writing issue** → append to `WRITING_RULES` in `scripts/research-prompts.ts`.
-     - **Cross-check between properties** → append to `CROSS_CHECK_RULES`.
-     - **URL-selection issue** → append to `SOURCE_SELECTION_RULES`.
-     - **Value-format issue** (enum, JSON shape, factual accuracy) → append to `VALUE_FORMAT_RULES`.
-     - **Review-only rule** (post-hoc verification with no write-time analogue) → append to `REVIEW_ONLY_RULES`.
-   - Match the imperative style and bullet format of the surrounding rules. Apply the patch directly — no dry run.
-   - **Goal: keep the rule base small.** Strengthening beats adding. Merging beats both. If Phase D ends with a net-positive rule count, confirm each new bullet is genuinely new.
+2. **Rule gap** — review flagged a failure pattern with no matching rule. Do NOT edit any rule file in Phase D. Record the candidate for Phase E.5: the failure pattern, the property it hit, and where a rule would live (which rule block or property-rules group). Phase E.5 decides whether it clears the bar and, if so, applies it — left uncommitted for human approval.
 
-After patching, run `pnpm run build` from `project-evaluations/`. If it fails, read the error, fix the affected file (`research-prompts.ts` or the relevant property-rules SKILL.md), and retry.
+After patching, run `pnpm run build` from `project-evaluations/`. If it fails, read the error, fix `src/data/evaluations/{id}.json`, and retry.
 
 3. **Maturity-date safety net (sub-agent).** If `Implementation maturity` has a value matching tier 3/4/5 (`/^[3-5]\s*:/`), spawn a fresh `Agent` (`general-purpose`) with: the property's `notes`, its `citations`, and the snapshot cache at `scripts/.source-cache/{id}.json` (URL → text) — instruct the agent to look up each `citations[].source` URL in that map. Ask the agent to confirm whether the cited sources actually contain a deployment date / first-tx date / dated announcement consistent with the chosen tier, and return either `OK` or a one-sentence gap description. If `OK`: nothing to do. If gap: set `needsResearchReview` on the property to a reason string naming the missing date (e.g. `"Tier {N} requires a YYYY date; no dated span found in cited sources for the deployment claim."`). The lint rule `maturity-date-citation` is the cheap first line of defence; this agent is the safety net that catches cases where a year token appears in some unrelated cited_text but the deployment date itself isn't substantiated.
 
-**Phase D is complete when:** every issue from Phase C's table has been addressed (edited in `{id}.json` or written into `research-prompts.ts`), the maturity-date safety net has run if applicable, the `needsResearchReview` reason string on each edited property reflects `REVIEW_ONLY_RULES #7` (kept only on residual factual uncertainty, with a specific reason naming the open question; cleared when the edit resolves the issue with a cited source), and `pnpm run build` passes. Mark the task `completed` and move to Phase E.
+**Phase D is complete when:** every evaluation-bug issue from Phase C's table has been fixed in `{id}.json`, every rule-gap candidate has been recorded for Phase E.5 (not applied), the maturity-date safety net has run if applicable, the `needsResearchReview` reason string on each edited property reflects `REVIEW_ONLY_RULES #7` (kept only on residual factual uncertainty, with a specific reason naming the open question; cleared when the edit resolves the issue with a cited source), and `pnpm run build` passes. Mark the task `completed` and move to Phase E.
 
 ### Phase E — Independent second-pass review
 
@@ -105,7 +91,20 @@ Then act on the merged report:
 
 After patching, run `pnpm run build`; fix and retry on failure.
 
-**Phase E is complete when:** `/review-evaluation-final` has returned its merged report, the Agreement + clear Second-pass-only items are applied to `{id}.json`, the Disagreement set is recorded for Phase F, and `pnpm run build` passes. Mark the task `completed` and move to Phase F.
+**Phase E is complete when:** `/review-evaluation-final` has returned its merged report, the Agreement + clear Second-pass-only items are applied to `{id}.json`, the Disagreement set is recorded for Phase F, and `pnpm run build` passes. Mark the task `completed` and move to Phase E.5.
+
+### Phase E.5 — Improvement integration
+
+Collect the rule-gap candidates recorded across Phases C, C.5, D, and E. Keep only those clearing a high bar:
+
+- **High-impact** — a deterministic lint or cross-check that, had it existed, would have changed a property value this run.
+- **Recurring** — the same theme appears in at least 2 review reports across `.claude/review-reports/`.
+
+For each qualifying candidate, APPLY the fix to its destination with the Edit tool — the relevant block in `scripts/research-prompts.ts`, the matching `property-rules-{group}/SKILL.md`, or the lint — and align the current eval if the new rule changes how this protocol should be graded. Be careful: make the smallest correct edit, match the file's existing voice, and never apply a speculative gap (a plausible gap is not the bar). **Leave every applied change uncommitted** — the human reviews and commits it; the pipeline edits rule files but never commits them. If a qualifying change is large, ambiguous, or you are not confident it is correct, record it in the report WITHOUT applying it and flag it for a human to author.
+
+Drop the non-qualifying candidates, recording them as skipped so a later run's recurrence scan can promote them.
+
+**Phase E.5 is complete when:** qualifying candidates are applied (uncommitted) to their destination rule files, the current eval is aligned to any newly-applied rule, and the applied + skipped candidates are written to the report's Improvements section. Mark the task `completed` and move to Phase F.
 
 ### Phase F — Report
 
@@ -117,9 +116,10 @@ Write a report to `project-evaluations/.claude/review-reports/{id}-{YYYY-MM-DD}.
 - Phase C.5 result: challenger-pass table (or "No challenger-pass candidates surfaced.").
 - Phase D result: list of evaluation edits and new rule ids added.
 - Phase E result: the merged second-pass report (all four sets), and which items were auto-applied.
+- `## Improvements`: the Phase E.5 record — qualifying candidates applied this run (uncommitted, pending human approval) plus the skipped ones for the recurrence scan.
 - Open items: the Disagreement set, plus any property still carrying a `needsResearchReview` reason string or missing a source.
 
-**Phase F is complete when:** the report file exists at `.claude/review-reports/{id}-{date}.md` with all seven sections filled in. Mark the task `completed`.
+**Phase F is complete when:** the report file exists at `.claude/review-reports/{id}-{date}.md` with all eight sections filled in. Mark the task `completed`.
 
 ### Phase G — Manual-fix tracking (post-merge)
 
@@ -135,8 +135,7 @@ If "All changes" or "Factual changes" is high relative to recent protocols, the 
 ## Failure modes
 
 - **Cache missing after Phase A** — the `/research-sources` skill silently returned. Inspect its output; do not proceed to Phase B.
-- **Build fails after Phase D or E** — a generated rule or an applied fix broke TypeScript/the schema. Read the error, edit the affected file, rebuild. Do not leave the repo in a broken state.
-- **New rule duplicates an existing id** — choose a more specific id. Never overwrite an existing rule in Phase D/E; overwriting rules must be a human-driven action.
+- **Build fails after Phase D or E** — an applied eval fix broke the JSON/schema. Read the error, fix `src/data/evaluations/{id}.json`, rebuild. Do not leave the repo in a broken state.
 - **Phase E subagent returns Phase C's report verbatim** — the subagent prompt leaked the first-pass findings. Re-run `/review-evaluation-final` with stricter prompt isolation (see that skill's failure modes).
 
 ## Verification
