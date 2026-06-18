@@ -546,7 +546,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["Unlimited access to DeFi applications", "Access to internal DeFi ecosystem"],
       "notes": "Aztec is a general-purpose smart-contract rollup, so any DeFi application can be deployed on it. Contracts support both private and public state, with private functions able to enqueue public function calls within the same transaction, so the full DeFi surface (lending, AMMs, vaults) can be authored and used inside the rollup. External composability with Ethereum L1 DeFi is asynchronous via the Inbox/Outbox bridge rather than synchronous cross-call.",
       "citations": [
         {

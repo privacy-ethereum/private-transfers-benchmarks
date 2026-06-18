@@ -337,13 +337,15 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
     name: "Access to DeFi",
     group: "Composability",
     description:
-      "Whether the solution can be used directly with DeFi applications. Whether the solution provides a native DeFi ecosystem for shielded assets Or whether there is no access to DeFi",
-    metric: "No access / Internal DeFi ecosystem / External limited / Unlimited",
-    inputType: "select",
+      "How the protocol's assets can be used in DeFi. Measured by two independent axes: an internal surface (DeFi usable while the asset stays private) and an external surface (reaching DeFi outside the privacy set, and by what mechanism).",
+    metric:
+      "No access to DeFi / Composable interface, but requires DeFi protocol changes / Access to internal DeFi ecosystem / External access via adapter / Access to external, but limited choice of DeFi protocols / Unlimited access to DeFi applications",
+    inputType: "multi-select",
     options: [
       "No access to DeFi",
       "Composable interface, but requires DeFi protocol changes",
       "Access to internal DeFi ecosystem",
+      "External access via adapter",
       "Access to external, but limited choice of DeFi protocols",
       "Unlimited access to DeFi applications",
     ],

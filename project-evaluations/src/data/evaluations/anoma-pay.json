@@ -433,7 +433,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
+      "value": ["No access to DeFi"],
       "notes": "AnomaPay's shielded balances cannot be plugged into external DeFi protocols — the forwarder contract allows wrapping and unwrapping ERC-20s, and the beta exposes only payment primitives over ETH, USDC, USDT, and XAN. Once unwrapped, downstream DeFi use is ordinary host-chain ERC-20 activity, not a feature of the shielded surface.",
       "citations": [
         {

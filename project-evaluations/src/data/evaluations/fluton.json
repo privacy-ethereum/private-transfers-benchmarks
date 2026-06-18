@@ -448,8 +448,8 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Access to external, but limited choice of DeFi protocols",
-      "notes": "Shielded cERC20 assets reach external DeFi through confidentiality adapters that sit between the user and the protocol, so confidential interaction routes through the adapter contract rather than the protocol's own contracts. The adapter unwraps the confidential tokens to their standard form before submitting batched actions, because existing protocols do not support cERC20s. Each project must build its own adapter and no global one exists, bounding reach to protocols that have one deployed.",
+      "value": ["External access via adapter", "Unlimited access to DeFi applications"],
+      "notes": "Shielded cERC20 assets can access external DeFi through confidentiality adapters. These are middleware contracts that sit between the user and the protocol — they unwrap the confidential tokens before submitting batched actions to DeFi protocols.",
       "citations": [
         {
           "cited_text": "The Confidentiality Adapter is a smart contract which works as a middleware between the user and the protocol",
@@ -460,7 +460,7 @@
           "source": "https://docs.fluton.io/confidentiality-adapter"
         },
         {
-          "cited_text": "Each projects has to create their own confidentiality adapter contract suitable to their needs. There is no global confidentiality adapter which makes every app confidential. \n\n",
+          "cited_text": "The best part of confidentiality adapter is, since it’s just a middleware contract, the protocol’s infrastructure code doesn’t have to be updated or changed at all",
           "source": "https://docs.fluton.io/confidentiality-adapter"
         }
       ]
