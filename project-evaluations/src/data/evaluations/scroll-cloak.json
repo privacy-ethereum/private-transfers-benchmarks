@@ -427,16 +427,16 @@
     },
     {
       "name": "Private State Scalability",
-      "value": "Per Account",
-      "notes": "Each Cloak instance is an isolated account-based EVM ledger, so private state is keyed per account like a standard EVM state trie rather than appended per transaction. Balances are updated in place, so the state footprint scales with the number of accounts that hold funds rather than with cumulative transaction count.",
+      "value": "Stateless",
+      "notes": "Cloak is a validium. Every account and transaction is held offchain, and only data commitments and validity proofs are posted to the Scroll host chain. The onchain footprint is a fixed-size commitment, not a per-account or per-transaction record, so protocol-specific private state stored on-chain does not grow as accounts or transactions accumulate. The logical ledger is account-based, but that state lives offchain.",
       "citations": [
         {
-          "cited_text": "Cloak proves every transaction using Scroll's [zkEVM](glossary#zkevm) technology, ensuring that state can only be updated according to the protocol rules.",
-          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/index.md"
+          "cited_text": "However, validiums do not post data, so 3rd-parties cannot independently rebuild the validium state.",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/glossary.md"
         },
         {
-          "cited_text": "- [x] Validium sequencer.\n- [x] Validium contracts.\n- [x] Validium provers.\n- [x] Stealth deposits.",
-          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/technology/roadmap.md"
+          "cited_text": "The host chain ensures the security of the confidentiality chain, by storing data commitments and verifying",
+          "source": "https://github.com/scroll-tech/cloak-documentation/blob/main/docs/glossary.md"
         }
       ]
     },
