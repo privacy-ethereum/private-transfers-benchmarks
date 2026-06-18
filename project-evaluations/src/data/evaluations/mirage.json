@@ -445,7 +445,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
+      "value": ["No access to DeFi"],
       "notes": "Mirage operates as a token transfer layer that enables confidential token transfers directly on public blockchains, with no protocol token, shielded asset, or wrapper that could be composed into DeFi. The on-chain footprint consists of a deposit into a temporary contract, a standard transfer from another address to the recipient, and a later withdrawal from the escrow.",
       "citations": [
         {

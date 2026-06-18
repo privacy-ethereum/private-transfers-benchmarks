@@ -163,7 +163,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["Unlimited access to DeFi applications"],
       "notes": "Stealth accounts are standard Safe smart accounts that can interact with any Ethereum DeFi protocol. The Fluidkey interface surfaces a curated Earn feature for yield-generating protocols, but users are not restricted to it — any DeFi interaction possible with a Safe account is available.",
       "url": "https://docs.fluidkey.com/readme/earn"
     },

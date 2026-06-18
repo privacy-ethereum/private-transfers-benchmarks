@@ -451,7 +451,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Access to external, but limited choice of DeFi protocols",
+      "value": ["Access to external, but limited choice of DeFi protocols"],
       "notes": "Nullmask supports shielded swaps via Uniswap V2. The pool contract, which holds public token balances, executes the Uniswap V2 swap on the user's behalf and credits them with shielded output notes in the new token, so the user never has to manually unshield, swap, and reshield. The tokens are sent to Uniswap for the swap, but the users balance update happen as regular shielded note creation, rather than as a public balance change for the user. Other DeFi primitives (lending, staking, derivatives) are not supported.",
       "citations": [
         {

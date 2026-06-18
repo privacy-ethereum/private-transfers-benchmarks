@@ -391,7 +391,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Access to internal DeFi ecosystem",
+      "value": ["Unlimited access to DeFi applications"],
       "notes": "Aleo is a standalone L1 blockchain that supports progammable smart contracts with private state. There is a fledgling native DeFi ecosystem for both shielded and transparent assets.",
       "needsResearchReview": "Internal DeFi claim requires citation"
     },

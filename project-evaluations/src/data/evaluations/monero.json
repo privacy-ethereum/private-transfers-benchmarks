@@ -176,7 +176,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
+      "value": ["No access to DeFi"],
       "notes": "There is no DeFi ecosystem in Monero due to its payment-only nature. Multiple L1s have launched XMR bridges that generate a XMR token representation (wrapped XMR) in their respective L1s for their users to hold and use XMR (in some cases it could be used as collateral in lending platforms).",
       "url": "https://www.getmonero.org/resources/moneropedia/blockchain.html"
     },

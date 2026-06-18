@@ -215,7 +215,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
+      "value": ["No access to DeFi"],
       "notes": "Intmax is designed primarily for private payments and asset transfers. Users must withdraw to Ethereum L1 to access the broader DeFi ecosystem. While the network supports applications for gaming and NFTs, there is no native DeFi infrastructure.",
       "url": "https://docs.network.intmax.io/user-guides/withdrawal-from-intmax-network"
     },
