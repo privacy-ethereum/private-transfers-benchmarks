@@ -183,7 +183,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
+      "value": ["No access to DeFi"],
       "notes": "In order to interact with any DeFi protocol, the user needs to withdraw funds from the Tornado Cash contracts first. A user could use Tornado Cash in a larger workflow where they do not want their main address linked to a specific DeFi action they will perform later.",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },

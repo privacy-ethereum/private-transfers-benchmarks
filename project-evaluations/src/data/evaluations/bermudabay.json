@@ -457,7 +457,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["Unlimited access to DeFi applications", "External access via adapter"],
       "notes": "Bermuda routes external DeFi calls through burner EIP-7702 smart accounts that can target any external EVM smart contract. The SDK documents both stateless interactions (swapping on Uniswap) and stateful ones (supplying or withdrawing liquidity to an Aave pool), with ERC-4626 tokenized vaults supported out-of-the-box by passing the vault's share token address as the token parameter. The burner-account pattern is generic across external contracts rather than a curated allowlist, so composition is mediated by the unshield/reshield flow but the destination set is open.",
       "citations": [
         {

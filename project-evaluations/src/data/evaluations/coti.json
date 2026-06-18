@@ -458,7 +458,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["Unlimited access to DeFi applications", "Access to internal DeFi ecosystem"],
       "notes": "COTI is a general-purpose confidential EVM where any DeFi application can be deployed and compose with the network's private tokens, so shielded assets reach the full set of apps built for the chain. As on other private smart-contract rollups, those apps must be written for the confidential token interface — private tokens are not consumed unchanged by plaintext-ERC-20 logic — but the on-chain DeFi surface itself is unrestricted.",
       "citations": [
         {

@@ -384,8 +384,8 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Access to external, but limited choice of DeFi protocols",
-      "notes": "Shielded assets are traded on public DeFi venues rather than a dedicated shielded DEX, so reaching protocols such as Uniswap or Cowswap is supported through the public route. A built-in Shielder-SDK integration with various DEXes is planned but not yet shipped, so today the path runs through the public withdraw route rather than a native in-pool DeFi runtime, which bounds what shielded balances can reach directly.",
+      "value": ["No access to DeFi"],
+      "notes": "Blanksqaure is advertised as a composable privacy stack for wallets and DeFi apps. As of writing, no DeFI integrations are live. Accessing DeFi means withdrawing from the shielded pool. A DEX integration is planned, but not yet live.",
       "citations": [
         {
           "cited_text": "any public protocol can be used to trade shielded assets, such as Uniswap or Cowswap",
