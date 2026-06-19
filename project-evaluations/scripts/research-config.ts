@@ -278,4 +278,25 @@ export const configs: Record<string, ProtocolConfig> = {
       "cleartext. Prefer the COTI V2 whitepaper (coti.io/files/coti_v2_whitepaper.pdf) and docs.coti.io as primary " +
       "sources. Do NOT attribute V1 DAG/Trustchain mechanisms to V2, and do NOT describe COTI as an FHE or ZK system.",
   },
+  "miden": {
+    id: "miden",
+    title: "Miden",
+    description:
+      "Miden is a zero-knowledge rollup focused on programmable privacy for on-chain finance, spun out of Polygon Labs into an independent network. Accounts and notes are private by default: transactions are executed and proven client-side, producing a STARK proof, and only commitments (not the underlying data) are published to the network. Global state is split across an account database, an append-only note database, and a nullifier database, combining account-based and UTXO-style (note) models. Notes carry spend scripts, enabling expressive, locally-executed private smart contracts. Miden is STARK-based and quantum-resistant.",
+    status: "pending",
+    documentation: "https://docs.miden.xyz/",
+    categories: ["Private L2", "Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
+    sourceUrls: [
+      "https://docs.miden.xyz/reference/protocol/",
+      "https://docs.miden.xyz/builder/smart-contracts/accounts/introduction",
+      "https://docs.miden.xyz/builder/smart-contracts/notes/introduction",
+      "https://docs.miden.xyz/builder/smart-contracts/transactions/introduction",
+      "https://docs.miden.xyz/builder/miden-guardian/",
+      "https://miden.xyz/resource/blog/privacy",
+      "https://miden.xyz/resource/blog/testnet-november-2025",
+      "https://github.com/0xMiden",
+    ],
+    context:
+      "CRITICAL: 'Miden' is the standalone zero-knowledge rollup that spun out of Polygon Labs on 29 April 2025 (raising $25M seed; formerly 'Polygon Miden') — evaluate the independent Miden network, NOT Polygon's zkEVM or Polygon PoS. Privacy model: accounts and notes can each be stored Publicly (on-chain, fully visible) or Privately/off-chain (only a commitment/hash on-chain). For a private note the network sees only the note hash and the sender (and the sender can be masked via relay accounts); a public note reveals sender, recipient and assets. Execution and proving happen client-side — the user generates a STARK proof per transaction in the Miden VM; the operator/sequencer verifies proofs and orders blocks. IMPORTANT maturity nuance: Miden is testnet-only as of mid-2026 (testnet ~v0.13/v0.14), with mainnet targeted for 2026 — do NOT report it as mainnet-live. A transitional 'privacy training wheels' measure means that on testnet and at initial mainnet, clients send all transaction data plus the proof to the operator, so the operator can see transaction data (Web2-like privacy) until full client-side data withholding is enabled. Cryptography is STARK-based (hash-based, no trusted setup, quantum-resistant). Compliance is via selective disclosure — data hidden from the network and competitors but discloseable to auditors. Prefer docs.miden.xyz and the 0xMiden GitHub as primary sources; miden.xyz blog posts are acceptable for dated maturity claims.",
+  },
 };
