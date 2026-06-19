@@ -224,8 +224,8 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
-      "notes": "The fhERC20 standard is designed for compatibility with existing wallets and tooling. The docs describe Redact as the foundation for private DeFi with plans for lending, borrowing, and swapping. Currently only confidential transfers are supported, so there is no live DeFi access.",
+      "value": ["Composable interface, but requires DeFi protocol changes"],
+      "notes": "Redact's fhERC20 is an ERC-20-compatible encrypted-token interface, so a DeFi protocol can compose with it only if it adapts to the encrypted balances model. In theory, lending, borrowing, and swapping is supported by the model. No integrations are live today — only confidential transfers ship — but the interface is composable by design once a protocol builds against it.",
       "url": "https://docs.redact.money/technical-walkthrough#caveat-invalid-transfer-amount"
     },
     {

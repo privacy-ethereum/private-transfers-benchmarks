@@ -456,7 +456,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "No access to DeFi",
+      "value": ["No access to DeFi"],
       "notes": "Houdini operates as a swap router that delivers plain destination tokens to a user-controlled address, with no protocol-issued shielded asset, wrapper, or note format that could plug into DeFi. After a swap, any subsequent DeFi use is whatever the recipient does with the plaintext token on the destination chain.",
       "citations": [
         {

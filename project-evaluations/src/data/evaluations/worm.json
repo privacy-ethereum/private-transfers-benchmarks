@@ -324,7 +324,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["Unlimited access to DeFi applications"],
       "notes": "WORM and BETH are both standard ERC-20 tokens deployed on Ethereum mainnet. They can be integrated with any DeFi application that supports ERC-20 tokens, including DEXs, lending protocols, and liquidity pools, without requiring any protocol changes. This provides full composability with the Ethereum DeFi ecosystem. It is worth pointing out that the token utility depends solely on the correct functioning of the WORM protocol. If the protocol experiences a critical failure or vulnerability, the value of WORM and BETH could be severely impacted, which would in turn affect their usability in DeFi applications.",
       "citations": [
         {

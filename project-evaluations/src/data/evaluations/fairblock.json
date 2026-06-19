@@ -500,8 +500,8 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Access to internal DeFi ecosystem",
-      "notes": "Confidential balances live on FairyRing behind an EVM escrow, and a user must redeem back to the EVM chain before the token can touch external DeFi. The encrypted balance is not a transferable token and no adapter lets it call DEXes or lending directly — a holder can transfer to other confidential accounts but composition stays confined to confidential transfers. FairyRing can host its own native confidential applications, an internal surface rather than the external DeFi ecosystem.",
+      "value": ["Access to internal DeFi ecosystem", "Composable interface, but requires DeFi protocol changes"],
+      "notes": "The confidential balance's only on-balance action is transfer between confidential accounts — reaching external DeFi means redeeming back to the public EVM chain. FairyRing hosts its own native confidential apps (cApps). Broader composability comes via FairyKit, where an external protocol integrates Fairblock to add confidentiality, so external access requires the protocol to adopt Fairblock's toolkit.",
       "citations": [
         {
           "cited_text": "receive a confidential balance from FairyRing, perform confidential transactions with that balance, and optionally redeem back to the EVM chain when withdrawing.",
@@ -514,6 +514,10 @@
         {
           "cited_text": "Natively, developers can build confidential applications (cApps) directly on FairyRing. FairyRing is a self-sufficient chain that can host its own native cApps. ",
           "source": "https://docs.fairblock.network/docs/confidential_transfers/technical_overview"
+        },
+        {
+          "cited_text": "Integration packages that plug into any protocol and application to bring one-click confidentiality to any app or user requiring it.",
+          "source": "https://docs.fairblock.network/docs/welcome/architecture"
         }
       ]
     },

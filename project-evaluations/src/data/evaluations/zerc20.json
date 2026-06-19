@@ -468,7 +468,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["Unlimited access to DeFi applications"],
       "notes": "zERC20's wrapper tokens are standard ERC-20s, so they are held, traded, lent, or bridged by any wallet, DEX, or lending protocol that already accepts ERC-20s. The design emphasises wallet compatibility through the standard ERC-20 flow, easy dApp integration via existing DEXes and lending protocols, and cross-chain movement via zk-Wormhole. The privacy mechanism activates only when tokens are sent to a burn address, so ordinary holding, trading, and lending behave like any other ERC-20.",
       "citations": [
         {

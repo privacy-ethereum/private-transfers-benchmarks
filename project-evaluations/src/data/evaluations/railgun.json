@@ -42,7 +42,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Unlimited access to DeFi applications",
+      "value": ["External access via adapter", "Unlimited access to DeFi applications"],
       "notes": "Railgun provides unlimited DeFi access through its relay adapt contract, which can execute arbitrary external contract calls against shielded balances. An unshield moves tokens temporarily into the relay adapt contract, a multi-call executes any number of contract interactions, and the result is shielded back into the user's private balance — all in a single atomic transaction.",
       "url": "https://docs.railgun.org/developer-guide/wallet/transactions/cross-contract-calls#how-it-works"
     },

@@ -184,7 +184,7 @@
     },
     {
       "name": "Access to DeFi",
-      "value": "Composable interface, but requires DeFi protocol changes",
+      "value": ["Composable interface, but requires DeFi protocol changes"],
       "notes": "Tongo uses an ERC20-compatible encrypted token interface. The docs list AMMs (hidden trade sizes) and DAO governance (confidential voting) as use cases. DeFi protocols would need to be built or adapted to work with encrypted balances and ZK proofs. Currently no DeFi integrations exist, but the design is composable.",
       "url": "https://docs.tongo.cash/sdk/operations/operations.html"
     },
