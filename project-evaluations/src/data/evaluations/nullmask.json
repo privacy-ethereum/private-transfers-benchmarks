@@ -221,12 +221,16 @@
     },
     {
       "name": "Third-party inspectability",
-      "value": "Yes",
-      "notes": "The RPC proxy parses transaction intent, selects funding notes, and generates ZK proofs, meaning it processes recipient, amount, and token data in plaintext before shielding. Per-user note storage and key storage is held by the proxy. The relayer, by contrast, never sees transaction contents and only forwards the proof and public inputs.",
+      "value": "No",
+      "notes": "The RPC proxy parses transaction intent, selects funding notes, and generates ZK proofs, meaning it processes recipient, amount, and token data in plaintext before shielding. Per-user note storage and key storage is held by the proxy. The user can self-host the RPC proxy as a Local Device deployment (mobile or browser extension). This flow is documented as providing full privacy where no third party can see sensitive transfer information.",
       "citations": [
         {
           "cited_text": "**Responsibilities:**\n\n* **Key management** — Generates viewing keys and receiving keys from wallet signatures; stores them locally\n* **Transaction shielding** — Parses transaction intent, selects funding notes, generates ZK proofs\n* **Balance tracking** — Scans the blockchain for new notes, trial-decrypts them, maintains shielded balances\n* **State isolation** — Per-user state via access tokens (HTTP-only cookies)\n* **Key registry sync** — Caches on-chain receiving keys for privacy-preserving lookups\n\n**Key internal services:**\n\n| Service | Purpose |\n| ------------------ | ---------------------------------------------------- |\n| ShieldingService | Orchestrates proof generation and relayer submission |\n| NoteTreeService | Manages the local Merkle tree for membership proofs |\n| NotesScanner | Scans blockchain events for incoming notes |\n| NotesStorage | Per-user encrypted note storage (LMDB) |\n| KeyStorageService | Per-user key storage |\n| KeyRegistryService | Syncs on-chain receiving key registry |\n| AccessTableService | Maps access tokens to account addresses |\n\n## Relayer\n\nExecutes shielded transactions on behalf of users.\n\n",
           "source": "https://docs.nullmask.io/architecture/components.md"
+        },
+        {
+          "cited_text": "### Local Device\n\n* Runs on the user's mobile device or as a browser extension\n* Full privacy — no third party sees transfers\n* Requires installation",
+          "source": "https://docs.nullmask.io/architecture/virtual-network.md"
         }
       ]
     },
