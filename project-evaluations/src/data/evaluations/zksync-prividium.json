@@ -1,10 +1,509 @@
 {
   "id": "zksync-prividium",
   "title": "ZKsync Prividium",
-  "description": "ZKsync Prividium is a permissioned Ethereum-secured chain by Matter Labs aimed at institutions. It runs as a Validium-style ZK chain where execution and data stay inside enterprise infrastructure while ZK validity proofs are posted to Ethereum for public verifiability without revealing transaction data.",
+  "description": "ZKsync Prividium is a permissioned Validium privacy layer built on the ZK Stack, letting an institution run a private instance of a ZKsync chain — with its own sequencer and prover — inside its own infrastructure. Transactions execute privately and state is held off-chain in a secure database, while each batch posts only a state root and a zero-knowledge proof to Ethereum. A proxy RPC enforces role-based, function-level access control with Okta SSO or Sign-In With Ethereum, and operators can selectively disclose data to auditors and regulators.",
+  "documentation": "https://docs.zksync.io/zk-stack/prividium/overview",
   "status": "pending",
-  "documentation": "",
   "categories": ["Private Validium", "Zero Knowledge Proofs (ZKPs)"],
-  "properties": [],
-  "sourceUrls": []
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Transaction inputs, calldata, and full state are stored off-chain in an operator-controlled database, with only state roots and STARK-based proofs submitted to Ethereum. Balances and transfer amounts therefore stay confidential from L1 and unauthorised parties, while the chain runs its own sequencer and prover inside the operator's infrastructure.",
+      "citations": [
+        {
+          "cited_text": "transaction inputs, calldata,\nand full state are stored off-chain in an operator-controlled database.\nOnly cryptographic commitments—state roots and STARK-based proofs—are submitted to Ethereum",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        },
+        {
+          "cited_text": "It runs a private instance of the ZKsync Chain, complete with its own sequencer and prover, inside an organization’s infrastructure or cloud.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/architecture"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Sender and receiver addresses never reach the public chain, since no transaction inputs, addresses, or calldata are visible or inferable from public data, so L1 watchers cannot link counterparties. Internally the chain is identity-bound, with the Proxy validating the user's JWT and wallet address on every request before any transaction reaches the standard RPC.",
+      "citations": [
+        {
+          "cited_text": "No transaction inputs, addresses, or calldata are visible or inferable from public data.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/overview"
+        },
+        {
+          "cited_text": "Proxy validates the user's JWT and wallet address \n\nProxy checks permissions for the requested contract function \n\nAuthorized requests proceed to the standard RPC; unauthorized requests return 401",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "No transaction details reach Ethereum, so the specific token moved in a transfer stays hidden from external L1 observers. Those observers only see state roots, metadata, and proof hashes, never the asset moved.",
+      "citations": [
+        {
+          "cited_text": "Keep all data inside your infrastructure (no transaction details on Ethereum)",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        },
+        {
+          "cited_text": "External visibility: L1 observers only see state roots, metadata, and proof hashes",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Prividium runs as a separate permissioned chain, so any interaction with it is distinguishable from ordinary public Ethereum activity. Users authenticate through Okta SSO or Sign-in With Ethereum, and all calls pass through the Proxy RPC, which checks the user's token and per-function permissions. Entry requires identity-bound authentication against a private network endpoint, a clearly observable protocol-specific action rather than a plain transfer.",
+      "citations": [
+        {
+          "cited_text": "Users authenticate through Okta SSO or Sign-in With Ethereum (SIWE)",
+          "source": "https://docs.zksync.io/zk-stack/prividium/overview"
+        },
+        {
+          "cited_text": "The Proxy RPC sits between end users and the chain's standard RPC API. It enforces transaction-level access control by filtering\nall blockchain interactions before they reach the sequencer.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "Underlying chain",
+      "needsResearchReview": "Batch cadence is operator-configurable and unpublished, so a seconds-to-L1-verification figure is not knowable.",
+      "notes": "Finality on Prividium tracks Ethereum L1, since every finalized batch is proven and posted to Ethereum using the ZKsync Gateway. The relayer submits the state root and proof to Ethereum. Once verified on-chain the batch becomes immutable unless Ethereum reorganizes. Each operator runs its own sequencer, so batch cadence is deployment-specific and the worst-case bound is Ethereum L1 finality.",
+      "citations": [
+        {
+          "cited_text": "Every finalized Prividium™ batch is proven and posted to Ethereum using the ZKsync Gateway.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        },
+        {
+          "cited_text": "The relayer submits the state root and proof to Ethereum \n\nOnce verified on-chain, the batch becomes immutable (unless Ethereum reorganizes)",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "Authentication relies on the user's pre-existing credentials. Each user authenticates through an identity provider like Okta, a crypto wallet via SIWE (Sign-In With Ethereum), or both methods. No protocol-specific key material is generated for the user, and session state is handled by the SDK automatically validating token expiration and clearing expired tokens. The single secret in use is the user's pre-existing wallet key for SIWE users or the SSO credential for OIDC users.",
+      "citations": [
+        {
+          "cited_text": "Each user can authenticate through an identity provider like Okta, a crypto wallet via SIWE (Sign-In With Ethereum), or both methods.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/administration-user-management"
+        },
+        {
+          "cited_text": "The SDK automatically validates token expiration and clears expired tokens.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/sdk"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Access is controlled at the contract-function level, with optional restrictions based on function arguments. Onboarding is a permissioning action by an administrator rather than a timed queue or challenge window, so no fixed deposit delay applies beyond host-chain block latency.",
+      "citations": [
+        {
+          "cited_text": "Access is controlled at the contract-function level, with optional restrictions based on function arguments.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/overview"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "State updates are finalized on Ethereum through the ZKsync Gateway, which receives the chain's state roots and zero-knowledge proofs. No protocol-imposed exit queue, challenge window, or time-lock is documented, so the protocol-level withdraw delay is zero with latency inherited from L1 batch posting.",
+      "citations": [
+        {
+          "cited_text": "State updates are finalized on Ethereum through the ZKsync Gateway",
+          "source": "https://docs.zksync.io/zk-stack/prividium/architecture"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "The operator controls a Proxy RPC that gates every request and returns 401 for unauthorized calls, letting one entity block specific transactions from reaching the sequencer. Forced transactions from Ethereum L1 can bypass the Proxy, but that fallback is itself filterable. The allowlist-based filterer restricts non-allowlisted addresses to ETH or ERC-20 transfers. Each deployment is a permissioned chain run by one operator, so there is no permissionless inclusion path users can fall back on.",
+      "citations": [
+        {
+          "cited_text": "Authorized requests proceed to the standard RPC; unauthorized requests return 401 Unauthorized",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        },
+        {
+          "cited_text": "Forced transactions originating from Ethereum (L1) can bypass the Proxy entirely.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        },
+        {
+          "cited_text": "Allowlisted addresses execute unrestricted forced transactions \n\nOther addresses can only transfer ETH or ERC-20 tokens",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "Prividium chains run their own sequencer and prover inside the operator's infrastructure, so transfer execution depends only on that single in-house operator rather than an additional committee or relayer set. The private chain's dedicated sequencer and prover execute transactions and generate zero-knowledge proofs locally. Settlement anchors to Ethereum L1 through the ZKsync Gateway, part of the protocol stack itself rather than an external crypto-economic system.",
+      "citations": [
+        {
+          "cited_text": "A private ZKsync Chain deployed within your infrastructure.\nIt includes a dedicated sequencer and prover that execute transactions and generate zero-knowledge proofs locally.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/architecture"
+        },
+        {
+          "cited_text": "Outbound-only proof posting: The relayer submits proofs to ZKsync Gateway without opening any inbound ports.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/deployment"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Withdrawal cannot rely solely on Ethereum's consensus because transaction data and state are stored off-chain in a secure database inside the operator's infrastructure, so independent state reconstruction fails if the operator withholds data. Ethereum-originated forced transactions are a potential bypass, but operators can filter them, and the allowlist-based filterer restricts non-allowlisted addresses to ETH or ERC-20 transfers. No guaranteed permissionless exit path remains.",
+      "citations": [
+        {
+          "cited_text": "All transaction data and state are stored off-chain in a secure database, ensuring privacy by design.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/architecture"
+        },
+        {
+          "cited_text": "Chain operators can implement transaction filtering to control forced transaction behavior.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        },
+        {
+          "cited_text": "Other addresses can only transfer ETH or ERC-20 tokens \n\nEnabling transaction filtering grants the chain operator censorship capability.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "needsResearchReview": "On-chain admin composition not classified — EOA vs multisig unverified in operator-run deployments.",
+      "notes": "Each Prividium chain operates under the operator's control. The initial admin is defined when the Prividium API launches, and adding more admins requires that admin to manually grant the admin role. Admins hold full system management, including users, roles, permissions, and disclosure settings. Upgrade authority therefore rests with the deploying institution rather than a public governance process or fork mechanism.",
+      "citations": [
+        {
+          "cited_text": "The initial admin is defined when the Prividium™ API launches.\nTo add more admins, the initial admin must manually grant other users the admin role.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/administration-user-management"
+        },
+        {
+          "cited_text": "Admin Full system management Manage users, roles, permissions, and disclosure settings",
+          "source": "https://docs.zksync.io/zk-stack/prividium/administration-user-management"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "No",
+      "notes": "Proof generation runs on operator-hosted infrastructure rather than on user devices. The application tier deploys a prover farm of CPU/GPU workers in a private subnet, inaccessible from the public internet, with the dedicated sequencer and prover executing transactions and generating zero-knowledge proofs locally within the operator's chain.",
+      "citations": [
+        {
+          "cited_text": "Prover farm (CPU/GPU workers; auto-scalable) \n\nHosting: \n\nDeployed in private address space, inaccessible from the public Internet",
+          "source": "https://docs.zksync.io/zk-stack/prividium/deployment"
+        },
+        {
+          "cited_text": "It includes a dedicated sequencer and prover that execute transactions and generate zero-knowledge proofs locally.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/architecture"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "A Prividium chain is a permissioned validium where the operator holds the plaintext ledger in an off-chain database. The internal explorer mirrors a standard public-chain block explorer, and all transaction data can be accessed by the chain operators.",
+      "citations": [
+        {
+          "cited_text": "and full state are stored off-chain in an operator-controlled database.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        },
+        {
+          "cited_text": "The internal block explorer mirrors a standard block explorer for a public chain.\nAll transaction data can be accessed by the chain operators.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/explorer"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "needsResearchReview": "Memento production go-live not dated in cited sources — only the May 2025 launch is dated, so tier 3 vs 4 unverified.",
+      "notes": "Matter Labs launched Prividium in late May 2025 as an enterprise-grade protocol for private, permissioned, compliant on-chain use cases like tokenizing real-world assets. The first production deployment is the Memento ZK Chain, deployed in collaboration with Deutsche Bank. The protocol has since undergone a SOC 2 Type I examination by Thoropass Assurance against the AICPA Trust Services Criteria.",
+      "citations": [
+        {
+          "cited_text": "Prividium, an enterprise-grade blockchain protocol designed to provide financial institutions with private, permissioned, and compliant turnkey solutions for on-chain use cases",
+          "source": "https://thedefiant.io/news/tradfi-and-fintech/zksync-introduces-private-blockchain-platform-prividium",
+          "date": "2025-05-28"
+        },
+        {
+          "cited_text": "Memento blockchain, in collaboration with Deutsche Bank, has deployed a live institutional Layer 2 powered by ZKsync Prividium to modernize fund management.",
+          "source": "https://www.zksync.io/prividium"
+        },
+        {
+          "cited_text": "independently conducted by Thoropass Assurance against the AICPA Trust Services Criteria for Security, Availability, Confidentiality, and Privacy.",
+          "source": "https://www.zksync.io/prividium"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Prividium finalizes each batch on Ethereum using a validity proof verified on L1, so transaction integrity rests on that on-chain verification. The protocol adopts no post-quantum scheme, and the conservative classification stands while the L1 verifier's proof system remains unverified.",
+      "citations": [
+        {
+          "cited_text": "State updates are finalized on Ethereum through the ZKsync Gateway",
+          "source": "https://docs.zksync.io/zk-stack/prividium/architecture"
+        },
+        {
+          "cited_text": "Each batch of transactions is finalized on Ethereum using a validity proof, ensuring tamper-proof integrity and trustless settlement.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/overview"
+        }
+      ],
+      "needsResearchReview": "L1-verifier proof system not pinned in Prividium docs — post-quantum status unverified."
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "Protocol/chain",
+      "notes": "Compliance is enforced at the protocol/chain access layer through the Proxy RPC, which filters all blockchain interactions before they reach the sequencer. Every request is gated on a JWT and wallet check plus a per-function permission lookup, with the Prividium API controlling who can deploy contracts and call specific functions. Enforcement therefore lives in the chain's network access layer and not in the token contracts themselves.",
+      "citations": [
+        {
+          "cited_text": "The Proxy RPC sits between end users and the chain's standard RPC API. It enforces transaction-level access control by filtering\nall blockchain interactions before they reach the sequencer.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        },
+        {
+          "cited_text": "The Prividium API sits between clients and the standard RPC API, controlling who can deploy contracts and call specific contract functions.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/permissions-overview"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Admin",
+      "notes": "Compliance enforcement is handled by the operator's designated administrators, who control the Admin Dashboard. Only designated admins can access it to manage users, roles, and contract permissions. Admins configure granular permissions for each contract function, and the Prividium API enforces them every time a user calls a function.",
+      "citations": [
+        {
+          "cited_text": "Only designated admins can access the Admin Dashboard to manage users, roles, and contract permissions.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/administration-user-management"
+        },
+        {
+          "cited_text": "After deployment, administrators configure granular permissions for each contract function.\nThe Prividium API enforces these permissions every time a user attempts to call a function.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/permissions-overview"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["Selective disclosure", "KYC/KYB"],
+      "notes": "Chain operators can supply Merkle proofs or DB extracts for selective disclosure such as audits and investigations, and auditors can be granted scoped roles for view-only access. Participation is identity-bound, with each user authenticating through an identity provider like Okta, a crypto wallet via SIWE, or both, and role-gated permissions enforced at the Proxy RPC. No on-chain set-membership gate or off-chain analytics attestation oracle is part of the design.",
+      "citations": [
+        {
+          "cited_text": "Supply Merkle proofs or DB extracts for selective disclosure (e.g., audits, investigations)",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        },
+        {
+          "cited_text": "Auditors can be granted scoped roles through the Permissioning System, enabling view-only access without exposing unrelated data.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        },
+        {
+          "cited_text": "Each user can authenticate through an identity provider like Okta, a crypto wallet via SIWE (Sign-In With Ethereum), or both methods.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/administration-user-management"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["Deposit", "Transfer", "Withdrawal"],
+      "notes": "The Proxy RPC enforces access control on every request before forwarding to the sequencer, filtering all interactions at the transaction level. Enforcement therefore happens on each submission, including bridge deposit and withdrawal calls, since the proxy validates the JWT and wallet address and checks permissions for the requested function. Forced L1-to-L2 transactions can bypass the proxy unless operators deploy a filterer that restricts non-allowlisted addresses to ETH or ERC-20 transfers.",
+      "citations": [
+        {
+          "cited_text": "It enforces transaction-level access control by filtering\nall blockchain interactions before they reach the sequencer.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        },
+        {
+          "cited_text": "Proxy validates the user's JWT and wallet address \n\nProxy checks permissions for the requested contract function \n\nAuthorized requests proceed to the standard RPC; unauthorized requests return 401",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        },
+        {
+          "cited_text": "Allowlisted addresses execute unrestricted forced transactions \n\nOther addresses can only transfer ETH or ERC-20 tokens",
+          "source": "https://docs.zksync.io/zk-stack/prividium/proxy"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User", "Involuntary third-party disclosure"],
+      "notes": "Sign-in-gated access lets each account view the data their role permits, so users self-view their own activity once authenticated. After signing in, the block explorer provides the configured level of access based on the account. Chain operators hold unrestricted visibility into all transaction data and can mint scoped view-only roles for auditors without user consent. Third-party visibility is operator-granted, not user-delegated through viewing keys.",
+      "citations": [
+        {
+          "cited_text": "users must first sign in with their wallet.\nThe block explorer then provides the configured level of access\nbased on their account.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/explorer"
+        },
+        {
+          "cited_text": "All transaction data can be accessed by the chain operators.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/explorer"
+        },
+        {
+          "cited_text": "Auditors can be granted scoped roles through the Permissioning System, enabling view-only access without exposing unrelated data.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Programmable",
+      "notes": "Viewing and access permissions on a Prividium chain are programmable. Administrators reconfigure who can call which contract functions at any time through the Admin Dashboard, and changes take effect immediately. Dashboard controls cover user management, role management, contract permissions, and audit capabilities, so roles granting visibility into contract calls can be granted, revoked, or updated post-deployment.",
+      "citations": [
+        {
+          "cited_text": "Configure role requirements for role-based permissions \n\nDefine argument restrictions for argument-based permissions \n\nChanges to permissions take effect immediately.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/permissions-overview"
+        },
+        {
+          "cited_text": "Contract permissions - Configure function-level access control \n\nAudit capabilities - Monitor access patterns and permission changes",
+          "source": "https://docs.zksync.io/zk-stack/prividium/permissions-overview"
+        },
+        {
+          "cited_text": "All linked wallets inherit the same role-based permissions assigned to the user.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/administration-user-management"
+        }
+      ]
+    },
+    {
+      "name": "Cryptographic verifiability",
+      "value": "Yes, with L1 consensus",
+      "notes": "Transaction correctness rests on zk validity proofs verified on Ethereum L1. The relayer submits the state root and proof to Ethereum, and once verified on-chain the batch becomes immutable. State updates are finalized on Ethereum through the ZKsync Gateway, which receives the chain state roots and zero-knowledge proofs, so finality is anchored under Ethereum consensus.",
+      "citations": [
+        {
+          "cited_text": "State updates are finalized on Ethereum through the ZKsync Gateway",
+          "source": "https://docs.zksync.io/zk-stack/prividium/architecture"
+        },
+        {
+          "cited_text": "The relayer submits the state root and proof to Ethereum \n\nOnce verified on-chain, the batch becomes immutable (unless Ethereum reorganizes)",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "The enterprise modules that deliver privacy and permissioning are closed source and require a commercial licence. They cover the permissioning system, Proxy RPC, private block explorer, and operational tooling — the load-bearing privacy code. Only the Prividium SDK is distributed under the MIT License, while the underlying ZK Stack components remain open source under their permissive licences.",
+      "citations": [
+        {
+          "cited_text": "Prividium™ extends the ZK Stack with functionality for private, permissioned institutional environments. These modules are closed source \nand require a commercial license.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/license"
+        },
+        {
+          "cited_text": "Permissioning system \nProvides role-based access control, event permissioning and transaction-scoped groups.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/license"
+        },
+        {
+          "cited_text": "Unlike other Prividium™ components, the Prividium™ SDK is distributed under the MIT License.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/license"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Stateless",
+      "notes": "The full ledger lives off-chain in the operator's private database, so no per-transaction or per-account object accumulates in Ethereum L1 storage. Only cryptographic commitments—state roots and STARK-based proofs—are submitted to Ethereum, giving a flat on-chain footprint per batch regardless of transaction or account count. Unbounded growth sits off-chain in the operator's database holding the account ledger and transaction history.",
+      "citations": [
+        {
+          "cited_text": "and full state are stored off-chain in an operator-controlled database.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        },
+        {
+          "cited_text": "Only cryptographic commitments—state roots and STARK-based proofs—are submitted to Ethereum, ensuring public verifiability without exposing private data.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No Scanning",
+      "notes": "Balances live as standard EVM account state accessible through the permissioned RPC and explorer, so user devices do not trial-decrypt outputs to find funds. Users sign in to the block explorer with their wallet and the explorer provides the configured level of access based on their account, so discovery is a direct authenticated lookup against the operator's indexed backend. Explorer initialisation creates a database storing explorer data, so indexing is server-side rather than on the client.",
+      "citations": [
+        {
+          "cited_text": "users must first sign in with their wallet.\nThe block explorer then provides the configured level of access\nbased on their account.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/explorer"
+        },
+        {
+          "cited_text": "This command creates a database to store explorer data and generates a docker compose file with explorer services",
+          "source": "https://docs.zksync.io/zk-stack/prividium/explorer"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "Account-based state model",
+      "notes": "Prividium runs a private ZKsync chain with a dedicated sequencer and prover that execute transactions and generate zero-knowledge proofs locally, keeping standard ZKsync EVM execution semantics. Contract deployment follows normal EVM patterns where chain administrators must grant explicit deployment permissions before you can deploy contracts. Standard ZKsync EVM execution on the private chain therefore follows the account model.",
+      "citations": [
+        {
+          "cited_text": "A private ZKsync Chain deployed within your infrastructure.\nIt includes a dedicated sequencer and prover that execute transactions and generate zero-knowledge proofs locally.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/architecture"
+        },
+        {
+          "cited_text": "Chain administrators must grant explicit deployment permissions before you can deploy contracts.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/developer-considerations"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Off-chain storage with on-chain commitment"],
+      "notes": "Prividium stores all transaction data and state off-chain in a secure database, with only state roots and zero-knowledge proofs anchored to Ethereum. Cryptographic commitments — state roots and STARK-based proofs — are submitted to Ethereum, ensuring public verifiability without exposing private data. This is a validium data-availability model where the off-chain database is authoritative and the L1 commitment binds it.",
+      "citations": [
+        {
+          "cited_text": "All transaction data and state are stored off-chain in a secure database, ensuring privacy by design.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/architecture"
+        },
+        {
+          "cited_text": "Only cryptographic commitments—state roots and STARK-based proofs—are submitted to Ethereum, ensuring public verifiability without exposing private data.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": ["Access to internal DeFi ecosystem"],
+      "notes": "Prividium is a permissioned, full-EVM ZKsync chain where smart contracts including DeFi protocols are deployed inside the chain itself. Administrators must grant explicit deployment permissions, so the internal DeFi surface is operator-curated rather than open. All contract calls route through a proxy RPC enforcing role and function-level permissions, restricting functions by role, argument match, or both, with unauthorized calls returning HTTP 403, gating which users touch which DeFi functions.",
+      "citations": [
+        {
+          "cited_text": "Chain administrators must grant explicit deployment permissions before you can deploy contracts.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/developer-considerations"
+        },
+        {
+          "cited_text": "Restrict contract functions by role, argument match, or both \n\nEnforce access at the RPC layer; unauthorized calls return HTTP 403 and are logged for audit",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Full programmability with public and private state",
+      "notes": "Prividium chains support general EVM smart contract deployment with per-function access policies, placing them in the full-programmability tier. Access policies set in the admin dashboard define which functions are public, private, or role-restricted, updatable without redeploying. Deployment is gated, since administrators must grant explicit permissions first. State lives off-chain while commitments settle on Ethereum, so public and role-gated private contract state coexist on the same chain.",
+      "citations": [
+        {
+          "cited_text": "Configure contract access policies through the Prividium™ Admin Dashboard, defining which functions are public, private, or role-restricted \n\nUpdate access settings without redeploying contracts",
+          "source": "https://docs.zksync.io/zk-stack/prividium/features"
+        },
+        {
+          "cited_text": "Chain administrators must grant explicit deployment permissions before you can deploy contracts.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/developer-considerations"
+        },
+        {
+          "cited_text": "The system checks permissions defined in the Admin Panel for all contract interactions.",
+          "source": "https://docs.zksync.io/zk-stack/prividium/developer-considerations"
+        }
+      ]
+    }
+  ]
 }
