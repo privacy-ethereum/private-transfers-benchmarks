@@ -283,8 +283,8 @@
     },
     {
       "name": "Third-party inspectability",
-      "value": "Yes",
-      "notes": "Private execution and proof generation happen client-side in the PXE, so plaintext inputs never reach the sequencer or prover network. Third-party node operators can still observe user-interest patterns — when the PXE queries the node for world state, the node learns which data the user is interested in, a known tradeoff users can mitigate by running their own node. Revealing a note's leaf index to a third party trivially reveals exactly the notes the user is about to read.",
+      "value": "No",
+      "notes": "Private execution and proof generation happen client-side in the PXE (Private eXecution Environment), so a user's plaintext inputs and notes never leave their own device and are never seen in the clear by the sequencer, the prover network, or any third party. Third-party node operators can still observe user-interest patterns — when the PXE queries the node for world state, the node learns which data the user is interested in.",
       "citations": [
         {
           "cited_text": "Private inputs never leave the client-side PXE.",
@@ -293,10 +293,6 @@
         {
           "cited_text": "When the PXE queries the node for world state (e.g., to check if a nullifier exists), the node learns which data the user is interested in.",
           "source": "https://docs.aztec.network/developers/docs/foundational-topics/pxe"
-        },
-        {
-          "cited_text": "Revealing the leaf's index to a third party trivially reveals exactly the note(s) you're about to read.",
-          "source": "https://docs.aztec.network/developers/docs/resources/considerations/privacy_considerations"
         }
       ]
     },
