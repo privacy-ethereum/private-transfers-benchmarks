@@ -495,4 +495,59 @@ export const configs: Record<string, ProtocolConfig> = {
       "origin; AVOID docs.inco.network, which carries legacy fhEVM/L1 material. There is no L2BEAT page (Inco is not " +
       "an L2). GitHub org: https://github.com/Inco-fhevm.",
   },
+  "payy": {
+    id: "payy",
+    title: "Payy",
+    description:
+      "Payy is a privacy-focused stablecoin payments network built by Polybase Labs, combining a UTXO note-commitment zero-knowledge rollup with a non-custodial mobile wallet and Visa card. Transactions hide sender, receiver, and amount using client-generated ZK proofs over a Merkle tree of note commitments with nullifiers. The network originally ran as a single-sequencer validium settling to Polygon, and is migrating to an Ethereum L2 ZK rollup with its own EVM layer.",
+    status: "pending",
+    documentation: "https://docs.payy.network",
+    categories: ["Private L2", "Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
+    sourceUrls: [
+      "https://docs.payy.network/llms-full.txt",
+      "https://docs.payy.network/protocol/architecture.md",
+      "https://docs.payy.network/protocol/data-availability.md",
+      "https://docs.payy.network/protocol/privacy-layer/utxo.md",
+      "https://docs.payy.network/protocol/privacy-layer/nullifiers.md",
+      "https://docs.payy.network/protocol/privacy-layer/zk-circuits.md",
+      "https://docs.payy.network/protocol/privacy-layer/private-address.md",
+      "https://docs.payy.network/protocol/privacy-layer/encrypted-lineage.md",
+      "https://docs.payy.network/protocol/sequencers.md",
+      "https://docs.payy.network/protocol/provers.md",
+      "https://github.com/polybase/payy",
+    ],
+    context:
+      "CRITICAL: Payy (Polybase Labs) is a privacy stablecoin PAYMENTS network — a UTXO / note-commitment ZK rollup " +
+      "plus a non-custodial consumer mobile wallet (live January 2024) and a Visa card (live August 2025). It is NOT " +
+      "an L1 and NOT a general smart-contract platform for others. TWO ARCHITECTURAL ERAS — do not conflate: (1) the " +
+      "LIVE consumer product has run as a single-sequencer VALIDIUM settling to Polygon PoS since January 2024 " +
+      "(100k+ users); (2) the docs were recently rewritten to describe a redesigned Ethereum L2 ZK ROLLUP with its " +
+      "own EVM (PUSD stablecoin, 300ms blocks) whose testnet/SDK are in alpha and whose mainnet is targeted for " +
+      "summer 2026. Grade the live deployed system, and state the migration in notes. Privacy mechanism: balances are " +
+      "UTXO notes, each a Poseidon commitment inserted into a sparse Merkle tree (their impl is called Smirk); " +
+      "spending a note inserts a deterministic nullifier N = Poseidon(nk, psi, cm) and requires a non-inclusion proof, " +
+      "so double-spend is impossible. Proof system: Noir + Barretenberg (Aztec) with an on-chain UltraHonk verifier; " +
+      "hash is Poseidon; private addresses are Grumpkin public keys (owner = Poseidon(x,y)); embedded curve BN254. " +
+      "Proving is CLIENT-SIDE on the user's device. The proof-system NAME is era-dependent: the original Polygon-" +
+      "validium circuits were Halo2 (older founder interview), while the redesigned-network docs say Noir + " +
+      "Barretenberg UltraHonk — prefer the current docs but flag if the live system's circuits are unverified, and do " +
+      "NOT assert an unsourced on-device proving time. Validity: " +
+      "a forged transfer or double-spend is stopped by the on-chain ZK validity proof verified in the Rollup contract " +
+      "plus the nullifier non-inclusion check — NOT a trusted operator for correctness. But sequencing/proving is run " +
+      "by a permissioned operator set today: a single sequencer, an allowlisted prover set, and a validator set, with " +
+      "multi-sequencer Fast HotStuff consensus and a PAYY token only on the roadmap (treat as future, not live). No " +
+      "TEE. Upgradeability: the deployed RollupV1 contract is OwnableUpgradeable (OpenZeppelin upgradeable proxy) with " +
+      "a single Owner that can add/remove provers, add/remove/swap verifiers, and manage the validator set — so " +
+      "Upgradeability is Single admin (upgradeable), no multisig evidenced. Compliance: KYC only at the edges (the " +
+      "Visa card and fiat on-ramps), NOT on the base private transfer; geographic OFAC-country restriction only, no " +
+      "on-chain blocklist/sanctions screen; the one compliance-privacy hook is ENCRYPTED LINEAGE, a governance-gated " +
+      "de-anonymisation where encrypted lineage can be decrypted in exceptional cases via an on-chain proposal — map " +
+      "this to Selective disclosure, not viewing keys, proof-of-innocence, or association sets. No viewing-key scheme " +
+      "exists (privacy comes from fresh-note unlinkability + nullifiers). No escape hatch / forced-exit is documented " +
+      "— pick the conservative No and flag. Open source: the public repo github.com/polybase/payy is SOURCE-AVAILABLE " +
+      "but NOT OSS-licensed — RollupV1.sol is SPDX UNLICENSED and the repo has no LICENSE file, so Open source = No " +
+      "despite marketing calling it open source. Docs are JS-rendered: fetch the .md variant of each page (append " +
+      ".md) or https://docs.payy.network/llms-full.txt for real text. Do NOT cite the 0x32...0000 / 0x30.. / 0x31.. " +
+      "addresses as the host-chain rollup anchor — those are Payy-EVM predeploys. There is no L2BEAT page.",
+  },
 };
