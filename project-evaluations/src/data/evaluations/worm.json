@@ -153,10 +153,9 @@
     },
     {
       "name": "Third-party inspectability",
-      "value": "Yes",
-      "notes": "The UI uses external provers for generating private proof-of-burn proofs. The external provers can inspect the inputs and leak private information to third parties. Users worried about this can run their own prover in a powerful server to generate their proofs. This is only recommended for advanced technical users due to complexity",
-      "url": "https://github.com/worm-privacy/worm-privacy.github.io/blob/82fad075f12b3340410aee7f494fe0954c4302f3/src/app/tools/burn-eth/mint-beth.tsx#L361",
-      "needsResearchReview": "Not verified — prover details need a source"
+      "value": "No",
+      "notes": "The UI uses external provers for generating private proof-of-burn proofs. The external provers can inspect the inputs and leak private information. Users worried about this can run their own prover in a powerful server to generate their proofs. This is only recommended for advanced technical users due to complexity.",
+      "url": "https://github.com/worm-privacy/worm-privacy.github.io/blob/82fad075f12b3340410aee7f494fe0954c4302f3/src/app/tools/burn-eth/mint-beth.tsx#L361"
     },
     {
       "name": "Implementation maturity",
