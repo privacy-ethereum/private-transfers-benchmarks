@@ -185,8 +185,8 @@
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/key-derivation-and-stealth-addresses"
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Correctness of all shielded operations is guaranteed by zk-SNARK proofs (Groth16 or similar pairing-based scheme on BN254) verified on-chain. Commitments use Poseidon hashing over the BabyJubjub curve, and viewing keys use Curve25519 encryption.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup"
     },

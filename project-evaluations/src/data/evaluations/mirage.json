@@ -358,9 +358,9 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "No",
-      "notes": "Although bytecode obfuscation is deterministic and each Nomad node submits an on-chain Merkle proof of the transfer to claim its reward, the broader execution depends on Intel SGX enclaves whose correctness rests on hardware attestation rather than verifiable math, and the platform's authority to revoke and reissue the enclave binary means the trust model includes the Mirage team's signing key. While arguably extremely secure, SGX has known side-channel and microarchitectural vulnerabilities. A TEE trust model is based on hardware trust assumptions, over full cryptographic verifiability.",
+      "name": "Verifiability",
+      "value": ["Cryptographic", "Trusted hardware", "Trusted operator"],
+      "notes": "Although bytecode obfuscation is deterministic and each Nomad node submits an on-chain Merkle proof of the transfer to claim its reward, the broader execution depends on Intel SGX enclaves whose correctness rests on hardware attestation rather than verifiable math, and the platform's authority to revoke and reissue the enclave binary means the trust model includes the Mirage team's signing key. While arguably extremely secure, SGX has known side-channel and microarchitectural vulnerabilities.",
       "citations": [
         {
           "cited_text": "Inside each node&#x27;s SGX enclave, the signal is decrypted and processed: \n\nThe enclave validates the escrow contract bytecode\n\nBonds tokens using one of its internal EOAs\n\nExecutes the transfer from another EOA\n\nBuilds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract using the bonded EOA\n\nBasic requirements \n\nTo run a node, you must be able to provide the following requirements:\n\nAt least $10k in USDC liquidity\n\nDedicated SGX machine (cloud-hosted)\n\nInterested in joining the network and running your own node? ",

@@ -165,9 +165,9 @@
       "url": "https://docs.network.intmax.io/user-guides/check-transaction-history"
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
-      "notes": "State transitions within Intmax are cryptographically verified using Plonky2 ZK proofs with FRI commitments and BN254 curve operations — an external observer can re-check the proofs against the published verifier. Additional trust concerns (contracts upgradable by a 2/4 multisig, Predicate AVS deposit gating, self-custodied balance data) are captured separately by Upgradeability and Censorship resistance rather than this property. The system settles through Scroll (L2) to Ethereum (L1), inheriting their consensus models for ordering.",
+      "name": "Verifiability",
+      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
+      "notes": "State transitions within Intmax are cryptographically verified using Plonky2 ZK proofs with FRI commitments and BN254 curve operations — an external observer can re-check the proofs against the published verifier. Additional trust concerns (contracts upgradable by a 2/4 multisig, Predicate AVS deposit gating, self-custodied balance data) are captured separately by Upgradeability and Censorship resistance rather than this property. Block production is permissionless with no privileged sequencer, and users can force inclusion via L1 if the sequencer fails.",
       "needsResearchReview": "Proving system requires citation",
       "citations": [
         {
@@ -178,6 +178,16 @@
         {
           "kind": "l2beat",
           "cited_text": "Sequencer failure\n\nSelf sequence\n\nIn the event of a sequencer failure, users can force transactions to be included in the project’s chain by sending them to L1 . There can be up to a 7d delay on this operation. Proposing new blocks requires creating ZK proofs.\n\n",
+          "source": "https://l2beat.com/scaling/projects/intmax"
+        },
+        {
+          "kind": "l2beat",
+          "cited_text": "There is no privileged entity that sequences transactions or produces blocks. This activity is permissionless and open to anyone.",
+          "source": "https://l2beat.com/scaling/projects/intmax"
+        },
+        {
+          "kind": "l2beat",
+          "cited_text": "A Multisig with 2/4 threshold.",
           "source": "https://l2beat.com/scaling/projects/intmax"
         }
       ]

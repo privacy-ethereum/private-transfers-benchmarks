@@ -1,15 +1,27 @@
 ---
 name: property-rules-cryptography
-description: Per-property guidance for the Cryptography property group. Invoke when evaluating, reviewing, or editing notes/values for Cryptographic verifiability, Post-quantum secure, Number of secrets, or Client-side proving. Cross-cutting rules in scripts/research-prompts.ts still apply on top — particularly WRITING_RULES #13 about naming standard primitives (proof system, curve, signature, hash, key derivation).
+description: Per-property guidance for the Cryptography property group. Invoke when evaluating, reviewing, or editing notes/values for Verifiability, Post-quantum secure, Number of secrets, or Client-side proving. Cross-cutting rules in scripts/research-prompts.ts still apply on top — particularly WRITING_RULES #13 about naming standard primitives (proof system, curve, signature, hash, key derivation).
 ---
 
 # Cryptography property rules
 
 Apply the rule for the property currently being evaluated. Cross-cutting rules in `scripts/research-prompts.ts` still apply.
 
-## Cryptographic verifiability
+## Verifiability
 
-Yes when transaction correctness is enforced by cryptographic proof verification (zk-SNARKs, ring signatures, signature schemes) that an external observer can re-check against the math given the published verifier. Application-layer protocols (ERC-20s, contract suites deployed on an existing chain) are "Yes", not "Yes, with L1 consensus" — block ordering and inclusion are the host chain's job and are captured under Time-to-finality, not here. "Yes, with L1 consensus" is only for protocols that are themselves an L1/rollup whose consensus is part of the protocol — individual transaction correctness is cryptographic but ordering/inclusion is consensus-based (PoW/PoS majority). No when correctness rests on an economic mechanism (stake-slashing not tied to a math proof), a social mechanism (multisig vote, governance signoff), a hardware-trust mechanism (TEE/SGX attestation, where trust roots in a hardware vendor signing CA rather than pure math), or an FHE coprocessor whose homomorphic-computation results carry no re-checkable correctness proof (input proofs-of-knowledge alone do not count — the computation itself rests on the coprocessor and its threshold/decryption network being honest). Upgradeable verifier contracts and permissioned admin gates are NOT a reason to mark No here — those are separately captured by Upgradeability and Censorship resistance. Notes should still mention if the verifier is swappable so readers see the full picture.
+Multi-select. What enforces transaction validity — that no party can forge an invalid transfer, mint, or double-spend. Judge ONLY what stops a FORGED transition. Ordering, liveness, censorship, and data availability are NOT validity — a sequencer or operator that cannot forge because a validity proof already constrains it does not belong here, even if it can halt, reorder, or withhold data. Those live in Censorship resistance, Escape hatch, and External network dependence. Privacy crypto (FHE / garbled circuits encrypting values) does not count unless it carries a re-checkable proof of correct computation.
+
+**Cryptographic** — validity rests on re-checkable cryptography: a ZK validity proof, ring signatures, stealth-address derivation plus signatures, or a proof-of-knowledge over inputs that a contract enforces. The operator or sequencer cannot forge. A protocol still counts as Cryptographic when a proof guards only part of the transition (e.g. input well-formedness), as long as that proof is re-checkable on-chain.
+
+**Honest Majority (Consensus, Threshold committee)** — validity rests on an honest threshold of a set you must trust, with no re-checkable proof. One primitive across both ends: a permissionless validator / own-consensus set (its own L1, or an L2 with its own decentralised sequencer) and a small permissioned MPC / FHE / threshold committee (coti, merces, redact, fluton). Do NOT tag a protocol that merely rides a host chain. How decentralised the set is belongs to the decentralisation axes, not here.
+
+**Trusted hardware** — a TEE / SGX enclave performs a validity job whose correctness you trust to hardware attestation: executing the transfer, or verifying the proofs and signed messages a contract accepts (mirage, redact). A TEE used only to decrypt or protect data in transit is confidentiality, not validity — do NOT tag it (fluton).
+
+**Trusted operator** — validity rests on a single party that can produce or withhold a wrong result with no re-checkable proof (houdiniswap). A single permissioned sequencer that only orders behind a validity proof is NOT tagged — that is liveness, captured elsewhere.
+
+Combine as needed: a shielded L1 is [Cryptographic, Honest Majority (Consensus, Threshold committee)] (zcash, monero); an MPC protocol with an on-chain validity proof is [Cryptographic, Honest Majority (Consensus, Threshold committee)] (merces); an MPC chain whose confidential compute has no correctness proof is [Honest Majority (Consensus, Threshold committee)] (coti); an FHE app whose threshold network decrypts, with an input proof verified in a TEE, is [Cryptographic, Honest Majority (Consensus, Threshold committee), Trusted hardware] (redact); an FHE app with only the threshold network is [Honest Majority (Consensus, Threshold committee)] (fluton); a single-sequencer validity-proof rollup or validium is [Cryptographic] (miden, scroll-cloak, zksync-prividium), because the operator only orders; an off-chain routing aggregator with no proof is [Trusted operator] (houdiniswap); SGX execution plus an on-chain Merkle proof and bonded operators is [Cryptographic, Trusted hardware, Trusted operator] (mirage).
+
+Upgradeable verifier contracts and permissioned admin gates are NOT a reason to downgrade — those are captured by Upgradeability and Censorship resistance. Notes should mention if the verifier is swappable.
 
 ## Post-quantum secure
 

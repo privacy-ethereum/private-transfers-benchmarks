@@ -278,13 +278,18 @@ export const PROPERTY_DEFINITIONS: PropertyContent[] = [
 
   // ── Verifiable ───────────────────────────────────────────────────────────
   {
-    name: "Cryptographic verifiability",
+    name: "Verifiability",
     group: "Verifiable",
     description:
-      "Whether transaction correctness is guaranteed by cryptographic proofs rather than social or majority-based mechanisms.",
-    metric: "Yes / Yes, with L1 consensus / No",
-    inputType: "select",
-    options: ["Yes", "Yes, with L1 consensus", "No"],
+      "Does the protocol enforce cryptographic verifiability for transaction validity? I.e., that no party can forge an invalid transfer or double-spend. Cryptographic means anyone can verify validity independently. This property can rest on more than one mechanism, e.g. cryptographic verifiability plus the protocol's own consensus. Other options include an honest majority of a validator set or committee, trusted hardware, or a single operator.",
+    metric: "Cryptographic / Honest Majority (Consensus, Threshold committee) / Trusted hardware / Trusted operator",
+    inputType: "multi-select",
+    options: [
+      "Cryptographic",
+      "Honest Majority (Consensus, Threshold committee)",
+      "Trusted hardware",
+      "Trusted operator",
+    ],
   },
   {
     name: "Open source",

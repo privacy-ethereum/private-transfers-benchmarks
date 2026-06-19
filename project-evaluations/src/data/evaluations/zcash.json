@@ -348,8 +348,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes, with L1 consensus",
+      "name": "Verifiability",
+      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
       "notes": "Zcash is an L1 blockchain whose individual transaction correctness is enforced by zk-SNARK verification (Halo2 / Orchard, Groth16 for legacy Sapling), while block ordering and inclusion are decided by majority-based PoW consensus. Shielded transactions are fully encrypted on-chain yet still verifiable as valid under the network's consensus rules.",
       "citations": [
         {

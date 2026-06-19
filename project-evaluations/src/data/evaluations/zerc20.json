@@ -365,8 +365,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Withdrawals are gated by zero-knowledge proofs verified on-chain: the recipient submits a proof that a zERC20 transfer was made to the corresponding burn address and that they know the secret used to form it, and the verifier mints tokens. Batch withdrawals are folded via Nova IVC, single withdrawals use Groth16, with Merkle membership over a Poseidon tree on BN254. Correctness rests on these proofs rather than attestations or voting, but the verifier is an upgradeable contract — the proving system is swappable by the contract owner.",
       "citations": [
         {
