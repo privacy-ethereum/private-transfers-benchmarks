@@ -150,8 +150,8 @@
       "url": "https://docs.privacypools.com/layers/asp"
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Privacy Pools uses Groth16 zk-SNARKs over the BN254 curve, with Circom circuits and Poseidon hashing for commitments and nullifiers. Proofs are verified on-chain.",
       "url": "https://docs.privacypools.com/layers/zk"
     },

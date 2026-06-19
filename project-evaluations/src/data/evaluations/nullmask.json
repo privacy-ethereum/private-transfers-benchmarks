@@ -356,8 +356,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Transaction correctness is enforced cryptographically: every shielded action requires a valid ZK proof verified by an on-chain verifier contract, and the proof cannot be forged without breaking the UltraHonk proof system, with Ethereum signatures verified inside the ZK circuit via secp256k1 ECDSA. Proofs are verified on-chain. The verifier contracts are upgradeable.",
       "citations": [
         {

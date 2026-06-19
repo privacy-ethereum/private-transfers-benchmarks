@@ -160,9 +160,9 @@
       "url": "https://docs.redact.money/faq#q-what-are-permits"
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "No",
-      "notes": "Transaction correctness rests on the off-chain CoFHE coprocessor and its threshold-decryption network rather than cryptographic proofs of homomorphic computation. The only zero-knowledge component is a proof of knowledge that the user knows the plaintext of an encrypted input, which guards input well-formedness but does not attest to computation correctness. Decryption results are produced by an MPC protocol among permissioned parties and signed by a dispatcher, so on-chain acceptance reduces to trusting a registered signer set. The input-proof verifier runs in a TEE, but hardware attestation is not a cryptographic correctness proof over the FHE computation itself.",
+      "name": "Verifiability",
+      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)", "Trusted hardware"],
+      "notes": "Transaction correctness rests on the off-chain CoFHE coprocessor and its threshold-decryption network rather than cryptographic proofs of homomorphic computation. The zero-knowledge component is a proof of knowledge that the user knows the plaintext of an encrypted input, which guards input well-formedness but does not attest to computation correctness. Decryption results are produced by an MPC protocol among permissioned parties and signed by a dispatcher, so on-chain acceptance reduces to trusting a registered signer set. The input-proof verifier runs in a TEE.",
       "citations": [
         {
           "cited_text": "It allows users to prove they know the plaintext of an encrypted input they’re sending to a smart contract, without revealing the plaintext itself. \n",

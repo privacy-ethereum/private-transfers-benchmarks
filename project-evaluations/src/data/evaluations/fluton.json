@@ -365,17 +365,13 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "No",
-      "notes": "Transaction correctness depends on the FHE coprocessor network rather than a re-checkable cryptographic proof. Each intent's outcome is recorded as an on-chain state transition and funds stay locked within the protocol until execution, but the homomorphic computation that produced the result runs on external coprocessors with no succinct proof an observer could re-verify. The per-intent proof of innocence attests only blocklist non-membership, not the correctness of the computation.",
+      "name": "Verifiability",
+      "value": ["Honest Majority (Consensus, Threshold committee)"],
+      "notes": "Transaction correctness depends on the FHE coprocessor network rather than a re-checkable cryptographic proof: the homomorphic computation that produced the result runs on external coprocessors with no succinct proof an observer could re-verify, and the per-intent proof of innocence attests only blocklist non-membership, not the correctness of the computation.",
       "citations": [
         {
-          "cited_text": "​\n\nDeterministic Settlement \n\nThe outcome of each intent is determined by on-chain state transitions rather than off-chain trust assumptions. \n\n",
-          "source": "https://docs.fluton.io/security-guarantees"
-        },
-        {
-          "cited_text": "User funds are never held by solvers or third parties. They remain locked within the protocol until execution is verified.",
-          "source": "https://docs.fluton.io/security-guarantees"
+          "cited_text": "A distributed system that securely handles decryption requests through multi-party computation",
+          "source": "https://www.fhenix.io/blog/what-is-fhenix"
         }
       ]
     },

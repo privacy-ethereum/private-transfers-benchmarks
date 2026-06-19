@@ -308,8 +308,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Each announcement event is a public on-chain record of receiver, amount, token, ephemeral pubkey, and ciphertext. Anyone holding the recipient's viewing key can re-derive the stealth address from these fields and check it matches the emitted receiver. Withdrawal authorisation is verified via ECDSA over a signed digest recovered with ecrecover.",
       "citations": [
         {

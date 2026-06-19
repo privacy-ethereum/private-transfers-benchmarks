@@ -317,8 +317,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Shielder verifies zk-SNARK proofs in the on-chain verifier contract rather than relying on majority vote or social attestation. Inclusion and ordering are inherited from the host chain.",
       "citations": [
         {

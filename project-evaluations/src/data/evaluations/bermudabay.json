@@ -354,8 +354,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Transaction correctness on Bermuda rests on zk-SNARK verification performed by on-chain contracts. The pool contract holds shielded funds and manages deposits, transfers, and withdrawals by verifying ZK proofs and enforcing compliance checks. Circuits are written in Noir and use the Barretenberg backend. Verifier contracts perform ZK-SNARK proof verification, with multiple verifier instances covering different UTXO topologies and spending scenarios, so verifier selection is per-circuit rather than majority-based.",
       "citations": [
         {

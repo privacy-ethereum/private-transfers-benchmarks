@@ -146,8 +146,8 @@
       "url": "https://docs.tornadocash.eth.limo/general/resources/compliance-tool.html"
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Tornado Cash uses Groth16 zk-SNARKs over the BN254 curve with Pedersen hash commitments stored in Merkle trees. The deposit commitment and withdrawal proof are verified on-chain by the smart contract's verifier, ensuring correctness without revealing the link between depositor and withdrawer.",
       "url": "https://docs.tornadocash.eth.limo/general/how-does-it-work.html"
     },

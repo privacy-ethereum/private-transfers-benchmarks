@@ -417,8 +417,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes, with L1 consensus",
+      "name": "Verifiability",
+      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
       "notes": "Transaction correctness on FairyRing is enforced by on-chain zero-knowledge proof verification in CosmWasm contracts: each transfer proves the sender's balance is sufficient, total value is preserved, and no negative balance results. Only valid proofs let FairyRing update encrypted balances, so correctness rests on proof math, not a single TEE or an MPC honest-majority assumption. FairyRing is itself a sovereign Cosmos chain, so ordering and inclusion rely on its own CometBFT consensus.",
       "citations": [
         {

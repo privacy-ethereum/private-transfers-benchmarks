@@ -367,9 +367,9 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "No",
-      "notes": "Correctness rests on an honest-threshold assumption over the multi-party-computation committee rather than a re-checkable proof: results are trusted when enough executor nodes behave faithfully. Secure enclaves are floated only as optional extra protection, not the root of trust, and no succinct on-chain proof attests that the encrypted operations were evaluated correctly.",
+      "name": "Verifiability",
+      "value": ["Honest Majority (Consensus, Threshold committee)"],
+      "notes": "Correctness rests on an honest-threshold assumption over the multi-party-computation committee rather than a re-checkable proof: results are trusted when enough executor nodes behave faithfully. Secure enclaves are raised only as optional extra protection, and no succinct onchain proof attests that the encrypted operations were evaluated correctly. COTI V2 is itself an EVM Layer 2 whose sequencer and stake-locked operators secure its blocks under its own consensus.",
       "citations": [
         {
           "cited_text": "When it comes to the security of the network, COTI V2 is predicated on the fact that a threshold of the network nodes operate faithfully. ",
@@ -378,6 +378,10 @@
         {
           "cited_text": "While COTI plans to use secure enclaves for an additional layer of protection, they are not a necessity for the integrity of the system. ",
           "source": "https://docs.coti.io/coti-documentation/how-coti-works/advanced-topics/garbled-circuits"
+        },
+        {
+          "cited_text": "It coordinates transaction flow and ensures orderly addition to the chain.",
+          "source": "https://docs.coti.io/coti-documentation/how-coti-works/introduction/coti-architecture"
         }
       ]
     },
