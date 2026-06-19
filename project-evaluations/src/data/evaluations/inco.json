@@ -1,10 +1,498 @@
 {
   "id": "inco",
-  "title": "INCO",
-  "description": "Inco is a confidentiality layer for blockchains that enables privacy-preserving smart contracts without modifying the underlying blockchain. It takes a modular approach, comparable to how SSL/TLS adds security to internet protocols.",
-  "status": "pending",
-  "documentation": "https://docs.inco.org/home",
-  "categories": ["Trusted Execution Environments (TEEs)", "Private L2"],
-  "properties": [],
-  "sourceUrls": []
+  "title": "Inco",
+  "description": "Inco is a confidentiality layer for existing EVM blockchains. Its live product, Inco Lightning, lets developers write confidential smart contracts in standard Solidity using encrypted data types (euint, ebool, eaddress). Encrypted values are stored off-chain and referenced on-chain as handles, while confidential computation and decryption run inside Trusted Execution Environments (TEEs). A quorum of TEE-based decryption nodes returns signed attestations that on-chain contracts verify. It is deployed on Base mainnet and Base Sepolia, with a Solana devnet in beta.",
+  "documentation": "https://docs.inco.org",
+  "status": "complete",
+  "categories": ["Trusted Execution Environments (TEEs)", "Encrypted Tokens", "Privacy Stack/Layer/Middleware"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Inco Lightning's confidential token behaves like a standard ERC20 except holder balances and transfer amounts are hidden from public view. Encrypted euint256 handles store balances on-chain while computation runs inside TEEs, so both the per-address holdings and the values moved in each transfer remain confidential.",
+      "citations": [
+        {
+          "cited_text": "A confidential token behaves similarly to a regular ERC20 token, but the balances of the holders, and transfer amounts are hidden from the public. \n",
+          "source": "https://docs.inco.org/guide/intro"
+        },
+        {
+          "cited_text": "Inco Lightning uses Trusted Execution Environments (TEEs) to deliver verifiable confidential compute at lightning-fast speeds.",
+          "source": "https://docs.inco.org/introduction"
+        },
+        {
+          "cited_text": "mapping ( address => euint256) public balanceOf;",
+          "source": "https://docs.inco.org/guide/handles"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "No",
+      "notes": "Transfers take a plaintext recipient address and key balances on transparent host-chain addresses, so sender and receiver are public on Base while only amounts and balances are hidden as handles to off-chain encrypted data.",
+      "citations": [
+        {
+          "cited_text": "euint256 value = valueInput. newEuint256 ( msg.sender ); \nreturn _transfer (to, value); \n}",
+          "source": "https://docs.inco.org/guide/intro"
+        },
+        {
+          "cited_text": "This gibberish value gives us no information about the actual balance of the user. \n\n",
+          "source": "https://docs.inco.org/guide/handles"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "Inco's confidential token hides amounts but not which asset is moving. A confidential token behaves like a regular ERC20 with balances and transfer amounts hidden, while the token contract being transacted stays identifiable on Base. A handle is only a unique identifier for an immutable piece of hidden data standing in for the amount, not for the asset's identity.",
+      "citations": [
+        {
+          "cited_text": "A confidential token behaves similarly to a regular ERC20 token, but the balances of the holders, and transfer amounts are hidden from the public. \n",
+          "source": "https://docs.inco.org/guide/intro"
+        },
+        {
+          "cited_text": "A handle is a unique identifier for an immutable piece of hidden data.\n",
+          "source": "https://docs.inco.org/guide/handles"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Interacting with Inco requires calling a confidential token contract that imports the Inco Solidity library, so a recognised Inco contract call on Base is distinguishable from an ordinary ERC20 transfer. Entry-point calls touch protocol-specific code rather than mimicking a plain native transfer, and the contract identity itself reveals that the privacy layer is in use.",
+      "citations": [
+        {
+          "cited_text": "Just import our Solidity library and start building privacy-preserving dApps today. \n\n",
+          "source": "https://docs.inco.org/introduction"
+        },
+        {
+          "cited_text": "A confidential token behaves similarly to a regular ERC20 token, but the balances of the holders, and transfer amounts are hidden from the public. \n",
+          "source": "https://docs.inco.org/guide/intro"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "Underlying chain",
+      "notes": "Inco Lightning operates as a confidentiality layer on top of existing chains rather than running its own consensus, so transaction finality follows the host chain's settlement. The system is live on Base Mainnet and Base Sepolia, with Solana Devnet support available in beta. Fees for confidential operations are paid in the host chain's native currency, reinforcing that ordering and settlement ride the underlying network.",
+      "citations": [
+        {
+          "cited_text": "Inco Lightning is live on Base Mainnet and Base Sepolia, with Solana Devnet support available in beta. ",
+          "source": "https://docs.inco.org/introduction"
+        },
+        {
+          "cited_text": "​\n\nFee Structure \n\nInco fees are paid in the native blockchain currency (ETH on Ethereum, etc.) ",
+          "source": "https://docs.inco.org/quickstart/fees"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "The protocol requires a single secret: the user's pre-existing host-chain wallet key, used to sign an EIP-712 message that binds the caller's address, the requested operation (decrypt, compute), and the handles or parameters involved in the request. No protocol-specific viewing key, spending key, or encryption key is derived or stored.",
+      "citations": [
+        {
+          "cited_text": "The JS SDK does this by asking the user to sign an EIP-712 message that binds: \n\nthe caller’s address,\n\nthe requested operation (decrypt, compute),\n",
+          "source": "https://docs.inco.org/guide/decryption"
+        },
+        {
+          "cited_text": "Our JS SDK embeds context information in the ciphertext\n(originating account, chain, contract), and the value of the created handle\nwill fallback to the default if it is used in another context. \n\n",
+          "source": "https://docs.inco.org/guide/input"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Inco Lightning is a confidentiality layer deployed on Base where users interact directly with confidential token contracts as ordinary host-chain transactions, so the deposit time is 0 seconds. There is no protocol-imposed queue or time-lock before use, and transfers execute in a single host-chain transaction without a separate shielded-pool deposit step.",
+      "citations": [
+        {
+          "cited_text": "​\n\nFee Structure \n\nInco fees are paid in the native blockchain currency (ETH on Ethereum, etc.) and are required for operations that involve processing encrypted inputs from external sources. \n\n",
+          "source": "https://docs.inco.org/quickstart/fees"
+        },
+        {
+          "cited_text": "A confidential token behaves similarly to a regular ERC20 token, but the balances of the holders, and transfer amounts are hidden from the public. \n",
+          "source": "https://docs.inco.org/guide/intro"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Reading or revealing a confidential value on Inco Lightning is an ordinary host-chain transaction with no protocol-imposed waiting period. An authorized address calls zap.attestedDecrypt(...) from the JS SDK, which talks to the covalidator, and the response contains the plaintext plus the covalidator signature. Latency reduces to Base block inclusion with no exit queue or challenge window.",
+      "citations": [
+        {
+          "cited_text": "The response contains the plaintext plus the covalidator signature, enabling the user to post the plaintext back on-chain if needed.\n\n",
+          "source": "https://docs.inco.org/guide/decryption"
+        },
+        {
+          "cited_text": "This ensures that only the address that has on-chain access to a handle (via e.allow or e.reveal ) can request an attestation for it",
+          "source": "https://docs.inco.org/guide/decryption"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "Yes",
+      "notes": "Inco operates as a confidentiality layer on top of Base, riding the host chain for ordering and settlement without introducing its own sequencer or validator set that could filter transfers. The on-chain logic governs only decryption rights over ciphertexts and does not gate transaction inclusion, with no blocklist, allowlist, or sanctions screen enforced at the transfer path. Base's permissionless validator set ultimately decides inclusion.",
+      "citations": [
+        {
+          "cited_text": "The access control logic is fully programmable and onchain.",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        },
+        {
+          "cited_text": "To give access to an account (i.e an address) to a ciphertext, you can use the e.allow function.\nThis will grant the address permanent access to seeing, publicly decrypting and computing",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        },
+        {
+          "cited_text": "confidentiality layer for existing blockchains.",
+          "source": "https://docs.inco.org/introduction"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Inco Lightning depends on an additional off-chain operator set beyond the host chain Base: a Trusted Execution Environment running the Confidential Compute Server, plus a quorum of TEE decryption nodes that return plaintext with signed attestations. The Confidential Compute Server runs inside a Trusted Execution Environment and securely handles all confidential operations in the system.",
+      "citations": [
+        {
+          "cited_text": "the decryption layer handles it securely through a quorum of TEE-based decryption nodes with verified attestations.\n\n",
+          "source": "https://www.inco.org/blog/inco-lightning-live-on-base-mainnet"
+        },
+        {
+          "cited_text": "​\n\nConfidential Compute Server \n\nThe Confidential Compute Server runs inside a Trusted Execution Environment (TEE) and securely handles all confidential operations in the system. ",
+          "source": "https://docs.inco.org/architecture/components"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Recovering shielded balances requires the TEE covalidator quorum: the on-chain contract holds only identifiers, while the actual data is stored offchain in encrypted form, so host-chain consensus alone cannot reconstruct a plaintext balance. Decryption is gated by an off-chain attested flow where the authorized user calls the SDK which talks to the covalidator. If the covalidator quorum is unavailable or censors a request, no Base-only recovery path exists.",
+      "citations": [
+        {
+          "cited_text": "The onchain smart contract is manipulating identifiers for a piece of hidden data (a balance, a boolean, etc.),\nand the actual data is safely stored offchain in an encrypted manner.\n",
+          "source": "https://docs.inco.org/guide/handles"
+        },
+        {
+          "cited_text": "The authorized user calls zap.attestedDecrypt(...) from the JS SDK, which talks to the covalidator.\n\n",
+          "source": "https://docs.inco.org/guide/decryption"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "needsResearchReview": "on-chain admin slot for Inco's Base contracts not classified, EOA vs multisig unverified",
+      "notes": "Upgrade authority for Inco's core confidentiality contracts and control over the TEE-based covalidator decryption quorum are not published in the canonical docs covering the Base mainnet deployment. The live architecture comprises a smart contract library, a confidential compute server, and a client-side JavaScript library, but the controlling key composition over those contracts and the enclave operator set is not enumerated.",
+      "citations": [
+        {
+          "cited_text": "Inco’s architecture consists of three main components that work together to provide confidential computing capabilities: \n\nSmart Contract Library\n\nConfidential Compute Server\n",
+          "source": "https://docs.inco.org/architecture/overview"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "N/A",
+      "notes": "Inco uses no proof system at all, so client-versus-server proving does not apply. The Confidential Compute Server runs inside a Trusted Execution Environment (TEE) and securely handles all confidential operations, with correctness resting on TEE attestations verified on-chain rather than zero-knowledge proofs. The client SDK only encrypts user inputs using the network's public key and handles ephemeral key and EIP-712 signature generation — an encryption step, not a proving step.",
+      "citations": [
+        {
+          "cited_text": "The Confidential Compute Server runs inside a Trusted Execution Environment (TEE) and securely handles all confidential operations in the system.",
+          "source": "https://docs.inco.org/architecture/components"
+        },
+        {
+          "cited_text": "Encrypts user inputs using the network’s public key\n\nHandles ephemeral key and EIP-712 signature generation for decryption requests\n",
+          "source": "https://docs.inco.org/architecture/components"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Plaintext handling sits inside a Trusted Execution Environment rather than being exposed to an external operator, and decryption requests are gated by on-chain access control before the enclave releases plaintext. This relies on TEE hardware attestation holding — the operator cannot read enclave memory under an honest setup with valid attestation, but the answer flips under a compromised-enclave or side-channel threat model, which TEEs have historically been vulnerable to.",
+      "citations": [
+        {
+          "cited_text": "The Confidential Compute Server runs inside a Trusted Execution Environment (TEE) and securely handles all confidential operations in the system.",
+          "source": "https://docs.inco.org/architecture/components"
+        },
+        {
+          "cited_text": "To give access to an account (i.e an address) to a ciphertext, you can use the e.allow function.\nThis will grant the address permanent access to seeing, publicly decrypting and computing",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "Inco Lightning went live on Base mainnet on 15 June 2026, following a Base Sepolia testnet launch in April 2025. The system was audited by Trail of Bits ahead of production release. It also runs on Base Sepolia and a Solana Devnet beta. Mainnet tenure is under one year as of the evaluation window, placing maturity at tier 3.",
+      "citations": [
+        {
+          "cited_text": "With this in mind, we&#x27;re excited to announce that Inco Lightning is now live on Base mainnet",
+          "source": "https://www.inco.org/blog/inco-lightning-live-on-base-mainnet",
+          "date": "2026-06-15"
+        },
+        {
+          "cited_text": "Inco Lightning has been extensively audited by Trail of Bits. \n\n",
+          "source": "https://www.inco.org/blog/inco-lightning-live-on-base-mainnet"
+        },
+        {
+          "cited_text": "In April 2025, we launched Inco Lightning on Base Sepolia testnet",
+          "source": "https://www.inco.org/blog/inco-lightning-live-on-base-mainnet"
+        },
+        {
+          "cited_text": "Inco Lightning is live on Base Mainnet and Base Sepolia, with Solana Devnet support available in beta. ",
+          "source": "https://docs.inco.org/introduction"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Inco Lightning's verification path rests on covalidator signatures checked on-chain through a pre-quantum signature scheme with no lattice-based fallback. Confidential computation and decryption occur inside a Trusted Execution Environment (TEE) that handles all confidential operations, so secrecy depends on hardware enclaves rather than post-quantum cryptography. Ordering and settlement ride the host chain (Base), whose ECDSA-secured consensus is likewise vulnerable to quantum attack.",
+      "citations": [
+        {
+          "cited_text": "incoVerifier (). isValidDecryptionAttestation (decryption, signatures)",
+          "source": "https://docs.inco.org/guide/verifying-attestations"
+        },
+        {
+          "cited_text": "The Confidential Compute Server runs inside a Trusted Execution Environment (TEE) and securely handles all confidential operations in the system.",
+          "source": "https://docs.inco.org/architecture/components"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "No compliance gate operates in the protocol. Access control logic is fully programmable and on-chain, governing which accounts may decrypt a given ciphertext, and e.allow grants an address permanent rights to view, publicly decrypt, and compute over the ciphertext. These primitives regulate ciphertext visibility, not transfer eligibility — no KYC, sanctions screening, or blocklist mechanism exists to enforce at the asset, app, or chain layer.",
+      "citations": [
+        {
+          "cited_text": "The access control logic is fully programmable and onchain.",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        },
+        {
+          "cited_text": "To give access to an account (i.e an address) to a ciphertext, you can use the e.allow function.\nThis will grant the address permanent access to seeing, publicly decrypting and computing",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "Inco's access control governs only who may decrypt or compute over a given ciphertext, with e.allow granting an address permanent rights to view, publicly decrypt, and compute over the ciphertext. The access logic is fully programmable and on-chain, and the set of accounts able to decrypt a given ciphertext is visible on-chain. No blocklist curator, sanctions screener, KYC provider, or asset-issuer transfer hook sits in the path, so no entity enforces compliance restrictions on transfers.",
+      "citations": [
+        {
+          "cited_text": "To give access to an account (i.e an address) to a ciphertext, you can use the e.allow function.\nThis will grant the address permanent access to seeing, publicly decrypting and computing",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        },
+        {
+          "cited_text": "The access control logic is fully programmable and onchain.",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["Selective disclosure"],
+      "notes": "The only compliance-adjacent capability is voluntary disclosure controlled by the holder: access to a ciphertext is granted via e.allow, which gives that address permanent rights to see, publicly decrypt, and compute over the value. A holder can also make a value fully public via e.reveal(), after which it can be accessed by anyone and cannot be undone. No KYC gate, on-chain blocklist/allowlist, or oracle-delivered policy attestation is part of the protocol.",
+      "citations": [
+        {
+          "cited_text": "To give access to an account (i.e an address) to a ciphertext, you can use the e.allow function.\nThis will grant the address permanent access to seeing, publicly decrypting and computing",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        },
+        {
+          "cited_text": "Once revealed with e.reveal(), the ciphertext is considered public and can be accessed\nby anyone. This action can not be undone. \n\n",
+          "source": "https://docs.inco.org/js-sdk/attestations/attested-reveal"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["None"],
+      "notes": "Inco's access control logic governs only who may decrypt or compute over a given ciphertext, with no compliance gate sitting in front of deposit, transfer, or withdrawal flows. The e.allow function grants an address permanent rights to see, publicly decrypt, and compute over the ciphertext, which is a disclosure permission rather than a transfer-lifecycle check. Selective disclosure is user-discretionary, so no entity enforces a policy at any lifecycle point.",
+      "citations": [
+        {
+          "cited_text": "To give access to an account (i.e an address) to a ciphertext, you can use the e.allow function.\nThis will grant the address permanent access to seeing, publicly decrypting and computing",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        },
+        {
+          "cited_text": "Note that once the access over a ciphertext is shared, the receiving account may share it with any other account, or publicly decrypt it.\n",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User", "Voluntary third-party disclosure"],
+      "notes": "Holders themselves can access their own ciphertext values, since the e.allow function grants an address permanent rights to see, publicly decrypt, and compute over the ciphertext, and a contract typically calls this for the caller on their own balance handle. The same primitive supports voluntary delegation to any other address by calling e.allow on a specific handle. No involuntary regulator or admin viewing path exists.",
+      "citations": [
+        {
+          "cited_text": "To give access to an account (i.e an address) to a ciphertext, you can use the e.allow function.\nThis will grant the address permanent access to seeing, publicly decrypting and computing",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        },
+        {
+          "cited_text": "This ensures that only the address that has on-chain access to a handle (via e.allow or e.reveal ) can request an attestation for it",
+          "source": "https://docs.inco.org/guide/decryption"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Programmable",
+      "notes": "Viewing rights on Inco are granted dynamically by contract logic per ciphertext handle. Calling e.allow on a value grants an address permanent rights to see, publicly decrypt, and compute over that ciphertext, and because handles are immutable, when the variable is updated the handle changes and access to the new handle must be granted again. Contract authors therefore control disclosure programmatically as encrypted state evolves.",
+      "citations": [
+        {
+          "cited_text": "To give access to an account (i.e an address) to a ciphertext, you can use the e.allow function.\nThis will grant the address permanent access to seeing, publicly decrypting and computing",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        },
+        {
+          "cited_text": "Whenever the variable is updated, the handle changes and the access to the new handle must be granted again.\n",
+          "source": "https://docs.inco.org/guide/guide-access-control"
+        }
+      ]
+    },
+    {
+      "name": "Verifiability",
+      "value": ["Honest Majority (Consensus, Threshold committee)", "Trusted hardware"],
+      "notes": "Validity in Inco's deployed stack rests on hardware attestation plus a signing quorum, with no re-checkable proof of correct computation. The Confidential Compute Server runs inside a Trusted Execution Environment (TEE) and securely handles all confidential operations. Solidity consumers verify outputs by checking covalidator signatures over the attested result on-chain rather than recomputing the work. The quorum threshold is not published, and ordering plus settlement ride the host chain.",
+      "citations": [
+        {
+          "cited_text": "The Confidential Compute Server runs inside a Trusted Execution Environment (TEE) and securely handles all confidential operations in the system.",
+          "source": "https://docs.inco.org/architecture/components"
+        },
+        {
+          "cited_text": "incoVerifier (). isValidDecryptionAttestation (decryption, signatures)",
+          "source": "https://docs.inco.org/guide/verifying-attestations"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "The public confidential-erc20-framework repository carries only the ERC20-layer contracts, tests, and templates. The core off-chain TEE compute server and covalidator quorum code that performs confidential computation and decryption is not published in the public GitHub organisation, and the dapp development kit ships without a detectable licence file. A critical backend component of the deployed protocol is closed-source, so the property fails.",
+      "citations": [
+        {
+          "cited_text": "Note: This repository is not audited and is intended solely as a proof of concept.\n\n",
+          "source": "https://github.com/Inco-fhevm/confidential-erc20-framework"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Account",
+      "notes": "On-chain storage maps each holder to an encrypted balance handle, so the footprint scales with the number of distinct accounts rather than with transfer count. User balances live in a mapping from address to euint256, and a handle serves as a unique identifier for an immutable piece of hidden data. When a balance changes, the slot is reassigned to a new handle in place. The chain-visible mapping does not enlarge per transfer — only new holders add entries.",
+      "citations": [
+        {
+          "cited_text": "This gibberish value gives us no information about the actual balance of the user. \n\n",
+          "source": "https://docs.inco.org/guide/handles"
+        },
+        {
+          "cited_text": "A handle is a unique identifier for an immutable piece of hidden data.\n",
+          "source": "https://docs.inco.org/guide/handles"
+        },
+        {
+          "cited_text": "mapping ( address => euint256) public balanceOf;",
+          "source": "https://docs.inco.org/guide/handles"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No Scanning",
+      "notes": "Account balances on Inco are stored as a direct mapping from address to an encrypted handle, so a user retrieves their own balance via a single balanceOf lookup that returns an opaque ciphertext handle. The handle is turned into plaintext through an authenticated request: the authorized user calls zap.attestedDecrypt from the JS SDK, which talks to the covalidator. No commitment tree or output scan is involved because the ledger is account-based.",
+      "citations": [
+        {
+          "cited_text": "This gibberish value gives us no information about the actual balance of the user. \n\n",
+          "source": "https://docs.inco.org/guide/handles"
+        },
+        {
+          "cited_text": "The authorized user calls zap.attestedDecrypt(...) from the JS SDK, which talks to the covalidator.\n\n",
+          "source": "https://docs.inco.org/guide/decryption"
+        },
+        {
+          "cited_text": "mapping ( address => euint256) public balanceOf;",
+          "source": "https://docs.inco.org/guide/handles"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "Account-based state model",
+      "notes": "Inco Lightning manages confidential state as per-address encrypted balances held in contract storage, with each holder's balance updated in place on transfer. User balances live in a mapping from address to euint256, and a transfer reassigns the sender and receiver entries to new ciphertext handles. The account entry is a handle pointing to off-chain encrypted ciphertext rather than a note-commitment in a Merkle tree.",
+      "citations": [
+        {
+          "cited_text": "This gibberish value gives us no information about the actual balance of the user. \n\n",
+          "source": "https://docs.inco.org/guide/handles"
+        },
+        {
+          "cited_text": "The onchain smart contract is manipulating identifiers for a piece of hidden data (a balance, a boolean, etc.),\nand the actual data is safely stored offchain in an encrypted manner.\n",
+          "source": "https://docs.inco.org/guide/handles"
+        },
+        {
+          "cited_text": "mapping ( address => euint256) public balanceOf;",
+          "source": "https://docs.inco.org/guide/handles"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Off-chain storage with on-chain commitment"],
+      "notes": "Inco Lightning's confidential token contracts hold only handles — unique identifiers for immutable pieces of hidden data — while the actual data is safely stored offchain in an encrypted manner. Each handle is a 32-byte bytes32 reference that the contract treats as an opaque pointer to the encrypted payload sitting outside chain storage, so the on-chain footprint is a commitment to off-chain ciphertext rather than the ciphertext itself.",
+      "citations": [
+        {
+          "cited_text": "A handle is a unique identifier for an immutable piece of hidden data.\n",
+          "source": "https://docs.inco.org/guide/handles"
+        },
+        {
+          "cited_text": "The onchain smart contract is manipulating identifiers for a piece of hidden data (a balance, a boolean, etc.),\nand the actual data is safely stored offchain in an encrypted manner.\n",
+          "source": "https://docs.inco.org/guide/handles"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": ["Composable interface, but requires DeFi protocol changes"],
+      "notes": "Inco Lightning exposes confidential primitives as a Solidity library imported into host-chain contracts, so a confidential balance is an encrypted euint256 handle rather than a fungible token that public DeFi can consume. Any DEX, lending market, or AMM that wants to accept these balances must be rewritten against the encrypted types, since hidden balances break the plaintext-balance assumption ordinary ERC-20 integrations rely on.",
+      "citations": [
+        {
+          "cited_text": "It introduces new private data types, operations, and access controls, enabling smart contracts to process sensitive data securely.",
+          "source": "https://docs.inco.org/introduction"
+        },
+        {
+          "cited_text": "A confidential token behaves similarly to a regular ERC20 token, but the balances of the holders, and transfer amounts are hidden from the public. \n",
+          "source": "https://docs.inco.org/guide/intro"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Full programmability with public and private state",
+      "notes": "Inco Lightning supports full programmability over mixed public and encrypted state in standard Solidity: developers import a library that introduces private data types, operations, and access controls. The encrypted types (euint256, ebool, eaddress) compose with normal Solidity control flow, so contracts like a confidential token with hidden balances are expressible alongside arbitrary public logic. Per-handle access control via e.allow grants decrypt/compute rights to specific accounts.",
+      "citations": [
+        {
+          "cited_text": "It introduces new private data types, operations, and access controls, enabling smart contracts to process sensitive data securely.",
+          "source": "https://docs.inco.org/introduction"
+        },
+        {
+          "cited_text": "A confidential token behaves similarly to a regular ERC20 token, but the balances of the holders, and transfer amounts are hidden from the public. \n",
+          "source": "https://docs.inco.org/guide/intro"
+        }
+      ]
+    }
+  ]
 }

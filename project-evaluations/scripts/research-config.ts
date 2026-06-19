@@ -442,4 +442,57 @@ export const configs: Record<string, ProtocolConfig> = {
       "the design paper (zksync.io/papers/beyond_public_vs_private_chains-design.pdf) is a PDF — use it for " +
       "background only.",
   },
+  "inco": {
+    id: "inco",
+    title: "Inco",
+    description:
+      "Inco is a confidentiality layer for existing EVM blockchains. Its live product, Inco Lightning, lets developers write confidential smart contracts in standard Solidity using encrypted data types (euint, ebool, eaddress). Encrypted values are stored off-chain and referenced on-chain as handles, while confidential computation and decryption run inside Trusted Execution Environments (TEEs). A quorum of TEE-based decryption nodes returns signed attestations that on-chain contracts verify. It is deployed on Base mainnet and Base Sepolia, with a Solana devnet in beta.",
+    status: "pending",
+    documentation: "https://docs.inco.org",
+    categories: ["Trusted Execution Environments (TEEs)", "Encrypted Tokens", "Privacy Stack/Layer/Middleware"],
+    sourceUrls: [
+      "https://docs.inco.org/introduction",
+      "https://docs.inco.org/architecture/overview",
+      "https://docs.inco.org/architecture/components",
+      "https://docs.inco.org/architecture/decryption-mechanisms",
+      "https://docs.inco.org/guide/input",
+      "https://docs.inco.org/guide/handles",
+      "https://docs.inco.org/guide/guide-access-control",
+      "https://docs.inco.org/guide/decryption",
+      "https://docs.inco.org/guide/verifying-attestations",
+      "https://docs.inco.org/quickstart/fees",
+      "https://www.inco.org/blog/inco-lightning-live-on-base-mainnet",
+      "https://github.com/Inco-fhevm",
+    ],
+    context:
+      "CRITICAL: Inco today is a TEE-based CONFIDENTIALITY LAYER for existing EVM chains — NOT an FHE L1. The live " +
+      "product is Inco Lightning, deployed on Base mainnet (live 15 June 2026, audited by Trail of Bits) and Base " +
+      "Sepolia (24 April 2025), with a Solana devnet in beta (9 January 2026). The deployed confidential-compute " +
+      "and decryption mechanism is Trusted Execution Environments (TEEs), NOT Fully Homomorphic Encryption. The docs " +
+      "say 'TEE' without naming a vendor — a gramine (Intel SGX/TDX-family) fork in the GitHub org corroborates the " +
+      "enclave family, but do NOT assert 'Intel TDX' as a documented fact. FHE " +
+      "(Zama fhEVM / TFHE) belongs to the OBSOLETE 2023 Cosmos-SDK 'modular confidential computing L1' design and to " +
+      "a future, NOT-YET-DEPLOYED engine called 'Inco Atlas' — do NOT describe FHE/TFHE/fhEVM as the live mechanism. " +
+      "The newest source describing the deployed system wins; ignore the 2025 roundup's lingering 'FHE' framing. " +
+      "Architecture: smart contracts hold only handles (identifiers) for data stored off-chain in encrypted form; a " +
+      "Confidential Compute Server runs inside a TEE; user inputs are encrypted client-side to the attested enclave " +
+      "public key (no per-user viewing key, and no zero-knowledge proof of plaintext knowledge — inputs are instead " +
+      "context-bound to account/chain/contract). Decryption: a user signs an EIP-712 message, then a quorum of " +
+      "TEE-based decryption nodes ('covalidators') returns plaintext plus a signed attestation that on-chain " +
+      "contracts verify via inco.incoVerifier().isValidDecryptionAttestation(...). Validity/verifiability rests on " +
+      "TEE remote attestation plus covalidator signatures, NOT a re-checkable ZK validity proof. Consensus: Inco " +
+      "runs NO consensus or sequencer of its own — it RIDES the host chain (Base) for ordering and settlement, and " +
+      "fees are paid in the host chain's native currency. Trust assumption: Intel TDX hardware plus the operator(s) " +
+      "running the enclaves plus the covalidator quorum (TEE hardware trust, not a cryptographic honest majority); the " +
+      "docs do NOT publish an explicit t-of-n threshold or " +
+      "honest-majority parameter for the quorum — treat that as under-specified, not a cryptographic honest-majority " +
+      "MPC. Access control is on-chain and programmable (e.allow(address) grants permanent per-handle decrypt/compute " +
+      "rights), with selective disclosure via attested-decrypt / attested-reveal — there is NO viewing-key scheme, " +
+      "NO KYC/AML, and NO blocklist documented. Upgradeability/admin of the core contracts and control of the " +
+      "covalidator quorum are NOT documented publicly — flag rather than guess. Open source is partial: client SDKs " +
+      "and templates are public (confidential-erc20-framework is MIT; lightning-rod has no detectable licence) but " +
+      "the core TEE compute server / covalidator code is NOT open-sourced. Use docs.inco.org as the canonical docs " +
+      "origin; AVOID docs.inco.network, which carries legacy fhEVM/L1 material. There is no L2BEAT page (Inco is not " +
+      "an L2). GitHub org: https://github.com/Inco-fhevm.",
+  },
 };
