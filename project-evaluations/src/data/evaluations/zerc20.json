@@ -231,15 +231,19 @@
     },
     {
       "name": "Third-party inspectability",
-      "value": "Yes",
-      "notes": "The off-chain indexer is positioned to link sender activity to recipients. The indexer operator observes the sender, the burn address, and the value, and learns the recipient on query. A relay node submits gasless redeem transactions on behalf of users and swaps zERC20 into native gas tokens, exposing recipient fee authorisations to that operator. The protocol acknowledges this exposure and advises users to run their own indexer instance to avoid sender-recipient linkage leaks.",
+      "value": "No",
+      "notes": "The off-chain indexer can link sender activity to recipients. The indexer operator observes the sender, the burn address, and the value, and learns the recipient on query. A relay node submits gasless redeem transactions on behalf of users and swaps zERC20 into native gas tokens, exposing recipient fee authorisations to that operator. The protocol acknowledges this exposure and advises users to run their own indexer instance to avoid sender-recipient linkage leaks.",
       "citations": [
         {
-          "cited_text": "Referenced by all zERC20 tokens on the same chain as an immutable\n\nVerifier \n\nLayerZero OApp that verifies Nova/Groth16 proofs, tracks teleported amounts per recipient, and relays roots to Hub\n\nHub \n\nAggregates transfer roots from all chains into a Poseidon tree, broadcasts global root to all Verifiers\n\nLiquidityManager \n\nManages liquidity policy, handles wrap/unwrap of underlying assets\n\nAdaptor \n\nCross-chain exit via Stargate when liquidity is more favorable on another chain\n\nSwapHelper \n\nPer-chain helper contract that atomically executes permit + transferFrom + native payout for relayer-managed token-to-native swaps\n\nhashtag \n\nOff-Chain Services\n\nService\n\nPurpose\n\nIndexer \n\nActix HTTP server + Postgres. Syncs on-chain events, maintains Merkle trees, generates root proofs\n\nDecider Prover \n\nHTTP worker that finalizes Nova proofs for on-chain verification\n\nCross-chain Job \n\nRelays transfer roots to Hub and triggers broadcasts\n\nRelay Node \n\nHTTP service that can submit gasless redeem transactions on behalf of users and swap zERC20 into native gas tokens\n\nhashtag \n\nICP Stealth Storage\n\nComponent\n\nPurpose\n\nKey Manager Canister \n\nVetKD-backed IBE key derivation per EVM address\n\nStorage Canister \n\nStores encrypted announcements and signed invoices\n\nhashtag \n\nData Flow\n\nhashtag \n\n1. ",
+          "cited_text": "Indexer Operator Observes sender/burn-address/value; learns recipient on query",
           "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture"
         },
         {
-          "cited_text": "hashtag \n\nCryptographic Primitives\n\nPrimitive\n\nUsage\n\nPoseidon Hash \n\nMerkle trees, burn address derivation, recipient binding\n\nSHA-256 \n\nHash chain commitments (truncated to 248 bits for BN254)\n\nNova Folding \n\nBatch withdrawal proofs, root transition proofs\n\nGroth16 \n\nSingle withdrawal proofs\n\nVetKD/IBE \n\nEncrypted stealth messaging on ICP\n\nhashtag \n\nTrust Model\n\nActor\n\nTrust Assumption\n\nContract Owner\n\nCan upgrade contracts, rotate verifiers\n\nBlocklist Owner\n\nCan add/remove sanctioned addresses on the Blocklist contract\n\nIndexer Operator\n\nObserves sender/burn-address/value; learns recipient on query\n\nICP Canisters\n\nStores encrypted data; cannot decrypt without recipient&#x27;s key\n\nFor maximum privacy : Run your own indexer instance to avoid sender-recipient linkage leaks.\n\n",
+          "cited_text": "Relay Node HTTP service that can submit gasless redeem transactions on behalf of users and swap zERC20 into native gas tokens",
+          "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture"
+        },
+        {
+          "cited_text": "For maximum privacy: Run your own indexer instance to avoid sender-recipient linkage leaks",
           "source": "https://zerc20.gitbook.io/zerc20/for-developers/architecture"
         }
       ]
