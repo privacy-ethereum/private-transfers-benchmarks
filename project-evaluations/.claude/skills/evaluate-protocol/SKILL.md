@@ -119,7 +119,9 @@ Write a report to `project-evaluations/.claude/review-reports/{id}-{YYYY-MM-DD}.
 - `## Improvements`: the Phase E.5 record — qualifying candidates applied this run (uncommitted, pending human approval) plus the skipped ones for the recurrence scan.
 - Open items: the Disagreement set, plus any property still carrying a `needsResearchReview` reason string or missing a source.
 
-**Phase F is complete when:** the report file exists at `.claude/review-reports/{id}-{date}.md` with all eight sections filled in. Mark the task `completed`.
+**Mark the evaluation complete.** Set the top-level `status` field in `src/data/evaluations/{id}.json` to `"complete"`. The research script (Phase B) carries the stub's `pending` status through unchanged, so the pipeline must flip it explicitly once the eval is filled out and has passed Phase E review + lint. Only mark a fully-populated evaluation complete — leave a partial stub as `pending`. The flip stays uncommitted like the rest of the run; the human reviews and commits it at the checkpoint.
+
+**Phase F is complete when:** the report file exists at `.claude/review-reports/{id}-{date}.md` with all eight sections filled in AND `src/data/evaluations/{id}.json` has `status: "complete"`. Mark the task `completed`.
 
 ### Phase G — Manual-fix tracking (post-merge)
 

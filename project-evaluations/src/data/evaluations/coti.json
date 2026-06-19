@@ -3,7 +3,7 @@
   "title": "Coti",
   "description": "COTI is a confidential EVM Layer 2 that runs computation over encrypted data using garbled circuits and multi-party computation (MPC). Its contract libraries let developers build applications such as private ERC-20 tokens whose balances and transfer amounts stay encrypted on-chain.",
   "documentation": "https://docs.coti.io/coti-documentation/",
-  "status": "pending",
+  "status": "complete",
   "categories": ["Garbled Circuits", "Multi Party Computation (MPC)", "Private L2"],
   "properties": [
     {

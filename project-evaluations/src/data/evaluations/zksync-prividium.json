@@ -3,7 +3,7 @@
   "title": "ZKsync Prividium",
   "description": "ZKsync Prividium is a permissioned Validium privacy layer built on the ZK Stack, letting an institution run a private instance of a ZKsync chain — with its own sequencer and prover — inside its own infrastructure. Transactions execute privately and state is held off-chain in a secure database, while each batch posts only a state root and a zero-knowledge proof to Ethereum. A proxy RPC enforces role-based, function-level access control with Okta SSO or Sign-In With Ethereum, and operators can selectively disclose data to auditors and regulators.",
   "documentation": "https://docs.zksync.io/zk-stack/prividium/overview",
-  "status": "pending",
+  "status": "complete",
   "categories": ["Private Validium", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [
     {

@@ -3,7 +3,7 @@
   "title": "Fluton",
   "description": "Fluton is a confidential execution layer that uses fully homomorphic encryption (FHE) to compute on encrypted data. Users sign encrypted intents that an off-chain solver network fulfils across supported chains.",
   "documentation": "https://docs.fluton.io/introduction",
-  "status": "pending",
+  "status": "complete",
   "categories": ["Fully Homomorphic encryption (FHE)", "Decentralised Network"],
   "properties": [
     {

@@ -3,7 +3,7 @@
   "title": "Fairblock",
   "description": "Fairblock is a decentralized cryptographic computer with its own execution layer for confidential computing. Confidential apps (cApps) run on Fairblock's native chain, FairyRing, and are accessible from major ecosystems without bridging funds or switching wallets. This evaluation assesses the network, in combination with Stabletrust, Fairblock's confidential stablecoin-transfer application built on FairyRing, which keeps balances and amounts encrypted while leaving addresses transparent.",
   "documentation": "https://docs.fairblock.network/docs/welcome/vision",
-  "status": "pending",
+  "status": "complete",
   "categories": [
     "Zero Knowledge Proofs (ZKPs)",
     "Homomorphic Encryption (HE)",
