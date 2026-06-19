@@ -126,8 +126,8 @@
       "url": "https://docs.fluidkey.com/technical-documentation/technical-walkthrough#id-2.-user-keys"
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Fluidkey's stealth address scheme follows ERC-5564, using ECDH on secp256k1 for shared secret derivation and BIP-32 for hierarchical key derivation. Each stealth address is deterministically derived from the sender's ephemeral key and the recipient's viewing public key, making the derivation cryptographically verifiable by anyone holding the viewing key.",
       "url": "https://docs.fluidkey.com/readme/frequently-asked-questions#is-fluidkey-audited"
     },

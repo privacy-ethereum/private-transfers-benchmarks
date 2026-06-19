@@ -59,8 +59,8 @@
       "url": "https://github.com/Railgun-Privacy/"
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Railgun uses the Groth16 proof system on the BN254 curve to verify shielded transactions on-chain. Spending keys use the Baby Jubjub elliptic curve with BIP-32 derivation, viewing keys use Ed25519 (EdDSA), and note commitments use Poseidon hashing. All state transitions are cryptographically verified by the smart contracts without revealing transaction details.",
       "url": "https://docs.railgun.org/wiki/learn/wallets-and-keys"
     },

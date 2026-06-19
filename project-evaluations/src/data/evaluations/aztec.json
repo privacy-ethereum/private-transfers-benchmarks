@@ -429,14 +429,10 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes, with L1 consensus",
-      "notes": "Aztec enforces state-transition correctness through recursive SNARKs. The rollup circuits compress thousands of transactions into a single SNARK proof for verification on Ethereum, aggregating proofs from private kernel and AVM execution. Each epoch root proof is verified by the HonkVerifier contract on Ethereum before the proven checkpoint is advanced. Each state update must carry a ZK proof that the new state was derived by correctly applying valid user transactions.",
+      "name": "Verifiability",
+      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
+      "notes": "Aztec enforces state-transition correctness through recursive SNARKs: each epoch root proof is verified by the HonkVerifier contract on Ethereum, and each state update must carry a ZK proof that the new state was derived by correctly applying valid user transactions. Its own permissionless sequencer set, joined by staking AZTEC, orders blocks under its own proof-of-stake consensus.",
       "citations": [
-        {
-          "cited_text": "The rollup circuits compress thousands of transactions into a single SNARK proof for verification on Ethereum.",
-          "source": "https://docs.aztec.network/developers/docs/foundational-topics/advanced/circuits/rollup_circuits"
-        },
         {
           "kind": "l2beat",
           "cited_text": "Each epoch root proof is verified by the HonkVerifier smart contract on Ethereum before the proven checkpoint number is advanced",
@@ -445,6 +441,11 @@
         {
           "kind": "l2beat",
           "cited_text": "Each update to the system state must be accompanied by a ZK proof that ensures that the new state was derived by correctly applying a series of valid user transactions to the previous state.",
+          "source": "https://l2beat.com/scaling/projects/aztecnetwork"
+        },
+        {
+          "kind": "l2beat",
+          "cited_text": "Users can permissionlessly become a sequencer by staking 200 K AZTEC to join the queue",
           "source": "https://l2beat.com/scaling/projects/aztecnetwork"
         }
       ]

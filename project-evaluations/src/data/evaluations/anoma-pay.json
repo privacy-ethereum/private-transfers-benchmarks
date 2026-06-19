@@ -342,9 +342,9 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
-      "notes": "Transfers are authorized by zero-knowledge proofs verified on-chain by the Anoma Protocol Adapter contract, the anchor that controls shielded funds via deployed forwarder contracts and verifies the proofs authorizing transfers. Even if the off-chain services go down, on-chain funds move only against a valid proof. The adapter aggregates Anoma Resource Machine proofs (RISC Zero zkVM), and any observer can re-check them against the deployed verifier. Ordering and inclusion fall under finality.",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
+      "notes": "Transfers are authorized by zero-knowledge proofs verified on-chain by the Anoma Protocol Adapter contract, which controls shielded funds and moves them only with a valid proof. The adapter aggregates Anoma Resource Machine proofs (RISC Zero zkVM) that any observer can re-check against the deployed verifier. This all relies on the underlying Anoma intent network, however, any faults there would threaten liveness and censorship resistances, rather than verifiability.",
       "citations": [
         {
           "cited_text": "It acts as the “anchor” for the system, controlling shielded funds via deployed forwarder contracts and verifying the cryptographic proofs that authorize transfers.",

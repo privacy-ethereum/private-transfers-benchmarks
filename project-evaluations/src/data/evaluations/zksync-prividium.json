@@ -378,9 +378,9 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes, with L1 consensus",
-      "notes": "Transaction correctness rests on zk validity proofs verified on Ethereum L1. The relayer submits the state root and proof to Ethereum, and once verified on-chain the batch becomes immutable. State updates are finalized on Ethereum through the ZKsync Gateway, which receives the chain state roots and zero-knowledge proofs, so finality is anchored under Ethereum consensus.",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
+      "notes": "Transaction correctness rests on zk validity proofs verified on Ethereum L1. The relayer submits the state root and proof to Ethereum, and once verified on-chain the batch becomes immutable. State updates are finalized on Ethereum through the ZKsync Gateway, which receives the chain state roots and zero-knowledge proofs.",
       "citations": [
         {
           "cited_text": "State updates are finalized on Ethereum through the ZKsync Gateway",

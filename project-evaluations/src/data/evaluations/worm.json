@@ -235,8 +235,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "WORM uses zk-SNARK circuits to cryptographically verify that users burned ETH to a specific address without revealing which address, by proving Merkle-Patricia-Trie inclusion of the burn address in Ethereum's state root and checking that the hash of each trie layer is contained in the next layer. The burn address is derived from a burn-key using Poseidon hashing, with an additional Keccak256 proof-of-work constraint requiring the hash to begin with two zero bytes, and a nullifier prevents reuse of the same burn-key.",
       "url": "https://github.com/worm-privacy/whitepaper#21-beth-the-proof-of-burn-receipt"
     },

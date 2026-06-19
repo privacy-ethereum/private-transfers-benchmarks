@@ -377,8 +377,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "No",
+      "name": "Verifiability",
+      "value": ["Trusted operator"],
       "notes": "No cryptographic proofs guarantee the correctness of a Private Swap's routing or settlement. Execution relies on two separate non-custodial exchanges, meaning settlement depends on off-chain CEX bookkeeping rather than on-chain verifiable computation.",
       "citations": [
         {
