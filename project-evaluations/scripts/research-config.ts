@@ -399,4 +399,47 @@ export const configs: Record<string, ProtocolConfig> = {
       "github.com/TaceoLabs/co-snarks. The eprint paper 2026/850 is a PDF — use the core.taceo.io articles and " +
       "docs.taceo.io instead as primary HTML sources.",
   },
+  "zksync-prividium": {
+    id: "zksync-prividium",
+    title: "ZKsync Prividium",
+    description:
+      "ZKsync Prividium is a permissioned Validium privacy layer built on the ZK Stack, letting an institution run a private instance of a ZKsync chain — with its own sequencer and prover — inside its own infrastructure. Transactions execute privately and state is held off-chain in a secure database, while each batch posts only a state root and a zero-knowledge proof to Ethereum. A proxy RPC enforces role-based, function-level access control with Okta SSO or Sign-In With Ethereum, and operators can selectively disclose data to auditors and regulators.",
+    status: "pending",
+    documentation: "https://docs.zksync.io/zk-stack/prividium/overview",
+    categories: ["Private Validium", "Zero Knowledge Proofs (ZKPs)"],
+    sourceUrls: [
+      "https://docs.zksync.io/zk-stack/prividium/overview",
+      "https://docs.zksync.io/zk-stack/prividium/architecture",
+      "https://docs.zksync.io/zk-stack/prividium/features",
+      "https://docs.zksync.io/zk-stack/prividium/proxy",
+      "https://docs.zksync.io/zk-stack/prividium/permissions-overview",
+      "https://docs.zksync.io/zk-stack/prividium/administration-user-management",
+      "https://docs.zksync.io/zk-stack/prividium/deployment",
+      "https://docs.zksync.io/zk-stack/prividium/developer-considerations",
+      "https://docs.zksync.io/zk-stack/prividium/explorer",
+      "https://docs.zksync.io/zk-stack/prividium/sdk",
+      "https://docs.zksync.io/zk-stack/prividium/license",
+      "https://www.zksync.io/prividium",
+    ],
+    context:
+      "CRITICAL: 'ZKsync Prividium' is Matter Labs' permissioned-Validium privacy product built on the ZK Stack — " +
+      "a private, access-controlled instance of a ZKsync chain run inside an institution's own infrastructure or " +
+      "cloud, NOT the public ZKsync Era L2 and NOT a single shared network. Each customer operates its OWN Prividium " +
+      "chain with its own sequencer and prover. Data availability is VALIDIUM: all transaction data and state are " +
+      "stored off-chain in a secure database, and only state roots + zk validity proofs are posted to Ethereum L1 " +
+      "(via the ZKsync Gateway) — no transaction inputs, addresses, or calldata are inferable from public L1 data. " +
+      "Access control: a Proxy RPC is the single entry point that authenticates users (Okta SSO or Sign-In With " +
+      "Ethereum / SIWE) and enforces role-based, contract-function-level permissions (e.g. Trader / Auditor / Admin) " +
+      "managed via an Admin Dashboard before any request reaches the Sequencer RPC. Compliance is built-in and " +
+      "regulator-facing: chain operators can selectively disclose specific data (e.g. bytecode, token supply, a given " +
+      "transaction) to auditors or regulators without exposing the full ledger; AML/KYC and address-level identity " +
+      "binding are enforced at the base layer. Privacy is confidentiality from the public plus role-gated internal " +
+      "access — the chain operator and authorised roles can see transaction data, so there is no anonymity from the " +
+      "operator. The design targets regulated institutions (trading, settlement, tokenised funds, payments) rather " +
+      "than retail, and it is a LICENSED commercial product. Live institutional use exists — e.g. Deutsche Bank's " +
+      "DAMA 2 tokenised-fund platform on the Memento ZK Chain (powered by Prividium) — but verify current deployment " +
+      "status and named adopters during Phase A. Prefer docs.zksync.io/zk-stack/prividium pages as primary sources; " +
+      "the design paper (zksync.io/papers/beyond_public_vs_private_chains-design.pdf) is a PDF — use it for " +
+      "background only.",
+  },
 };
