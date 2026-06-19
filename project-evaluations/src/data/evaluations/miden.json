@@ -380,8 +380,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes, with L1 consensus",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Transaction correctness rests on STARK proofs generated client-side: the Miden VM generates a proof that the transaction was valid, and only this proof and the resulting state commitments are submitted to the network. If any assertion fails the proof cannot be generated and the transaction is rejected before it reaches the network. Batches and blocks are aggregated by the operator via recursive proof verification, so ordering sits with the operator while validity is purely cryptographic.",
       "citations": [
         {

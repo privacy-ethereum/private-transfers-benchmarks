@@ -139,8 +139,8 @@
       "url": "https://www.getmonero.org/resources/moneropedia/viewkey.html"
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes, with L1 consensus",
+      "name": "Verifiability",
+      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
       "notes": "Transaction correctness in Monero is cryptographically guaranteed: CLSAG ring signatures prove spend authorization without revealing the signer, Bulletproofs+ range proofs verify amounts are non-negative without revealing values, and key images prevent double-spending. Block ordering and consensus use the RandomX proof-of-work algorithm, which is a majority-based mechanism rather than a cryptographic proof of correctness.",
       "url": "https://docs.getmonero.org/cryptography/"
     },

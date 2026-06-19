@@ -321,9 +321,9 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes, with L1 consensus",
-      "notes": "Aleo is an L1 blockchain whose individual transaction correctness is enforced by zk-SNARK verification (Varuna), while block ordering and inclusion are decided by a decentralized validator set using a supermajority-based PoS model. Shielded transactions are fully encrypted on-chain yet still verifiable as valid under the network's consensus rules. Per the rule, L1 protocols with cryptographic transaction correctness plus consensus-based ordering take \"Yes, with L1 consensus\".",
+      "name": "Verifiability",
+      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
+      "notes": "Aleo is an L1 blockchain whose individual transaction correctness is enforced by zk-SNARK verification (Varuna), while chain ordering is secured by AleoBFT, Aleo's own DAG-based proof-of-stake consensus with a staked validator set and instant finality.",
       "citations": [
         {
           "cited_text": "Varuna uses SonicKZG10 as its polynomial commitment scheme (a KZG-based scheme with pairings over BLS12-377).",
@@ -336,6 +336,10 @@
         {
           "cited_text": "If a validator's total stake falls below 10M credits or their self-bond drops below 100 credits, they are removed from the committee.",
           "source": "https://docs.aleo.org/learn/network/nodes/validators"
+        },
+        {
+          "cited_text": "They verify zero-knowledge proofs, validate transactions, and produce blocks.",
+          "source": "https://docs.aleo.org/participate/run-a-node/validator/index.html"
         }
       ]
     },

@@ -396,8 +396,8 @@
       ]
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes, with L1 consensus",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Cloak proves L3 batches with Scroll's zkEVM. Succinct validity proofs attest that the chain operator executed all transactions correctly, following the EVM protocol rules. The validity proofs are then verified by Scroll L2 contracts, which post their own proofs to Ethereum L1 — per-transaction correctness rests on zk proof verification, while finality of the verification rests on the L1 chain's consensus.",
       "citations": [
         {

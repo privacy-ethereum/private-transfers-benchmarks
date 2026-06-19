@@ -147,8 +147,8 @@
       "url": "https://docs.tongo.cash/protocol/auditor.html#global-auditor"
     },
     {
-      "name": "Cryptographic verifiability",
-      "value": "Yes",
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
       "notes": "Tongo uses ElGamal homomorphic encryption over the Stark curve combined with Sigma protocol zero-knowledge proofs to ensure that all operations (fund, transfer, withdrawal) are cryptographically verifiable. The protocol relies on the discrete logarithm assumption over the Stark curve and requires no trusted setup.",
       "url": "https://docs.tongo.cash/protocol/encryption.html"
     },
