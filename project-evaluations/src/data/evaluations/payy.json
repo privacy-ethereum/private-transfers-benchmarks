@@ -1,10 +1,506 @@
 {
   "id": "payy",
   "title": "Payy",
-  "description": "Payy is an EVM-compatible ZK rollup for private stablecoin payments. It claims ~300ms deterministic finality, up to 100k TPS, and near-zero transfer fees, with native zero-knowledge cryptography precompiles. Targets stablecoin payments with privacy at every layer.",
-  "status": "pending",
-  "documentation": "",
-  "categories": ["Private L2", "Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
-  "properties": [],
-  "sourceUrls": []
+  "description": "Payy is a privacy-focused stablecoin payments network built by Polybase Labs, combining a UTXO note-commitment zero-knowledge rollup with a non-custodial mobile wallet and Visa card. Transactions hide sender, receiver, and amount using client-generated ZK proofs over a Merkle tree of note commitments with nullifiers. The documented network is an Ethereum L2 ZK rollup with its own EVM layer, proving with Noir and Barretenberg and verifying on Ethereum. An earlier era ran as a single-sequencer Halo2 validium settling to Polygon.",
+  "documentation": "https://docs.payy.network",
+  "status": "complete",
+  "categories": [
+    "Private L2",
+    "Shielded Pool",
+    "Zero Knowledge Proofs (ZKPs)"
+  ],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "In-pool transfers on Payy occur entirely within the privacy rollup, where payments are fully private, meaning the sender, receiver, amount and asset are all hidden. Each note is a Poseidon commitment, and the hash record states are stored in a sparse Merkle tree (Smirk), so amounts and balances are never exposed on a public ledger. The original messages can provably never be reconstructed, since hashing results in data loss.",
+      "citations": [
+        {
+          "cited_text": "Payments are fully private. That means the sender, receiver, amount and asset are all hidden. Total privacy.\n",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        },
+        {
+          "cited_text": "$$cm$$ is the note commitment, which is a Poseidon commitment to the note.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/nullifiers.md"
+        },
+        {
+          "cited_text": "Each of the hash record states are stored in a merkle tree (our implementation is [Smirk](https://github.com/polybase/payy/tree/main/pkg/smirk))",
+          "source": "https://docs.payy.network/protocol/privacy-layer/privacy-rollup.md"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Private transfers on Payy occur entirely within the privacy layer, where payments are fully private, meaning the sender, receiver, amount and asset are all hidden. Spends publish a deterministic nullifier constructed so it is impossible for an external party to determine which nullifier matches a spent record, breaking the link between input and output notes. An encrypted-lineage path can be decrypted in exceptional cases using an on-chain proposal, not weakening anonymity.",
+      "citations": [
+        {
+          "cited_text": "Payments are fully private. That means the sender, receiver, amount and asset are all hidden. Total privacy.\n",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        },
+        {
+          "cited_text": "the encrypted lineage can be decrypted in exceptional cases using an on-chain proposal",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        },
+        {
+          "cited_text": "The nullifier is constructed in such a way that it is impossible for an external party to determine which nullifier matches a spent record (or a record to be spent).\n\n",
+          "source": "https://docs.payy.network/protocol/privacy-layer/nullifiers.md"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "Payy's privacy layer hides the asset alongside the sender, receiver, and amount within shielded notes. Payments are fully private, meaning the sender, receiver, amount and asset are all hidden. Notes carry an application type used to differentiate between different applications running on the Payy Network, so multiple asset types coexist in the same shielded pool with the asset commitment kept inside the note.",
+      "citations": [
+        {
+          "cited_text": "Payments are fully private. That means the sender, receiver, amount and asset are all hidden. Total privacy.\n",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        },
+        {
+          "cited_text": "* **Application Type** - used to differentiate between different applications running on the Payy Network (each application type would have a different set of ZK circuit constraints)",
+          "source": "https://docs.payy.network/protocol/privacy-layer/utxo.md"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Entering the privacy set requires a deposit into a recognisable privacy contract: the architecture exposes a PrivacyBridge predeployed on the EVM layer that routes funds into the privacy rollup, so the on-chain entry call is an observable interaction with a known privacy protocol. Even the stealth-address flow does not hide entry, since funds are pulled to a newly minted one-time address. The opt-in shielded design makes usage distinguishable from ordinary ERC-20 transfers at deposit.",
+      "citations": [
+        {
+          "cited_text": "[**PrivacyBridge**](/protocol/privacybridge.md) - a predeployed bridge to the Privacy Layer accessible from the [EVM Layer](/protocol/evm-layer.md).",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        },
+        {
+          "cited_text": "Payy enables privacy on the [EVM Layer](/protocol/evm-layer.md) by making it seamless to move funds in and out of the [Privacy Layer](/protocol/privacy-layer.md) (native ERC-20 privacy pools)",
+          "source": "https://docs.payy.network/privacy/stealth-transactions.md"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "Underlying chain",
+      "notes": "Payy is an L2 ZK rollup on Ethereum, so transfer finality is inherited from the host chain once the batched commitments and proof are verified there. The batched transactions are ordered and stored on Ethereum, and once they finalise their order cannot change and the future state is predictable and fixed. The cadence between sequencing and proof verification is not published as a seconds figure, so a precise worst-case latency cannot be quoted.",
+      "citations": [
+        {
+          "cited_text": "Once the transactions have been finalised on Ethereum, the order of the transactions cannot change, and therefore the future state is predictable and fixed.",
+          "source": "https://docs.payy.network/protocol/data-availability.md"
+        },
+        {
+          "cited_text": "The Ethereum smart contract needs only the proof and the new root hash from the prover to the verify and ensure the security of the network.",
+          "source": "https://docs.payy.network/protocol/provers.md"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "2",
+      "notes": "The privacy key material the cited spans support is two distinct secrets: a Grumpkin Schnorr private key, whose public key the private address transport-encodes and from which owner = Poseidon(x, y) is derived, plus a nullifier key nk, a unique secret associated with each user used to compute the spend nullifier. The docs do not state these derive from a single seed, nor describe a separate host-chain wallet key, so the count rests only on these two cited protocol secrets.",
+      "citations": [
+        {
+          "cited_text": "it is the transport encoding of a Grumpkin Schnorr public key. Wallets and RPCs decode it to an affine Grumpkin point `(x, y)`, derive `owner = Poseidon(x, y)`",
+          "source": "https://docs.payy.network/protocol/privacy-layer/private-address.md"
+        },
+        {
+          "cited_text": "$$nk$$ is the Nullifier Key, a unique secret associated with each user (this is a auth commitment to the auth)",
+          "source": "https://docs.payy.network/protocol/privacy-layer/nullifiers.md"
+        }
+      ],
+      "needsResearchReview": "single-seed derivation and a separate host-chain wallet key are not in any cited source"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Moving funds into the privacy layer happens through an ordinary mint transaction with no protocol-imposed queue or time-lock. The mint transaction type allows a note to be created without a corresponding input, validated on Ethereum in the data availability layer before acceptance. Host-chain block inclusion latency is the only delay and does not constitute a waiting period.",
+      "citations": [
+        {
+          "cited_text": "**Mint** - allows a note to be created without a corresponding input, minting will be further validated on Ethereum in the data availability layer before it will be accepted as a valid transaction",
+          "source": "https://docs.payy.network/protocol/privacy-layer/utxo.md"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Spending a note out of the privacy pool publishes its nullifier alongside a non-inclusion proof in a single on-chain transaction, with no exit queue, challenge window, or time-lock before funds leave. A deterministic nullifier is inserted into the tree on each spend, with a non-inclusion proof against the original input. Host-chain block latency, not a protocol-imposed waiting period, bounds withdrawal.",
+      "citations": [
+        {
+          "cited_text": "a deterministic nullifier record that for each spend must be inserted into the tree, and during spend of the original input not, must be proven not to exist in the tree via a non-inclusion proof.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/nullifiers.md"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Payy currently runs with a single sequencer and node operators that are private and invite-only at the time of writing. A lone permissioned sequencer orders every block, giving that operator the ability to withhold inclusion of any valid transfer with no permissionless fallback available to users. Multi-sequencer selection via Fast HotStuff is on the roadmap — multiple sequencers will operate in parallel to sequence blocks — but this remains future work rather than a live mitigation.",
+      "citations": [
+        {
+          "cited_text": "Payy Network currently runs as a single-sequencer validium rollup on Polygon, and node operators are private and invite-only at the time of writing, with public node operation expected later.",
+          "source": "https://coincodecap.com/payy-network-and-wallet-review"
+        },
+        {
+          "cited_text": "multiple sequencers will operate in parallel to sequence blocks\n* multiple blocks will be produced per block allocation by a single sequencer",
+          "source": "https://docs.payy.network/protocol/sequencers.md"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "Payy's transfer settlement relies on its own native operator set rather than an external committee or oracle layer. Sequencers handle sequencing and validity, and provers prove transactions valid in ZK. That set is the protocol's own staked operator set, not a separate external network — its allowlisting is a censorship-resistance concern, not dependence on an outside committee. No external bridge attester, price oracle, or third-party data feed sits in the private-transfer path.",
+      "citations": [
+        {
+          "cited_text": "Sequencers are responsible for ensuring the sequencing and validity of transactions on Payy.",
+          "source": "https://docs.payy.network/protocol/sequencers.md"
+        },
+        {
+          "cited_text": "Payy Network provers process L2 sequenced blocks, proving in ZK (zero knowledge) that the EVM Layer and Privacy Layer transactions are valid. ",
+          "source": "https://docs.payy.network/protocol/provers.md"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Payy's architecture lists a permissioned sequencer and rollup-prover role set, with no user-triggered force-exit path that bypasses the sequencer. The sequencer adds pending unproven blocks to L1 and guarantees transaction order, so exit depends on the operator including a spend. No challenge-window self-exit is described in the architecture, so withdrawals rely on the permissioned operator set rather than only Ethereum consensus and cryptography.",
+      "citations": [
+        {
+          "cited_text": "**Sequencer** - add pending unproven blocks to the L1, guaranteeing the order of transactions\n* **Rollup Prover** - prove that an existing sequenced block is valid or invalid",
+          "source": "https://docs.payy.network/protocol/architecture.md"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "notes": "The deployed RollupV1 contract is an OpenZeppelin upgradeable proxy with a single Owner controlling all privileged functions, as the contract is declared \"contract RollupV1 is Initializable, OwnableUpgradeable\". The Owner alone can add or remove provers, swap or remove ZK verifiers, and rotate the validator set through `onlyOwner` gates, with no on-chain timelock or multisig wrapper evidenced in the source.",
+      "citations": [
+        {
+          "cited_text": "contract RollupV1 is Initializable, OwnableUpgradeable {",
+          "source": "https://raw.githubusercontent.com/polybase/payy/main/eth/contracts/rollup3/RollupV1.sol"
+        },
+        {
+          "cited_text": "function addProver(address prover) public onlyOwner {",
+          "source": "https://raw.githubusercontent.com/polybase/payy/main/eth/contracts/rollup3/RollupV1.sol"
+        }
+      ],
+      "needsResearchReview": "Polygon admin slot not classified, EOA vs multisig unverified"
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Payy generates ZK proofs on the user's device. The protocol uses Noir and the Barretenberg ZK framework by Aztec, and when using the Payy client SDKs the client constructs the proofs for you. Manual TypeScript callers outside the SDK point to a specific @aztec/bb.js version, so proving runs in-process rather than at a remote service. An earlier era of the network used the team's own Halo2 circuits before the move to Noir.",
+      "citations": [
+        {
+          "cited_text": "When using the [Payy client SDKs](/build-on-payy/payy-client.md), the client constructs the proofs for you.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/zk-circuits.md"
+        },
+        {
+          "cited_text": "Payy uses [Noir](https://noir-lang.org/) and [Barretenberg](https://github.com/AztecProtocol/barretenberg) ZK framework by Aztec",
+          "source": "https://docs.payy.network/protocol/privacy-layer/zk-circuits.md"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Proof generation runs client-side on the user's device. The protocol uses Noir and Barretenberg, and the Payy client SDKs construct the proofs locally, so no external prover service receives plaintext witnesses such as sender, recipient, or amount. The sequencer orders Poseidon note commitments and nullifiers rather than cleartext transfer fields, so no operator is positioned to inspect private transfer details.",
+      "citations": [
+        {
+          "cited_text": "Payy uses [Noir](https://noir-lang.org/) and [Barretenberg](https://github.com/AztecProtocol/barretenberg) ZK framework by Aztec",
+          "source": "https://docs.payy.network/protocol/privacy-layer/zk-circuits.md"
+        },
+        {
+          "cited_text": "When using the [Payy client SDKs](/build-on-payy/payy-client.md), the client constructs the proofs for you.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/zk-circuits.md"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "2 : Public testnet",
+      "notes": "Payy's Ethereum-rollup Noir network is testnet/alpha: no cited source places it live on mainnet, node operators are private and invite-only at the time of writing, and the multi-sequencer Fast HotStuff consensus is still future work. A consumer Payy Visa card and wallet are in production over an earlier Halo2 validium era, but that is a separate prior-era deployment rather than the Noir network being graded here.",
+      "citations": [
+        {
+          "cited_text": "Payy Network currently runs as a single-sequencer validium rollup on Polygon, and node operators are private and invite-only at the time of writing, with public node operation expected later.",
+          "source": "https://coincodecap.com/payy-network-and-wallet-review"
+        }
+      ],
+      "needsResearchReview": "documented Noir network is testnet/alpha, mainnet (targeted summer 2026) status unconfirmed"
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Payy's cryptographic stack relies on elliptic-curve primitives that fall to Shor's algorithm. Private addresses are the transport encoding of a Grumpkin Schnorr public key with owner = Poseidon(x, y), and spends are authenticated with Grumpkin Schnorr signatures. Schnorr signatures over an elliptic-curve group offer no resistance against a quantum adversary, and Poseidon's collision resistance also degrades under Grover's algorithm. None of these is a post-quantum scheme.",
+      "citations": [
+        {
+          "cited_text": "it is the transport encoding of a Grumpkin Schnorr public key. Wallets and RPCs decode it to an affine Grumpkin point `(x, y)`, derive `owner = Poseidon(x, y)`",
+          "source": "https://docs.payy.network/protocol/privacy-layer/private-address.md"
+        },
+        {
+          "cited_text": "use the same decoded point for recipient-side encryption and Schnorr verification",
+          "source": "https://docs.payy.network/protocol/privacy-layer/private-address.md"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "The base private transfer on Payy has no compliance gate: the note-transfer circuit carries no on-chain blocklist or sanctions screen, and any KYC the team runs attaches to the Visa card and fiat on-ramp rather than to in-protocol transfers. The team treats AML and compliance operations as something that must continue even with a privacy network, but those checks bind only at the card edge. No enforcement layer touches private note transfers.",
+      "citations": [
+        {
+          "cited_text": "you have to continue doing the existing AML [anti-money laundering] and compliance operations, even if you have a privacy network.”",
+          "source": "https://www.coindesk.com/business/2025/08/06/ex-apple-engineer-unveils-privacy-focused-crypto-visa-card"
+        },
+        {
+          "cited_text": "Payy uses zero-knowledge proofs ( ZKPs ) to allow an authorization when tapping the card; a Payy Network blockchain transaction then debits the amount from the user’s wallet",
+          "source": "https://www.coindesk.com/business/2025/08/06/ex-apple-engineer-unveils-privacy-focused-crypto-visa-card"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "No entity enforces compliance on Payy's base private transfer. KYC and AML run only at the Visa card and fiat on-ramp edges, administered by the team as the operator gating card access, not on in-protocol note transfers. The team has stated that even with a privacy network the existing AML operations must continue, but Payy was built from the start for private stablecoin transactions in a regulatory-compliant manner. No DAO, asset issuer, or external screening vendor gates the transfer itself.",
+      "citations": [
+        {
+          "cited_text": "you have to continue doing the existing AML [anti-money laundering] and compliance operations, even if you have a privacy network.”",
+          "source": "https://www.coindesk.com/business/2025/08/06/ex-apple-engineer-unveils-privacy-focused-crypto-visa-card"
+        },
+        {
+          "cited_text": "Payy was focused from the beginning doing private stablecoin transactions in a regulatory compliant manner, avoiding obstacles that would hamper acceptance and user uptake.",
+          "source": "https://www.coindesk.com/business/2025/08/06/ex-apple-engineer-unveils-privacy-focused-crypto-visa-card"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": [
+        "Selective disclosure"
+      ],
+      "notes": "The base private transfer carries no KYC, blocklist, or sanctions screen, and any identity check is fiat-edge-only, at the Visa card and on-ramp. The one in-protocol hook is encrypted lineage — nullifiers prevent transaction lineage from being observed publicly, but the encrypted lineage can be decrypted in exceptional cases using an on-chain proposal. That decryption is involuntary and governance-gated, not voluntary user key-sharing, so the disclosure is tagged involuntary third-party.",
+      "citations": [
+        {
+          "cited_text": "Payy uses [Nullifiers](/protocol/privacy-layer/nullifiers.md) to prevent lineage of transactions being observed publicly.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/encrypted-lineage.md"
+        },
+        {
+          "cited_text": "the encrypted lineage can be decrypted in exceptional cases using an on-chain proposal",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": [
+        "None"
+      ],
+      "notes": "No compliance gate sits on the private note transfer itself. Any AML/KYC check attaches at the fiat boundary — the card and on-ramp edges where stablecoins meet the Visa rails — not within in-protocol transfers between notes. The team has stated they continue performing existing AML and compliance operations even with a privacy network, but card taps trigger a zero-knowledge authorization followed by a Payy Network transaction settling with Visa, leaving private transfers ungated.",
+      "citations": [
+        {
+          "cited_text": "you have to continue doing the existing AML [anti-money laundering] and compliance operations, even if you have a privacy network.”",
+          "source": "https://www.coindesk.com/business/2025/08/06/ex-apple-engineer-unveils-privacy-focused-crypto-visa-card"
+        },
+        {
+          "cited_text": "Payy uses zero-knowledge proofs ( ZKPs ) to allow an authorization when tapping the card; a Payy Network blockchain transaction then debits the amount from the user’s wallet",
+          "source": "https://www.coindesk.com/business/2025/08/06/ex-apple-engineer-unveils-privacy-focused-crypto-visa-card"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": [
+        "User",
+        "Involuntary third-party disclosure",
+        "Protocol"
+      ],
+      "notes": "Self-view is available to users through their Grumpkin private key material, which derives note ownership as `owner = Poseidon(x, y)`. Beyond self-view, nullifiers prevent lineage from being observed publicly, so outsiders cannot tell which notes were spent. The one exception is the encrypted lineage, decryptable in exceptional cases using an on-chain proposal — involuntary disclosure at the protocol layer without consent. No viewing-key scheme exists for voluntary delegation to auditors.",
+      "citations": [
+        {
+          "cited_text": "Wallets and RPCs decode it to an affine Grumpkin point `(x, y)`, derive `owner = Poseidon(x, y)`, and use that owner hash inside the privacy protocol.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/private-address.md"
+        },
+        {
+          "cited_text": "the encrypted lineage can be decrypted in exceptional cases using an on-chain proposal",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Programmable",
+      "notes": "Viewing permissions on Payy are exercisable after the fact through governance rather than fixed at the moment of transfer. There is no recipient viewing key in proofs — nullifiers prevent transaction lineage from being observed publicly, and the only de-anonymisation path is that the encrypted lineage can be decrypted in exceptional cases using an on-chain proposal. Because that decision is made by governance after transactions occur, viewing access is grantable on past activity.",
+      "citations": [
+        {
+          "cited_text": "Payy uses [Nullifiers](/protocol/privacy-layer/nullifiers.md) to prevent lineage of transactions being observed publicly.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/encrypted-lineage.md"
+        },
+        {
+          "cited_text": "the encrypted lineage can be decrypted in exceptional cases using an on-chain proposal",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        }
+      ]
+    },
+    {
+      "name": "Verifiability",
+      "value": [
+        "Cryptographic"
+      ],
+      "notes": "Validity in Payy rests on a re-checkable zero-knowledge proof: provers prove in ZK that the EVM Layer and Privacy Layer transactions are valid, and the on-chain verifier contract on Ethereum needs only the proof and new root hash to re-verify the network. Double-spend is blocked cryptographically by a deterministic Poseidon nullifier proven non-existent via a non-inclusion proof. The sequencer and prover set only order and produce proofs — they cannot forge a transition the verifier accepts.",
+      "citations": [
+        {
+          "cited_text": "Payy Network provers process L2 sequenced blocks, proving in ZK (zero knowledge) that the EVM Layer and Privacy Layer transactions are valid.",
+          "source": "https://docs.payy.network/protocol/provers.md"
+        },
+        {
+          "cited_text": "The Ethereum smart contract needs only the proof and the new root hash from the prover to the verify and ensure the security of the network.",
+          "source": "https://docs.payy.network/protocol/provers.md"
+        },
+        {
+          "cited_text": "a deterministic nullifier record that for each spend must be inserted into the tree, and during spend of the original input not, must be proven not to exist in the tree via a non-inclusion proof.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/nullifiers.md"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "The Payy repository carries no OSI-approved licence covering the protocol code. The core rollup contract RollupV1.sol is published under the SPDX identifier \"UNLICENSED\", which reserves all rights rather than granting open-source permissions. The public repository is source-available for inspection but lacks any permissive or copyleft licence (MIT, Apache-2.0, GPL, BSD, etc.) covering the contracts, circuits, node, or frontend components.",
+      "citations": [
+        {
+          "cited_text": "// SPDX-License-Identifier: UNLICENSED\npragma solidity ^0.8.20;",
+          "source": "https://raw.githubusercontent.com/polybase/payy/main/eth/contracts/rollup3/RollupV1.sol"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Transaction",
+      "notes": "On-chain private state on Payy accumulates as note commitments and nullifiers inserted into the Smirk sparse Merkle tree, with UTXO transactions creating one new insert hash for every incoming and outgoing note. Spending also inserts a deterministic nullifier, so the tree grows monotonically with transfer volume, not with holder count. The structure is append-only — inclusion and non-inclusion proofs and insertion of new hashes — with no in-place rewrite that would bound growth per account.",
+      "citations": [
+        {
+          "cited_text": "**Increased tree utilisation** - UTXO transactions create one new insert hash for every incoming and outgoing note in a transaction.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/utxo.md"
+        },
+        {
+          "cited_text": "Each of the hash record states are stored in a merkle tree (our implementation is [Smirk](https://github.com/polybase/payy/tree/main/pkg/smirk))",
+          "source": "https://docs.payy.network/protocol/privacy-layer/privacy-rollup.md"
+        },
+        {
+          "cited_text": "Insert - insert a new hash into the tree if it does not already exist\n\nTo satisfy these properties, Payy uses a sparse merkle tree \\[DPP16].",
+          "source": "https://docs.payy.network/protocol/privacy-layer/privacy-rollup.md"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Scanning",
+      "notes": "Payy's privacy layer uses a UTXO note-commitment model where each transaction creates a new output record/hash, preventing adversaries from matching accounts based on activity patterns visible in account-based models. Recipients locally derive note ownership from decoded private addresses, deriving owner = Poseidon(x, y) and a receive_prefix from it. The bridge emits a `prefix6` tag from the owner hash, letting the device filter commitments and trial-process matches to discover incoming notes.",
+      "citations": [
+        {
+          "cited_text": "each transaction creates a new output record/hash. This prevents adversaries from looking for addresses with high activity or attempting to match accounts based on the source IP of the transaction",
+          "source": "https://docs.payy.network/protocol/privacy-layer/utxo.md"
+        },
+        {
+          "cited_text": "derive note ownership as `owner = Poseidon(x, y)`\n* derive `receive_prefix` from that owner hash",
+          "source": "https://docs.payy.network/protocol/privacy-layer/private-address.md"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Payy manages private state through a note-commitment model where each store of value is a note belonging to a specific authenticated account, usable only once, following the UTXO approach of Bitcoin and Zcash. Each note is a Poseidon commitment in a sparse Merkle tree, and spending requires publishing a nullifier with a non-inclusion proof: the nullifier is N = Poseidon(nk, ψ, cm). Due to the strict privacy constraints desired for the Payy Network, the UTXO model was selected.",
+      "citations": [
+        {
+          "cited_text": "each store of value is a note that belongs to a specific authenticated account. Notes can be of any value, but can only be used once.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/utxo.md"
+        },
+        {
+          "cited_text": "$$nk$$ is the Nullifier Key, a unique secret associated with each user (this is a auth commitment to the auth)\n* $$\\psi$$ (psi) sender controlled randomness",
+          "source": "https://docs.payy.network/protocol/privacy-layer/nullifiers.md"
+        },
+        {
+          "cited_text": "Due to the strict privacy constraints desired for the Payy Network, the UTXO model was selected.\n\n",
+          "source": "https://docs.payy.network/protocol/privacy-layer/utxo.md"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": [
+        "Smart contracts"
+      ],
+      "notes": "Note commitments and spent nullifiers are held in the rollup contract's sparse Merkle tree (Smirk), and the underlying transaction data — UTXO proofs and EVM transactions — is published to Ethereum so all network participants can reconstruct the full state of the tree, preventing colluding provers from advancing the root without releasing the data. The authoritative private payload thus lives in protocol-managed contract storage and settlement-chain data rather than an off-chain store.",
+      "citations": [
+        {
+          "cited_text": "Availability of transaction data (UTXO proofs and EVM transactions), so all network participants can determine for themselves the full state of Smirk (our sparse merkle tree).",
+          "source": "https://docs.payy.network/protocol/data-availability.md"
+        },
+        {
+          "cited_text": "The batched transactions are ordered and stored on Ethereum, providing a definitive state of the network, even if the rollup root state hash has not yet been updated to reflect these transactions.",
+          "source": "https://docs.payy.network/protocol/data-availability.md"
+        },
+        {
+          "cited_text": "each transaction creates a new output record/hash.",
+          "source": "https://docs.payy.network/protocol/privacy-layer/utxo.md"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": [
+        "External access via adapter"
+      ],
+      "notes": "Payy reaches DeFi through stealth transactions, a core privacy flow rather than roadmap. To perform a private swap, private funds are pulled from the Privacy Layer to a new one-time address, the swap is performed on the EVM Layer, and tokens are returned to the pool in a follow-up mint. The stealth-address bridge is the adapter, and privacy ends at the one-time EVM address where the swap runs, so this is external adapter access rather than an in-pool DeFi surface.",
+      "citations": [
+        {
+          "cited_text": "Payy enables privacy on the [EVM Layer](/protocol/evm-layer.md) by making it seamless to move funds in and out of the [Privacy Layer](/protocol/privacy-layer.md) (native ERC-20 privacy pools)",
+          "source": "https://docs.payy.network/privacy/stealth-transactions.md"
+        },
+        {
+          "cited_text": "private funds are pulled from the Privacy Layer to a new one-time address, the swap is performed on the [EVM Layer](/protocol/evm-layer.md) and PAYY tokens are returned to the Privacy Layer pool",
+          "source": "https://docs.payy.network/privacy/stealth-transactions.md"
+        }
+      ],
+      "needsResearchReview": "EVM Layer DeFi breadth uncertain — docs show one swap flow, not the full set of reachable protocols"
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Transfers and DeFi operations",
+      "notes": "Beyond fully private transfers, where sender, receiver, amount, and asset are all hidden, Payy exposes an EVM Layer reached via stealth transactions that move funds in and out of the Privacy Layer, enabling DeFi operations such as private swaps. The architecture also lists Native ZK, a ZK verification precompile reducing cost for custom privacy applications. Private state stays in the UTXO note model rather than arbitrary private smart contracts, short of general private programmability.",
+      "citations": [
+        {
+          "cited_text": "Payments are fully private. That means the sender, receiver, amount and asset are all hidden. Total privacy.\n",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        },
+        {
+          "cited_text": "Payy enables privacy on the [EVM Layer](/protocol/evm-layer.md) by making it seamless to move funds in and out of the [Privacy Layer](/protocol/privacy-layer.md) (native ERC-20 privacy pools)",
+          "source": "https://docs.payy.network/privacy/stealth-transactions.md"
+        },
+        {
+          "cited_text": "[**Native ZK**](/privacy/native-zk.md) - a ZK verification precompile reducing cost for custom privacy applications",
+          "source": "https://docs.payy.network/privacy/privacy-architecture.md"
+        }
+      ]
+    }
+  ]
 }
