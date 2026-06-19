@@ -3,7 +3,7 @@
   "title": "Merces",
   "description": "Merces by TACEO is a confidential token protocol implementing Private Shared State (PSS). It wraps any ERC-20 into a confidential version: balances are stored as secret shares across the TACEO MPC network, while only commitments are published on-chain. Deposits, withdrawals, and transfers are computed inside the MPC network, which produces a collaborative SNARK (CoSNARK) proving each state transition. Integrity is enforced on-chain by proof verification, so funds stay safe even if the entire MPC network is corrupted and only confidentiality rests on non-collusion.",
   "documentation": "https://docs.taceo.io/docs/finance-solutions/overview/",
-  "status": "pending",
+  "status": "complete",
   "categories": ["CoSNARKs", "Zero Knowledge Proofs (ZKPs)", "Multi Party Computation (MPC)", "Decentralised Network"],
   "properties": [
     {
