@@ -1,0 +1,33 @@
+{
+  "name": "ekono-scraper",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Daily price scraper + MCP server for Tiendas Ekono Costa Rica (tiendasekono.com)",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "scrape": "tsx src/run.ts",
+    "mcp": "tsx src/mcp/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/run.js",
+    "start:mcp": "node dist/mcp/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "better-sqlite3": "^11.10.0",
+    "cheerio": "^1.0.0",
+    "p-limit": "^6.2.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^22.15.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0"
+  }
+}
