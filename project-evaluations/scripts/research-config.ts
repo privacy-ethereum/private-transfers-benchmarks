@@ -610,4 +610,70 @@ export const configs: Record<string, ProtocolConfig> = {
       "GitHub repo /doc folder (doc/nf_4.md is the primary file); the old Nightfall_3 GitBook (westlad.gitbook.io) " +
       "is superseded, do NOT cite it for NF_4. No L2BEAT page. GitHub org: github.com/EYBlockchain.",
   },
+  "platus": {
+    id: "platus",
+    title: "Platus",
+    description:
+      "Platus is a composable private-account layer for Ethereum and EVM chains. Users deposit assets into a shielded pool of encrypted notes and transact through per-app stealth-address accounts, so existing dApps can recognise a returning user without learning their identity or linking activity across applications. Privacy rests on client-held viewing and spending keys with on-chain zk-SNARK verification, stealth addresses over Baby Jubjub, and hybrid post-quantum encryption.",
+    status: "pending",
+    documentation: "https://docs.platus.xyz/",
+    categories: ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)", "Stealth Addresses"],
+    sourceUrls: [
+      "https://docs.platus.xyz/architecture/master-account",
+      "https://docs.platus.xyz/architecture/stealth-addresses",
+      "https://docs.platus.xyz/architecture/cryptographic-primitives",
+      "https://docs.platus.xyz/architecture/circuits",
+      "https://docs.platus.xyz/architecture/keys-and-security",
+      "https://docs.platus.xyz/architecture/quantum-security",
+      "https://docs.platus.xyz/architecture/bundler",
+      "https://docs.platus.xyz/architecture/app-account",
+      "https://docs.platus.xyz/compliance",
+      "https://docs.platus.xyz/guide/deposit",
+      "https://www.platus.xyz/blog/introduction-to-private-accounts",
+    ],
+    context:
+      "CRITICAL DISAMBIGUATION: this is Platus at platus.xyz / docs.platus.xyz — a composable on-chain PRIVACY " +
+      "protocol (private accounts, shielded pool, stealth addresses) for EVM chains. It is NOT Platypus Finance (an " +
+      "Avalanche stablecoin AMM), NOT dePlutus, NOT the Platypus CBDC academic paper — ignore all of those. " +
+      "EARLY-STAGE / PRE-LAUNCH: as of the latest sources (blog through March 2026) there is NO mainnet and NO " +
+      "confirmed live testnet — the 2 Dec 2025 blog says 'launching on testnet in the coming weeks', the site is " +
+      "waitlist-only, and the Contract Addresses, FAQ, transact guide, and changelog doc pages all read 'Coming " +
+      "Soon'. Grade it as a prototype/pre-launch system and set needsResearchReview generously where the deployed " +
+      "behaviour cannot be confirmed. Architecture: an app-layer protocol on Ethereum/EVM (no own L1/L2, specific " +
+      "host network NOT named in docs — do not assert one). A user holds one private master account, and per-dApp " +
+      "App Accounts are deterministically derived so apps keep persistent per-user state without linking activity. " +
+      "Privacy model: UTXO/note shielded pool — a note (asset, amount, owner, nonce) is committed to an on-chain " +
+      "binary Merkle commitment tree, recipients hidden via stealth addresses over Baby Jubjub (sender computes " +
+      "H1=[r]G, H2=[r]ik, recipient scans with viewing key). Hash Poseidon in-circuit, SHA-256/512 for key " +
+      "derivation, AEAD ChaCha20-Poly1305 with HKDF-SHA256, signatures Schnorr over Baby Jubjub. POST-QUANTUM: " +
+      "hybrid ECDH + ML-KEM-1024 (CRYSTALS-Kyber, NIST level 5) — so Post-quantum secure is plausibly Yes (hybrid " +
+      "PQ key encapsulation), unlike most peers. Proof system: a zk-SNARK JoinSplit circuit + Merkle-membership " +
+      "circuit, but the SNARK BACKEND (Groth16/PLONK), trusted setup, and CLIENT-vs-SERVER proving are NOT stated " +
+      "in the docs — do NOT assert them, flag Client-side proving as unconfirmed. Validity: on-chain zk-SNARK " +
+      "verification in the Master Account contract enforces note ownership, Merkle membership, nullifier " +
+      "correctness, value conservation, and spending-key signature — double-spend blocked by exposed nullifiers, no " +
+      "trusted operator for validity → Verifiability is CRYPTOGRAPHIC. Consensus: no own consensus — settles to a " +
+      "host EVM chain via permissionless ERC-4337-style BUNDLERS that batch user operations and post proofs + notes " +
+      "on-chain. Censorship resistance is EXPLICITLY NOT guaranteed today (docs say it 'can be solved with FOCIL' " +
+      "and a future unified mempool) → Censorship resistance = No. Compliance: a PERMISSIONED deposit screener " +
+      "evaluates each deposit's source address against OFAC SDN/sanctions lists, hack/exploit-linked addresses, and " +
+      "wash/sybil patterns over a mandatory 4-hour settlement queue, signing approvals (rejected deposits are " +
+      "withdrawable), plus an on-chain blacklist check on stealth addresses and tokens — so Type of compliance " +
+      "includes sanctions screening / programmatic policies + an on-chain blocklist (POI/ASP), enforced at DEPOSIT, " +
+      "by the permissioned screener. NO KYC/AML, and NO viewing-key-based auditor / selective-disclosure / formal " +
+      "POI-set membership-proof for disclosure is documented (viewing keys exist only for the user's OWN scanning). " +
+      "Keys: a client spending key sk roots the hierarchy — sPK = SHA-512(sk) x G, viewing key vk = Poseidon(sPK, " +
+      "nonce), identity key ik = vk x G, an ML-KEM public key, hybrid public key hPK = (ik, mPK) shared to receive, " +
+      "per-app key ak = Keccak256(sk, protocol_id) — viewing and spending are cryptographically isolated, so " +
+      "Number of secrets is at least 2 independent secrets. Escape hatch: a user-callable forceExit on the Deposit " +
+      "Manager lets a user withdraw a deposit before settlement if the screener rejects it or the 4-hour window " +
+      "expires ('Platus never has custody') — this covers the DEPOSIT stage; a forced exit for already-shielded " +
+      "notes against a censoring bundler is NOT documented, so treat Escape hatch as the deposit-stage forceExit and " +
+      "flag the post-shield gap. Upgradeability/admin: NOT documented (no proxy/owner/multisig info) — pick the " +
+      "conservative Single admin and set needsResearchReview. Open source: NO public GitHub, repo, licence, " +
+      "whitepaper, or audit found → Open source = No (closed/not-yet-released). Maturity: pre-launch, no testnet-" +
+      "live confirmation, no contract addresses → tier 1 (prototype/devnet) with a flag, NOT mainnet. Docs: " +
+      "docs.platus.xyz (GitBook, has a sitemap.xml) — many pages still 'Coming Soon'. No L2BEAT page (not a " +
+      "rollup). No GitHub org found.",
+  },
 };
