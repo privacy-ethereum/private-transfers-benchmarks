@@ -1,10 +1,550 @@
 {
   "id": "nightfall",
   "title": "Nightfall",
-  "description": "",
-  "status": "pending",
-  "documentation": "",
+  "description": "Nightfall_4 is a Rust-based zero-knowledge rollup, originally built by EY, for private transfers of ERC-20, ERC-721, ERC-1155, and ERC-3525 tokens. It hides amounts and recipients using a Zcash-style commitment and nullifier UTXO model with client-side proofs, and a proposer computes a proof of correct block assembly so block correctness is enforced cryptographically on-chain with no challenge period. Participation is gated by on-chain X.509 enterprise certificates and an on-chain sanctions list.",
+  "documentation": "https://github.com/EYBlockchain/nightfall_4_CE",
+  "status": "complete",
   "categories": ["Private L2", "Zero Knowledge Proofs (ZKPs)", "Shielded Pool"],
-  "properties": [],
-  "sourceUrls": []
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Nightfall 4 conceals transfer amounts inside Zcash-style UTXO commitments: a transfer selects existing commitments matching the tokenId and creates two new output commitments, one for the recipient and one for change. Layer 2 balances are sets of these commitments rather than public account entries, so per-address holdings are not visible on-chain — the balance is the sum of the commitments the user owns for a given ERC20 contract, with no information exposed about how funds are distributed.",
+      "citations": [
+        {
+          "cited_text": "Transfer: This operation will select one or two existing commitments of suitable value (sum equal to or greater than the transfer value, with the tokenId matching the tokenId to be transferred). ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Two new output commitments will be created: one for the new owner receiving the transferred commitment, and the other for any change returned to the original owner of the input commitments. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "the balance will be the sum of all the commitments that the user owns relating to a particular ERC20 contract. Remember that the balance may be spread across multiple commitments",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Recipient addressing uses compressed ZKP public keys rather than Ethereum addresses, so the on-chain receiver identity is hidden behind a Layer 2 address derived from a ZKP keypair. The ZKP public keys of the recipients act as their Layer 2 addresses. A transfer consumes existing commitments owned by the sender and emits fresh output commitments for the recipient and change, so neither party is revealed on-chain.",
+      "citations": [
+        {
+          "cited_text": "- recipientData.recipientCompressedZkpPublic: The ZKP public keys of the recipients. This acts as their Layer 2 addresses. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Two new output commitments will be created: one for the new owner receiving the transferred commitment, and the other for any change returned to the original owner of the input commitments. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "Nightfall_4 supports shielded transfers across ERC20, ERC721, ERC1155 and ERC3525 tokens within a single rollup, so the asset standard behind a note is not fixed by the pool. Commitments bind a tokenId that the circuit matches at transfer time, with output commitments created for the recipient and change. The asset identity is carried inside the shielded commitment alongside the value, exposed only at the deposit and withdrawal boundary.",
+      "citations": [
+        {
+          "cited_text": "It enables one to transfer ERC20, ERC721, ERC1155 and ERC3525 tokens in privacy. ",
+          "source": "https://github.com/EYBlockchain/nightfall_4_CE"
+        },
+        {
+          "cited_text": "Transfer: This operation will select one or two existing commitments of suitable value (sum equal to or greater than the transfer value, with the tokenId matching the tokenId to be transferred). ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Two new output commitments will be created: one for the new owner receiving the transferred commitment, and the other for any change returned to the original owner of the input commitments. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Entering Nightfall 4 requires a deposit call to the Nightfall smart contract, a known privacy protocol address, making the entry observable on-chain. It is not possible to deposit or withdraw without owning an X509 certificate the contracts accept, and the deposit itself is an escrow transaction. This protocol-specific escrow call, gated by an on-chain certificate allowlist check, is distinguishable from an ordinary token transfer.",
+      "citations": [
+        {
+          "cited_text": "It is not possible to deposit or withdraw funds to/from a Nightfall network without owning an X509 certificate that the Nightfall smart contracts accept as valid.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Deposit: This will pass a payment from the user to the Nightfall smart contract (an escrow transaction). It will create a pending deposit which will later be picked up by the proposer",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "Underlying chain",
+      "notes": "Nightfall_4's rollup is cryptographic, so finality is achieved in the same time as the underlying blockchain, with no challenge period or separate settlement cadence added by the protocol. It runs no consensus of its own and is deployed as a host-chain privacy layer, including a Layer-3 on Plume, so time-to-finality is inherited from whichever chain it settles on.",
+      "citations": [
+        {
+          "cited_text": "Unlike [NF_3](https://github.com/EYBlockchain/Nightfall_3), NF_4's rollup is cryptographic in nature so that finality is achieved in the same time as the underlying blockchain.\n",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Today, we’re taking a big step forward with the Nightfall privacy protocol deploying as a Layer-3 on Plume. ",
+          "source": "https://plume.org/blog/nightfall-comes-to-plume-privacy-meets-scale-for-institutional-rwas"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "3",
+      "notes": "The user must independently store three secrets: a BIP-32 24-word mnemonic, an Ethereum signing key for L1 transactions, and the X.509 certificate private key. From the mnemonic, a root key is derived, from which the nullifier key and BabyJubJub zkp private key are produced via Poseidon hashing, so all ZKP material collapses into one secret. The X.509 certificate private key and the Ethereum signing key are the other two independent secrets.",
+      "citations": [
+        {
+          "cited_text": "use jf_primitives::poseidon::{FieldHasher, Poseidon};\nuse nf_curves::ed_on_bn254::{\nBJJTEAffine as JubJub, BabyJubjub, Fr as BJJScalar, GENERATOR_X, GENERATOR_Y,\n};",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/lib/src/derive_key.rs"
+        },
+        {
+          "cited_text": "/// Derives ZKP Keys from a Bip32 compatible Mnemonic (24-word phrase) and a\n/// derivation path",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/lib/src/derive_key.rs"
+        },
+        {
+          "cited_text": "This can be done via a Hardware Security Module (HSM) for storing the certicate and Ethereum keys but ZKP keys must be directly available to the `client`",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "In normal operation a user will obtain a valid X509 certificate and provide it to the `client`, along with the corresponding private key. The client will then present this certificate",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "A deposit on Nightfall 4 is an ordinary L1 transaction that escrows tokens to the Nightfall contract, with no protocol-imposed queue or waiting period before the user can submit it. The deposit creates a pending deposit later picked up by the proposer and turned into commitments. The optimistic challenge layer of the prior version has been removed, since the rollup is cryptographic so finality matches the underlying blockchain. Host-chain block inclusion latency is not a deposit waiting period.",
+      "citations": [
+        {
+          "cited_text": "Deposit: This will pass a payment from the user to the Nightfall smart contract (an escrow transaction). It will create a pending deposit which will later be picked up by the proposer",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Unlike [NF_3](https://github.com/EYBlockchain/Nightfall_3), NF_4's rollup is cryptographic in nature so that finality is achieved in the same time as the underlying blockchain.\n",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Withdraw time is 0 seconds, with no protocol-imposed delay between submitting a withdraw and funds becoming spendable on L1. NF_4 is a pure validity rollup where finality matches the underlying blockchain, eliminating any optimistic challenge window. A withdraw nullifies input commitments and de-escrows funds in the same flow, with no output commitments created. Inclusion latency depends on the active proposer assembling a block, which is operational rather than a protocol delay.",
+      "citations": [
+        {
+          "cited_text": "NF_4's rollup is cryptographic in nature so that finality is achieved in the same time as the underlying blockchain.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Withdraw: This is a special case of a Transfer but, rather than output commitments being created, suffienct funds are de-escrowed for the recipient to withdraw the amount they are being paid",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "After successful withdraw operation client will automatically do the de-escrow.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Deposits and withdrawals are gated by an X.509 certificate allowlist enforced on-chain, and a user cannot transact if the address is on a sanctions contract or the certificate is revoked, so the certificate issuer or sanctions list operator can stop a transfer. Block production is also permissioned: proposers take turns in a round-robin, a single active proposer rotated only after exceeding its allowed window, and no forced-exit path is documented.",
+      "citations": [
+        {
+          "cited_text": "It is not possible to deposit or withdraw funds to/from a Nightfall network without owning an X509 certificate that the Nightfall smart contracts accept as valid.\n\n",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "From this point on, unless the address appears on a sanctions contract or the certificate expires, or is revoked by the issuer, the user can transact on Nightfall. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "The `proposer`s take turns in a round-robin (other patterns are possible by replacing the contract that implements ProposerManager) to make Layer 2 blocks. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Rotates the active proposer if it has exceeded its allowed proposal window.\n\nThe rotation is permitted only when the current `proposer` has been active for more\nthan `ROTATION_BLOCKS` Layer 1 blocks",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "NF_4 blocks are produced by the protocol's own staked operator set, not an additional external settlement network. Proposers register with the RoundRobin smart contract via the ProposerManager interface and take turns in a round-robin to make Layer 2 blocks, and their stake is held by the protocol for withdrawal on de-registration. The X.509 certificate gates which operators may join, but that is a compliance and censorship dependency rather than a separate chain the protocol settles against.",
+      "citations": [
+        {
+          "cited_text": "`proposer`s also require a certificate. Once validated, they have to register with the RoundRobin smart contract, via the ProposerManager interface. The `proposer`s take turns in a round-robin ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Success will make the proposers remaining stake available for withdrawal.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Withdrawals must be processed by the active proposer, who assembles the transaction into a Layer 2 block and computes a proof of correct assembly before funds are de-escrowed. The only documented mitigation against a single proposer refusing service is broadcasting the client transaction to several proposers provided by third parties. No L1-only forced-exit path is documented for a user to withdraw shielded funds without an active proposer including the transaction.",
+      "citations": [
+        {
+          "cited_text": "`proposer`: This container assembles Layer 2 blocks and computes a proof of correct assembly of the blocks, which shows that all the transactions incorporated in the block are correct",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Users do not have to trust a `proposer` application and therefore can use `proposer`s provided by third parties. It makes sense for a user to submit a client transaction to multiple `proposer`s",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "needsResearchReview": "owner address not classified on-chain for a canonical deployment, EOA vs multisig unverified",
+      "notes": "Upgrades are performed by a single owner key that controls the core UUPS proxies. The system uses UUPS proxies (OpenZeppelin's UUPSUpgradeable + Initializable) where the proxy address is permanent, state lives in the proxy so user funds and Merkle roots survive upgrades, and each implementation gates `_authorizeUpgrade` with onlyOwner. Only the proxy owner (the address behind NF4_SIGNING_KEY) can upgrade, and one owner is the only supported configuration, with multi-sig in the future.",
+      "citations": [
+        {
+          "cited_text": "- We use UUPS proxies (OpenZeppelin’s UUPSUpgradeable + Initializable):\n\n- Proxy address is permanent; the implementation (logic) address changes on upgrade.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/Upgradable%20Contracts%20Guide.md"
+        },
+        {
+          "cited_text": "- Only the proxy owner (the address behind NF4_SIGNING_KEY) can upgrade. We currently only support one owner, multi-sig will be added in the future.\n\n",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/Upgradable%20Contracts%20Guide.md"
+        },
+        {
+          "cited_text": "`_authorizeUpgrade(address newImpl)` (we gate this with onlyOwner).",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/Upgradable%20Contracts%20Guide.md"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "The client computes proofs locally for transfers and withdrawals: the commitments are validated by creating an UltraPlonk proof, wrapped into a ClientTransaction struct sent to one or more proposers. ZKP keys must be directly available to the client, since the ZKP computation cannot run inside an HSM. Deposit proofs are the exception — the proposer computes them because the Layer 2 block containing the deposit must be known before the proof can be computed.",
+      "citations": [
+        {
+          "cited_text": "All of these commitments will be validated by creating an UltraPlonk proof, ensuring that the operation is correct. The resulting commitments and proof are wrapped into a `ClientTransaction\n` struct",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "ZKP keys must be directly available to the `client` (it's not currently possible to run the ZKP computation inside an HSM).",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "When incorporating a deposit transaction, the proposer also computes the deposit proof. This is because the Layer 2 block containing the deposit needs to be known to compute the proof",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Transfer and withdraw proofs are generated by the user's own client, so no external prover receives the private witnesses for those flows. The client sends its proofs directly to one or more proposers, with no requirement that the proposer is trusted by the client. The proposer's role is to batch already-valid client proofs into a rollup proof, not to see plaintext witnesses. The one exception is deposits, where the proposer computes the proof because the Layer 2 block must be known first.",
+      "citations": [
+        {
+          "cited_text": "It generates proofs in support of client transactions and sends them directly to one or more `proposer` containers for incorporation into a Layer 2 block. There is no requirement",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "successful verification of the rollup proof on-chain by the Nightfall contract guarantees that all transactions in the block are correct. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "When incorporating a deposit transaction, the proposer also computes the deposit proof. This is because the Layer 2 block containing the deposit needs to be known to compute the proof",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "2 : Public testnet",
+      "needsResearchReview": "NF_4 release date and live-testnet status not in a cited span, mainnet unproven",
+      "notes": "Nightfall_4's source code was released as experimental software that should not be used to make significant value transactions. The protocol's real-world deployment path is host-chain testnet only: Nightfall is deploying as a Layer-3 on Plume, with EY assisting the rollout. No production mainnet deployment of NF_4 processing real value is documented — the docs note mainnet hasn't been tested yet — placing maturity at the public-testnet tier.",
+      "citations": [
+        {
+          "cited_text": "Please note that this software should be treated as experimental. It should not be used to make significant value transactions.",
+          "source": "https://github.com/EYBlockchain/nightfall_4_CE"
+        },
+        {
+          "cited_text": "This section probably also applies to a mainnet deployment, but that hasn't been tested yet.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Today, we’re taking a big step forward with the Nightfall privacy protocol deploying as a Layer-3 on Plume. ",
+          "source": "https://plume.org/blog/nightfall-comes-to-plume-privacy-meets-scale-for-institutional-rwas"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Nightfall_4's cryptographic stack rests entirely on pre-quantum primitives: the ZKP public key is a scalar multiplication of the BabyJubJub generator, a discrete-log construction broken by Shor's algorithm. Client proofs are UltraPlonk proofs whose security also collapses under quantum attack. Root keys come from a BIP32 mnemonic, and the host chain's signatures are pre-quantum — none offer post-quantum hardness.",
+      "citations": [
+        {
+          "cited_text": "let generator = TEAffine:: ::new(GENERATOR_X, GENERATOR_Y);\nlet zkp_public_key = (generator * zkp_private_key).into_affine();",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/lib/src/derive_key.rs"
+        },
+        {
+          "cited_text": "The client proofs are UltraPlonk proofs, rather than Groth16, and therefore no per-circuit trusted setup is needed",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "They are generated from the input path and mnemonic using the BIP32 protocol.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "Protocol/chain",
+      "notes": "Compliance is enforced at the protocol layer through Nightfall's own smart contracts. Deposits and withdrawals require an X509 certificate the Nightfall smart contracts accept. The client presents this certificate, with its signed Ethereum address, to the X509 smart contract, which validates the credentials and adds the address to the allow list, with access conditional on staying off the sanctions contract. This gate sits in Nightfall's contract suite, not the underlying ERC token contracts.",
+      "citations": [
+        {
+          "cited_text": "It is not possible to deposit or withdraw funds to/from a Nightfall network without owning an X509 certificate that the Nightfall smart contracts accept as valid.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "This contract will validate the `client`'s credentials and, if valid, will add the client's Ethereum address to Nightfall allow list. From this point on, unless the address appears on a",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Admin",
+      "notes": "Compliance enforcement rests with the certificate issuer and the operator administering the X509 allowlist and sanctions contracts. A user can transact only while their address stays off the sanctions contract and the certificate has not expired or been revoked by the issuer. Participation is gated by an X509 certificate the Nightfall smart contracts accept, with the issuer holding revocation authority and the operator controlling the on-chain allowlist and sanctions registry.",
+      "citations": [
+        {
+          "cited_text": "From this point on, unless the address appears on a sanctions contract or the certificate expires, or is revoked by the issuer, the user can transact on Nightfall. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "It is not possible to deposit or withdraw funds to/from a Nightfall network without owning an X509 certificate that the Nightfall smart contracts accept as valid.\n\n",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["KYC/KYB", "Proof of innocence (POI) / ASP", "Programmatic policies"],
+      "notes": "Nightfall enforces identity gating through X.509 enterprise certificates: depositing or withdrawing is impossible without a certificate the Nightfall smart contracts accept. The X509 contract adds the bound address to an allow list, with transactions blocked if the address appears on a sanctions contract — an on-chain curated blocklist. Plume's host-chain deployment adds chain-level AML and TRM transaction scanning. No viewing-key or selective-disclosure scheme is part of the protocol.",
+      "citations": [
+        {
+          "cited_text": "It is not possible to deposit or withdraw funds to/from a Nightfall network without owning an X509 certificate that the Nightfall smart contracts accept as valid.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "This contract will validate the `client`'s credentials and, if valid, will add the client's Ethereum address to Nightfall allow list. From this point on, unless the address appears on a",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Compliance: Chain-level AML at the sequencer, TRM wallet & transaction scanning, and Nest onboarding with accreditation and disclosures built in. ",
+          "source": "https://plume.org/blog/nightfall-comes-to-plume-privacy-meets-scale-for-institutional-rwas"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["Deposit", "Withdrawal"],
+      "notes": "Compliance is gated at the pool boundary on both entry and exit, since it is not possible to deposit or withdraw without owning an X509 certificate the Nightfall smart contracts accept. The X509 contract validates the credential and adds the address to an allowlist, with access conditional on the address staying off the sanctions contract and the certificate remaining valid. In-pool transfers between admitted users are not subject to a separate certificate or sanctions gate.",
+      "citations": [
+        {
+          "cited_text": "It is not possible to deposit or withdraw funds to/from a Nightfall network without owning an X509 certificate that the Nightfall smart contracts accept as valid.\n\n",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "From this point on, unless the address appears on a sanctions contract or the certificate expires, or is revoked by the issuer, the user can transact on Nightfall. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User"],
+      "notes": "Nightfall_4 holders see their own commitments through the keys derived from their mnemonic, since the BIP-32 derivation produces only a root_key, nullifier_key, zkp_private_key, and zkp_public_key — there is no separate viewing key. The client stores commitments in its own database scoped to the wallet it manages, and each user must run their own client with access to a single wallet. No delegated-view, auditor, or regulator read path exists, so the only viewer is the user.",
+      "citations": [
+        {
+          "cited_text": "pub struct ZKPKeys {\npub root_key: Fr254,\npub nullifier_key: Fr254,\npub zkp_private_key: BJJScalar,\npub zkp_public_key: JubJub,\n}",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/lib/src/derive_key.rs"
+        },
+        {
+          "cited_text": "Each user must run their own client. This is so that each client only has access to a single wallet. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "None",
+      "notes": "Nightfall 4 has no viewing-key or selective-disclosure scheme, so there is no permission state for anyone to grant, revoke, or update. A key-derivation function exists only as a convenience to generate ZKP spending keys from a mnemonic and BIP32 path, not to authorise a third party to view a user's transactions. Without any auditor or viewer role wired into commitments or proofs, the property has no control mechanism to characterise.",
+      "citations": [
+        {
+          "cited_text": "This is a convenience function for generating a set of ZKP keys. They are generated from the input path and mnemonic using the BIP32 protocol.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
+      "notes": "Validity rests on a zero-knowledge rollup proof: once the active proposer has enough client transactions for a Layer 2 block (64, currently, but any power of 4), it computes a rollup proof, and successful on-chain verification by the Nightfall contract guarantees all transactions in the block are correct. Double-spend and forgery are blocked because each client transaction is constrained by its proof. There is no challenger — NF_4 uses a cryptographic (ZKP) rollup, not an optimistic one.",
+      "citations": [
+        {
+          "cited_text": "Once a `proposer` has sufficient `client` transations to create a Layer 2 block (64 transactions, currently, but any power of 4 is acceptable) and it is the active `proposer` in the round-robin",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "`proposer`: This container assembles Layer 2 blocks and computes a proof of correct assembly of the blocks, which shows that all the transactions incorporated in the block are correct",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "There is no `challenger` application; it's not required becasue NF_4 uses a cryptogrpahic (ZKP) rollup, not a cryptoeconomic (Optimistic) rollup.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The nightfall_4_CE rollup code is released into the public domain, which makes the source freely usable as an open source release. The source code for Nightfall, renamed Nightfall_4, and supporting tools are in the public domain and are available on Github.",
+      "citations": [
+        {
+          "cited_text": "The source code for Nightfall, renamed Nightfall_4, and supporting tools are in the public domain and are available on",
+          "source": "https://www.ey.com/en_gl/newsroom/2025/04/ey-upgrades-nightfall-a-zero-knowledge-roll-up-enabling-private-transactions-on-the-ethereum-blockchain"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Transaction",
+      "notes": "Nightfall's on-chain private state grows monotonically with transaction count through a Zcash-style commitment and nullifier model. A transfer creates two new output commitments (recipient and change) plus a separate fee commitment and fee change commitment. Deposits add further commitments — a value commitment and optionally a deposit_fee commitment. The commitment and nullifier sets therefore accumulate per transaction rather than per account, with the proposer holding the Merkle tree data.",
+      "citations": [
+        {
+          "cited_text": "In addition to the transfer value, it will also account for the required fee. Two new output commitments will be created: one for the new owner receiving the transferred commitment",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "this deposit request will generate two commitments: one deposit commitment represents the `value` of the token the user intends to deposit, while the other is a `deposit_fee` commitment",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "It also requires access to a MongoDB to store Merkle tree data, a mempool and metadata. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Scanning",
+      "notes": "The client maintains its own commitment database and tracks notes addressed to its ZKP keys by observing on-chain block events. The webhook returns a BlockchainEvent object when an L2 block is on-chain, useful for knowing when a transaction is on-chain. The client exposes a rest api that returns the commitment entry in its commitment db if it exists, otherwise status code 404, reflecting the Zcash-style UTXO model where the device tracks notes from on-chain block events, not a remote indexer.",
+      "citations": [
+        {
+          "cited_text": "Once the proof is computed and the client transaction is sent to a `proposer`, a webhook returns further information about the transaction (see API documentation for details)",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "The Webhook also returns a BlockchainEvent object, when a L2 block is on-chain. This is useful for knowing when a transaction is on-chain. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "A rest api that returns the commitment entry in the commitment db of the `client`, if it exists. Otherwise it returns status code 404. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Nightfall_4 manages private state as note commitments spent by publishing nullifiers. A transfer creates two output commitments — recipient and change — plus a fee commitment and fee change commitment. Deposits are turned into deposit commitments, a special case of a transfer. The commitment trait set exposes a Nullifiable trait whose nullifier_hash is computed from a nullifier_key, characteristic of a Zcash-style shielded pool, not per-address balance ciphertexts.",
+      "citations": [
+        {
+          "cited_text": "Two new output commitments will be created: one for the new owner receiving the transferred commitment, and the other for any change returned to the original owner of the input commitments.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "It will create a pending deposit which will later be picked up by the proposer and turned into deposit commitment(s) with an associated proof ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "pub trait Nullifiable: Commitment + Copy {\nfn nullifier_hash(&self, nullifier_key: &Fr254) -> Result ;\n}",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/lib/src/commitments.rs"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Smart contracts"],
+      "notes": "Nightfall_4's commitments and nullifiers are managed by the Nightfall smart contract on the host chain, with proposers computing a rollup proof that the contract verifies on-chain, guaranteeing all transactions in the block are correct. Client commitments and metadata are mirrored locally in a MongoDB for wallet use, but that mirror is derived from chain history, so the authoritative private state lives in the protocol's own contracts.",
+      "citations": [
+        {
+          "cited_text": "`proposer`: This container assembles Layer 2 blocks and computes a proof of correct assembly of the blocks, which shows that all the transactions incorporated in the block are correct",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "The client expects access to a MongoDB url for storage of commitments and metadata. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": ["No access to DeFi"],
+      "notes": "Nightfall 4 is a token-transfer rollup whose shielded notes support only deposit, transfer, and withdraw on ERC20, ERC721, ERC1155 and ERC3525 tokens. The client API exposes three transaction types — Deposit, Transfer, Withdraw — with no swap-into-DeFi primitive, lending hook, or external-protocol adapter for shielded notes. Withdrawing back to plaintext on the host chain is the only path off the shielded set, and that re-enters general L1 surface rather than a composability mechanism.",
+      "citations": [
+        {
+          "cited_text": "Nightfall_4 (NF_4) is a Zero-Knowledge Proof (ZKP)-based application for transferring ERC20, ERC721, ERC1155 and ERC3525 tokens under privacy. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Once validation is complete, the user can intitiate three types of transaction via the `client`:\n\n1. Deposit: This will pass a payment from the user to the Nightfall smart contract",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "3. Withdraw: This is a special case of a Transfer but, rather than output commitments being created, suffienct funds are de-escrowed for the recipient",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "Nightfall 4 supports private transfers of ERC20, ERC721, ERC1155 and ERC3525 tokens through three transaction types: deposit, transfer, and withdraw. A swap endpoint lets two parties atomically exchange token types, each nullifying their input commitments and creating an output commitment for the counterparty, with either both sides settling or neither. The exposed operations are limited to these three transaction types plus the atomic swap, with no further programmability.",
+      "citations": [
+        {
+          "cited_text": "Nightfall_4 (NF_4) is a Zero-Knowledge Proof (ZKP)-based application for transferring ERC20, ERC721, ERC1155 and ERC3525 tokens under privacy. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Once validation is complete, the user can intitiate three types of transaction via the `client`:\n\n1. Deposit: This will pass a payment from the user to the Nightfall smart contract",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "This call allows two parties to atomically exchange different token types. ",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        },
+        {
+          "cited_text": "Each party's transaction will nullify their own input commitments and create an output commitment for the counterparty. The swap is atomic: either both sides settle or neither does.",
+          "source": "https://raw.githubusercontent.com/EYBlockchain/nightfall_4_CE/master/doc/nf_4.md"
+        }
+      ]
+    }
+  ]
 }
