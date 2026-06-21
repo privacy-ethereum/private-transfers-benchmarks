@@ -1,10 +1,593 @@
 {
   "id": "zama",
   "title": "Zama",
-  "description": "Zama is an open-source cryptography company developing fully homomorphic encryption (FHE) technology, including the ERC-7984 confidential token standard, which keeps token balances and transfer amounts encrypted on-chain while remaining auditable. Zama provides an FHE co-processor and a confidential token implementation.",
-  "status": "pending",
-  "documentation": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained",
-  "categories": ["Fully Homomorphic encryption (FHE)"],
-  "properties": [],
-  "sourceUrls": []
+  "description": "Zama is a cross-chain confidentiality layer that adds FHE-encrypted confidential tokens (the ERC-7984 standard) to existing EVM chains. Confidential smart contracts deploy on the host chain, which stores only encrypted ciphertext handles while heavy fully homomorphic encryption computation runs off-chain on a decentralised coprocessor network. Decryption is gated by an on-chain access-control list and performed by a threshold-MPC key-management network, and a dedicated Gateway rollup orchestrates input verification, decryption, and bridging. It is live on Ethereum mainnet.",
+  "documentation": "https://docs.zama.org/protocol",
+  "status": "complete",
+  "categories": [
+    "Fully Homomorphic encryption (FHE)",
+    "Encrypted Tokens",
+    "Multi Party Computation (MPC)"
+  ],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "ERC-7984 tokens keep balances, transfer amounts, and transaction details encrypted by default, with FHE preserving that encryption during computation so the actual data stays encrypted while the blockchain processes the transaction, and the smart contract itself does not know the balance. On-chain handles point to ciphertexts held by the coprocessor network, and balances and transfer amounts are kept encrypted end-to-end.",
+      "citations": [
+        {
+          "cited_text": "ERC-7984 tokens keep it encrypted, so your balance, transfer amounts, and transaction details remain private by default.",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        },
+        {
+          "cited_text": "the actual data stay encrypted. The smart contract itself doesn&#x27;t know your balance.",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        },
+        {
+          "cited_text": "balances and transfer amounts are kept encrypted end-to-end, while payment providers can embed compliance features into the token contract directly.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "all ciphertexts on the host chain are simply pointers (the actual data is stored by coprocessors)",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "No",
+      "notes": "ERC-7984's confidentiality scope is limited to keeping the balance, transfer amounts, and transaction details private by default. The standard encrypts token balances and transfer amounts but makes no claim of concealing the counterparties, so the participant graph stays visible. Transfers run as ordinary host-chain transactions from externally owned accounts, leaving sender and recipient addresses in cleartext on the public ledger for any observer.",
+      "citations": [
+        {
+          "cited_text": "ERC-7984 tokens keep it encrypted, so your balance, transfer amounts, and transaction details remain private by default.",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        },
+        {
+          "cited_text": "By encrypting token balances and transfer amounts, and keeping them encrypted even during computation, ERC-7984 delivers genuine confidentiality",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "ERC-7984 encrypts the balance but not the asset identity. The confidential balance call returns an euint64 encrypted handle for the amount only, not for the asset type, so the encrypted fields cover the value rather than which token contract is being called. The balance stays encrypted while the asset type is not among the encrypted fields the standard protects.",
+      "citations": [
+        {
+          "cited_text": "ERC-7984 tokens keep it encrypted, so your balance, transfer amounts, and transaction details remain private by default.",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        },
+        {
+          "cited_text": "confidentialBalanceOf(account); \n// returns euint64 (encrypted handle)",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "A confidential transfer is a call to a known ERC-7984 token contract, where the contract stores encrypted handles pointing to encrypted values rather than the values themselves. Existing chains support these tokens without any protocol upgrades, so the confidential-token contract runs alongside ordinary public transfers on the same host chain. The amount is hidden, but the transfer is still a host-chain call to that specific token contract.",
+      "citations": [
+        {
+          "cited_text": "It stores encrypted \"handles\", think of these as pointers to encrypted values rather than the values themselves.",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        },
+        {
+          "cited_text": "The beauty is that existing blockchains don&#x27;t need to change. Ethereum, Layer 2s, and other EVM chains can support confidential tokens without any protocol upgrades.\n\n",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "Underlying chain",
+      "notes": "Finality for confidential token transfers is inherited from the host chain, since the Zama Protocol is not a new L1 or L2 but a cross-chain confidentiality layer sitting on top of existing chains, so users don't need to bridge to a new chain. The confidential token contracts run directly on the host L1/L2, with mainnet on Ethereum live, so transfer settlement inherits host-chain block latency rather than any separate Zama-imposed wait.",
+      "citations": [
+        {
+          "cited_text": "The Zama Protocol is not a new L1 or L2, but rather a cross-chain confidentiality layer sitting on top of existing chains.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "The testnet is already live, with the mainnet on Ethereum launching by end of 2025.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "The user authorises decryption requests with their existing Ethereum wallet via EIP-712 authentication, so no protocol-specific signing key is introduced. Encrypted inputs go to a single global FHE public key, and the KMS response is re-encrypted under the user's public key and decrypted locally. The same wallet keypair handles both signing and the decryption authorisation, with no per-user FHE keypair to manage, so the only independently stored secret is the wallet private key.",
+      "citations": [
+        {
+          "cited_text": "* Initiate user-side decryption requests, including EIP-712 authentication.\n",
+          "source": "https://docs.zama.org/protocol/solidity-guides/v0.10/docs/protocol/architecture/relayer_oracle.md"
+        },
+        {
+          "cited_text": "* Collect the response from the KMS, re-encrypted under the user’s public key.\n* Deliver the ciphertext back to the user, who decrypts it locally in their browser/app.\n\n",
+          "source": "https://docs.zama.org/protocol/solidity-guides/v0.10/docs/protocol/architecture/relayer_oracle.md"
+        },
+        {
+          "cited_text": "all ciphertexts need to be encrypted under the same public key",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Wrapping a public ERC-20 into its confidential ERC-7984 counterpart is an ordinary host-chain transaction with no protocol-imposed queue or time-lock — moving from regular ERC-20 to confidential ERC-7984 is straightforward, with the amount visible entering and then becoming encrypted, while going the other direction requires an explicit decryption step. Inclusion reduces to Ethereum block latency rather than any waiting period imposed by the Zama Protocol.",
+      "citations": [
+        {
+          "cited_text": "Moving from regular ERC-20 to confidential ERC-7984 is straightforward (the amount is visible entering, then becomes encrypted).",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "Unwrapping confidential tokens back to public form requires an asynchronous decryption round-trip through the off-chain coprocessor and threshold KMS network, with no protocol-imposed queue, exit window, or time-lock on top. A network of coprocessors performs the encrypted math off-chain, and a transfer sends a decryption request to these nodes, so the wait reduces to KMS decryption latency, not any fixed waiting period.",
+      "citations": [
+        {
+          "cited_text": "a network of coprocessors performs the actual encrypted math. When your transfer executes, the blockchain doesn&#x27;t crunch the numbers, it sends a request to these specialized nodes",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        },
+        {
+          "cited_text": "Moving from regular ERC-20 to confidential ERC-7984 is straightforward (the amount is visible entering, then becomes encrypted).",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        },
+        {
+          "cited_text": "The KMS performs decryption using a threshold decryption protocol — at least a minimum number of MPC parties (e.g., 9 out of 13) must participate in the protocol to robustly decrypt a value.",
+          "source": "https://docs.zama.org/protocol/protocol/overview/kms"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "Confidential transfers ride Ethereum for ordering, but the protocol layer grants operators a unilateral censorship lever: any operator can pause the protocol and blacklist sanctioned addresses. Decryption also requires that the producing contract has explicitly allowed it. This operator-held pause-and-blacklist gate sits above the host chain, so the protocol can block confidential operations even where Ethereum would accept the transaction, leaving no permissionless fallback.",
+      "citations": [
+        {
+          "cited_text": "The only exception is pausing the protocol in case of an emergency and blacklisting spammers and sanctioned addresses, which any operator can do",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "In order for a user or contract to decrypt a value, they need to first have been explicitly allowed to do so by the contract that produced the value on the host chain.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Zama layers three staked/permissioned networks on top of the host chain that confidential transfers depend on. The coprocessor network performs FHE off-chain, where coprocessors must stake $ZAMA tokens and are slashed if caught misbehaving, and they validate encrypted inputs. Decryption requires the KMS, which currently uses 13 MPC nodes operated by different reputable organizations. Orchestration runs through the Gateway, an Arbitrum rollup, so all three sets are curated.",
+      "citations": [
+        {
+          "cited_text": "To enforce honest behavior, coprocessors must stake $ZAMA tokens and are subject to slashing if caught misbehaving—either through automated checks or governance-based fraud proofs.\n\n",
+          "source": "https://docs.zama.org/protocol/protocol/overview/coprocessor"
+        },
+        {
+          "cited_text": "Encrypted input verification\n\nWhen users submit encrypted values to the Gateway, each coprocessor:\n\nVerifies the associated Zero-Knowledge Proof of Knowledge (ZKPoK).\n\n",
+          "source": "https://docs.zama.org/protocol/protocol/overview/coprocessor"
+        },
+        {
+          "cited_text": "Security architecture\n\nMPC-based key sharing\n\nThe KMS currently uses 13 MPC nodes, operated by different reputable organizations.\n\n",
+          "source": "https://docs.zama.org/protocol/protocol/overview/kms"
+        },
+        {
+          "cited_text": "The Gateway is a specialized blockchain component (implemented as an Arbitrum rollup) responsible for managing:\n\nValidation of encrypted inputs from users and applications.\n\n",
+          "source": "https://docs.zama.org/protocol/protocol/overview/gateway"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Confidential balances exist as on-chain handles, where all ciphertexts on the host chain are simply pointers and the actual data is stored by coprocessors off-chain. Any decryption requires the threshold KMS committee, where at least a minimum number of MPC parties (e.g., 9 out of 13) must participate to robustly decrypt a value. With the plaintext held off-chain and decryption gated on that committee, the host chain alone does not expose a recovery path.",
+      "citations": [
+        {
+          "cited_text": "Since all ciphertexts on the host chain are simply pointers (the actual data is stored by coprocessors), FHE operations can be chained just like regular operations",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "The KMS performs decryption using a threshold decryption protocol — at least a minimum number of MPC parties (e.g., 9 out of 13) must participate in the protocol to robustly decrypt a value.",
+          "source": "https://docs.zama.org/protocol/protocol/overview/kms"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "DAO",
+      "needsResearchReview": "on-chain upgrade authority (Aragon operator governance) not classified against a deployed contract",
+      "notes": "Upgrades are adopted by stake-weighted operator governance, not a fixed M-of-N safe. The Zama Protocol uses Delegated Proof-of-Stake, and updates have to be adopted by a majority of operators, covering software, fees, and new Host Chains. Slashing is done via governance and proposals are posted on Aragon, so the upgrade authority reads as a DAO. Outside majority rule, any operator can pause and blacklist sanctioned addresses, while unpausing requires multiple coprocessors.",
+      "citations": [
+        {
+          "cited_text": "The Zama Protocol uses Delegated Proof-of-Stake, with 18 operators running the protocol: initially 13 KMS nodes and 5 FHE Coprocessors (then more over time).",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "Updates to the Zama Protocol have to be adopted by a majority of operators to be effective. This includes software updates, changes to the fees, adding support for a new Host Chain, etc.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "incentivizing operators to behave honestly. Governance proposals can be found on Aragon",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "The only exception is pausing the protocol in case of an emergency and blacklisting spammers and sanctioned addresses, which any operator can do",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Encrypted inputs are generated on the client using the FHE public key. Each input carries a Zero-Knowledge Proof of Knowledge proving the user knows the plaintext, and inputs are always encrypted on the client side. Coprocessors then re-verify this client-built proof, since when users submit encrypted values to the Gateway each coprocessor verifies the associated ZKPoK, making the proof a re-checkable artefact produced on the user's device rather than by an external prover.",
+      "citations": [
+        {
+          "cited_text": "They are accompanied by Zero-Knowledge Proofs of Knowledge (ZKPoKs) to ensure the validity of the encrypted data without revealing the plaintext.\n\n",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/inputs"
+        },
+        {
+          "cited_text": "Frontend encryption : Always encrypt inputs using the FHE public key on the client side to ensure data confidentiality.\n\n",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/inputs"
+        },
+        {
+          "cited_text": "Encrypted input verification\n\nWhen users submit encrypted values to the Gateway, each coprocessor:\n\nVerifies the associated Zero-Knowledge Proof of Knowledge (ZKPoK).\n\n",
+          "source": "https://docs.zama.org/protocol/protocol/overview/coprocessor"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "Yes",
+      "notes": "Off-chain infrastructure can read user plaintext under collusion thresholds. The KMS network holds the global FHE private key as secret shares across 13 MPC nodes, and if enough collude they can decrypt the data for themselves, learning all the secret values. Coprocessors hold the off-chain ciphertext and compute with no validity proof submitted. A quorum of MPC parties (e.g., 9 out of 13) suffices to decrypt, so a coalition of KMS operators can inspect any handle.",
+      "citations": [
+        {
+          "cited_text": "Since each KMS node has a share of the private key, if enough of these nodes collude, they can decrypt the encrypted data for themselves, which would lead to them learning all the secret values.",
+          "source": "https://www.openzeppelin.com/news/zama-confidential-fungible-token-audit"
+        },
+        {
+          "cited_text": "users must trust that the coprocessors are honestly performing their FHE operations on the encrypted data. There is no validity proof submitted by these coprocessors",
+          "source": "https://www.openzeppelin.com/news/zama-confidential-fungible-token-audit"
+        },
+        {
+          "cited_text": "Stores and serves encrypted data for decryption or bridging.\n\n",
+          "source": "https://docs.zama.org/protocol/protocol/overview/coprocessor"
+        },
+        {
+          "cited_text": "The KMS performs decryption using a threshold decryption protocol — at least a minimum number of MPC parties (e.g., 9 out of 13) must participate in the protocol to robustly decrypt a value.",
+          "source": "https://docs.zama.org/protocol/protocol/overview/kms"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "3 : Mainnet for less than 1 year",
+      "notes": "Zama Protocol went live on Ethereum mainnet on December 31, 2025, placing the deployment under one year of mainnet tenure. The first user-facing application followed shortly after, with Zama Auction launching on January 21, 2026 with real value at stake on mainnet. The confidential fungible token contracts received an OpenZeppelin audit engagement run May 2025 with the report published March 18, 2026, covering the ERC-20-style confidential token and its wrapper.",
+      "citations": [
+        {
+          "cited_text": "On December 31, 2025, Zama Protocol went live on mainnet.",
+          "source": "https://www.zama.org/post/zama-developer-program-mainnet-season1-building-for-the-long-game",
+          "date": "2025-12-31"
+        },
+        {
+          "cited_text": "The first application, Zama Auction, launched on Janurary 21, 2026 with real value at stake, on mainnet. ",
+          "source": "https://www.zama.org/post/zama-developer-program-mainnet-season1-building-for-the-long-game"
+        },
+        {
+          "cited_text": "Type: Library \nTimeline: From 2025-05-05 → To 2025-05-16\nLanguages: Solidity",
+          "source": "https://www.openzeppelin.com/news/zama-confidential-fungible-token-audit"
+        },
+        {
+          "cited_text": "Zama Confidential Fungible Token Audit \n\nTable of Content\n\n- March 18, 2026",
+          "source": "https://www.openzeppelin.com/news/zama-confidential-fungible-token-audit"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Zama's lattice FHE confidentiality is post-quantum, but the integrity layer is not, so the protocol is not post-quantum overall. The FHE and MPC technologies are already resistant to quantum computers, however the ZKPoK input proof is not (similar to most ZK-SNARKs), with a lattice-based post-quantum replacement in progress. Host-chain signatures are also classical, since signature schemes used by host chains are not currently post-quantum.",
+      "citations": [
+        {
+          "cited_text": "Zama’s FHE and MPC technologies are already resistant to quantum computers. However, the ZKPoK is not (similar to most ZK-SNARKs).",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "signature schemes used by Host Chains are not currently post-quantum.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "Protocol/chain",
+      "notes": "Enforcement sits at the protocol layer through the operator blacklist. Any operator can pause the protocol and blacklist sanctioned addresses, so a blacklisted address cannot move ERC-7984 balances even though the host chain would accept the transaction. Selective disclosure runs alongside through the per-handle ACL, where applications define their own compliance rules within their smart contracts, but the sanctioned-address gate is enforced by the protocol operators, not dapp developers.",
+      "citations": [
+        {
+          "cited_text": "the Zama Protocol enables applications to define their own compliance rules directly within their smart contracts.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "The only exception is pausing the protocol in case of an emergency and blacklisting spammers and sanctioned addresses, which any operator can do",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Admin",
+      "notes": "The operator set curates the sanctioned-address blacklist: any operator can pause the protocol and blacklist sanctioned addresses. This is a standing operator-administered gate, not a third-party vendor screen, and broader protocol changes have to be adopted by a majority of operators. The selective-disclosure side is delegated to dapp developers, where applications define their own compliance rules directly within their smart contracts, so the protocol curates only the sanctions blocklist.",
+      "citations": [
+        {
+          "cited_text": "The only exception is pausing the protocol in case of an emergency and blacklisting spammers and sanctioned addresses, which any operator can do",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "Updates to the Zama Protocol have to be adopted by a majority of operators to be effective. This includes software updates, changes to the fees, adding support for a new Host Chain, etc.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "the Zama Protocol enables applications to define their own compliance rules directly within their smart contracts.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": [
+        "Selective disclosure",
+        "Proof of innocence (POI) / ASP"
+      ],
+      "notes": "Two mechanisms apply. Selective disclosure runs through the programmable ACL, where a per-handle access grant gives permanent decrypt rights to a specific address, letting a user hand an Observer or auditor decrypt access rather than a global viewing key. Applications define their own compliance rules within their smart contracts. Separately, any operator can pause the protocol and blacklist sanctioned addresses, a curated-set gate screening transfers against a sanctions list, the POI/ASP case.",
+      "citations": [
+        {
+          "cited_text": "allow : Grants permanent access to an address.\n\nallowThis : Grants the current contract access to manipulate the ciphertext.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/acl"
+        },
+        {
+          "cited_text": "the Zama Protocol enables applications to define their own compliance rules directly within their smart contracts.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "The only exception is pausing the protocol in case of an emergency and blacklisting spammers and sanctioned addresses, which any operator can do",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": [
+        "Transfer",
+        "Withdrawal"
+      ],
+      "notes": "The operator sanctioned-address blacklist gates the moving of balances. Because confidential operations depend on coprocessors certifying handles and the KMS authorising decryption, a blacklisted address cannot transfer ERC-7984 balances or unwrap them to public form, so enforcement bites at the transfer and withdrawal stages. The ACL controls who can access, compute on, or decrypt encrypted values, the selective-disclosure side of compliance alongside the blacklist gate.",
+      "citations": [
+        {
+          "cited_text": "The ACL is a permission management system designed to control who can access, compute on, or decrypt encrypted values in fhevm.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/acl"
+        },
+        {
+          "cited_text": "The only exception is pausing the protocol in case of an emergency and blacklisting spammers and sanctioned addresses, which any operator can do",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": [
+        "User",
+        "Voluntary third-party disclosure"
+      ],
+      "notes": "Users with the wallet key controlling a handle decrypt their own ciphertexts, initiating user-side decryption requests with EIP-712 authentication. The ACL lets them grant decrypt rights to any chosen address through a per-handle access grant giving long-term access for a specific address. Delegation extends this to off-chain helpers, granting a delegate the right to user-decrypt for the caller contract. All grants are user-initiated per handle, with no standing third-party access.",
+      "citations": [
+        {
+          "cited_text": "Grants long-term access to the ciphertext for a specific address.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/acl"
+        },
+        {
+          "cited_text": "Grants a delegate the right to user-decrypt on behalf of the caller contract for a specific contractAddress",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/acl"
+        },
+        {
+          "cited_text": "Initiate user-side decryption requests, including EIP-712 authentication.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/v0.10/docs/protocol/architecture/relayer_oracle.md"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Programmable",
+      "notes": "Viewing permissions on Zama are programmable per ciphertext handle at any time after creation. Per-handle access grants come in permanent and one-transaction forms: one grants long-term access for a specific address, another grants access only for the current transaction, and a third can make a value publicly decryptable, granting global permission for any entity to decrypt the cleartext off-chain. Decryption rights can also be delegated to a third party and later revoked.",
+      "citations": [
+        {
+          "cited_text": "Grants long-term access to the ciphertext for a specific address.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/acl"
+        },
+        {
+          "cited_text": "Grants access to the ciphertext only for the duration of the current transaction.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/acl"
+        },
+        {
+          "cited_text": "makePubliclyDecryptable : Grants permanent, global permission for any entity to decrypt the cleartext value associated with the given ciphertext (handle) off-chain.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/acl"
+        },
+        {
+          "cited_text": "revokeUserDecryptionDelegation : Revokes a previously granted delegation.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/smart-contract/acl"
+        }
+      ]
+    },
+    {
+      "name": "Verifiability",
+      "value": [
+        "Cryptographic",
+        "Honest Majority (Consensus, Threshold committee)",
+        "Trusted hardware"
+      ],
+      "notes": "Validity rests on three layers. Encrypted inputs carry a zero-knowledge proof of knowledge each coprocessor verifies, a re-checkable cryptographic check that only well-formed inputs enter. FHE compute correctness has no validity proof and relies on a staked coprocessor majority, valid as long as more than 50% are honest. The MPC nodes run inside AWS Nitro Enclaves providing some integrity on the computation, which makes verifiability dependent on hardware security, so trusted hardware applies.",
+      "citations": [
+        {
+          "cited_text": "Encrypted input verification\n\nWhen users submit encrypted values to the Gateway, each coprocessor:\n\nVerifies the associated Zero-Knowledge Proof of Knowledge (ZKPoK).\n\n",
+          "source": "https://docs.zama.org/protocol/protocol/overview/coprocessor"
+        },
+        {
+          "cited_text": "The protocol relies on a majority-honest assumption: as long as more than 50% of coprocessors are honest, results are valid.",
+          "source": "https://docs.zama.org/protocol/protocol/overview/coprocessor"
+        },
+        {
+          "cited_text": "users must trust that the coprocessors are honestly performing their FHE operations on the encrypted data. There is no validity proof submitted by these coprocessors",
+          "source": "https://www.openzeppelin.com/news/zama-confidential-fungible-token-audit"
+        },
+        {
+          "cited_text": "all KMS nodes must run the MPC software inside AWS Nitro Enclaves, making it harder for operators to leak their shares while providing some level of integrity on the MPC computation.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "this makes verifiability dependent on hardware security, which is suboptimal.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The fhevm monorepo containing gateway contracts, host contracts, the Rust coprocessor, and KMS connector is published under the BSD-3-Clause-Clear license. The separate threshold key management repository, a fully decentralized key management solution for TFHE, ships under the same terms. Patent rights are withheld: the libraries are free under the BSD 3-Clause Clear license only for development, research, prototyping, and experimentation, with commercial use requiring Zama's patent license.",
+      "citations": [
+        {
+          "cited_text": "### License\n\nThis software is distributed under the **BSD-3-Clause-Clear** license. ",
+          "source": "https://github.com/zama-ai/fhevm"
+        },
+        {
+          "cited_text": "The Zama KMS is a fully decentralized key management solution for TFHE, based on a maliciously secure and robust",
+          "source": "https://github.com/zama-ai/kms"
+        },
+        {
+          "cited_text": "Zama’s libraries are free to use under the BSD 3-Clause Clear license only for development, research, prototyping, and experimentation purposes.",
+          "source": "https://github.com/zama-ai/fhevm"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Account",
+      "notes": "On-chain state is keyed per account: each ERC-7984 contract holds an encrypted balance handle per address in a mapping that updates in place on transfer, so adding a holder adds one entry while transfers rewrite entries without enlarging the set. Ciphertexts on the host chain are simply pointers, the data stored by coprocessors, so the bulk payload lives off-chain. This matches an encrypted-balance-per-address layout, not an append-only commitment or nullifier tree.",
+      "citations": [
+        {
+          "cited_text": "Since all ciphertexts on the host chain are simply pointers (the actual data is stored by coprocessors), FHE operations can be chained just like regular operations",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "It stores encrypted \"handles\", think of these as pointers to encrypted values rather than the values themselves.",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No Scanning",
+      "notes": "Balances on Zama's confidential token system are account-addressed handles, so the wallet reads a known storage slot rather than trial-decrypting outputs. To reveal the plaintext the client uses the Relayer, which initiates user-side decryption requests with EIP-712 authentication and collects the KMS response re-encrypted under the user's public key. No chain-wide scanning or view-tag filtering is required to locate one's own funds.",
+      "citations": [
+        {
+          "cited_text": "Initiate user-side decryption requests, including EIP-712 authentication.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/v0.10/docs/protocol/architecture/relayer_oracle.md"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "Account-based state model",
+      "notes": "ERC-7984 maintains an encrypted balance per address, with the confidential balance call returning an euint64 encrypted handle. Contract storage uses the per-address encrypted balance mapping, keying one encrypted handle per address. This is an encrypted-ERC20 design where balances are held per account, with no note commitments or nullifier set.",
+      "citations": [
+        {
+          "cited_text": "confidentialBalanceOf(account); \n// returns euint64 (encrypted handle)",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        },
+        {
+          "cited_text": "mapping(address account => euint64 balance) internal _balances;",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": [
+        "Off-chain storage with on-chain commitment",
+        "Smart contracts"
+      ],
+      "notes": "Ciphertexts live off-chain on the coprocessor network, with the host chain holding only handles that reference them — all ciphertexts on the host chain are simply pointers, the data being stored by coprocessors. The coprocessor stores and serves encrypted data for decryption or bridging. The on-chain side is a Solidity token contract recording the encrypted-balance handles in the per-address balance mapping, so the commitment to each private balance sits inside smart-contract state.",
+      "citations": [
+        {
+          "cited_text": "Since all ciphertexts on the host chain are simply pointers (the actual data is stored by coprocessors), FHE operations can be chained just like regular operations",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "Stores and serves encrypted data for decryption or bridging.\n\n",
+          "source": "https://docs.zama.org/protocol/protocol/overview/coprocessor"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": [
+        "Access to internal DeFi ecosystem",
+        "Composable interface, but requires DeFi protocol changes"
+      ],
+      "notes": "Composability runs between confidential contracts as well as with non-confidential ones, with developers building on top of other contracts, tokens, and dapps. This supports an internal confidential DeFi surface including AMMs and lending built on the FHEVM library. Confidential balances are exposed as euint64 encrypted handles rather than plain uint256, so the composable interface operates over encrypted handles rather than ordinary public ERC-20 values.",
+      "citations": [
+        {
+          "cited_text": "Composability between confidential contracts, as well as with non-confidential ones. Developers can build on top of other contracts, tokens and dapps.\n\n",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "Of course, developers can build much more complicated applications, such as AMMs, lending, and more. ",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "confidentialBalanceOf(account); \n// returns euint64 (encrypted handle)",
+          "source": "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Full programmability with public and private state",
+      "notes": "Zama enables general confidential smart contracts written directly in Solidity, with developers importing the FHEVM library and writing logic using the provided operators without any knowledge of cryptography. Encrypted state is first-class: ebool, euint8 through euint256, and eaddress coexist with public Solidity state, and arithmetic, bitwise, comparison, and encrypted conditional selection cover non-trivial logic. Scope extends beyond payments to AMMs and lending via a programmable ACL.",
+      "citations": [
+        {
+          "cited_text": "Developers simply need to import our library (called FHEVM) and write their logic using the provided operators.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "FHEVM introduces encrypted data types compatible with Solidity",
+          "source": "https://docs.zama.org/protocol/solidity-guides/getting-started/overview"
+        },
+        {
+          "cited_text": "Advanced: FHE.select for branching on encrypted conditions, FHE.randEuintX for on-chain randomness.",
+          "source": "https://docs.zama.org/protocol/solidity-guides/getting-started/overview"
+        },
+        {
+          "cited_text": "developers can build much more complicated applications, such as AMMs, lending, and more.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        }
+      ]
+    }
+  ]
 }
