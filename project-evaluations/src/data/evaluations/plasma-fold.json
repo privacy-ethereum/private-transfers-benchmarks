@@ -1,10 +1,506 @@
 {
   "id": "plasma-fold",
   "title": "Plasma Fold",
-  "description": "",
-  "status": "pending",
-  "documentation": "",
-  "categories": ["Private Plasma", "Zero Knowledge Proofs (ZKPs)"],
-  "properties": [],
-  "sourceUrls": []
+  "description": "Plasma Fold (PlasmaBlind) is a research-prototype privacy layer on the PlasmaFold Plasma Layer 2 for Ethereum, by Privacy and Scaling Explorations. Users hold UTXOs and send shielded transactions that hide amounts and recipients while sender public keys stay visible, and a single aggregator folds user proofs into a constant-size block-validity proof posted to an L1 rollup contract. Privacy comes from the blinding property of the Nova folding scheme, so users prove validity client-side in under 100 milliseconds without a per-transaction SNARK. Each user keeps a local balance proof enabling unilateral exit to L1 independent of operator liveness.",
+  "documentation": "https://eprint.iacr.org/2026/634",
+  "status": "complete",
+  "categories": ["Private Plasma", "Zero Knowledge Proofs (ZKPs)", "Shielded Pool"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "PlasmaBlind hides UTXO amounts behind commitments, making it infeasible for another party to learn a user's balance. Output UTXOs are replaced by cryptographic commitments that bind to the amounts and recipients while concealing their concrete values. Concealing amounts and recipients this way keeps a user's balance hidden from any observer of the on-chain data.",
+      "citations": [
+        {
+          "cited_text": "In \\Protocol, we hide the amounts of \\acp{UTXO} behind their commitments, making it infeasible for another party to learn the balance of a user.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "In addition, created output \\acp{UTXO} are replaced by cryptographic \\textit{commitments} binding to the amounts and recipients while hiding their concrete values.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/overview.tex"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Only receiver",
+      "notes": "PlasmaBlind hides transaction amounts and recipients but reveals the sender's public key for each transaction, so anonymity is asymmetric rather than full. The sender's public key is revealed for data availability, which leaks when and how often a user transacts even though amounts and recipients stay confidential. The shielded transaction design targets sender-receiver unlinkability and confidentiality of amounts at the protocol level.",
+      "citations": [
+        {
+          "cited_text": "While \\Protocol hides the amount and recipient of each transaction, the sender's public key is revealed for data availability",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "\\Protocol further adds sender-receiver unlinkability and confidentiality of transaction amounts by utilizing the Nova folding scheme",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/overview.tex"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "The protocol hides transaction amounts and recipients through commitments but does not conceal asset or token type. Each output is a pair of the owner's public key and an amount, with no asset-type field. Amounts are hidden behind commitments so another party cannot learn a user's balance, and at exit the user reveals that balance so the rollup contract can return the corresponding L1 funds. No mechanism for shielding which token is transacted appears in the construction.",
+      "citations": [
+        {
+          "cited_text": "A \\ac{UTXO} is denoted as $\\Utxo \\coloneqq (\\Pk, \\Amount)$, where \\Amount and \\Pk are respectively the \\ac{UTXO}'s value and the public key of the \\ac{UTXO}'s owner.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "However, when exiting from the private \\ac{L2}, the user needs to reveal their balance, so that the rollup contract can transfer the corresponding amount of \\ac{L1} funds back to the user.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Using the protocol leaves an observable on-chain footprint that distinguishes it from ordinary transfers. The sender's public key is revealed for data availability, and the aggregator posts the public-key tree leaves on-chain so users can check inclusion, so any observer can detect participation and how often a sender transacts. Deposits and withdrawals route through the rollup contract as special transactions, making entry and exit visible interactions with a known privacy system.",
+      "citations": [
+        {
+          "cited_text": "While \\Protocol hides the amount and recipient of each transaction, the sender's public key is revealed for data availability",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "we require the aggregator to post onchain the leaves of $\\Tree^\\Pk_t$, so that users can learn whether the aggregator has included their transactions in the current block.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "Since deposits and withdrawals can be treated as special transactions from and to the rollup contract, they can be integrated into \\Protocol with minimal modifications to the transaction flow.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "Underlying chain",
+      "notes": "PlasmaBlind settles to Ethereum L1, so finality follows the host chain once the block validity proof is verified on L1. The L1 rollup contract verifies a constant-size block validity proof, and if the proof is valid the rollup contract accepts the block by updating the tree roots stored on-chain. No protocol-specific batch cadence or seconds-to-verification figure is given in the prototype, so the relevant delay is Ethereum L1 inclusion plus L1 finality of the settlement transaction.",
+      "citations": [
+        {
+          "cited_text": "The L1 rollup contract verifies a constant-size block validity proof.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        },
+        {
+          "cited_text": "If the proof is valid, the rollup contract accepts the block by updating the tree roots stored on-chain",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "2",
+      "notes": "The user holds two independently stored secrets: the protocol-level spending key and the pre-existing Ethereum wallet key behind their L1 address. The spending key authorises transactions and is stored locally on joining, and the identity public key is derived from it with a pseudo-random function, so no separate viewing key exists. Any deposit or exit requires the user's own L1 address, so the host-chain wallet key controlling that address is the distinct second secret in use.",
+      "citations": [
+        {
+          "cited_text": "Every user in \\Protocol has a secret key $\\Sk$ and a public key $\\Pk$.\n$\\Pk$ represents the user's identity in \\Protocol, while $\\Sk$ is used to authorize transactions",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "Upon joining \\Protocol, every user needs to create a key pair $(\\Sk, \\Pk)$, submit the public key $\\Pk$ to the rollup contract, and store the secret key $\\Sk$ locally.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "Consequently, we can simply derive \\Pk from \\Sk as $\\Pk \\coloneqq \\PRF(\\Sk, \\bot)$ using a PRF based on a circuit-friendly hash function.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "The rollup contract registers the user by recording the user's \\ac{L2} public key \\Pk with their \\ac{L1} address \\Address",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Deposits in PlasmaBlind have no protocol-imposed waiting period. To deposit, the user first locks coins on the L1 by sending a transaction with the corresponding amount to the rollup contract, then starts the transaction flow and creates a shielded transaction with no input UTXOs and one or more output UTXOs to claim the deposited funds on L2. No queue, challenge window, or time-lock gates this flow, so the only latency is ordinary L1 block inclusion plus the next aggregator block.",
+      "citations": [
+        {
+          "cited_text": "To deposit, the user first locks coins on the \\ac{L1} by sending a transaction with the corresponding amount to the rollup contract.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "The exit flow imposes no waiting period: the user reveals their balance to the rollup contract by submitting the balance proof, verified against the latest block tree root and the user's nonce. If the proof is valid the coins are transferred to the user's L1 address, after which their L2 public key and nonce are removed from the contract's state. No challenge window, dispute period, or queue gates the withdrawal, so settlement follows L1 inclusion of the exit transaction.",
+      "citations": [
+        {
+          "cited_text": "This can be done by submitting the balance proof $\\pi^\\Balance$, which is verified by the rollup contract against the latest block tree root and the user's nonce.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "If the proof is valid, the corresponding amount of coins will be transferred to the user's \\ac{L1} address \\Address",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "Yes",
+      "notes": "PlasmaBlind supports permissionless aggregators, the graded achievable configuration, so no single party can permanently censor inclusion since any aggregator can build the next block. The more-exposed default deployment uses a single aggregator that the paper calls an explicit single point of failure for inclusion, but even then users can always exit unilaterally because the exit flow involves only the user and the rollup contract, so funds stay recoverable.",
+      "citations": [
+        {
+          "cited_text": "PlasmaBlind can also operate with permissionless aggregators, reaching a theoretical ~1,800 TPS when broadcasting nullifiers on the Ethereum L1.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        },
+        {
+          "cited_text": "A straightforward deployment of \\Protocol involves a single aggregator responsible for collecting transactions, building blocks, and generating proofs.\nThis creates a single point of failure",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "users can always exit by themselves without relying on the aggregator, e.g., in case the aggregator goes offline or maliciously drops the user's transaction.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "PlasmaBlind settles to Ethereum L1 through a constant-size validity proof verified by the rollup contract, without routing transfers through any committee or relayer network. Data availability borrows the Intmax2 design as a technique rather than a separate trust network. The protocol's own aggregator and the L1 contract are the only parties in the settlement path, so there is no external network dependence.",
+      "citations": [
+        {
+          "cited_text": "The L1 rollup contract verifies a constant-size block validity proof.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        },
+        {
+          "cited_text": "PlasmaBlind leverages [Intmax2](https://eprint.iacr.org/2023/1082)'s data availability protocol to reach ~36,000 TPS theoretical throughput in a centralized setting. ",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Instantly",
+      "notes": "Users can unilaterally withdraw without aggregator cooperation: the exit flow involves only the user and the rollup contract, so users can always exit even if the aggregator goes offline. To exit, the user reveals their balance by submitting the balance proof, verified against the latest block tree root and the user's nonce. Folding-based incremental verifiable computation keeps this proof current after each transaction, so folding enables instant exits with no mandated challenge window.",
+      "citations": [
+        {
+          "cited_text": "users can always exit by themselves without relying on the aggregator, e.g., in case the aggregator goes offline or maliciously drops the user's transaction.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "This can be done by submitting the balance proof $\\pi^\\Balance$, which is verified by the rollup contract against the latest block tree root and the user's nonce.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "As an additional benefit, folding schemes enable instant exits for users.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/overview.tex"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "needsResearchReview": "rollup contract specified in paper not implemented, no deployed admin slot to classify",
+      "notes": "PlasmaBlind is a research prototype whose on-chain rollup contract is specified in the paper rather than implemented, and the repository holds only Rust crates with no Solidity. No deployed contract exposes an admin or upgrade slot to classify, so the conservative single-admin classification reflects the absence of any defined decentralised governance over the contract. The aggregator is an operator and liveness role, not the contract admin.",
+      "citations": [
+        {
+          "cited_text": "A straightforward deployment of \\Protocol involves a single aggregator responsible for collecting transactions, building blocks, and generating proofs.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "To minimize trust and burden on the aggregator, one can extend \\Protocol to support multiple aggregators working together in a distributed and decentralized manner.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Users generate transaction validity proofs locally by folding their witness with a random pair via BlindFold, without running a full zkSNARK prover. The README reports sub-100ms client-side proving on a MacBook M1 Pro, while the paper's detailed benchmarks on a MacBook Pro with an Apple M1 Max CPU and 32 GB of RAM report 32.806 ms for transaction validity proving with Griffin and 43.112 ms for the balance update. Balance proofs are also maintained locally via IVC after each transaction.",
+      "citations": [
+        {
+          "cited_text": "Users prove transaction validity by folding their witness with a random pair (BlindFold), without running a full zkSNARK prover.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        },
+        {
+          "cited_text": "client-side proving *very* efficient (sub-100ms on a MacBook M1 Pro).",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        },
+        {
+          "cited_text": "We run client-side proving benchmarks on a MacBook Pro with an Apple M1 Max CPU and 32\\,GB of RAM",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/implementation.tex"
+        },
+        {
+          "cited_text": "Prove transaction validity & 32.806\\,ms & 51.830\\,ms & 60.388\\,ms & 94.026\\,ms \\\\\nProve balance update & 43.112\\,ms",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/implementation.tex"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "The aggregator receives only shielded transactions containing nullifiers and committed outputs, so it cannot learn the original input or output values and cannot check whether transactions are valid. By the hiding property of the non-interactive folding scheme it learns nothing about the witness, while soundness stops an invalid one. Amounts and recipients stay hidden from every third party, and no external prover, validium committee, or indexer sits between the user and the L1 contract.",
+      "citations": [
+        {
+          "cited_text": "Consequently, the aggregator cannot learn the original input or output \\acp{UTXO} and is unable to check whether users' transactions are valid.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "Due to the hiding property of $\\NIFS$, the aggregator cannot learn any information about $\\w^\\Tx$ from $\\W^\\Tx$, while the soundness of \\NIFS prevents the sender from using an invalid $\\w^\\Tx$.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "1 : Prototype / devnet",
+      "needsResearchReview": "research prototype, no deployed contract or testnet, no dated deployment evidence",
+      "notes": "PlasmaBlind is a research prototype with no mainnet or testnet deployment. The codebase is a Rust implementation built on the sonobe folding library and arkworks, organised into core, client, and aggregator crates, with the L1 rollup contract specified in the paper rather than implemented in Solidity. The authors characterise the aggregator as a benchmarked prototype run on an Intel i9 desktop. No deployed contract address, audit, or public testnet exists.",
+      "citations": [
+        {
+          "cited_text": "This repo provides an implementation of PlasmaBlind using the [`sonobe`](https://github.com/privacy-ethereum/sonobe) folding library and [`arkworks`](https://github.com/arkworks-rs).",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        },
+        {
+          "cited_text": "We implement \\Protocol in Rust based on the \\texttt{sonobe}",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/implementation.tex"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "The protocol relies on the Nova folding scheme together with its BlindFold extension for privacy, both elliptic-curve constructions. The curve choice is the BN254 and Grumpkin cycle, pinned through the arkworks curve dependencies in the core crate manifest, and discrete-log hardness on these curves breaks under Shor's algorithm. No lattice, hash-based, or code-based fallback is present in the proving stack.",
+      "citations": [
+        {
+          "cited_text": "PlasmaBlind adds sender-receiver unlinkability and confidential amounts through the [Nova](https://eprint.iacr.org/2021/370) folding scheme and its [BlindFold](https://eprint.iacr.org/2024/248)",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        },
+        {
+          "cited_text": "ark-bn254 = { workspace = true, features = [\"r1cs\"] }\nark-grumpkin = { workspace = true, features = [\"r1cs\"] }",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/core/Cargo.toml"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "No compliance gate appears anywhere in the protocol flows. The enrollment flow only registers a public key and initialises a nonce, with no screening, allowlist, or know-your-customer check applied to the user. The rollup contract records the user's L2 public key with their L1 address and sets the nonce to zero, nothing more. Exits similarly verify only the balance proof against the latest block tree root and the user's nonce, with no policy filter on the recipient.",
+      "citations": [
+        {
+          "cited_text": "The rollup contract registers the user by recording the user's \\ac{L2} public key \\Pk with their \\ac{L1} address \\Address and initializing the user's nonce $\\Nonce_\\Pk$ to 0.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "This can be done by submitting the balance proof $\\pi^\\Balance$, which is verified by the rollup contract against the latest block tree root and the user's nonce.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "No compliance enforcement entity exists within the protocol. PlasmaBlind specifies the interactions among three types of parties: the user, the aggregator, and the rollup contract. None of these roles curate blocklists, screen addresses, or gate transactions on policy grounds — the aggregator's verification work is limited to transaction validity and nullifier non-membership, and the rollup contract checks block proofs against state roots.",
+      "citations": [
+        {
+          "cited_text": "\\Protocol specifies the interactions among three types of parties: the \\textit{user}, the \\textit{aggregator}, and the \\textit{rollup contract}.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["None"],
+      "notes": "The protocol implements no compliance gating mechanism. Amounts are hidden behind commitments so another party cannot learn a user's balance, and the user only reveals their balance when exiting so the rollup contract can return the L1 funds. No viewing-key disclosure, blocklist or allowlist check, know-your-customer gate, or attestation oracle appears in the construction, and transaction validity rests solely on nullifier non-membership, commitment openings, and the balance relation.",
+      "citations": [
+        {
+          "cited_text": "In \\Protocol, we hide the amounts of \\acp{UTXO} behind their commitments, making it infeasible for another party to learn the balance of a user.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["None"],
+      "notes": "The deposit, transfer, and exit flows in Plasma Fold contain only cryptographic validity checks with no compliance screening at any stage. Deposits and withdrawals are special transactions to and from the rollup contract, whose checks are limited to verifying the block proof, then updating tree roots and nonces. The exit path likewise only verifies the balance proof against the latest block tree root and the user's nonce, with no list-based gating, sanctions screen, or identity check.",
+      "citations": [
+        {
+          "cited_text": "Since deposits and withdrawals can be treated as special transactions from and to the rollup contract, they can be integrated into \\Protocol with minimal modifications to the transaction flow.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "If the proof is valid, the rollup contract accepts the block by updating the tree roots stored on-chain and incrementing the nonces for all users with non-$\\bot$ public keys in $\\Tree^\\Pk_{t}$.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "This can be done by submitting the balance proof $\\pi^\\Balance$, which is verified by the rollup contract against the latest block tree root and the user's nonce.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User"],
+      "notes": "The protocol exposes transaction contents only to the transacting parties: a transparent transaction is known only to the sender and is never shared with the aggregator or other users. Recipients learn their incoming outputs through peer-to-peer openings the sender transmits, so they can later claim ownership. No viewing-key mechanism, auditor delegation, regulator backdoor, or governance-controlled disclosure path is part of the construction.",
+      "citations": [
+        {
+          "cited_text": "It is only known to the sender for privacy of transaction data such as recipients and amounts, and is never shared with the aggregator or other users.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "openings need to be sent to the corresponding recipients, so that they can later claim the ownership of their received \\acp{UTXO}",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "None",
+      "notes": "The protocol contains no viewing-permission mechanism of any kind. The only disclosure pathway is the sender transmitting the commitment opening directly to the recipient so they can later claim ownership. No grantable, revocable, or auditor-facing viewing right exists, and amounts stay hidden behind commitments so another party cannot learn a user's balance except via the user's own exit reveal. Selective disclosure to third parties has nothing to control because no such channel is defined.",
+      "citations": [
+        {
+          "cited_text": "openings need to be sent to the corresponding recipients, so that they can later claim the ownership of their received \\acp{UTXO}",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "In \\Protocol, we hide the amounts of \\acp{UTXO} behind their commitments, making it infeasible for another party to learn the balance of a user.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
+      "notes": "Validity rests on re-checkable cryptography: the L1 rollup contract verifies a constant-size block validity proof attesting that every shielded transaction in the block is valid and correctly summarised as the block data. Double-spend is blocked by a nullifier tree where input nullifiers must not already be contained, and after insertion the new root must match the claimed updated root. The single aggregator handles ordering and inclusion behind these proofs, so it cannot forge transitions.",
+      "citations": [
+        {
+          "cited_text": "The L1 rollup contract verifies a constant-size block validity proof.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        },
+        {
+          "cited_text": "the rollup contract should be convinced that every shielded transaction in the block is valid, and that these transactions are correctly summarized as the block data.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "$\\Nullifier^\\In_{t, k, i}$ for every $i \\in [0, m - 1], k \\in [0, l - 1]$ are not contained in the nullifier tree with old root $\\Root^\\Nullifier_{[t - 1]}$.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The plasma-blind repository is released under the MIT License, with copyright held by the Ethereum Foundation, an OSI-approved permissive licence covering the Rust core, client, and aggregator crates alongside the LaTeX paper source. The on-chain verifier logic is paper-only, so no Solidity component sits outside this licence.",
+      "citations": [
+        {
+          "cited_text": "MIT License\n\nCopyright (c) 2026 Ethereum Foundation\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/LICENSE"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Transaction",
+      "notes": "The nullifier tree is a permanent, global structure holding all historical valid nullifiers as leaves, with the rollup contract storing the latest root and updating it on a valid proof. Each shielded transaction adds one nullifier per consumed output, so the accumulator expands per transaction even though only the succinct root sits in contract storage. Public key tree leaves are also posted in calldata, but the nullifier root is the load-bearing accumulator.",
+      "citations": [
+        {
+          "cited_text": "contains all historical valid nullifiers as leaves. The rollup contract stores the latest root and updates it upon receiving a valid proof.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "we require the aggregator to post onchain the leaves of $\\Tree^\\Pk_t$, so that users can learn whether the aggregator has included their transactions in the current block.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "No Scanning",
+      "notes": "Users of PlasmaBlind maintain a local balance proof updated only when they send or receive a transaction, with transfer data pushed to them by the sender rather than found through chain scanning. The sender submits the shielded transaction to the aggregator and also sends it with the opening and the output to each recipient. Unlike Intmax2, users do not need to synchronise for blocks they are not involved in, removing per-block trial-decryption work.",
+      "citations": [
+        {
+          "cited_text": "the sender sends $\\TxShielded$ along with the opening $\\rho_j$ and the corresponding output \\ac{UTXO} $\\Utxo^\\Out_j$ to each recipient $\\Pk_j$",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "in a similar vein to \\PlasmaFold, users of \\Protocol do not need to synchronize for blocks that they are not involved in.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Plasma Fold operates in the UTXO model, where a transaction consumes old outputs to create new ones, each carrying the owner's public key and value. Spent outputs are replaced by nullifiers, unique deterministic tags that prevent double-spending without revealing which output is consumed, while created outputs become commitments binding to amounts and recipients. State is therefore a set of unspent outputs tracked through nullifiers and commitments rather than account balances.",
+      "citations": [
+        {
+          "cited_text": "\\Protocol operates in the \\ac{UTXO} model, and a transaction in \\Protocol consumes old \\acp{UTXO} to create new \\acp{UTXO}.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "consumed \\acp{UTXO} are replaced by \\textit{nullifiers}, which are unique, deterministic tags that prevent double-spending without revealing which output is consumed.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/overview.tex"
+        },
+        {
+          "cited_text": "created output \\acp{UTXO} are replaced by cryptographic \\textit{commitments} binding to the amounts and recipients while hiding their concrete values.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/overview.tex"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Off-chain storage with on-chain commitment"],
+      "notes": "PlasmaBlind keeps transaction payloads off-chain while posting only succinct commitments to L1. It uses Merkle trees or vector commitments to cut calldata size and on-chain storage, with the binding property of the commitment scheme ensuring those commitments open to the correct values. Users maintain local balance proofs updated via IVC after each transaction, enabling instant exits from the L2 without interacting with the aggregator.",
+      "citations": [
+        {
+          "cited_text": "we leverage Merkle trees $\\Tree$ (or vector commitments in general) to reduce calldata size and onchain storage.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "the binding property of $\\CM$ ensures the commitments are opened to the correct values.",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "users maintain local balance proofs updated via IVC after each transaction to enable instant exits from the L2 without interacting with the aggregator.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": ["No access to DeFi"],
+      "notes": "PlasmaBlind operates as a standalone private payments L2 with no smart-contract execution surface beyond transfers. It is a private L2 protocol with instant client-side proving, and the construction only specifies the enrollment, transaction, and exit flows as its main procedures. None of these flows expose hooks for external DeFi composition, so there is no path to compose private balances with on-chain protocols.",
+      "citations": [
+        {
+          "cited_text": "PlasmaBlind is a private L2 protocol with instant client-side proving. ",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md"
+        },
+        {
+          "cited_text": "We are now ready to describe the main procedures of \\Protocol, namely, the \\textit{enrollment flow} the \\textit{transaction flow}, and the \\textit{exit flow}.\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "PlasmaBlind's transaction model is restricted to value transfers between outputs, with no general-purpose contract execution. Each UTXO is a public key paired with an amount, and a transparent transaction is defined simply as a set of input UTXOs and a set of output UTXOs. There is no scripting field, no contract state, and no execution surface beyond moving value from inputs to outputs.",
+      "citations": [
+        {
+          "cited_text": "A \\ac{UTXO} is denoted as $\\Utxo \\coloneqq (\\Pk, \\Amount)$, where \\Amount and \\Pk are respectively the \\ac{UTXO}'s value and the public key of the \\ac{UTXO}'s owner.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        },
+        {
+          "cited_text": "Formally, a transparent transaction with $m$ input \\acp{UTXO} and $n$ output \\acp{UTXO} is defined as $\\Tx \\coloneqq (\\{ \\Utxo^\\In_i \\}^{m - 1}_{i = 0}, \\{ \\Utxo^\\Out_j \\}^{n - 1}_{j = 0})$.\n\n",
+          "source": "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex"
+        }
+      ]
+    }
+  ]
 }
