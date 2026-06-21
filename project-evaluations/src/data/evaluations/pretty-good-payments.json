@@ -1,10 +1,517 @@
 {
   "id": "pretty-good-payments",
   "title": "Pretty Good Payments",
-  "description": "Pretty Good Payments is a research proposal for free, private, scalable stablecoin payments on Ethereum. It combines zero-knowledge proofs with a yield-based fee model: idle deposits in the system generate yield that funds protocol operations, enabling zero user fees while preserving privacy of sender, receiver, and amount.",
-  "status": "pending",
-  "documentation": "",
-  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
-  "properties": [],
-  "sourceUrls": []
+  "description": "Pretty Good Payments is a privacy-focused optimistic rollup on Ethereum for free, private ERC-20 stablecoin transfers. It adapts Zcash's shielded e-cash model — Poseidon-hashed notes, nullifiers, and Groth16 proofs — to an EIP-4844 blob rollup, and pays sequencers from yield earned on deposited funds routed into ERC-4626 vaults rather than charging users fees. Sender, receiver, amount, and the transaction graph are hidden. It is a grant-funded reference implementation by an external contributor, open-codebase but not deployed to any public network.",
+  "documentation": "https://github.com/aleph-v/pretty_good_payments",
+  "status": "complete",
+  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)", "Private L2"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": ""
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Pretty Good Payments operates a shielded pool where notes hide token type, amount, blinding, and owner inside a Poseidon commitment, with sender identity, receiver identity, transaction amounts, and the transaction graph all hidden from external observers. Spends consume nullifiers and produce new note commitments through a Groth16 circuit, so in-pool transfers leak neither balances nor amounts. Deposit and withdrawal amounts are visible only at the L1 boundary.",
+      "citations": [
+        {
+          "cited_text": "### What's Hidden\n\n- Sender identity\n- Receiver identity\n- Transaction amounts\n- Transaction graph",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "The core transfer functionality uses Groth16 zero-knowledge proofs to enable fully private transactions:",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Anonymity",
+      "value": "Yes",
+      "notes": "Pretty Good Payments uses a Zcash-style shielded UTXO model where notes are owned by a key whose public form is a Poseidon hash of a 252-bit private scalar, and spends reveal only a nullifier that cannot connect the nullifier to the note without the private key. Both endpoints of a transfer fall within the hidden set: sender identity, receiver identity, transaction amounts, and the transaction graph remain hidden from external observers, while only block inclusion and output counts are visible.",
+      "citations": [
+        {
+          "cited_text": "Each input note has a unique nullifier:\n\n```\nnullifier = Poseidon(privateKey, blinding, noteIndex)\n```",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "### What's Hidden\n\n- Sender identity\n- Receiver identity\n- Transaction amounts\n- Transaction graph",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        }
+      ]
+    },
+    {
+      "name": "Asset privacy",
+      "value": "Yes",
+      "notes": "Pretty Good Payments structures each note as [asset_id, amount, blinding, publicKey], with the asset_id being a 252-bit ERC-20 token address, and stores notes in the Merkle tree only as a Poseidon hash of asset_id, amount, blinding, and publicKey. Because the token identifier is committed inside the Poseidon commitment alongside the amount and owner key, the specific asset moving in a shielded transfer is hidden from third-party observers. The boundary remains exposed at deposit and withdrawal.",
+      "citations": [
+        {
+          "cited_text": "### Note Structure\n\n```\nNote = [asset_id, amount, blinding, publicKey]\n\n- asset_id:  252 bits - ERC-20 token address\n- amount:    180 bits - Token amount",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "### What's Hidden\n\n- Sender identity\n- Receiver identity\n- Transaction amounts\n- Transaction graph",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        }
+      ]
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Pretty Good Payments operates as a dedicated layer-2 privacy rollup with its own entry contract, so depositing is a visible call to the Entrypoint contract. Transfers are batched by sequencers into EIP-4844 blobs posted to L1 as PGP-specific blob data rather than ordinary ERC-20 transfers. Withdrawals route through a special note with publicKey = 0 and a KZG opening proof, making every entry and exit observable as PGP usage.",
+      "citations": [
+        {
+          "cited_text": "**Deposit**: Users deposit ERC-20 tokens by calling the Entrypoint contract.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        },
+        {
+          "cited_text": "**Sequence**: Sequencers batch transactions into EIP-4844 blobs and post them to L1. ",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        },
+        {
+          "cited_text": "**Withdraw**: Users create a special note with `publicKey = 0` and `blinding = destinationAddress`.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        }
+      ]
+    },
+    {
+      "name": "On-chain gas cost: deposit",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: transfer",
+      "value": ""
+    },
+    {
+      "name": "On-chain gas cost: withdraw",
+      "value": ""
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "1555200",
+      "needsResearchReview": "challenge period is configurable per network, 1,555,200s is the mainnet figure not a fixed protocol constant",
+      "notes": "Trustless finality requires waiting out the fraud-proof challenge window, which runs roughly 18 days on mainnet and is gated on beacon-chain blob availability rather than inherited from Ethereum L1 inclusion. Blob data remains available for the challenge period (~18 days on mainnet), and once the window passes with no successful challenge the block becomes final. Soft settlement rides L1 inclusion of the block, but withdrawal irreversibility waits on the challenge period elapsing.",
+      "citations": [
+        {
+          "cited_text": "Blob data remains available for the challenge period (~18 days on mainnet)",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Number of secrets",
+      "value": "2",
+      "notes": "The user controls two independently stored secrets: a note spending key for the shielded protocol and an ordinary Ethereum key for L1 interactions. The note spending key is any 252-bit value with the public key derived by Poseidon-hashing it, generated or imported separately from the wallet. For Ethereum-keyed accounts the spending key is an Ethereum address and the user signs the transaction's input and output references on L1.",
+      "citations": [
+        {
+          "cited_text": "### Note Structure\n\n```\nNote = [asset_id, amount, blinding, publicKey]\n\n- asset_id:  252 bits - ERC-20 token address\n- amount:    180 bits - Token amount",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "Set `privateKey` to an Ethereum address (< 160 bits)\n2. Transaction requires L1 approval in TransactionRegistry\n3. User signs `[nullifiers, outputLeaves]` on L1\n4. ",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        }
+      ]
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "Depositing into Pretty Good Payments requires no protocol-imposed waiting period — users call deposit() to move tokens from L1 into the L2 system, and the contract records the note hash for inclusion in a future block. Inclusion is bounded only by L1 block latency plus the sequencer's next block, and a deposit made now targets block max(highestPendingDeposit, currentBlock + 2). The sequencer MUST include exactly these deposits when submitting that block, or they can be challenged.",
+      "citations": [
+        {
+          "cited_text": "**Deposits**: Users call `deposit()` to move tokens from L1 into the L2 system.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        },
+        {
+          "cited_text": "A deposit made now targets block `max(highestPendingDeposit, currentBlock + 2)`. This gives sequencers at least two blocks of lead time to include deposits.\n\n",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        },
+        {
+          "cited_text": "The sequencer MUST include exactly these deposits when submitting that block, or they can be challenged.\n\n",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        }
+      ]
+    },
+    {
+      "name": "Withdraw time",
+      "value": "1555200",
+      "needsResearchReview": "challenge period is configurable per network, 1,555,200s is the mainnet figure not a fixed protocol constant",
+      "notes": "Withdrawals require waiting for the containing block to pass the challenge period before funds can move to L1, since the containing block must be past the challenge period before a KZG opening proof can release tokens. Blob data remains available for the challenge period (~18 days on mainnet), so the withdraw delay is roughly 1,555,200 seconds. The protocol is a reference implementation not deployed to any public network, so the period is a stated parameter rather than an observed mainnet value.",
+      "citations": [
+        {
+          "cited_text": "The containing block must be past the challenge period (confirmed)",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        },
+        {
+          "cited_text": "Blob data remains available for the challenge period (~18 days on mainnet)",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "Yes",
+      "notes": "Sequencing is permissionless: anyone can become a sequencer by staking ETH, and the stake serves as a security bond against invalid data, slashable by challengers. The open window is a liveness fallback where any sequencer with sufficient stake can submit blocks, keeping the system live even if priority sequencers go offline. Deposits are forced inclusions: the sequencer must include exactly these deposits or be challenged. No blocklist, allowlist, or KYC gate exists on transfers or withdrawals.",
+      "citations": [
+        {
+          "cited_text": "Anyone can become a sequencer by staking ETH.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md"
+        },
+        {
+          "cited_text": "Any sequencer with sufficient stake can submit blocks. If multiple sequencers want to submit, they compete through normal Ethereum transaction ordering.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md"
+        },
+        {
+          "cited_text": "Deposits for a block are stored in `perBlockDeposits[blockNr]`, an array of note hashes. The sequencer MUST include exactly these deposits when submitting that block, or they can be challenged.\n\n",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        }
+      ]
+    },
+    {
+      "name": "External network dependence",
+      "value": "No",
+      "notes": "Sequencing in Pretty Good Payments is handled by the protocol's own staked operator set on Ethereum, with no additional committee or relayer network layered on top. Anyone can become a sequencer by staking ETH, and this stake serves as a security bond against invalid data. Open-period inclusion is contested through ordinary L1 transaction ordering, so any sequencer with sufficient stake can submit blocks, and no extra crypto-economic system mediates settlement.",
+      "citations": [
+        {
+          "cited_text": "Anyone can become a sequencer by staking ETH.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md"
+        },
+        {
+          "cited_text": "Any sequencer with sufficient stake can submit blocks. If multiple sequencers want to submit, they compete through normal Ethereum transaction ordering.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md"
+        }
+      ]
+    },
+    {
+      "name": "Escape hatch",
+      "value": "Can exit in a time period",
+      "needsResearchReview": "forced exit under total sequencer censorship beyond the open window is unspecified",
+      "notes": "Withdrawal is self-service after a delay: a user creates an output note where the blinding field encodes their L1 destination address and the publicKey is set to 0, then proves inclusion to the L1 contract. The contract requires the containing block be past the challenge period, the note have publicKey == 0, not have been withdrawn before, and a valid KZG proof show it exists in the blob.",
+      "citations": [
+        {
+          "cited_text": "blinding: destinationAddress,  // Your L1 address\n     publicKey: 0  // Marks as withdrawable",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/user-guide.md"
+        },
+        {
+          "cited_text": "The containing block must be past the challenge period (confirmed)",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        },
+        {
+          "cited_text": "calls the EIP-4844 point evaluation precompile to verify the claimed value matches the blob.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        }
+      ]
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "needsResearchReview": "no canonical deployment, on-chain owner slot not classified as EOA vs multisig",
+      "notes": "The contracts are Ownable with no proxy or UUPS pattern, so updates require fresh deployments rather than in-place upgrades — PGP contracts are not upgradeable, and the update path is to deploy new contracts, migrate state off-chain, and redirect users. The owner retains live parameter control, including the priority-sequencer rotation list via addFirstLook. That live parameter authority over the sequencer list places this under Single admin rather than Immutable.",
+      "citations": [
+        {
+          "cited_text": "PGP contracts are **not upgradeable**.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/deployment.md"
+        },
+        {
+          "cited_text": "For updates:\n\n1. Deploy new contracts\n2. Migrate state (off-chain)\n3. Redirect users to new deployment",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/deployment.md"
+        }
+      ]
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Pretty Good Payments has users generate the spend proof locally before handing it off to a sequencer. The user's wallet generates a ZK proof using the transfer circuit, which proves membership, authorization, and value conservation, then submits it to the sequencer via a POST /submit endpoint carrying the proof, anchor info, nullifiers, and output leaves. The sequencer's role is batching and posting blobs to L1, not proof generation.",
+      "citations": [
+        {
+          "cited_text": "**Generate ZK proof**\n   - Uses transfer.circom circuit\n   - Proves membership, authorization, value conservation",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/user-guide.md"
+        },
+        {
+          "cited_text": "POST /submit\n   {\n     proof: [...],\n     anchorInfo: \"...\",\n     nullifiers: [...],\n     outputs: [...]\n   }",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/user-guide.md"
+        },
+        {
+          "cited_text": "User creates ZK proof for spend\n2. Submits proof to sequencer API\n3. ",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/overview.md"
+        }
+      ]
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Proving happens client-side, with users generating the Groth16 proof locally before submitting to a sequencer, so no external prover service receives plaintext note contents. The sequencer only orders and posts block data — sender, receiver, amounts, and the transaction graph stay hidden, and observers see only nullifiers, output note hashes, and the anchor. Data availability uses EIP-4844 blobs committed via KZG, with no validium operator able to inspect user data.",
+      "citations": [
+        {
+          "cited_text": "### What's Hidden\n\n- Sender identity\n- Receiver identity\n- Transaction amounts\n- Transaction graph",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "**Generate ZK proof** proving:\n   - Input notes exist in the tree\n   - Prover knows the private keys\n   - Outputs have same total value as inputs\n   - Nullifiers are correctly computed",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        }
+      ]
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "1 : Prototype / devnet",
+      "needsResearchReview": "reference implementation not deployed to any public network, no dated first-tx evidence",
+      "notes": "Pretty Good Payments is a reference implementation with deployment guidance for Ethereum mainnet or testnets, but the runbook only covers Sepolia testnet and a local Anvil node as concrete targets, with no canonical deployed instance named. The deploy guide lists only shared Poseidon library addresses as external dependencies, not a deployed PGP entrypoint. It is positioned as an optimistic-rollup Layer 2 with a Zcash-style e-cash model, but no mainnet or public testnet instance is identified.",
+      "citations": [
+        {
+          "cited_text": "**Poseidon Libraries** (deployed deterministically):\n- PoseidonT3: `0x3333333C0A88F9BE4fd23ed0536F9B6c427e3B93`\n- PoseidonT5: `0x555333f3f677Ca3930Bf7c56ffc75144c51D9767`",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/deployment.md"
+        },
+        {
+          "cited_text": "PGP contracts are **not upgradeable**.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/deployment.md"
+        },
+        {
+          "cited_text": "Pretty Good Payments (PGP) is a Layer 2 payment system that enables private transactions for ERC-20 tokens, settling to Ethereum mainnet.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "The transfer circuit uses Groth16-style proofs in Circom 2.1.5 with Poseidon hashing, and the core transfer functionality uses Groth16 zero-knowledge proofs to enable fully private transactions. Groth16 and Poseidon both rest on classical discrete-log and algebraic hardness assumptions that fall to Shor's algorithm on a sufficiently large quantum computer. No lattice-based, hash-based, or other post-quantum primitive guards the spend authorisation or commitment scheme.",
+      "citations": [
+        {
+          "cited_text": "pragma circom 2.1.5;\n\ninclude \"binary-merkle-root.circom\";\ninclude \"poseidon.circom\";",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/circuits/transfer.circom"
+        },
+        {
+          "cited_text": "The core transfer functionality uses Groth16 zero-knowledge proofs to enable fully private transactions:",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "None",
+      "notes": "No compliance gate exists anywhere in the transaction flow. The system runs as a permissionless shielded pool: users pay nothing, sequencer registration is open with a slashable stake, and transactions use zero-knowledge proofs to hide sender, receiver, and amounts. Sequencer admission turns on stake alone, with the bond securing against fraud rather than gating users by identity, and deposit, transact, and withdraw paths carry no blocklist, allowlist, KYC, or sanctions screen.",
+      "citations": [
+        {
+          "cited_text": "**Privacy**: Transactions use zero-knowledge proofs to hide sender, receiver, and amounts",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        },
+        {
+          "cited_text": "if a sequencer submits invalid data, challengers can prove the fraud and claim half the stake as a reward.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md"
+        }
+      ]
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "None",
+      "notes": "No entity enforces compliance restrictions on this protocol. Sequencer participation is fully permissionless — anyone can stake ETH, with the stake serving as a security bond challengers can claim half of if invalid data is proven, a fraud-proof game not a compliance gate. The contract owner's authority is limited to operational rotation: it maintains a list of priority sequencers chosen by epoch number modulo list length, and no blocklist, allowlist, or KYC mechanism exists.",
+      "citations": [
+        {
+          "cited_text": "Anyone can become a sequencer by staking ETH.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md"
+        },
+        {
+          "cited_text": "The contract owner maintains a list of priority sequencers. For any given epoch, the priority sequencer is determined by taking the epoch number modulo the list length.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md"
+        }
+      ]
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["None"],
+      "notes": "The protocol operates as a permissionless shielded pool with no compliance gating: it uses a Zcash-style e-cash model for notes, spending, and privacy, with no KYC, no blocklist or sanctions screen, no proof-of-innocence or association-set check, and no viewing-key disclosure path. Withdrawals are self-service via a special note where publicKey = 0, with no policy oracle consulted. The optional Ethereum-keyed account mode is a UX feature, not a screening mechanism.",
+      "citations": [
+        {
+          "cited_text": "# Private E-Cash System\n\nPretty Good Payments uses a simplified version of the Zcash private e-cash model. This document explains how notes work, how they're spent, and the privacy guarantees.\n\n",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "Create transaction with output where `publicKey = 0`\n2. Set `blinding = destinationAddress`\n3. Submit transaction normally\n\n### Withdrawal Process\n\n```\n1. ",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        }
+      ]
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["None"],
+      "notes": "No compliance gating sits at any point in the transfer lifecycle. Sequencers collect transactions, batch them into blobs, and submit blocks to L1 under purely economic constraints — no KYC, blocklist, or sanctions screen runs at deposit, shielded spend, or withdrawal. Anyone can become a sequencer by staking ETH, and that stake acts as a security bond enforced only against invalid data via fraud proofs, not against user identity or destination.",
+      "citations": [
+        {
+          "cited_text": "Sequencers are the operators who collect transactions, batch them into blobs, and submit blocks to L1.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md"
+        },
+        {
+          "cited_text": "Anyone can become a sequencer by staking ETH.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User"],
+      "notes": "Pretty Good Payments has no viewing-key or auditor-disclosure scheme. Notes are stored as Poseidon hashes in the merkle tree, and a note can be spent by anyone who knows the preimage of its publicKey, so only a holder of the spending secret can identify and track their own notes via the tree indexing used for client syncing. Hidden from outside observers are sender identity, receiver identity, transaction amounts, and the transaction graph, with no delegated-viewing or admin access path.",
+      "citations": [
+        {
+          "cited_text": "### Note Structure\n\n```\nNote = [asset_id, amount, blinding, publicKey]\n\n- asset_id:  252 bits - ERC-20 token address\n- amount:    180 bits - Token amount",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "### What's Hidden\n\n- Sender identity\n- Receiver identity\n- Transaction amounts\n- Transaction graph",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        }
+      ]
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "None",
+      "notes": "The protocol exposes no viewing-key or auditor-access mechanism — notes are spent by anyone holding the preimage of the note's publicKey, with privacy resting on Poseidon commitments, nullifiers, and blinding factors. Hidden are sender, receiver, amounts, and the transaction graph, with no provision for selectively revealing any to a third party. The ethereum-keyed account mode partially exposes the sender address on L1 but is a signing variant, not a disclosure primitive.",
+      "citations": [
+        {
+          "cited_text": "### What's Hidden\n\n- Sender identity\n- Receiver identity\n- Transaction amounts\n- Transaction graph",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        }
+      ]
+    },
+    {
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
+      "notes": "Each transfer carries a re-checkable Groth16 zero-knowledge proof that a verifier contract can reject, with the contract extracting proof and inputs from the blob via KZG. State-transition correctness, however, is optimistic: a submitted block enters a challenge period during which anyone can challenge fraud. Double-spend prevention rests on the same path — a nullifier appears once, with a duplicate provable via KZG openings. The model is 1-of-N honest challenger, not a validity rollup.",
+      "citations": [
+        {
+          "cited_text": "**Invalid ZK Proof**: The Groth16 proof doesn't verify against the public inputs. The contract extracts the proof and inputs from the blob via KZG, then calls the verifier contract.\n\n",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        },
+        {
+          "cited_text": "## How It Works\n\nWhen a sequencer submits a block, it enters a challenge period. During this window, anyone can examine the block and submit a challenge transaction if they find fraud. ",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/challenge-game.md"
+        },
+        {
+          "cited_text": "A nullifier should only ever appear once across the entire chain history. If the same nullifier appears twice, someone double-spent - they used the same note as input to two different transactions.\n\n",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/challenge-game.md"
+        }
+      ]
+    },
+    {
+      "name": "Open source",
+      "value": "No",
+      "notes": "The repository carries an \"UNLICENSED — All rights reserved\" declaration, stated plainly at the bottom of the README as the project's licence. This is not an OSI-approved licence, and with no separate permissive licence covering the Solidity contracts, Circom circuits, or Rust off-chain components, the code is source-available rather than open source.",
+      "citations": [
+        {
+          "cited_text": "## License\n\nUNLICENSED - All rights reserved",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        }
+      ]
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Transaction",
+      "notes": "Pretty Good Payments accumulates on-chain protocol state per transaction. Each transfer inserts up to three new note commitments as leaves and reveals nullifiers, with notes organized in a sparse merkle tree of depth 44 whose used nullifiers the contract permanently tracks to block reuse. The underlying note payload lives in EIP-4844 blobs with only the hash and metadata stored on-chain, but per-block anchor hashes and the nullifier set still grow monotonically with transaction count.",
+      "citations": [
+        {
+          "cited_text": "Each transaction can consume up to 2 input notes and create up to 3 output notes.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        },
+        {
+          "cited_text": "organized in a predictable sparse merkle tree with total depth of 44 levels",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "The actual block data lives in EIP-4844 blobs attached to the transaction - only the hash and metadata are stored on-chain.\n\n",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        }
+      ]
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Scanning",
+      "notes": "Pretty Good Payments uses a sparse merkle tree where users only need to track root hashes for each day, block roots within the current day, and individual notes within the current block. Wallet syncing requires the device to download day roots, download block roots for the current day, and download paths for the user's own notes, then verify notes exist in the tree and check nullifiers haven't been used. This is Zcash-style trial discovery on the user's device, with no delegated indexer service.",
+      "citations": [
+        {
+          "cited_text": "### Note Structure\n\n```\nNote = [asset_id, amount, blinding, publicKey]\n\n- asset_id:  252 bits - ERC-20 token address\n- amount:    180 bits - Token amount",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "**Sync merkle tree**\n   - Download day roots\n   - Download block roots for current day\n   - Download paths for your notes\n\n3. ",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/user-guide.md"
+        },
+        {
+          "cited_text": "**Check note status**\n   - Verify notes exist in tree\n   - Check nullifiers haven't been used\n\n## Troubleshooting\n\n### Deposit Not Appearing\n\n1. ",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/user-guide.md"
+        }
+      ]
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Pretty Good Payments organises private state as discrete shielded notes, each the fundamental unit of value, structured as a tuple of asset_id, amount, blinding, and publicKey hashed via Poseidon into a Merkle tree. Spends consume input notes and produce fresh output notes — up to 2 inputs and 3 outputs — matching the Zcash-style commitment-and-nullifier construction. Each input has a unique nullifier Poseidon(privateKey, blinding, noteIndex) preventing double-spend.",
+      "citations": [
+        {
+          "cited_text": "Notes are the fundamental unit of value in PGP. Each note represents ownership of tokens.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "**Select input notes** (up to 2)\n2. **Create output notes** (up to 3)\n3. **Compute nullifiers** for inputs",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        },
+        {
+          "cited_text": "Each input note has a unique nullifier:\n\n```\nnullifier = Poseidon(privateKey, blinding, noteIndex)\n```",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md"
+        }
+      ]
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Off-chain storage with on-chain commitment"],
+      "notes": "Block data, including transaction notes, lives in EIP-4844 blobs attached to sequencer submissions, with only the block hash and metadata stored on-chain. The on-chain footprint is cryptographic commitments: each block's BlockData is reduced to one keccak256 hash in a roots array. Withdrawals reconstruct note data from the off-chain blobs via a KZG proof that their note exists in a block's blob data. The blobs are ephemeral data-availability artefacts, not persistent storage.",
+      "citations": [
+        {
+          "cited_text": "The actual block data lives in EIP-4844 blobs attached to the transaction - only the hash and metadata are stored on-chain.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        },
+        {
+          "cited_text": "Rather than storing this entire structure, the contract stores only its keccak256 hash in a `roots` array.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        },
+        {
+          "cited_text": "They must provide a KZG proof that their note exists in a confirmed block's blob data.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md"
+        }
+      ]
+    },
+    {
+      "name": "Access to DeFi",
+      "value": ["No access to DeFi"],
+      "notes": "PGP is a payments-only privacy rollup whose shielded notes carry ERC-20 value for private transfers, with no composability hook for users. Users deposit funds and receive notes they can spend privately, their funds generate yield but it goes to sequencers, and transactions are free. Deposited tokens are auto-routed by the protocol into yield vaults to pay sequencers via an ERC4626-compliant vault. Spend circuits handle only note-to-note transfers with no swap, lending, or external callback.",
+      "citations": [
+        {
+          "cited_text": "Users deposit funds and receive notes they can spend privately. Their funds generate yield, but they don't receive it directly - it goes to sequencers. In exchange, transactions are free.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/yield.md"
+        },
+        {
+          "cited_text": "The YieldRouter immediately deposits them into an ERC4626-compliant vault.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/yield.md"
+        }
+      ]
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "The protocol supports only shielded ERC-20 transfers with deposits and withdrawals, with no private smart-contract execution layer. It is a Layer 2 payment system for private ERC-20 transactions settling to Ethereum. Each spend is constrained to up to 2 input and 3 output notes. An optional Ethereum-owned account mode permits L1 signature authorization, making L2 payments programmable for multisig, swaps, and escrows, but the resolution logic runs on L1 in plaintext, not as private L2 contracts.",
+      "citations": [
+        {
+          "cited_text": "Pretty Good Payments (PGP) is a Layer 2 payment system that enables private transactions for ERC-20 tokens, settling to Ethereum mainnet.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        },
+        {
+          "cited_text": "Each transaction can consume up to 2 input notes and create up to 3 output notes.",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        },
+        {
+          "cited_text": "This dedicated L1 authorization flow can be used to make L2 payments programmable enabling multisig ownership, trustless swaps, escrows and other features which require resolution logic",
+          "source": "https://github.com/aleph-v/pretty_good_payments/blob/main/README.md"
+        }
+      ]
+    }
+  ]
 }
