@@ -25,7 +25,7 @@ Upgradeable verifier contracts and permissioned admin gates are NOT a reason to 
 
 ## Post-quantum secure
 
-(no property-specific rule yet — apply cross-cutting rules)
+A named curve, proof system, signature, or hash asserted in the notes (BN254, Groth16, secp256k1, Curve25519, etc.) must appear in one of the property's cited spans, or be explicitly hedged as inferred ("the Circom default curve, BN254"). Do not state an inferred primitive as a documented fact — when the docs name only the proving framework (e.g. "Circom 2.1.5") and the curve is a default, either cite a span that names the curve or rest the verdict on what IS cited (the proof system and hash being classical is usually enough for a No). This applies equally to Verifiability and Number of secrets when they name the same primitive.
 
 ## Number of secrets
 
