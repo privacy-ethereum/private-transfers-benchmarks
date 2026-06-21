@@ -826,4 +826,85 @@ export const configs: Record<string, ProtocolConfig> = {
       "blog post (pse.dev/blog/pretty-good-payments, 26 Feb 2026). Seed cache URLs as the GitHub blob/raw paths. No " +
       "L2BEAT page (not deployed). GitHub: github.com/aleph-v/pretty_good_payments.",
   },
+  "plasma-fold": {
+    id: "plasma-fold",
+    title: "Plasma Fold",
+    description:
+      "Plasma Fold (PlasmaBlind) is a research-prototype privacy layer on the PlasmaFold Plasma Layer 2 for Ethereum, by Privacy and Scaling Explorations. Users hold UTXOs and send shielded transactions that hide amounts and recipients while sender public keys stay visible, and a single aggregator folds user proofs into a constant-size block-validity proof posted to an L1 rollup contract. Privacy comes from the blinding property of the Nova folding scheme, so users prove validity client-side in under 100 milliseconds without a per-transaction SNARK. Each user keeps a local balance proof enabling unilateral exit to L1 independent of operator liveness.",
+    status: "pending",
+    documentation: "https://eprint.iacr.org/2026/634",
+    categories: ["Private Plasma", "Zero Knowledge Proofs (ZKPs)", "Shielded Pool"],
+    sourceUrls: [
+      "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/overview.tex",
+      "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/construction.tex",
+      "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/implementation.tex",
+      "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/README.md",
+      "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/core/Cargo.toml",
+      "https://raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/LICENSE",
+      "https://pse.dev/blog/plasmablind-private-l2-payments-at-consumer-hardware-proving-speeds",
+    ],
+    context:
+      "GRADE PlasmaBlind (the PRIVACY variant of the PlasmaFold line), under id `plasma-fold`, title 'Plasma Fold'. " +
+      "John chose this over the scaling-only base PlasmaFold (ePrint 2025/1300, no privacy). PlasmaBlind is ePrint " +
+      "2026/634 by Pierre Daix-Moreux and Chengru Zhang at PSE (Privacy and Scaling Explorations, Ethereum " +
+      "Foundation). PAPER-CITATION REQUIREMENT (critical, from John): the paper itself must be a cited source. " +
+      "eprint.iacr.org Cloudflare-BLOCKS automated fetch, so the paper is cited via its LaTeX SOURCE committed in " +
+      "the repo — the raw.githubusercontent.com/privacy-ethereum/plasma-blind/master/paper/*.tex files ARE the paper " +
+      "text and DO fetch. Prefer overview.tex / construction.tex / implementation.tex for the load-bearing crypto, " +
+      "privacy, validity, key, and exit claims. MATURITY: research PROTOTYPE — no mainnet, no testnet, no L2BEAT, no " +
+      "deployed contract addresses, and the repo contains NO Solidity (only Rust crates core/client/aggregator + the " +
+      "LaTeX paper), so the on-chain verifier is SPECIFIED-IN-PAPER, not implemented. Grade Implementation maturity " +
+      "= tier 1 (prototype/devnet) and flag. Architecture: a Plasma L2 on Ethereum with three roles — users, a " +
+      "SINGLE aggregator, and an L1 rollup contract. Users hold UTXOs and maintain a local IVC balance proof updated " +
+      "client-side after each transaction; the aggregator collects shielded transactions, assembles compressed " +
+      "blocks, and posts a constant-size block-validity proof to L1. PRIVACY SCOPE (the load-bearing nuance — get " +
+      "this exactly right): PlasmaBlind HIDES transaction AMOUNTS and RECIPIENTS, and hides them even from the " +
+      "AGGREGATOR (the user blinds before submitting), BUT SENDER PUBLIC KEYS ARE REVEALED — it does not hide THAT a " +
+      "given sender transacted in a block, and sender pubkeys leak per-block transaction frequency. So: " +
+      "Confidentiality = Yes (amounts hidden), Anonymity is PARTIAL — recipient hidden but sender visible, so weigh " +
+      "Unlinkability vs a partial-anonymity value and FLAG (do not assert full Yes). Asset privacy: the paper hides " +
+      "amounts, not necessarily the token/asset type — treat asset-type concealment as unspecified and lean No " +
+      "unless a span supports it. Privacy mechanism: the BLINDING property of the Nova folding scheme (the BlindFold " +
+      "extension) — folding a satisfying instance-witness pair with a uniformly random satisfying pair yields a " +
+      "folded witness that reveals nothing about the original, giving zero-knowledge WITHOUT a per-transaction " +
+      "SNARK. Double-spend blocked by nullifiers (Nullifier = PRF(Sk, UTXO-position)), unlinkable to the spent " +
+      "output. Proof system: Nova folding + BlindFold via the sonobe library + arkworks; decider SNARK is MicroNova " +
+      "(~12 KB compressed proof). CURVE: BN254 with the Grumpkin cycle — this rests on core/Cargo.toml (ark-bn254 + " +
+      "ark-grumpkin), NOT on paper prose, so cite the Cargo.toml for the curve, do NOT claim Pasta/Pallas-Vesta. " +
+      "HASH: Poseidon or Griffin (SNARK-friendly, selectable) — there is NO SHA-256 accumulator. Client-side " +
+      "proving = YES (sub-100 ms on a MacBook Pro M1 Max, 32 GB RAM; no WASM claim in the sources, so do not assert " +
+      "WASM). Trusted setup: NOT discussed in the paper — treat as unspecified (do not assert a ceremony). " +
+      "VERIFIABILITY: the aggregator posts a constant-size SNARK proof of block VALIDITY that the L1 contract " +
+      "verifies, plus per-transaction client ZK validity proofs and the nullifier tree — it is VALIDITY-proven (zk), " +
+      "NOT a fraud-proof/challenge Plasma for the happy path (construction.tex has a 'fraud proof or validity proof' " +
+      "hedge but the blog is unambiguous validity). So Verifiability = [Cryptographic]. The single aggregator is a " +
+      "liveness/censorship point, not a forging point (every transition is proven and users exit unilaterally) — do " +
+      "NOT tag Trusted operator. Consensus/settlement: settles to Ethereum L1, a single aggregator posts the block " +
+      "commitments + validity proof; data availability uses Intmax2's DA protocol (client-held data) — weigh " +
+      "External network dependence = No (the aggregator is the protocol's own operator, Intmax2 DA is a technique " +
+      "not a separate trust network) but FLAG the DA dependency. Compliance: NONE — no KYC/AML, no blocklist, no " +
+      "viewing keys, no selective disclosure documented (privacy is unconditional within the hiding model). The " +
+      "compliance quartet is all None / [None]. Keys: a user holds a wallet SECRET KEY Sk (public key Pk = PRF(Sk, " +
+      "bottom), an in-circuit hash, not an EC key) plus the per-transaction blinding RANDOMNESS for the fold (an " +
+      "ephemeral per-tx secret, not a stored key), and an ordinary Ethereum key for L1 deposits and exits — so " +
+      "Number of secrets is at least the Sk; weigh whether the Ethereum L1 key counts as a second independent " +
+      "secret (lean 2, the wallet key + the protocol spending key Sk) and FLAG. Escape hatch: INSTANT, " +
+      "non-interactive exit to L1 from the user's own IVC balance proof, independent of aggregator liveness (Plasma's " +
+      "core strength) — the contract verifies the balance proof against the latest block-tree root and pays out, so " +
+      "Escape hatch = Instantly. Note the privacy nuance: the EXIT REVEALS the user's balance on-chain (de-shields) " +
+      "— the hiding is for in-L2 transfers, not the L1 exit. Upgradeability: single-operator model, no deployed or " +
+      "upgradeable contract exists (paper-only on-chain logic, repo has no Solidity) — pick the conservative Single " +
+      "admin and set needsResearchReview noting it is paper-only. Post-quantum: Nova folding is built on " +
+      "elliptic-curve (BN254/Grumpkin discrete-log) cryptography, classical — Post-quantum = No. Open source: the " +
+      "repo github.com/privacy-ethereum/plasma-blind is MIT licensed (Copyright 2026 Ethereum Foundation, per the " +
+      "LICENSE file) → Open source = Yes (cite the LICENSE). Private Data Storage: minimal on-chain commitments with " +
+      "transaction data held off-chain via the Intmax2 DA approach → weigh Off-chain storage with on-chain " +
+      "commitment. Private state model UTXO. Client-side indexing: users maintain their own balance proof and are " +
+      "sent their transfer data (Intmax2-style), rather than scanning the chain — weigh No Scanning and FLAG. Time-" +
+      "to-finality: a validity-proof rollup settling to Ethereum — weigh Underlying chain (finality follows L1 once " +
+      "the block proof is verified) and flag. Maturity dates: ePrint 2026/634 (IACR news 4 April 2026), PSE blog " +
+      "18 May 2026, repo created 28 October 2025. Docs: there is NO hosted docs site — the paper (its LaTeX source " +
+      "in the repo) + the PSE blog + the repo README/Cargo/LICENSE are the authoritative sources. Cite the paper " +
+      "via the raw .tex URLs. GitHub: github.com/privacy-ethereum/plasma-blind.",
+  },
 };
