@@ -676,4 +676,81 @@ export const configs: Record<string, ProtocolConfig> = {
       "docs.platus.xyz (GitBook, has a sitemap.xml) — many pages still 'Coming Soon'. No L2BEAT page (not a " +
       "rollup). No GitHub org found.",
   },
+  "zama": {
+    id: "zama",
+    title: "Zama",
+    description:
+      "Zama is a cross-chain confidentiality layer that adds FHE-encrypted confidential tokens (the ERC-7984 standard) to existing EVM chains. Confidential smart contracts deploy on the host chain, which stores only encrypted ciphertext handles while heavy fully homomorphic encryption computation runs off-chain on a decentralised coprocessor network. Decryption is gated by an on-chain access-control list and performed by a threshold-MPC key-management network, and a dedicated Gateway rollup orchestrates input verification, decryption, and bridging. It is live on Ethereum mainnet.",
+    status: "pending",
+    documentation: "https://docs.zama.org/protocol",
+    categories: ["Fully Homomorphic encryption (FHE)", "Encrypted Tokens", "Multi Party Computation (MPC)"],
+    sourceUrls: [
+      "https://docs.zama.org/protocol/zama-protocol-litepaper",
+      "https://docs.zama.org/protocol/protocol/overview",
+      "https://docs.zama.org/protocol/protocol/overview/coprocessor",
+      "https://docs.zama.org/protocol/protocol/overview/kms",
+      "https://docs.zama.org/protocol/protocol/overview/gateway",
+      "https://docs.zama.org/protocol/solidity-guides/smart-contract/inputs",
+      "https://docs.zama.org/protocol/solidity-guides/smart-contract/acl",
+      "https://www.zama.org/post/erc-7984-the-confidential-token-standard-explained",
+      "https://www.zama.org/post/announcing-the-zama-confidential-blockchain-protocol",
+      "https://github.com/zama-ai/fhevm",
+    ],
+    context:
+      "Grade the CURRENT Zama Confidential Blockchain Protocol — the deployed fhEVM-based confidential-token system " +
+      "plus the ERC-7984 confidential token standard. ERA SPLIT: the old fhEVM 'confidential ERC-20' (devnet from " +
+      "Sept 2023) is superseded by the current Zama Protocol (public testnet July 2025, MAINNET ON ETHEREUM 30 Dec " +
+      "2025, first transfer was encrypted USDT / cUSDT). The litepaper page is STALE ('testnet live, mainnet end of " +
+      "2025') — treat mainnet as LIVE. Identity: a CROSS-CHAIN CONFIDENTIALITY LAYER on existing EVM chains (the " +
+      "Inco/Fhenix category), NOT an L1 or L2 — the host chain handles ordering/consensus/execution, Zama adds " +
+      "FHE confidential tokens via a Solidity library + host contracts. Privacy: FHE (TFHE) — encrypted types " +
+      "euint8..256/ebool, on-chain values are HANDLES (pointers); the actual ciphertext is stored OFF-CHAIN by the " +
+      "coprocessors (plus a public-availability layer). Clients encrypt inputs to a SINGLE GLOBAL FHE PUBLIC KEY " +
+      "(not a per-user key), and heavy FHE compute runs off-chain on the coprocessor network using TFHE-rs. " +
+      "Validity/verifiability has THREE layers: (1) every encrypted input carries a ZKPoK (zero-knowledge proof of " +
+      "plaintext knowledge) that coprocessors re-verify before certifying a handle — re-checkable, so CRYPTOGRAPHIC " +
+      "applies; (2) coprocessor compute correctness is MAJORITY-HONEST (results valid as long as >50% of staked, " +
+      "slashable coprocessors are honest, Gateway accepts on majority consensus); (3) the threshold KMS decryption " +
+      "network. So Verifiability is at least [Cryptographic, Honest Majority (Consensus, Threshold committee)]. KMS: " +
+      "13 MPC nodes run by different organisations, threshold decryption tolerant of <=1/3 malicious nodes (a docs " +
+      "EXAMPLE quorum is 9-of-13 — treat the exact threshold as an example, not fixed), the global FHE PRIVATE KEY " +
+      "is SECRET-SHARED and never reconstructed by one party, and each node runs inside an AWS NITRO ENCLAVE (TEE). " +
+      "IMPORTANT for Verifiability: the Nitro enclave protects the KMS key shares (confidentiality of decryption), " +
+      "NOT a forge-prevention/validity job — under the strict-validity rubric a TEE that only protects decryption is " +
+      "NOT tagged Trusted hardware (cf. fluton), so do NOT add Trusted hardware unless review finds the enclave " +
+      "performs a re-checkable validity step. Consensus: rides the host chain (Ethereum) for the confidential token " +
+      "contracts, but the protocol runs its OWN infrastructure — the Gateway is a dedicated Arbitrum rollup " +
+      "orchestrating operator/KMS/coprocessor registration, key rotation, input verification, and bridging, plus " +
+      "the coprocessor network and the KMS. External network dependence = Yes, permissioned (coprocessors + 13-node " +
+      "KMS + Gateway are additional permissioned/staked networks beyond the host chain). Compliance/disclosure: a " +
+      "PROGRAMMABLE on-chain ACL (FHE.allow / allowThis / allowTransient / makePubliclyDecryptable / " +
+      "delegateUserDecryption) decides who can decrypt which handle — selective disclosure is per-handle ACL grants " +
+      "to an 'Observer' (auditor/regulator), NOT a global viewing key. Operators also hold an EMERGENCY power to " +
+      "pause the protocol and blacklist spammers/sanctioned addresses — a centralised pause/blacklist, not a " +
+      "per-transaction KYC gate. No protocol-level KYC. Type of compliance is primarily Selective disclosure (ACL); " +
+      "weigh whether the emergency sanctioned-address blacklist adds POI/ASP — it is an emergency operator power, " +
+      "not a standing on-chain per-tx blocklist, so flag rather than assume. Upgradeability: host/Gateway contracts " +
+      "are upgradeable and governed by a MAJORITY OF OPERATORS ('updates must be adopted by a majority of operators " +
+      "to be effective'), with the single-operator emergency pause/blacklist exception — closest enum is Multi-sig " +
+      "or DAO (operator-majority governance), NOT Single admin and NOT Immutable; flag the exact mechanism. Keys: " +
+      "the user holds their normal WALLET/EOA key (host-chain signing + authorising decryption requests); there is " +
+      "NO per-user FHE keypair (inputs are encrypted to the global public key with a ZKPoK), and the global FHE " +
+      "private key is secret-shared across the KMS — so Number of secrets is 1 (the wallet key). Client-side " +
+      "proving: the ZKPoK proof of plaintext knowledge is generated CLIENT-SIDE by the user for each encrypted " +
+      "input, so Client-side proving is plausibly Yes (a re-checkable input proof built on the client) — distinct " +
+      "from FHE peers like Inco that have no such proof. Post-quantum: TFHE/FHE is lattice-based (LWE) and " +
+      "quantum-resistant for the ENCRYPTION, but host-chain ECDSA signatures and the ZKPoK proof system are " +
+      "classical — so the protocol is likely NOT post-quantum secure overall (Post-quantum = No), with the " +
+      "lattice-based FHE noted; flag for review. Escape hatch: NONE — an ERC-7984 balance is an on-chain handle " +
+      "pointing to ciphertext held OFF-CHAIN on coprocessors, and all decryption needs KMS participation, so there " +
+      "is no host-chain-only recovery path if the coprocessor/KMS stack disappears or censors (Escape hatch = No). " +
+      "Maturity: mainnet on Ethereum since 30 Dec 2025 → tier 3 (mainnet < 1 year); OpenZeppelin audited the " +
+      "confidential fungible token (report 18 Mar 2026). Open source: org github.com/zama-ai, almost everything is " +
+      "BSD-3-Clause-Clear (an open-source licence, but patent rights are explicitly NOT granted and commercial use " +
+      "needs a separate patent licence — note this) → Open source = Yes; one repo (go-ethereum-coprocessor) is " +
+      "LGPL/GPL. The live code is in the github.com/zama-ai/fhevm monorepo and github.com/zama-ai/kms. Docs: " +
+      "docs.zama.org (mirror docs.zama.ai) — the sitemap.xml is near-empty, navigate the docs tree directly. No " +
+      "L2BEAT page (not an L2). Funding '$73M' is CUMULATIVE (Series A + B); Series B alone is $57M (25 Jun 2025) — " +
+      "do not cite $73M as a single round.",
+  },
 };
