@@ -753,4 +753,77 @@ export const configs: Record<string, ProtocolConfig> = {
       "L2BEAT page (not an L2). Funding '$73M' is CUMULATIVE (Series A + B); Series B alone is $57M (25 Jun 2025) — " +
       "do not cite $73M as a single round.",
   },
+  "pretty-good-payments": {
+    id: "pretty-good-payments",
+    title: "Pretty Good Payments",
+    description:
+      "Pretty Good Payments is a privacy-focused optimistic rollup on Ethereum for free, private ERC-20 stablecoin transfers. It adapts Zcash's shielded e-cash model — Poseidon-hashed notes, nullifiers, and Groth16 proofs — to an EIP-4844 blob rollup, and pays sequencers from yield earned on deposited funds routed into ERC-4626 vaults rather than charging users fees. Sender, receiver, amount, and the transaction graph are hidden. It is a grant-funded reference implementation by an external contributor, open-codebase but not deployed to any public network.",
+    status: "pending",
+    documentation: "https://github.com/aleph-v/pretty_good_payments",
+    categories: ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)", "Private L2"],
+    sourceUrls: [
+      "https://github.com/aleph-v/pretty_good_payments",
+      "https://github.com/aleph-v/pretty_good_payments/blob/main/circuits/transfer.circom",
+      "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/ecash.md",
+      "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/challenge-game.md",
+      "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/concepts/sequencing.md",
+      "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/guides/deployment.md",
+      "https://github.com/aleph-v/pretty_good_payments/blob/main/docs/architecture/smart-contracts.md",
+      "https://pse.dev/blog/pretty-good-payments",
+    ],
+    context:
+      "CRITICAL — MATURITY: Pretty Good Payments (PGP) is a grant-funded REFERENCE IMPLEMENTATION, NOT deployed to " +
+      "any public network. No mainnet, no public testnet, no deployed PGP contract addresses exist (the only " +
+      "addresses in the deploy guide are shared deterministic Poseidon-library vanity addresses, not a PGP " +
+      "instance). The only run cited is a local/devnet demo (1638 transactions). Grade it as tier 1 (prototype / " +
+      "devnet) and treat operational properties (live admin, deployed addresses, escape-hatch-in-practice) as " +
+      "SPECIFIED-IN-CODE, not deployed — flag accordingly. Built by external contributor aleph-v, funded by a " +
+      "Cypherpunk Fellowship (Protocol Labs + Web3Privacy Now) plus an EF PSE matching grant, republished on the " +
+      "PSE blog — it is NOT a PSE-team product. Disambiguate from Pretty Good PRIVACY (the 1991 encryption tool — " +
+      "the name is a deliberate homage) and from an unrelated Elastos/BeL2 'PGP testnet'. Architecture: an " +
+      "OPTIMISTIC privacy ROLLUP (L2) settling to Ethereum L1, for private ERC-20 transfers, modelled on Zcash " +
+      "shielded e-cash. Privacy: UTXO shielded notes (token, amount, blinding factor, owner key) hashed with " +
+      "Poseidon, commitments in a Merkle tree, spends reveal nullifiers to block double-spend. Spend circuit takes " +
+      "up to 2 input notes to 3 output notes. Proof system Groth16 in Circom 2.1.5, curve BN254 (alt_bn128, the " +
+      "Circom default — INFERRED, not a verbatim docs string, so flag if a citation is needed), hash Poseidon. " +
+      "Trusted setup: YES (per-circuit Groth16 phase-2 on top of the Hermez perpetual powers-of-tau). Client-side " +
+      "proving: YES (the user generates the ZK proof, ~0.5s, then submits to a sequencer). VERIFIABILITY is the " +
+      "subtle one: each individual transfer carries a re-checkable Groth16 spend proof (so the sequencer cannot " +
+      "forge a user's transfer) → Cryptographic applies; BUT state-transition correctness is OPTIMISTIC — the " +
+      "Entrypoint contract does NOT verify every tx proof at submission, blocks are assumed valid and policed by a " +
+      "one-round FRAUD-PROOF challenge game (anyone can challenge with KZG blob openings, a cheating sequencer is " +
+      "100% slashed). This is a 1-of-N honest-challenger assumption, not an honest-majority committee and not a " +
+      "trusted operator (the sequencer is bonded and every spend is ZK-proven). Seed Verifiability = [Cryptographic] " +
+      "and FLAG the optimistic fraud-proof state-transition model for the reviewer to weigh (it is weaker than a " +
+      "validity rollup — do not silently treat it as a pure validity proof). Consensus/settlement: no own consensus, " +
+      "settles to Ethereum, data posted as EIP-4844 blobs committed via KZG. Sequencing is PERMISSIONLESS staking " +
+      "(epochs have a closed priority-sequencer window and an open window where any staked sequencer can include); " +
+      "the sequencer set is the protocol's OWN staked set, so External network dependence = No (not an additional " +
+      "external network). Censorship resistance = Yes: deposits MUST be included or the sequencer is slashed, the " +
+      "open sequencing window is the liveness fallback, and there is NO blocklist/allowlist/KYC. Compliance: NONE — " +
+      "no KYC/AML, no blocklist, no sanctions screening, no viewing keys, no selective disclosure, no POI/ASP " +
+      "anywhere (a pure permissionless shielded pool). The compliance quartet is all None / [None]. The optional " +
+      "'Ethereum-owned note' mode (owner is a plain L1 address, authorising signature public) is a programmability " +
+      "feature, NOT a compliance/disclosure mechanism — do not treat it as selective disclosure. Keys: a user holds " +
+      "a NOTE PRIVATE KEY (any 252-bit BN254 scalar, public key = Poseidon(domainSep, privateKey)) PLUS their " +
+      "ordinary Ethereum key (for L1 deposits and for Ethereum-owned notes) — two independent secrets, so Number of " +
+      "secrets is 2; the nullifier and blinding are derived, not separately held. Escape hatch / withdrawal is " +
+      "SELF-SERVICE with no operator permission: the user creates a special note (publicKey = 0, blinding = " +
+      "destination address) and after the challenge period proves it via a KZG opening to receive tokens on L1 — so " +
+      "Escape hatch = Can exit in a time period (the ~18-day challenge window). Forced exit under TOTAL sequencer " +
+      "censorship is not spelled out beyond the open-window argument — note that. Upgradeability: contracts are " +
+      "Ownable (owner() / transferOwnership), and the OWNER maintains the priority-sequencer rotation list (a real " +
+      "centralisation point), with no proxy/UUPS upgrade pattern documented — closest enum is Single admin (owner " +
+      "parameter control), SPECIFIED in the deploy guide but not live, so set needsResearchReview. Post-quantum: " +
+      "Groth16 / BN254 / Poseidon are all classical → Post-quantum = No. Open source: the repo is public but " +
+      "licensed 'UNLICENSED — All rights reserved' (GitHub reports license: none) — the blog calls it 'open source' " +
+      "but the actual licence contradicts that, so Open source = No (cite the README licence, NOT the blog). Private " +
+      "Data Storage: note data lives in EIP-4844 blobs (ephemeral off-chain DA) with commitments on-chain → weigh " +
+      "Off-chain storage with on-chain commitment. Private state model UTXO; Client-side indexing is Zcash-style " +
+      "scanning. Time-to-finality: optimistic rollup — trustless withdrawal finality is the ~18-day challenge " +
+      "window, though soft settlement rides Ethereum — flag which the value should reflect. Docs: there is NO hosted " +
+      "docs site — documentation is an mdBook in the repo /docs folder (docs/SUMMARY.md is the index) plus the PSE " +
+      "blog post (pse.dev/blog/pretty-good-payments, 26 Feb 2026). Seed cache URLs as the GitHub blob/raw paths. No " +
+      "L2BEAT page (not deployed). GitHub: github.com/aleph-v/pretty_good_payments.",
+  },
 };
