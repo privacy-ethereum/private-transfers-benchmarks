@@ -139,12 +139,12 @@ dataSources:
       file: ../src/privacy-pools/privacy-pools.ts
 
   - kind: ethereum
-    name: BETHToETH
+    name: BETH
     network: mainnet
     source:
-      address: "0xbA5A285806c343AaD955a40FE4b6e5e607B752b6"
-      abi: BETHToETH
-      startBlock: 24470196
+      address: "0x5624344235607940d4d4EE76Bf8817d403EB9Cf8"
+      abi: BETH
+      startBlock: 24436025
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -152,14 +152,15 @@ dataSources:
       entities:
         - WormWithdraw
         - WormProtocolStats
-        - WormOperationStats
+        - WormWithdrawStats
       abis:
-        - name: BETHToETH
-          file: ../abis/worm/BETHToETH.json
-      callHandlers:
-        - function: swapBethWithEth(uint256,address)
-          handler: handleSwapBethWithEth
-      file: ../src/worm/beth-to-eth.ts
+        - name: BETH
+          file: ../abis/worm/BETH.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+          receipt: true
+      file: ../src/worm/beth.ts
 
   - kind: ethereum
     name: LiquidityManager
