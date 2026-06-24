@@ -81,7 +81,7 @@
     {
       "name": "External network dependence",
       "value": "Yes, permissioned",
-      "notes": "Redact relies on Fhenix's CoFHE coprocessor network for all FHE computations. The architecture consists of a task manager contract, an aggregator, the fheOS computation engine, and a threshold network for decryption via MPC. Full ciphertexts are stored on an off-chain DA layer with only 128-bit handles on-chain. A trusted dealer initializes the threshold network's key distribution (with plans to eliminate this dependency). If the coprocessor network goes down, the protocol cannot process transfers or decrypt balances.",
+      "notes": "Redact relies on Fhenix's CoFHE coprocessor network. The architecture consists of a task manager contract, an aggregator, the fheOS computation engine, and a threshold network for decryption via MPC. Full ciphertexts are stored on an off-chain DA layer with only 128-bit handles on-chain. A trusted dealer initializes the threshold network's key distribution (with plans to eliminate this dependency). If the coprocessor network goes down, the protocol cannot process transfers or decrypt balances.",
       "url": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network"
     },
     {
@@ -162,18 +162,22 @@
     {
       "name": "Verifiability",
       "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)", "Trusted hardware"],
-      "notes": "Transaction correctness rests on the off-chain CoFHE coprocessor and its threshold-decryption network rather than cryptographic proofs of homomorphic computation. The zero-knowledge component is a proof of knowledge that the user knows the plaintext of an encrypted input, which guards input well-formedness but does not attest to computation correctness. Decryption results are produced by an MPC protocol among permissioned parties and signed by a dispatcher, so on-chain acceptance reduces to trusting a registered signer set. The input-proof verifier runs in a TEE.",
+      "notes": "Transaction correctness rests on the off-chain CoFHE coprocessor and its threshold-decryption network rather than cryptographic proofs of homomorphic computation. The zero-knowledge component proves that the user knows the plaintext of an encrypted input, proving input well-formedness but not computation correctness. Decryption results are produced by an MPC protocol and signed by a dispatcher, so on-chain acceptance reduces to trusting a threshold set. The input-proof verifier runs in a TEE.",
       "citations": [
         {
-          "cited_text": "It allows users to prove they know the plaintext of an encrypted input they’re sending to a smart contract, without revealing the plaintext itself. \n",
+          "cited_text": "It allows users to prove they know the plaintext of an encrypted input they’re sending to a smart contract, without revealing the plaintext itself.",
           "source": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/zk-verifier"
         },
         {
-          "cited_text": "​\n\nDispatcher Signing \n\nThe Threshold Network’s Dispatcher component signs every decrypt and sealoutput result with an ECDSA key. This signature enables on-chain verification — clients can publish signed decrypt results directly to the TaskManager contract via FHE.publishDecryptResult() . \n\n",
+          "cited_text": "The Threshold Network’s Dispatcher component signs every decrypt and sealoutput result with an ECDSA key.",
           "source": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network"
         },
         {
-          "cited_text": "The ZKVerifier is intended to run in a TEE to reduce trust and ensure the integrity of the inputs and signed verification messages. \n\n",
+          "cited_text": "This signature enables on-chain verification — clients can publish signed decrypt results directly to the TaskManager contract via FHE.publishDecryptResult()",
+          "source": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/threshold-network"
+        },
+        {
+          "cited_text": "The ZKVerifier is intended to run in a TEE to reduce trust and ensure the integrity of the inputs",
           "source": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/zk-verifier"
         }
       ]
@@ -191,15 +195,15 @@
       "notes": "Redact's on-chain private state grows with the number of accounts, not with transactions. Each ERC20 token balance is an encrypted ciphertext handle stored per address and updated in place: a new holder adds one mapping entry, while transfers between existing holders rewrite entries without enlarging the set. The full encrypted state lives off-chain on the Fhenix CoFHE coprocessor.",
       "citations": [
         {
-          "cited_text": "hashtag \n\nConcepts\n\nhashtag \n\nEncrypted Balances\n\nUtilizing the Fhenix CoFHE coprocessor, Fully Homomorphic Encryption (FHE) operations are integrated into the blockchain environment. This ensures that an ERC20 token&#x27;s balance is maintained in an encrypted state, accessible only under specific conditions as:\n\nhashtag \n\nManually decrypted \n\nA user or contract can request to decrypt their own balance. ",
+          "cited_text": "This ensures that an ERC20 token&#x27;s balance is maintained in an encrypted state, accessible only under specific conditions as:",
           "source": "https://docs.redact.money/architecture/fherc20-token-standard"
         },
         {
-          "cited_text": "The encrypted value can be used as part of an FHE operation, such as FHE.add, FHE.sub, or FHE.select (branching). The value remains encrypted throughout these FHE operations, and no data is revealed at any stage.\n\n",
+          "cited_text": "The value remains encrypted throughout these FHE operations, and no data is revealed at any stage.",
           "source": "https://docs.redact.money/architecture/fherc20-token-standard"
         },
         {
-          "cited_text": "Result Processor : Handles FHE operation results from the computation layer and publishes them back to the blockchain. \n\nFHEOS Server : Executes the actual FHE operations on encrypted data and maintains the encrypted state. \n\n",
+          "cited_text": "FHEOS Server : Executes the actual FHE operations on encrypted data and maintains the encrypted state.",
           "source": "https://cofhe-docs.fhenix.zone/deep-dive/cofhe-components/overview"
         }
       ]
