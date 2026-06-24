@@ -10,10 +10,14 @@ type UpgradeabilityProperty = Extract<Property, { name: "Upgradeability" }>;
 
 const evaluationsDir = join(dirname(fileURLToPath(import.meta.url)), "../../src/data/evaluations");
 
-/** Evaluations authored before the new max caps feature. Migrations can occur in future PRs. */
+/**
+ * Evaluations predating typed-date and admin_class citations. They are exempt only from the
+ * maturity typed-date, upgrade admin_class and research-review-length checks. The notes and
+ * cited_text length caps apply to every protocol.
+ */
 const LEGACY_PROTOCOLS = new Set([
   "bermudabay",
-  "curvy",
+  "curvy", // should not be here? I'm unsure
   "fluidkey",
   "hinkal",
   "houdiniswap",
@@ -31,7 +35,6 @@ const LEGACY_PROTOCOLS = new Set([
   "zerc20",
 ]);
 
-const NOTES_MAX_LEGACY = 700;
 const NOTES_MAX_NEW = 500;
 const CITED_TEXT_MAX = 200;
 const RESEARCH_REVIEW_MAX = 120;
@@ -127,8 +130,7 @@ const normaliseWhitespace = (s: string) => s.replace(/[‘’]/g, "'").replace(/
 
 const BARE_SOURCE_EXEMPT_KINDS = new Set(["explorer", "license"]);
 
-function checkCitations(file: string, property: Property, legacy: boolean, sourceCache: SourceCache, issues: Issue[]) {
-  if (legacy) return;
+function checkCitations(file: string, property: Property, sourceCache: SourceCache, issues: Issue[]) {
   const push = (rule: string, error: string) => issues.push({ file, property: property.name, rule, error });
 
   for (const citation of property.citations ?? []) {
@@ -162,9 +164,9 @@ const files = readdirSync(evaluationsDir).filter((filename) => filename.endsWith
 for (const file of files) {
   const protocolId = file.replace(/\.json$/, "");
   const legacy = LEGACY_PROTOCOLS.has(protocolId);
-  const notesMax = legacy ? NOTES_MAX_LEGACY : NOTES_MAX_NEW;
+  const notesMax = NOTES_MAX_NEW;
   const json = JSON.parse(readFileSync(join(evaluationsDir, file), "utf-8"));
-  const sourceCache = legacy ? {} : readSourceCache(protocolId);
+  const sourceCache = readSourceCache(protocolId);
 
   parseSchema(file, json, issues);
 
@@ -196,7 +198,7 @@ for (const file of files) {
       }
     }
 
-    checkCitations(file, property, legacy, sourceCache, issues);
+    checkCitations(file, property, sourceCache, issues);
 
     if (property.name === "Implementation maturity") {
       checkMaturityDate(file, property as MaturityProperty, legacy, issues);
