@@ -13,19 +13,19 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "Hinkal hides both balances and transfer amounts. Assets are deposited into a shared shielded pool and tracked as encrypted UTXOs, so external observers cannot determine how much a user holds or transfers. Each transaction consumes a note by adding its nullifier to the state and creates new notes by adding new values to the commitment tree. To ensure a recipient receives the secret information required to spend their commitments, the sender encrypts the secrets of the commitment sent to the recipient.",
+      "notes": "Hinkal hides both balances and transfer amounts. Assets are deposited into a shared shielded pool and tracked as encrypted UTXOs, so external observers cannot determine how much a user holds or transfers. Each transaction consumes a note by adding its nullifier to the state and creates new notes by adding new values to the commitment tree. To ensure a recipient receives the secret information required to spend their commitments, the sender encrypts the secrets of the commitment.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/transactions/deposits-and-withdrawals"
     },
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "Hinkal uses stealth addresses derived per user using their canonical public key so that on-chain interactions cannot be linked to a user's identity. The shielded pool hides the sender and receiver of every internal transfer due to its note-based UTXOs model. Every transaction uses input notes (adds its nullifiers to the tree) and creates new notes (add commitments to the commitment tree) pointing to new fresh stealth addresses. A commitment is defined as the Poseidon hash of the token address, amount, stealth address (recipient) and timestamp.",
+      "notes": "Hinkal uses stealth addresses derived per user using their canonical public key so that on-chain interactions cannot be linked to a user's identity. The shielded pool hides the sender and receiver of every internal transfer due to its note-based UTXO model. Every transaction spends input notes and creates new notes pointing to fresh stealth addresses. A commitment is defined as the Poseidon hash of the token address, amount, stealth address (recipient) and timestamp.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/key-derivation-and-stealth-addresses#stealth-addresses"
     },
     {
       "name": "Asset privacy",
       "value": "Yes",
-      "notes": "There are three transactions types in Hinkal: shield (deposit), unshield (withdraw) and private transfer. As expected when a user shields and/or unshields tokens, the asset type (e.g. native token, ERC20, etc) is revealed because the Hinkal contract or the recipient end up with the tokens in the public on-chain registry. In a private transfer, the sender nullifies some commitments and creates new commitments. There is no information about the asset type published on-chain. Therefore asset privacy is preserved.",
+      "notes": "There are three transaction types in Hinkal: shield (deposit), unshield (withdraw) and private transfer. When a user shields and/or unshields tokens, the asset type is revealed because the Hinkal contract or the recipient ends up with the tokens in the public on-chain registry. In a private transfer, the sender nullifies some commitments and creates new commitments. There is no information about the asset type published on-chain. Therefore asset privacy is preserved.",
       "url": "https://hinkal-team.gitbook.io/hinkal/technical-description/setup/utxos-commitments-and-nullifiers#off-chain-utxo-creation"
     },
     {
@@ -138,10 +138,10 @@
     {
       "name": "Type of compliance",
       "value": ["Programmatic policies", "Selective disclosure", "Proof of innocence (POI) / ASP"],
-      "notes": "Hinkal layers three mechanisms. Programmatic policies: Chainalysis integration blocks transactions involving sanctioned addresses at the smart-contract level with continuous re-screening. Selective disclosure: users can export an audit file for a chosen time interval to share with third parties via the viewing key. POI/ASP: source-of-funds is enforced by a ZK proof that funds are not associated with any depositId linked to a blacklisted address — a non-membership proof at transfer or withdrawal. Deposits above $10,000 require a privacy-preserving identity attestation (zkTLS or reusable attestations from zkMe, Galxe, AiPrise, BABT, Authento), short of full KYC.",
+      "notes": "Hinkal supports several mechanisms. Programmatic policies: Chainalysis blocks sanctioned addresses with re-screening. Selective disclosure: users export an audit with a viewing key. POI/ASP: a ZK proof that funds are not associated with a depositId linked to a blacklisted address — a non-membership proof at transfer or withdrawal. Deposits above $10,000 require a privacy-preserving attestation (zkTLS or reusable attestations from zkMe, Galxe, AiPrise, BABT, Authento), short of KYC.",
       "citations": [
         {
-          "cited_text": "KYT & Pool Integrity\n\nHinkal enforces real-time screening at the smart contract level through integration with Chainalysis. Transactions involving sanctioned or illicit addresses are blocked before entering the confidential smart contract, preventing contamination and preserving smart contract integrity.\n\n",
+          "cited_text": "Hinkal enforces real-time screening at the smart contract level through integration with Chainalysis. Transactions involving sanctioned or illicit addresses are blocked",
           "source": "https://hinkal-team.gitbook.io/hinkal/introduction/compliance"
         },
         {
@@ -149,19 +149,23 @@
           "source": "https://hinkal-team.gitbook.io/hinkal/introduction/compliance"
         },
         {
-          "cited_text": "If the user has an account at a supported exchange, they can prove account ownership without revealing personal data to Hinkal, using zkTLS-based attestations.\n\nThis proof is generated by logging into the exchange and producing a zero-knowledge proof (powered by Reclaim Protocol).\n\n",
+          "cited_text": "If the user has an account at a supported exchange, they can prove account ownership without revealing personal data to Hinkal, using zkTLS-based attestations.",
           "source": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
         },
         {
-          "cited_text": "Alternatively, Hinkal supports reusable attestations from zkMe arrow-up-right , Galxe arrow-up-right , AiPrise arrow-up-right , Binance Account Bound Token arrow-up-right (BABt), Galxe Passport arrow-up-right , and Authento arrow-up-right .\n\n",
+          "cited_text": "Alternatively, Hinkal supports reusable attestations from zkMe, Galxe, AiPrise, Binance Account Bound Token (BABt), Galxe Passport, and Authento.",
           "source": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
         },
         {
-          "cited_text": "2) Selective disclosure for auditability and proof of ownership\n\nHinkal Wallet includes selective disclosure, enabling users to prove transaction history and ownership when required (e.g., for an exchange review, audit, or internal compliance). Users can export an audit file for a chosen time interval and share it with third parties to establish provenance and provide an audit trail, without making all activity public by default.\n\n",
+          "cited_text": "Hinkal Wallet includes selective disclosure, enabling users to prove transaction history and ownership when required (e.g., for an exchange review, audit, or internal compliance).",
           "source": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
         },
         {
-          "cited_text": "When a user initiates a private transfer or withdrawal, they must generate a zero-knowledge proof demonstrating that their funds are not associated with any depositId linked to a blacklisted address.\n\nThis proof is verified against the current blacklist state, ensuring that compliance checks always reflect the most up-to-date sanctions and risk data.\n\n",
+          "cited_text": "Users can export an audit file for a chosen time interval and share it with third parties to establish provenance and provide an audit trail, without making all activity public by default.",
+          "source": "https://hinkal-team.gitbook.io/hinkal/technical-description/compliance"
+        },
+        {
+          "cited_text": "they must generate a zero-knowledge proof demonstrating that their funds are not associated with any depositId linked to a blacklisted address.",
           "source": "https://hinkal-team.gitbook.io/hinkal/introduction/compliance"
         }
       ]
