@@ -15,7 +15,7 @@
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "Monero hides both sender and receiver identity. Senders are obscured by CLSAG ring signatures, which mix the real input with 16 decoys, making it infeasible to determine the true signer. Stealth addresses also provide receiver account unlinkability - each transaction creates a one-time destination address. Ring signature analysis techniques (timing correlation, ring selection heuristics) can sometimes narrow the true sender. The upcoming FCMP++ upgrade will replace ring signatures with full-chain membership proofs, expanding the anonymity set from 16 decoys to the entire UTXO set (~150M outputs).",
+      "notes": "Monero hides sender and receiver. Senders are obscured by CLSAG ring signatures, which mix the real input with 16 decoys. Stealth addresses also provide receiver unlinkability. Ring signature analysis techniques (timing correlation, ring selection heuristics) can sometimes narrow the true sender. The upcoming FCMP++ upgrade will replace ring signatures with full-chain membership proofs, expanding the anonymity set from 16 decoys to the entire UTXO set (~150M outputs).",
       "url": "https://www.getmonero.org/resources/moneropedia/ringsignatures.html"
     },
     {
@@ -27,7 +27,7 @@
     {
       "name": "Plausible deniability",
       "value": "No",
-      "notes": "Although all Monero transactions are indistinguishable from each other within the protocol, Monero itself is a known privacy chain. Any interaction with the Monero network is inherently a privacy transaction, so a user cannot plausibly deny to an exchange or regulator that privacy features are being used. Plausible deniability requires that private transactions be indistinguishable from non-private ones (e.g. zkWormholes embedding private transfers in normal-looking L1 transactions), which is not the case when the entire protocol is private.",
+      "notes": "Although all Monero transactions are indistinguishable from each other within the protocol, Monero itself is a known privacy chain. Any interaction with the Monero network is inherently a privacy transaction, so a user cannot plausibly deny to an exchange or regulator that privacy features are being used. Plausible deniability requires that private transactions be indistinguishable from non-private ones, which is not the case when the entire protocol is private.",
       "url": "https://www.getmonero.org/resources/moneropedia/ringsignatures.html"
     },
     {
