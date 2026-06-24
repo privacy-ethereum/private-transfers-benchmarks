@@ -13,7 +13,7 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "RAILGUN shielded balances are built from a registry of UTXOs encrypted with the sender and receiver's keys, so no outsider can view a UTXO's contents unless they are the recipient. To send, a user consumes available UTXO notes and posts new encrypted notes on-chain for the recipient wallet to find and add to their balance. The UTXOs form a Merkle tree whose roots and leaves validate balance state during transactions. To reconstruct a wallet's private balance, each commitment leaf must be synced and decrypted, a process that takes a few minutes before token balances aggregate.",
+      "notes": "RAILGUN shielded balances are built from a registry of UTXOs encrypted with the sender and receiver's keys, so no outsider can view a UTXO's contents unless they are the recipient. To send, a user consumes available UTXO notes and posts new encrypted notes on-chain for the recipient wallet to find and add to their balance. The UTXOs form a Merkle tree whose roots and leaves validate balance state during transactions.",
       "url": "https://docs.railgun.org/developer-guide/wallet/private-balances"
     },
     {
@@ -73,7 +73,7 @@
     {
       "name": "Escape hatch",
       "value": "Can exit in a time period",
-      "notes": "With Private Proofs of Innocence, there is an Unshield-Only Standby Period, during which the only available action will be an unshield interaction to return tokens back to the original wallet. This Unshield-Only Standby Period is to give List Providers enough time to update their data such that bad actors are unable to hop addresses quickly to outrun data updates. As always, during this Unshield-Only Standby Period, users retain full control and custody over their tokens and can be unshielded back to the shielding address if needed urgently.",
+      "notes": "With Private Proofs of Innocence, there is an Unshield-Only Standby Period, during which the only available action will be an unshield interaction to return tokens back to the original wallet. This Unshield-Only Standby Period is to give List Providers enough time to update their data such that bad actors are unable to hop addresses quickly to outrun data updates. Users retain full control and custody over their tokens.",
       "url": "https://docs.railgun.org/wiki/assurance/private-proofs-of-innocence#unshield-only-standby-period"
     },
     {
@@ -189,7 +189,7 @@
     {
       "name": "Anonymity",
       "value": "Yes",
-      "notes": "When a user sends a transaction using Railgun, they consume their available UTXOs (notes) by adding a nullifier to the on-chain state. In the same step new UTXOs belonging to the recipient are generated and added to the commitments merkle tree. These new UTXOs are encrypted and only the recipient has the ability to check their values and aggregate their total balance. An outside on-chain observer can see commitments added (notes generated) and nullifiers (notes consumed) but cannot link the sender or recipient with a specific transaction.",
+      "notes": "When a user sends a transaction using Railgun, they consume their available UTXOs (notes) by adding a nullifier to the on-chain state. In the same step new UTXOs belonging to the recipient are generated and added to the commitments merkle tree. An outside on-chain observer can see commitments added (notes generated) and nullifiers (notes consumed) but cannot link the sender or recipient with a specific transaction.",
       "url": "https://docs.railgun.org/wiki/learn/using-private-tokens"
     },
     {
