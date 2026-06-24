@@ -64,7 +64,7 @@
           "source": "https://docs.privacypools.com/protocol/ragequit"
         },
         {
-          "cited_text": "This operation serves as a critical backup withdrawal method which ensures the ability to withdraw user funds when the label is not approved by the ASP or its approval was revoked (removed from the approved labels set).",
+          "cited_text": "This operation serves as a critical backup withdrawal method which ensures the ability to withdraw user funds when the label is not approved by the ASP or its approval was revoked",
           "source": "https://docs.privacypools.com/protocol/ragequit"
         }
       ]
@@ -128,7 +128,7 @@
     {
       "name": "Type of compliance",
       "value": ["Proof of innocence (POI) / ASP"],
-      "notes": "The ASP vets deposits by checking the source of funds against illicit activity before adding them to the approved association set. This functions as a proof-of-innocence mechanism where only vetted deposits can be privately withdrawn. Depending on the ASP, there could be multiple compliance mechanisms used in order to valid if a transaction is safe or not. For example one ASP might check the transaction and funds history (Know Your Transaction KYT), another ASP might verify that the interacting address does not belong to a sanctioned list (Proof of Innocence).",
+      "notes": "The ASP vets deposits by checking the source of funds against illicit activity before adding them to the approved association set. This functions as a proof-of-innocence mechanism where only vetted deposits can be privately withdrawn. For example one ASP might check the transaction and funds history (Know Your Transaction KYT), another ASP might verify that the interacting address does not belong to a sanctioned list (Proof of Innocence).",
       "url": "https://docs.privacypools.com/layers/asp"
     },
     {
