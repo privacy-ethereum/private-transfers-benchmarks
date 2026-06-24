@@ -4,7 +4,7 @@
   "description": "Fluton is a confidential execution layer that uses fully homomorphic encryption (FHE) to compute on encrypted data. Users sign encrypted intents that an off-chain solver network fulfils across supported chains.",
   "documentation": "https://docs.fluton.io/introduction",
   "status": "pending",
-  "categories": ["Fully Homomorphic encryption (FHE)", "Decentralised Network"],
+  "categories": ["Fully Homomorphic encryption (FHE)", "Private Bridge", "Decentralised Network"],
   "properties": [
     {
       "name": "Anonymity set size",
@@ -100,15 +100,19 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "A single secret is required: the user's Ethereum wallet key, from which the FHE encryption/decryption material for ERC7984 confidential fungible token operations is derived. The same key signs encrypted intents that solvers fulfil, while FHE protects sensitive information such as amounts and strategies, and decrypts the user's own cERC20 balances. No separate spending or viewing key is maintained beyond the wallet signature.",
+      "notes": "A single secret is required: the user's Ethereum wallet key, which signs the encrypted intents that solvers fulfil and authorises viewing the user's own cERC20 balances. The intents are encrypted under the FHE coprocessors' global public key, which the user does not manage, and the matching decryption key is split across the coprocessor network rather than held by the user.",
       "citations": [
-        {
-          "cited_text": "We adopt the ERC7984 (Confidential Fungible Token) standart to allow encrypted token transfers and shielded balances. \n\n",
-          "source": "https://docs.fluton.io/confidential-architecture"
-        },
         {
           "cited_text": "A network of solvers fulfills that intent, while ERC7984 and encrypted execution with FHE protect sensitive information such as amounts and strategies.",
           "source": "https://docs.fluton.io/confidential-architecture"
+        },
+        {
+          "cited_text": "To maintain composability onchain, all ciphertexts need to be encrypted under the same public key.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
+        },
+        {
+          "cited_text": "The KMS ensures that no single party can ever access the decryption keys.",
+          "source": "https://docs.zama.org/protocol/zama-protocol-litepaper"
         }
       ]
     },
@@ -279,8 +283,8 @@
     },
     {
       "name": "Enforcement entities",
-      "value": "Admin",
-      "notes": "Fluton itself runs the compliance gate: a proof of innocence is automatically generated on every intent and an invalid proof blocks intent creation, proving the wallet is not on a blacklist without revealing identity. No external analytics vendor or governance mechanism is named as the decision-maker, so curation of the exclusion set and the policy behind it rests with the core team that operates the protocol.",
+      "value": "Third party",
+      "notes": "A proof of innocence is generated on every intent and an invalid proof blocks creation, proving the wallet is absent from a blacklist without revealing identity. The exclusion set comes from an external Proof of Innocence scheme rather than a Fluton-curated list.",
       "citations": [
         {
           "cited_text": "In Fluton, a POI is automatically generated every time the user creates an intent.",
@@ -378,11 +382,15 @@
     {
       "name": "Open source",
       "value": "No",
-      "notes": "The fluton-relayer backend is published on GitHub and its README references an MIT licence, covering only the relayer and solver component. The protocol's other critical components — the smart contracts, FHE circuits, frontend, and SDK — are not published in accessible repositories under a declared open source licence.",
+      "notes": "The relayer and solver backend is published under an MIT licence. Published bridge contracts are public but have no licence, and the SDK is not published, so the full stack is not open source.",
       "citations": [
         {
           "cited_text": "## License\n\n[MIT](LICENSE)",
           "source": "https://github.com/fluton-io/fluton-relayer"
+        },
+        {
+          "cited_text": "// SPDX-License-Identifier: UNLICENSED",
+          "source": "https://github.com/Fluton-io/fluton-contracts/blob/main/contracts/Bridge.sol"
         }
       ]
     },
