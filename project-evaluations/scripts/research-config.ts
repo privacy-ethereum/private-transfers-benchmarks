@@ -299,4 +299,36 @@ export const configs: Record<string, ProtocolConfig> = {
     context:
       "CRITICAL: 'Miden' is the standalone zero-knowledge rollup that spun out of Polygon Labs on 29 April 2025 (raising $25M seed; formerly 'Polygon Miden') — evaluate the independent Miden network, NOT Polygon's zkEVM or Polygon PoS. Privacy model: accounts and notes can each be stored Publicly (on-chain, fully visible) or Privately/off-chain (only a commitment/hash on-chain). For a private note the network sees only the note hash and the sender (and the sender can be masked via relay accounts); a public note reveals sender, recipient and assets. Execution and proving happen client-side — the user generates a STARK proof per transaction in the Miden VM; the operator/sequencer verifies proofs and orders blocks. IMPORTANT maturity nuance: Miden is testnet-only as of mid-2026 (testnet ~v0.13/v0.14), with mainnet targeted for 2026 — do NOT report it as mainnet-live. A transitional 'privacy training wheels' measure means that on testnet and at initial mainnet, clients send all transaction data plus the proof to the operator, so the operator can see transaction data (Web2-like privacy) until full client-side data withholding is enabled. Cryptography is STARK-based (hash-based, no trusted setup, quantum-resistant). Compliance is via selective disclosure — data hidden from the network and competitors but discloseable to auditors. Prefer docs.miden.xyz and the 0xMiden GitHub as primary sources; miden.xyz blog posts are acceptable for dated maturity claims.",
   },
+  "fluton": {
+    id: "fluton",
+    title: "Fluton",
+    description:
+      "Fluton is a confidential execution layer for blockchains that uses homomorphic encryption. Its intent-based design moves privacy out of individual protocols and chains, treating it as a shared execution primitive.",
+    status: "pending",
+    documentation: "https://docs.fluton.io/introduction",
+    categories: ["Fully Homomorphic encryption (FHE)", "Decentralised Network"],
+    sourceUrls: [
+      "https://docs.fluton.io/introduction",
+      "https://docs.fluton.io/confidential-architecture",
+      "https://docs.fluton.io/cERC20",
+      "https://docs.fluton.io/proof-of-innocence",
+      "https://docs.fluton.io/supported-networks-addresses",
+    ],
+    context:
+      "CRITICAL: Fluton is a 'universal confidential execution layer' (CEL) for blockchains — intent-based, " +
+      "cross-chain confidential swaps, bridging, payments, and yield. Privacy is FHE-based: smart contracts use " +
+      "Zama and Fhenix FHE coprocessors to compute on encrypted data, and the confidential token primitive is the " +
+      "cERC20, an ERC-7984 Confidential Fungible Token (wrap/shield public tokens 1:1 into encrypted cERC20s — " +
+      "cUSDC, cUSDT, cDAI, etc.). Users sign an ENCRYPTED INTENT and a decentralized network of solvers fulfils it " +
+      "through a four-plane CEL (Intent, Routing, Adapter, Protocol planes); confidentiality adapters batch and " +
+      "submit actions to existing protocol contracts without changing them. Amounts, balances, portfolio, " +
+      "strategies, and address linkage are encrypted, but the FACT a transaction occurred is visible, and the " +
+      "ENTRY POINT leaks (the 'Entry Leak Problem' — at shield time you reveal your address and shielded amount; " +
+      "once inside you can stay private). Compliance: Proof of Innocence (POI) is auto-generated on every intent " +
+      "(prove not-on-a-blacklist without revealing identity), plus selective disclosure to authorized parties. " +
+      "STATUS as of 2026: TESTNET ONLY — deployed on Ethereum Sepolia, Arbitrum Sepolia, and Base Sepolia; the " +
+      "private testnet is closed and a public testnet is in progress; the SDK is not yet published; NO mainnet. " +
+      "Treat maturity as early testnet. Open source: the fluton-relayer repo is public; the SDK is unpublished. " +
+      "Prefer docs.fluton.io pages as primary sources.",
+  },
 };
