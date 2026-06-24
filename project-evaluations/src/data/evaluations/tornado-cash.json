@@ -45,7 +45,7 @@
     {
       "name": "Number of secrets",
       "value": "2",
-      "notes": "Each deposit generates a random 62-byte preimage (nullifier + secret), which is Pedersen-hashed on the Baby Jubjub curve to produce a commitment stored in a Merkle tree. The nullifier and secret are randomly generated in the user's browser, not derived from the wallet key. This deposit note is an independent secret that must be backed up separately. The wallet key is the first secret, and the deposit note is the second. The Note Account feature allows encrypted on-chain backup of notes using the wallet key, but the note itself is not derivable from the wallet.",
+      "notes": "Each deposit generates a 62-byte preimage (nullifier + secret), hashed on the Baby Jubjub curve into a commitment stored in a Merkle tree. The nullifier and secret are generated in the user's browser, not derived from the wallet key. This deposit note is an independent secret backed up separately. The wallet key is the first secret, the deposit note the second. The Note Account feature allows encrypted on-chain backup using the wallet key, but the note itself is not derivable from the wallet.",
       "url": "https://docs.tornadocash.eth.limo/tornado-cash-classic/deposit-withdraw.html"
     },
     {
@@ -63,7 +63,7 @@
     {
       "name": "Censorship resistance",
       "value": "Yes",
-      "notes": "Tornado Cash smart contracts are immutable and permissionless. In August 2022, the US government sanctioned addresses that had interacted with Tornado Cash and multiple frontend applications were taken down. Transactions were censored at the block-building level by compliant MEV relays. Despite this, the smart contracts remained functional and users were able to interact with them directly or through alternative frontends. A relayer network exists for gas-free withdrawals but is optional — users can call the contracts directly.",
+      "notes": "Tornado Cash smart contracts are immutable and permissionless. In August 2022, the US government sanctioned addresses that had interacted with Tornado Cash and multiple frontend applications were taken down. Transactions were censored at the block-building level by compliant MEV relays. Despite this, the smart contracts remained functional and users were able to interact with them directly or through alternative frontends.",
       "url": "https://docs.tornadocash.eth.limo/general/guides/post-censorship/"
     },
     {
