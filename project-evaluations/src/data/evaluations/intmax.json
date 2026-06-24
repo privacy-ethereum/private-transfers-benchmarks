@@ -141,7 +141,11 @@
       "notes": "Intmax gates incoming deposits via Predicate AVS — a programmable per-deposit policy framework that returns a cryptographic attestation of compliance against rule sets sourcing from blockchain-analytics vendors. Predicate is the canonical example of programmatic policies. Users additionally demonstrate via a Proof of Innocence model that their funds are not associated with sanctioned or illicit activity before being accepted into the network.",
       "citations": [
         {
-          "cited_text": "Permitter Contract ​ \n\nThis contract uses a service called Predicate to verify AML checks and to determine whether the transaction originates from valid mining activities. It is invoked by the Liquidity contract whenever a user deposits funds. Deposits from addresses that do not comply with predetermined policies will be rejected. ",
+          "cited_text": "This contract uses a service called Predicate to verify AML checks and to determine whether the transaction originates from valid mining activities. It is invoked by the Liquidity contract",
+          "source": "https://docs.network.intmax.io/developers-hub/intmax-nodes/smart-contracts"
+        },
+        {
+          "cited_text": "Deposits from addresses that do not comply with predetermined policies will be rejected.",
           "source": "https://docs.network.intmax.io/developers-hub/intmax-nodes/smart-contracts"
         }
       ]
@@ -167,17 +171,27 @@
     {
       "name": "Verifiability",
       "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
-      "notes": "State transitions within Intmax are cryptographically verified using Plonky2 ZK proofs with FRI commitments and BN254 curve operations — an external observer can re-check the proofs against the published verifier. Additional trust concerns (contracts upgradable by a 2/4 multisig, Predicate AVS deposit gating, self-custodied balance data) are captured separately by Upgradeability and Censorship resistance rather than this property. Block production is permissionless with no privileged sequencer, and users can force inclusion via L1 if the sequencer fails.",
+      "notes": "State transitions within Intmax are cryptographically verified using Plonky2 ZK proofs with FRI commitments and BN254 curve operations — an external observer can re-check the proofs against the published verifier. Additional trust concerns are captured separately by Upgradeability and Censorship resistance rather than this property. Block production is permissionless with no privileged sequencer, and users can force inclusion via L1 if the sequencer fails.",
       "needsResearchReview": "Proving system requires citation",
       "citations": [
         {
           "kind": "l2beat",
-          "cited_text": "INTMAX Whitepaper \n\n7\nState validation \n\nINTMAX uses validity proofs to ensure that users cannot withdraw more than they have. For every transfer made, a ZK proof is required to prove the amount that has been transferred to be subtracted from the sender’s balance. ",
+          "cited_text": "INTMAX uses validity proofs to ensure that users cannot withdraw more than they have.",
           "source": "https://l2beat.com/scaling/projects/intmax"
         },
         {
           "kind": "l2beat",
-          "cited_text": "Sequencer failure\n\nSelf sequence\n\nIn the event of a sequencer failure, users can force transactions to be included in the project’s chain by sending them to L1 . There can be up to a 7d delay on this operation. Proposing new blocks requires creating ZK proofs.\n\n",
+          "cited_text": "For every transfer made, a ZK proof is required to prove the amount that has been transferred to be subtracted from the sender’s balance.",
+          "source": "https://l2beat.com/scaling/projects/intmax"
+        },
+        {
+          "kind": "l2beat",
+          "cited_text": "In the event of a sequencer failure, users can force transactions to be included in the project’s chain by sending them to L1.",
+          "source": "https://l2beat.com/scaling/projects/intmax"
+        },
+        {
+          "kind": "l2beat",
+          "cited_text": "There can be up to a 7d delay on this operation. Proposing new blocks requires creating ZK proofs.",
           "source": "https://l2beat.com/scaling/projects/intmax"
         },
         {
