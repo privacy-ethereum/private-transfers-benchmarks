@@ -18,7 +18,7 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "Account holdings and transfer amounts are encrypted end-to-end. On FairyRing a CosmWasm contract credits the user with an encrypted balance for a deposit, recording only ciphertext on-chain with no plaintext balance visible. Transfers update the encrypted balances of sender and receiver through homomorphic addition and subtraction, never exposing the underlying token amounts. Addresses stay transparent, so confidentiality holds over values while anonymity does not.",
+      "notes": "Account holdings and transfer amounts are encrypted end-to-end. On FairyRing a CosmWasm contract credits the user with an encrypted balance for a deposit, recording only ciphertext on-chain with no plaintext balance visible. Transfers update the encrypted balances of sender and receiver through homomorphic addition and subtraction, never exposing the underlying token amounts.",
       "citations": [
         {
           "cited_text": "Only encrypted values are recorded on FairyRing. No plaintext balances are visible onchain.\n\n",
@@ -36,15 +36,23 @@
     },
     {
       "name": "Anonymity",
-      "value": "No",
-      "notes": "Sender and receiver addresses stay visible on-chain in the confidential-transfer design. Encryption covers amounts and balances by default while addresses are deliberately kept transparent, so observers can still see who transacted with whom. Address-privacy modes exist only as opt-in KYB/KYC-gated environments rather than the default Stabletrust flow.",
+      "value": "Yes",
+      "notes": "Sender and receiver addresses stay visible on-chain in the confidential-transfer design. Encryption covers amounts and balances by default while addresses are deliberately kept transparent, so observers can still see who transacted with whom.An additional Anonymous Confidential Transfer feature provides anonymity. It holds funds under an account ID independent of the user's public EVM address, hiding the wallet identity of sender and receiver during transfers.",
       "citations": [
         {
           "cited_text": "Compliance and Regulatory Alignment ​ \n\nConfidential amounts, transparent addresses \n\nFairblock encrypts amounts and balances by default, but keeps sender and receiver addresses transparent. ",
           "source": "https://docs.fairblock.network/docs/confidential_transfers/confidential_transactions"
         },
         {
-          "cited_text": "Regulators, auditors, and banks can still see who interacted with who.\n\n",
+          "cited_text": "protecting not only the transaction amount, but also the public wallet identity involved in day-to-day transfers",
+          "source": "https://docs.fairblock.network/docs/confidential_transfers/technical_overview#anonymous-confidential-transfer"
+        },
+        {
+          "cited_text": "This account is identified by an account ID that is independent of the user's public EVM address.",
+          "source": "https://docs.fairblock.network/docs/confidential_transfers/technical_overview#anonymous-confidential-transfer"
+        },
+        {
+          "cited_text": "Amounts and balances are encrypted while addresses stay transparent. ",
           "source": "https://docs.fairblock.network/docs/confidential_transfers/confidential_transactions"
         }
       ]
@@ -435,6 +443,10 @@
         {
           "kind": "license",
           "source": "https://github.com/Fairblock/fairyring/blob/main/LICENSE"
+        },
+        {
+          "kind": "license",
+          "source": "https://github.com/Fairblock/confidential-transfer-cosmwasm"
         }
       ]
     },
