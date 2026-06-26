@@ -1,0 +1,12 @@
+{
+  "name": "audit-report-pdf",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsx build.ts"
+  },
+  "dependencies": {
+    "marked": "18.0.4",
+    "puppeteer-core": "25.0.4"
+  }
+}
