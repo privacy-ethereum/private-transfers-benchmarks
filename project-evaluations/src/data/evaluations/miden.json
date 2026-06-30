@@ -3,7 +3,7 @@
   "title": "Miden",
   "description": "Miden is a zero-knowledge rollup focused on programmable privacy applications, spun out of Polygon Labs into an independent network. Accounts and notes are private by default: transactions are executed and proven client-side, producing a STARK proof, and only commitments (not the underlying data) are published to the network. Global state is split across an account database, an append-only note database, and a nullifier database, combining account-based and note-based models. Notes carry spend scripts, enabling expressive, locally-executed private smart contracts. Miden is STARK-based and quantum-resistant.",
   "documentation": "https://docs.miden.xyz/",
-  "status": "pending",
+  "status": "complete",
   "categories": ["Private L2", "Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
   "properties": [
     {
