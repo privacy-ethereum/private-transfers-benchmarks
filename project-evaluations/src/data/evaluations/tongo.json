@@ -13,7 +13,7 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "Tongo uses ElGamal homomorphic encryption over the Stark curve to store account balances as encrypted ciphertexts. Each account maintains a current balance (spendable) and a pending balance (received but requiring an explicit rollover operation before spending). The pending balance exists to prevent balance manipulation attacks where an attacker sends a small encrypted amount to a sender mid-proof-generation, changing the sender's balance and invalidating their ZK proof. Both balances are stored as ciphertexts invisible to external observers. Mathematical operations (additions, subtractions) are performed homomorphically without decryption.",
+      "notes": "Tongo uses ElGamal homomorphic encryption over the Stark curve to store and operate on account balances. Balances are stored as ciphertexts. Transfers are performed homomorphically without decryption. Each account has a current balance and a pending balance (received but requires explicit operation before spend). The pending balance prevents attacks where an attacker sends a small encrypted amount to a sender mid-proof-generation, changing the sender's balance and invalidating their ZK proof.",
       "url": "https://docs.tongo.cash/protocol/introduction.html#introduction-to-tongo"
     },
     {

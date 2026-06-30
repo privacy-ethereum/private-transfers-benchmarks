@@ -16,11 +16,11 @@
       "notes": "Transfer amounts and per-address balances of the underlying token are visible on-chain in plaintext, with no shielded commitments or encrypted amounts. Alice's wallet deposits the payout (100 USDC) plus a 2 USDC tip into the per-transaction escrow, and the node then sends 100 USDC from its own wallet directly to Bob, so on-chain it looks like a random address transferring 100 USDC.",
       "citations": [
         {
-          "cited_text": "Alice’s wallet deposits into this escrow:\n\n100 USDC (the amount she wants Bob to receive)\n\n2 USDC (a small tip to reward whoever completes the transfer)\n\nAt the same time, the Mirage app encrypts Alice’s instructions: “Send 100 USDC to Bob’s address. ",
+          "cited_text": "Alice’s wallet deposits into this escrow:\n\n100 USDC (the amount she wants Bob to receive)\n\n2 USDC (a small tip to reward whoever completes the transfer)",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         },
         {
-          "cited_text": "If they want to take the job, here&#x27;s what happens:\n\nThe node posts a security deposit into Alice&#x27;s escrow contract (ensuring they only profit by completing the job honestly)\n\nThe node sends 100 USDC from their own wallet directly to Bob via another address \n\nThis is the key moment. Onchain, it looks like this node (some random address) is sending Bob 100 USDC. ",
+          "cited_text": "The node posts a security deposit into Alice&#x27;s escrow contract\n\nThe node sends 100 USDC from their own wallet directly to Bob via another address",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         }
       ]
@@ -28,18 +28,22 @@
     {
       "name": "Anonymity",
       "value": "Unlinkability",
-      "notes": "Each transfer uses a transaction-specific escrow that the sender funds directly, and the recipient is paid by a node from an unrelated address, so neither party's individual transaction hides their own identity — only the correspondence between the funding leg and the payout leg is obscured. On-chain activity resembles an ordinary token transfer: a deposit into a temporary contract, a standard transfer from another address to the recipient, and a later withdrawal from the escrow. Each private transaction uses a unique temporary escrow rather than a shared pool, so the privacy property is the inability to tie deposit to payout rather than concealment of either party.",
+      "notes": "Each transfer uses a per-transaction escrow that the sender funds directly, and the recipient is paid by a node from an unrelated address, so neither party's transaction hides their own identity — only the link between the funding leg and the payout leg is obscured. Transfers resemble ordinary token transfers: a deposit into a contract, a standard transfer from another address to the recipient, and a later withdrawal from the escrow. Privacy comes from the inability to tie deposit to payout.",
       "citations": [
         {
-          "cited_text": "Mirage is designed so that the blockchain activity looks like an ordinary stablecoin transfer.\n\nObservers may see:\n\nA deposit into a temporary contract\n\nA standard transfer from another address to the recipient\n\nA later withdrawal from the escrow contract\n\nBecause each transaction uses a unique contract and does not interact with a recognizable privacy pool, observers cannot determine that a privacy protocol was used without spending significant resources on identifying a specific target.\n\n",
+          "cited_text": "Observers may see:\n\nA deposit into a temporary contract\n\nA standard transfer from another address to the recipient\n\nA later withdrawal from the escrow contract",
           "source": "https://docs.mirageprivacy.com/faq/general"
         },
         {
-          "cited_text": "And to anyone analyzing the blockchain, there&#x27;s no visible link between Alice and Bob, and there is no sign Alice used a privacy solution to begin with. ",
+          "cited_text": "Because each transaction uses a unique contract and does not interact with a recognizable privacy pool, observers cannot determine that a privacy protocol was used",
+          "source": "https://docs.mirageprivacy.com/faq/general"
+        },
+        {
+          "cited_text": "And to anyone analyzing the blockchain, there&#x27;s no visible link between Alice and Bob, and there is no sign Alice used a privacy solution to begin with.",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         },
         {
-          "cited_text": "Mirage takes a different approach:\n\nSegregation of funds: each private transaction uses a unique temporary escrow contract\n\nUndetectable record: transactions appear similar to ordinary stablecoin transfers\n\nNative: no need to swap stablecoins to a different privacy layer 1 or 2\n\nThe system attempts to make it impossible to prove that a privacy protocol was used. ",
+          "cited_text": "Segregation of funds: each private transaction uses a unique temporary escrow contract\n\nThe system attempts to make it impossible to prove that a privacy protocol was used.",
           "source": "https://docs.mirageprivacy.com/faq/general"
         }
       ]
@@ -50,11 +54,11 @@
       "notes": "Mirage is a token transfer protocol where the asset being moved is directly observable on-chain — the blockchain activity looks like an ordinary token transfer, with observers able to see a deposit into a temporary contract, a transfer to the recipient, and a later withdrawal from the escrow. Nodes provide their own token liquidity (e.g. USDC) to execute transfers.",
       "citations": [
         {
-          "cited_text": "Mirage is designed so that the blockchain activity looks like an ordinary stablecoin transfer.\n\nObservers may see:\n\nA deposit into a temporary contract\n\nA standard transfer from another address to the recipient\n\nA later withdrawal from the escrow contract\n\nBecause each transaction uses a unique contract and does not interact with a recognizable privacy pool, observers cannot determine that a privacy protocol was used without spending significant resources on identifying a specific target.\n\n",
+          "cited_text": "Observers may see:\n\nA deposit into a temporary contract\n\nA standard transfer from another address to the recipient\n\nA later withdrawal from the escrow contract",
           "source": "https://docs.mirageprivacy.com/faq/general"
         },
         {
-          "cited_text": "Mirage transactions rely on nodes that provide their own liquidity to execute transfers. Nodes must maintain a minimum amount of stablecoin liquidity (e.g. USDC) in order to execute user requests.\n\n",
+          "cited_text": "Mirage transactions rely on nodes that provide their own liquidity to execute transfers. Nodes must maintain a minimum amount of stablecoin liquidity (e.g. USDC) in order to execute user requests.",
           "source": "https://docs.mirageprivacy.com/faq/general"
         }
       ]
@@ -62,14 +66,18 @@
     {
       "name": "Plausible deniability",
       "value": "Yes",
-      "notes": "Mirage's entry path is designed to be indistinguishable from ordinary on-chain activity. Each leg of the transfer (send & receive) is plausibly deniable. Each transaction deploys a unique smart contract that to outside observers looks like a normal unverified contract, with small random bytecode variations making it costly to detect which contracts belong to Mirage. Coordination moves off-chain via encrypted signals to executors, so the on-chain footprint is a deposit into an ordinary-looking contract and a later standard transfer to the recipient from a node's wallet.",
+      "notes": "Mirage's entry path is designed to be indistinguishable from ordinary on-chain activity. Each transaction deploys a unique smart contract that to outside observers looks like a normal unverified contract, with small random bytecode variations making it costly to detect which contracts belong to Mirage. Coordination moves off-chain via encrypted signals to executors, so the on-chain footprint is a deposit into an ordinary-looking contract and a later standard transfer to the recipient.",
       "citations": [
         {
-          "cited_text": "Self-Sovereignty and Compliance \n\nInstead of using obvious mixer contracts, Mirage creates different unique smart contracts for each transaction. To outside observers, these look like normal, unverified contracts that appear on Ethereum every day. ",
+          "cited_text": "Mirage creates different unique smart contracts for each transaction. To outside observers, these look like normal, unverified contracts that appear on Ethereum every day.",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         },
         {
-          "cited_text": "Since Mirage transactions are designed to be indistinguishable from normal Ethereum activity, no external observer can definitively prove someone used a privacy protocol. When you use Mirage, your on-chain footprint consists entirely of routine-looking interactions: depositing tokens into what appears to be an ordinary contract, and someone else later making a standard transfer to your intended recipient. ",
+          "cited_text": "Since Mirage transactions are designed to be indistinguishable from normal Ethereum activity, no external observer can definitively prove someone used a privacy protocol.",
+          "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
+        },
+        {
+          "cited_text": "your on-chain footprint consists entirely of routine-looking interactions: depositing tokens into what appears to be an ordinary contract, and someone else later making a standard transfer",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         }
       ]
@@ -96,7 +104,7 @@
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         },
         {
-          "cited_text": "The following time indications represent the time for the network of nodes to process and settle the transaction:\n\nEthereum mainnet: less than ~90 seconds\n\nLayer 2 networks (e.g. Base or Arbitrum): under ~6 seconds\n\nTempo (Testnet): under ~4 seconds\n\nActual processing time depends on network block times and congestion.\n\n",
+          "cited_text": "Ethereum mainnet: less than ~90 seconds\n\nLayer 2 networks (e.g. Base or Arbitrum): under ~6 seconds\n\nTempo (Testnet): under ~4 seconds",
           "source": "https://docs.mirageprivacy.com/faq/general"
         }
       ]
@@ -104,18 +112,18 @@
     {
       "name": "Number of secrets",
       "value": "1",
-      "notes": "Mirage requires the user to hold only their existing Ethereum wallet key (secp256k1 ECDSA), which authorises deployment of and deposit into the per-transaction escrow. The protocol derives no viewing key, spending key, or nullifier seeds. The recipient is paid at their normal address with no Mirage-specific signing. Wallets broadcast an encrypted message called a signal — signal encryption is handled by the client and network rather than from a user-held long-term key. The obfuscated escrow contract can be deterministically verified by using public information (like transaction parameters) as seed. No secrets are required to perform a verification of a Mirage contract.",
+      "notes": "Mirage requires the user to hold only their existing Ethereum wallet key (secp256k1 ECDSA), which authorises deployment of and deposit into the per-transaction escrow. The protocol derives no viewing key, spending key, or nullifier seeds. The recipient is paid at their normal address with no Mirage-specific signing. Signal encryption is handled by the client and network, not a user-held long-term key. The obfuscated escrow contract can be deterministically verified requiring no secrets.",
       "citations": [
         {
           "cited_text": "Step 1: Setting Up the Escrow \n\nWhen Alice hits send, she deploys a small, temporary escrow contract through the Mirage app. ",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         },
         {
-          "cited_text": "Alice’s wallet deposits into this escrow:\n\n100 USDC (the amount she wants Bob to receive)\n\n2 USDC (a small tip to reward whoever completes the transfer)\n\nAt the same time, the Mirage app encrypts Alice’s instructions: “Send 100 USDC to Bob’s address. ",
+          "cited_text": "Alice’s wallet deposits into this escrow:\n\n100 USDC (the amount she wants Bob to receive)\n\n2 USDC (a small tip to reward whoever completes the transfer)",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         },
         {
-          "cited_text": "When you want to make a private transaction, your wallet broadcasts an encrypted message (called a &#x27;signal&#x27;) to a network of independent executors. Each signal is locked behind a cryptographic puzzle that must be solved before its contents can be read. Your actual intentions are only revealed to the node that picks up your transaction. ",
+          "cited_text": "your wallet broadcasts an encrypted message (called a &#x27;signal&#x27;) to a network of independent executors. Your actual intentions are only revealed to the node that picks up your transaction.",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         },
         {
@@ -134,7 +142,7 @@
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         },
         {
-          "cited_text": "Alice’s wallet deposits into this escrow:\n\n100 USDC (the amount she wants Bob to receive)\n\n2 USDC (a small tip to reward whoever completes the transfer)\n\nAt the same time, the Mirage app encrypts Alice’s instructions: “Send 100 USDC to Bob’s address. ",
+          "cited_text": "Alice’s wallet deposits into this escrow:\n\n100 USDC (the amount she wants Bob to receive)\n\n2 USDC (a small tip to reward whoever completes the transfer)",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         }
       ]
@@ -142,18 +150,22 @@
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "Withdrawal from the per-transfer escrow is available immediately when no Nomad has sent a bond: funds can be withdrawn from the smart contract at any time without permissions, as long as a node has not already submitted a security deposit. Once a node sends it's bond, withdrawal is paused until either settlement completes or the bond deadline lapses — Nomads post bonds of at least half the reward to secure execution rights within a 5-minute deadline, after which forfeited bonds roll into the reward pool and the deployer can withdraw.",
+      "notes": "Withdrawal from the per-transfer escrow is available immediately when no Nomad has sent a bond: funds can be withdrawn from the smart contract at any time without permissions, as long as a node has not already submitted a security deposit. Once a node sends its bond, withdrawal is paused until either settlement completes or the bond deadline lapses — Nomads post bonds of at least half the reward within a 5-minute deadline, after which forfeited bonds roll into the reward pool.",
       "citations": [
         {
           "cited_text": "The user can withdraw funds from the smart contract at any time without needing any permissions, as long as a node has not already submitted a security deposit to finish the transaction.\n\n",
           "source": "https://docs.mirageprivacy.com/faq/general"
         },
         {
-          "cited_text": "This single-task escrow operates with ERC20 tokens and manages funds, bonds, and payments through a time-based bonding mechanism:\n\n- **Funding**: Deployers fund the contract with reward and payment amounts for task completion\n- **Bonding**: Nomads post bonds (minimum 50% of reward) to secure execution rights within a 5-minute deadline\n- **Collection**: Successful Nomads collect their bond plus rewards and payments, fully draining the contract\n- **Forfeiture**: Failed Nomads forfeit their bonds, which are added to the reward pool for subsequent attempts\n- **Withdrawal**: Deployers can withdraw original funds when no active bonds exist or request cancellation to prevent new bonds\n\nThe contract ensures security through immutable deployment parameters, time-based execution deadlines, and bond forfeiture mechanisms that incentivize reliable task completion by Nomads.\n\n",
+          "cited_text": "Bonding**: Nomads post bonds (minimum 50% of reward) to secure execution rights within a 5-minute deadline",
           "source": "https://raw.githubusercontent.com/MiragePrivacy/escrow/master/README.md"
         },
         {
-          "cited_text": "The following time indications represent the time for the network of nodes to process and settle the transaction:\n\nEthereum mainnet: less than ~90 seconds\n\nLayer 2 networks (e.g. Base or Arbitrum): under ~6 seconds\n\nTempo (Testnet): under ~4 seconds\n\nActual processing time depends on network block times and congestion.\n\n",
+          "cited_text": "Forfeiture**: Failed Nomads forfeit their bonds, which are added to the reward pool for subsequent attempts\n- **Withdrawal**: Deployers can withdraw original funds when no active bonds exist",
+          "source": "https://raw.githubusercontent.com/MiragePrivacy/escrow/master/README.md"
+        },
+        {
+          "cited_text": "Ethereum mainnet: less than ~90 seconds\n\nLayer 2 networks (e.g. Base or Arbitrum): under ~6 seconds\n\nTempo (Testnet): under ~4 seconds",
           "source": "https://docs.mirageprivacy.com/faq/general"
         }
       ]
@@ -164,7 +176,7 @@
       "notes": "There are several ways in which a transfer could be stopped. The platform can revoke the enclave binary that all Nomad operators run, blocking clients from producing usable signals. Onboarding as a Nomad is currently handled directly by the team rather than open registration. Mirage runs a wallet screening check through a third-party compliance partner and the Mirage API could stop issuing compliance certificates to block certain users from participating.",
       "citations": [
         {
-          "cited_text": "Mitigating Vulnerabilities \n\nNodes run a lightweight enclave that manages the funds and handles executing signals.\nIn the event of a vulnerability or hack, the platform will issue a signature revoking the enclave, blocking any clients from producing any more signals for nodes.\n",
+          "cited_text": "the platform will issue a signature revoking the enclave, blocking any clients from producing any more signals for nodes.",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         },
         {
@@ -176,18 +188,22 @@
     {
       "name": "External network dependence",
       "value": "Yes, permissioned",
-      "notes": "Mirage relies on the external Nomad network, a permissioned set of operators. The Nomad network consists of TEE-based nodes that decrypt, validate, and execute client signals, so every private transfer depends on these external actors to process the encrypted signal. Node operation requires a dedicated SGX machine and at least $10k in USDC liquidity, and onboarding is handled directly by the Mirage team rather than open registration. The platform retains the ability to revoke the enclave via signature and later sign and distribute a new enclave.",
+      "notes": "Mirage relies on the external Nomad network, a permissioned set of operators. The Nomad network consists of TEE-based nodes that decrypt, validate, and execute client signals, so every private transfer depends on these external actors. Node operation requires a dedicated SGX machine and at least $10k in USDC liquidity, and onboarding is handled directly by the Mirage team rather than open registration. The platform retains the ability to revoke the enclave via signature.",
       "citations": [
         {
-          "cited_text": "Menu\nChevron Down \n\nMenu \n\nNomad Overview\n\nOn this page\nChevron Right \n\nNomad Overview \n\nThe Nomad network is a network of TEE-backed nodes that decrypt, validate, and execute client signals without exposing transaction details or node activity to any specific party.\n\n",
+          "cited_text": "The Nomad network is a network of TEE-backed nodes that decrypt, validate, and execute client signals without exposing transaction details or node activity to any specific party.",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         },
         {
-          "cited_text": "Inside each node&#x27;s SGX enclave, the signal is decrypted and processed: \n\nThe enclave validates the escrow contract bytecode\n\nBonds tokens using one of its internal EOAs\n\nExecutes the transfer from another EOA\n\nBuilds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract using the bonded EOA\n\nBasic requirements \n\nTo run a node, you must be able to provide the following requirements:\n\nAt least $10k in USDC liquidity\n\nDedicated SGX machine (cloud-hosted)\n\nInterested in joining the network and running your own node? ",
+          "cited_text": "To run a node, you must be able to provide the following requirements:\n\nAt least $10k in USDC liquidity\n\nDedicated SGX machine (cloud-hosted)",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         },
         {
-          "cited_text": "In the event of a vulnerability or hack, the platform will issue a signature revoking the enclave, blocking any clients from producing any more signals for nodes.\nOnce a sufficient mitigation is released by the platform, a new enclave is signed and distributed to nodes to resume work.",
+          "cited_text": "the platform will issue a signature revoking the enclave, blocking any clients from producing any more signals for nodes.",
+          "source": "https://docs.mirageprivacy.com/nomad/overview/"
+        },
+        {
+          "cited_text": "Once a sufficient mitigation is released by the platform, a new enclave is signed and distributed to nodes to resume work.",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         }
       ]
@@ -206,14 +222,14 @@
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "notes": "Upgrade authority sits with the Mirage team. Although each deployed escrow instance is immutable, the team controls the toolchain and operator set that define protocol behaviour across future transfers. The Azoth bytecode obfuscator, and any upcoming escrow contract upgrades are all team-controlled. Instance-level immutability does not constrain these upgrades. However, both the escrow contract and Azoth are open source. Azoth's outputs are also deterministic, meaning it is possible to perform an integrity check to ensure the contract you're interacting with hasn't been tampered with.",
+      "notes": "Upgrade authority sits with the Mirage team. Although each deployed escrow instance is immutable, the team controls the toolchain and operator set that define protocol behaviour across future transfers. The Azoth bytecode obfuscator and any upcoming escrow contract upgrades are all team-controlled. Instance-level immutability does not constrain these upgrades. However, both the escrow contract and Azoth are open source. Azoth's outputs are also deterministic, allowing an integrity check.",
       "citations": [
         {
           "cited_text": "**Note**: This is a testing implementation with simplified mechanics. The production contract will differ in implementation details while maintaining the core bonding logic.\n\n",
           "source": "https://raw.githubusercontent.com/MiragePrivacy/escrow/master/README.md"
         },
         {
-          "cited_text": "This single-task escrow operates with ERC20 tokens and manages funds, bonds, and payments through a time-based bonding mechanism:\n\n- **Funding**: Deployers fund the contract with reward and payment amounts for task completion\n- **Bonding**: Nomads post bonds (minimum 50% of reward) to secure execution rights within a 5-minute deadline\n- **Collection**: Successful Nomads collect their bond plus rewards and payments, fully draining the contract\n- **Forfeiture**: Failed Nomads forfeit their bonds, which are added to the reward pool for subsequent attempts\n- **Withdrawal**: Deployers can withdraw original funds when no active bonds exist or request cancellation to prevent new bonds\n\nThe contract ensures security through immutable deployment parameters, time-based execution deadlines, and bond forfeiture mechanisms that incentivize reliable task completion by Nomads.\n\n",
+          "cited_text": "The contract ensures security through immutable deployment parameters, time-based execution deadlines, and bond forfeiture mechanisms that incentivize reliable task completion by Nomads.",
           "source": "https://raw.githubusercontent.com/MiragePrivacy/escrow/master/README.md"
         }
       ]
@@ -224,11 +240,15 @@
       "notes": "Mirage transfers rely on TEE-based execution rather than client-generated zero-knowledge proofs. Clients encrypt their signal (recipient, amount, etc.) using the enclave's global secp256k1 public key and send it to the network — an encryption step, not a proving step. The only proof involved is produced server-side by Nomad operators, where the enclave builds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract.",
       "citations": [
         {
-          "cited_text": "Clients encrypt their signal (containing recipient, amount, ...) using the enclave&#x27;s global secp256k1 public key, and send it to the network.\n\n",
+          "cited_text": "Clients encrypt their signal (containing recipient, amount",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         },
         {
-          "cited_text": "Inside each node&#x27;s SGX enclave, the signal is decrypted and processed: \n\nThe enclave validates the escrow contract bytecode\n\nBonds tokens using one of its internal EOAs\n\nExecutes the transfer from another EOA\n\nBuilds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract using the bonded EOA\n\nBasic requirements \n\nTo run a node, you must be able to provide the following requirements:\n\nAt least $10k in USDC liquidity\n\nDedicated SGX machine (cloud-hosted)\n\nInterested in joining the network and running your own node? ",
+          "cited_text": "using the enclave&#x27;s global secp256k1 public key, and send it to the network.",
+          "source": "https://docs.mirageprivacy.com/nomad/overview/"
+        },
+        {
+          "cited_text": "Builds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract using the bonded EOA",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         }
       ]
@@ -236,10 +256,14 @@
     {
       "name": "Third-party inspectability",
       "value": "No",
-      "notes": "Inside each Nomad node's SGX enclave, the encrypted signal is decrypted and processed, with the enclave validating the escrow bytecode, bonding tokens, executing the transfer, and building a Merkle proof to claim the reward. This means recipient, amount, and token are exposed in inside a third-party operator's machine. However, trust rests on the TEE's hardware assumptions and SGX attestation rather than on the operator. The TEE must be compromised in order for a third party to inspect the signal.",
+      "notes": "Inside each Nomad node's SGX enclave, the encrypted signal is decrypted and processed, with the enclave validating the escrow bytecode, bonding tokens, executing the transfer, and building a Merkle proof to claim the reward. This means recipient, amount, and token are exposed inside a third-party operator's machine. However, trust rests on the TEE's hardware assumptions and SGX attestation rather than on the operator. The TEE must be compromised for a third party to inspect the signal.",
       "citations": [
         {
-          "cited_text": "Inside each node&#x27;s SGX enclave, the signal is decrypted and processed: \n\nThe enclave validates the escrow contract bytecode\n\nBonds tokens using one of its internal EOAs\n\nExecutes the transfer from another EOA\n\nBuilds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract using the bonded EOA\n\nBasic requirements \n\nTo run a node, you must be able to provide the following requirements:\n\nAt least $10k in USDC liquidity\n\nDedicated SGX machine (cloud-hosted)\n\nInterested in joining the network and running your own node? ",
+          "cited_text": "Inside each node&#x27;s SGX enclave, the signal is decrypted and processed:\n\nThe enclave validates the escrow contract bytecode\n\nBonds tokens using one of its internal EOAs",
+          "source": "https://docs.mirageprivacy.com/nomad/overview/"
+        },
+        {
+          "cited_text": "Builds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract using the bonded EOA",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         }
       ]
@@ -254,7 +278,7 @@
           "source": "https://raw.githubusercontent.com/MiragePrivacy/escrow/master/README.md"
         },
         {
-          "cited_text": "As of the upcoming Beta release, when connecting a wallet to the Mirage web application, the system will perform wallet screening, risk scoring, and analysis of the origin of funds through a compliance partner integration, allowing Mirage to ensure compliance with Anti-Money Laundering (AML) and Countering the Financing of Terrorism (CFT). ",
+          "cited_text": "As of the upcoming Beta release, when connecting a wallet to the Mirage web application, the system will perform wallet screening, risk scoring, and analysis of the origin of funds",
           "source": "https://docs.mirageprivacy.com/faq/general"
         }
       ],
@@ -263,10 +287,10 @@
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "Mirage is not post-quantum secure. User authentication depends on Ethereum-native secp256k1 ECDSA signatures, which are broken by Shor's algorithm on a sufficiently capable quantum computer. The off-chain coordination layer relies on encrypted signals broadcast to executors, locked behind a cryptographic puzzle that must be solved before contents can be read, using ephemeral asymmetric encryption that is likewise vulnerable to quantum attack, alongside Intel SGX attestation for Nomad operators — none of these primitives offer post-quantum guarantees.",
+      "notes": "Mirage is not post-quantum secure. User authentication depends on Ethereum-native secp256k1 ECDSA signatures, which are broken by Shor's algorithm. The off-chain coordination layer relies on encrypted signals locked behind a cryptographic puzzle that must be solved before contents can be read, using ephemeral asymmetric encryption that is likewise vulnerable to quantum attack, alongside Intel SGX attestation for Nomad operators — none of these primitives offer post-quantum guarantees.",
       "citations": [
         {
-          "cited_text": "When you want to make a private transaction, your wallet broadcasts an encrypted message (called a &#x27;signal&#x27;) to a network of independent executors. Each signal is locked behind a cryptographic puzzle that must be solved before its contents can be read. ",
+          "cited_text": "Each signal is locked behind a cryptographic puzzle that must be solved before its contents can be read.",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         }
       ]
@@ -277,11 +301,11 @@
       "notes": "Wallet screening, risk scoring, and origin-of-funds analysis via a third-party compliance partner are executed at the level of the Mirage web application.",
       "citations": [
         {
-          "cited_text": "As of the upcoming Beta release, when connecting a wallet to the Mirage web application, the system will perform wallet screening, risk scoring, and analysis of the origin of funds through a compliance partner integration, allowing Mirage to ensure compliance with Anti-Money Laundering (AML) and Countering the Financing of Terrorism (CFT). This allows Mirage to gatekeep its use from illicit users.\n\n",
+          "cited_text": "when connecting a wallet to the Mirage web application, the system will perform wallet screening, risk scoring, and analysis of the origin of funds through a compliance partner integration",
           "source": "https://docs.mirageprivacy.com/faq/general"
         },
         {
-          "cited_text": "At escrow deployment, Mirage runs a wallet screening check through a third-party compliance partner. This process requires only the user wallet address.\n\n",
+          "cited_text": "At escrow deployment, Mirage runs a wallet screening check through a third-party compliance partner. This process requires only the user wallet address.",
           "source": "https://docs.mirageprivacy.com/faq/compliance"
         }
       ]
@@ -292,7 +316,7 @@
       "notes": "There is a wallet-screening step at escrow deployment via a third-party compliance partner.",
       "citations": [
         {
-          "cited_text": "At escrow deployment, Mirage runs a wallet screening check through a third-party compliance partner. This process requires only the user wallet address.\n\n",
+          "cited_text": "At escrow deployment, Mirage runs a wallet screening check through a third-party compliance partner. This process requires only the user wallet address.",
           "source": "https://docs.mirageprivacy.com/faq/compliance"
         }
       ]
@@ -303,7 +327,7 @@
       "notes": "Compliance is enforced at escrow deployment via a wallet-screening check run by a third-party compliance partner — wallet screening, risk scoring, and analysis of the origin of funds. The check happens at the Mirage web application layer rather than on-chain. The API logic can be modified to work with new policies.",
       "citations": [
         {
-          "cited_text": "At escrow deployment, Mirage runs a wallet screening check through a third-party compliance partner. This process requires only the user wallet address.\n\n",
+          "cited_text": "At escrow deployment, Mirage runs a wallet screening check through a third-party compliance partner. This process requires only the user wallet address.",
           "source": "https://docs.mirageprivacy.com/faq/compliance"
         },
         {
@@ -318,15 +342,15 @@
       "notes": "The wallet-screening check running at escrow deployment through a third-party compliance partner triggered when connecting a wallet to the Mirage web application. This executes wallet screening, risk scoring, and origin-of-funds analysis. The rest of the transfer lifecycle has no compliance step.",
       "citations": [
         {
-          "cited_text": "At escrow deployment, Mirage runs a wallet screening check through a third-party compliance partner. This process requires only the user wallet address.\n\n",
+          "cited_text": "At escrow deployment, Mirage runs a wallet screening check through a third-party compliance partner. This process requires only the user wallet address.",
           "source": "https://docs.mirageprivacy.com/faq/compliance"
         },
         {
-          "cited_text": "As of the upcoming Beta release, when connecting a wallet to the Mirage web application, the system will perform wallet screening, risk scoring, and analysis of the origin of funds through a compliance partner integration, allowing Mirage to ensure compliance with Anti-Money Laundering (AML) and Countering the Financing of Terrorism (CFT). ",
+          "cited_text": "when connecting a wallet to the Mirage web application, the system will perform wallet screening, risk scoring, and analysis of the origin of funds through a compliance partner integration",
           "source": "https://docs.mirageprivacy.com/faq/general"
         },
         {
-          "cited_text": "The user can withdraw funds from the smart contract at any time without needing any permissions, as long as a node has not already submitted a security deposit to finish the transaction.\n\n",
+          "cited_text": "The user can withdraw funds from the smart contract at any time without needing any permissions, as long as a node has not already submitted a security deposit to finish the transaction.",
           "source": "https://docs.mirageprivacy.com/faq/general"
         }
       ]
@@ -363,11 +387,15 @@
       "notes": "Although bytecode obfuscation is deterministic and each Nomad node submits an on-chain Merkle proof of the transfer to claim its reward, the broader execution depends on Intel SGX enclaves whose correctness rests on hardware attestation rather than verifiable math, and the platform's authority to revoke and reissue the enclave binary means the trust model includes the Mirage team's signing key. While arguably extremely secure, SGX has known side-channel and microarchitectural vulnerabilities.",
       "citations": [
         {
-          "cited_text": "Inside each node&#x27;s SGX enclave, the signal is decrypted and processed: \n\nThe enclave validates the escrow contract bytecode\n\nBonds tokens using one of its internal EOAs\n\nExecutes the transfer from another EOA\n\nBuilds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract using the bonded EOA\n\nBasic requirements \n\nTo run a node, you must be able to provide the following requirements:\n\nAt least $10k in USDC liquidity\n\nDedicated SGX machine (cloud-hosted)\n\nInterested in joining the network and running your own node? ",
+          "cited_text": "Builds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract using the bonded EOA",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         },
         {
-          "cited_text": "Mitigating Vulnerabilities \n\nNodes run a lightweight enclave that manages the funds and handles executing signals.\nIn the event of a vulnerability or hack, the platform will issue a signature revoking the enclave, blocking any clients from producing any more signals for nodes.\nOnce a sufficient mitigation is released by the platform, a new enclave is signed and distributed to nodes to resume work.",
+          "cited_text": "the platform will issue a signature revoking the enclave, blocking any clients from producing any more signals for nodes.",
+          "source": "https://docs.mirageprivacy.com/nomad/overview/"
+        },
+        {
+          "cited_text": "Once a sufficient mitigation is released by the platform, a new enclave is signed and distributed to nodes to resume work.",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         }
       ]
@@ -378,7 +406,7 @@
       "notes": "Not every major component of Mirage carries an OSI-approved open source licence. Azoth, the deterministic EVM bytecode obfuscator written in Rust, is published under the MIT licence, but the escrow contract used to facilitate compensation for Nomad executor nodes is unlicensed. The Nomad executor/enclave code, which handles node-side key operations, is not published in the MiragePrivacy organisation.",
       "citations": [
         {
-          "cited_text": "Popular repositories\n\nLoading \n\nazoth\nazoth \nPublic \n\nA deterministic EVM bytecode obfuscator written in Rust\n\nRust \n\n32\n\n1\n\nescrow\nescrow \nPublic \n\nEscrow contract used by Mirage to facilitate fair compensation of all Nomads.\n\n",
+          "cited_text": "azoth\nazoth \nPublic \n\nA deterministic EVM bytecode obfuscator written in Rust\n\nRust \n\n32\n\n1\n\nescrow\nescrow \nPublic \n\nEscrow contract used by Mirage to facilitate fair compensation of all Nomads.",
           "source": "https://github.com/MiragePrivacy"
         },
         {
@@ -393,11 +421,11 @@
       "notes": "Although Mirage maintains no growing Merkle tree, note set, or nullifier registry, each transfer deploys a fresh per-transaction escrow contract that persists on-chain after the funds are drained. The on-chain bytecode and contract-storage footprint accumulates indefinitely with usage.",
       "citations": [
         {
-          "cited_text": "Self-Sovereignty and Compliance \n\nInstead of using obvious mixer contracts, Mirage creates different unique smart contracts for each transaction. To outside observers, these look like normal, unverified contracts that appear on Ethereum every day. ",
+          "cited_text": "Mirage creates different unique smart contracts for each transaction. To outside observers, these look like normal, unverified contracts that appear on Ethereum every day.",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         },
         {
-          "cited_text": "Mirage solves this by moving all coordination off-chain. When you want to make a private transaction, your wallet broadcasts an encrypted message (called a &#x27;signal&#x27;) to a network of independent executors. ",
+          "cited_text": "Mirage solves this by moving all coordination off-chain. When you want to make a private transaction, your wallet broadcasts an encrypted message (called a &#x27;signal&#x27;)",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         }
       ]
@@ -408,7 +436,7 @@
       "notes": "No scanning is required on the client side. Recipients receive funds through a direct on-chain token transfer from a node created wallet, which appears as a regular address sending them tokens, so their wallet picks it up as any ordinary incoming transfer.",
       "citations": [
         {
-          "cited_text": "If they want to take the job, here&#x27;s what happens:\n\nThe node posts a security deposit into Alice&#x27;s escrow contract (ensuring they only profit by completing the job honestly)\n\nThe node sends 100 USDC from their own wallet directly to Bob via another address \n\nThis is the key moment. Onchain, it looks like this node (some random address) is sending Bob 100 USDC. ",
+          "cited_text": "The node posts a security deposit into Alice&#x27;s escrow contract\n\nThe node sends 100 USDC from their own wallet directly to Bob via another address",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         },
         {
@@ -427,7 +455,7 @@
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         },
         {
-          "cited_text": "If they want to take the job, here&#x27;s what happens:\n\nThe node posts a security deposit into Alice&#x27;s escrow contract (ensuring they only profit by completing the job honestly)\n\nThe node sends 100 USDC from their own wallet directly to Bob via another address \n\nThis is the key moment. ",
+          "cited_text": "The node posts a security deposit into Alice&#x27;s escrow contract\n\nThe node sends 100 USDC from their own wallet directly to Bob via another address",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/a-simple-example"
         }
       ]
@@ -435,10 +463,10 @@
     {
       "name": "Private Data Storage",
       "value": ["N/A"],
-      "notes": "Mirage stores no private transaction data of its own. The encrypted signal is broadcast transiently over an off-chain libp2p gossip layer and discarded once a Nomad decrypts it inside an SGX enclave to execute the transfer. On-chain there is only the per-transfer escrow contract holding public funds (deposit amount and bond mechanics) plus the public payout transfer — no commitments, encrypted blobs, or off-chain stores anchored by on-chain hashes. The property does not apply because the protocol has no private data to store anywhere.",
+      "notes": "Mirage stores no private transaction data of its own. The encrypted signal is broadcast transiently over an off-chain libp2p gossip layer and discarded once a Nomad decrypts it inside an SGX enclave to execute the transfer. On-chain there is only the per-transfer escrow contract holding public funds (deposit amount and bond mechanics) plus the public payout transfer — no commitments, encrypted blobs, or off-chain stores anchored by on-chain hashes.",
       "citations": [
         {
-          "cited_text": "Inside each node&#x27;s SGX enclave, the signal is decrypted and processed: \n\nThe enclave validates the escrow contract bytecode\n\nBonds tokens using one of its internal EOAs\n\nExecutes the transfer from another EOA\n\nBuilds a Merkle proof for the transfer and collects the reward by submitting the proof to the escrow contract using the bonded EOA\n\nBasic requirements \n\nTo run a node, you must be able to provide the following requirements:\n\nAt least $10k in USDC liquidity\n\nDedicated SGX machine (cloud-hosted)\n\nInterested in joining the network and running your own node? ",
+          "cited_text": "Inside each node&#x27;s SGX enclave, the signal is decrypted and processed:\n\nThe enclave validates the escrow contract bytecode\n\nBonds tokens using one of its internal EOAs",
           "source": "https://docs.mirageprivacy.com/nomad/overview/"
         }
       ]
@@ -449,15 +477,15 @@
       "notes": "Mirage operates as a token transfer layer that enables confidential token transfers directly on public blockchains, with no protocol token, shielded asset, or wrapper that could be composed into DeFi. The on-chain footprint consists of a deposit into a temporary contract, a standard transfer from another address to the recipient, and a later withdrawal from the escrow.",
       "citations": [
         {
-          "cited_text": "Mirage aims to provide this missing layer of infrastructure. Its purpose is to enable confidential stablecoin transfers directly on public blockchains, allowing wallets, payment platforms, exchanges, and decentralized applications to offer financial privacy while preserving the open and self-custodial nature of blockchain networks. ",
+          "cited_text": "Its purpose is to enable confidential stablecoin transfers directly on public blockchains, allowing wallets, payment platforms, exchanges, and decentralized applications to offer financial privacy",
           "source": "https://docs.mirageprivacy.com/faq/general"
         },
         {
-          "cited_text": "Observers may see:\n\nA deposit into a temporary contract\n\nA standard transfer from another address to the recipient\n\nA later withdrawal from the escrow contract\n\nBecause each transaction uses a unique contract and does not interact with a recognizable privacy pool, observers cannot determine that a privacy protocol was used without spending significant resources on identifying a specific target.\n\n",
+          "cited_text": "Observers may see:\n\nA deposit into a temporary contract\n\nA standard transfer from another address to the recipient\n\nA later withdrawal from the escrow contract",
           "source": "https://docs.mirageprivacy.com/faq/general"
         },
         {
-          "cited_text": "Self-Sovereignty and Compliance \n\nInstead of using obvious mixer contracts, Mirage creates different unique smart contracts for each transaction. ",
+          "cited_text": "Instead of using obvious mixer contracts, Mirage creates different unique smart contracts for each transaction.",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         }
       ]
@@ -468,11 +496,11 @@
       "notes": "Mirage's programmability is limited to payment flows, specifically private token transfers executed through a one-time escrow pattern. Each transaction deploys a unique smart contract that to outside observers looks like a normal, unverified contract.",
       "citations": [
         {
-          "cited_text": "Self-Sovereignty and Compliance \n\nInstead of using obvious mixer contracts, Mirage creates different unique smart contracts for each transaction. To outside observers, these look like normal, unverified contracts that appear on Ethereum every day. ",
+          "cited_text": "Mirage creates different unique smart contracts for each transaction. To outside observers, these look like normal, unverified contracts that appear on Ethereum every day.",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         },
         {
-          "cited_text": "When you use Mirage, your on-chain footprint consists entirely of routine-looking interactions: depositing tokens into what appears to be an ordinary contract, and someone else later making a standard transfer to your intended recipient. ",
+          "cited_text": "your on-chain footprint consists entirely of routine-looking interactions: depositing tokens into what appears to be an ordinary contract, and someone else later making a standard transfer",
           "source": "https://docs.mirageprivacy.com/understanding-mirage/introduction"
         }
       ]
