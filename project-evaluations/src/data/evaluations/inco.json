@@ -4,7 +4,7 @@
   "description": "Inco is a confidentiality layer for existing EVM blockchains. Its live product, Inco Lightning, lets developers write confidential smart contracts in standard Solidity using encrypted data types (euint, ebool, eaddress). Encrypted values are stored off-chain and referenced on-chain as handles, while confidential computation and decryption run inside Trusted Execution Environments (TEEs). A quorum of TEE-based decryption nodes returns signed attestations that on-chain contracts verify. It is deployed on Base mainnet and Base Sepolia, with a Solana devnet in beta.",
   "documentation": "https://docs.inco.org",
   "status": "complete",
-  "categories": ["Trusted Execution Environments (TEEs)", "Encrypted Tokens", "Privacy Stack/Layer/Middleware"],
+  "categories": ["Trusted Execution Environments (TEEs)", "Encrypted Tokens", "Decentralised Network"],
   "properties": [
     {
       "name": "Anonymity set size",
@@ -32,14 +32,18 @@
     {
       "name": "Anonymity",
       "value": "No",
-      "notes": "Transfers take a plaintext recipient address and key balances on transparent host-chain addresses, so sender and receiver are public on Base while only amounts and balances are hidden as handles to off-chain encrypted data.",
+      "notes": "Inco supports ewncrypted uints and encrypted addresses. Its confidential token keys balances on regular addresses and a transfer routes to a public receiver with a public sender. An encrypted-address type exists in the library, but the deployed confidential token standard does not use it to obscure who transacts with whom. State access would still be visible.",
       "citations": [
         {
           "cited_text": "euint256 value = valueInput. newEuint256 ( msg.sender ); \nreturn _transfer (to, value); \n}",
           "source": "https://docs.inco.org/guide/intro"
         },
         {
-          "cited_text": "This gibberish value gives us no information about the actual balance of the user. \n\n",
+          "cited_text": "mapping(address => euint256) public balanceOf;",
+          "source": "https://docs.inco.org/guide/handles"
+        },
+        {
+          "cited_text": "euint256, ebool, and eaddress are the hidden counterparts of uint256, bool, and address, respectively.",
           "source": "https://docs.inco.org/guide/handles"
         }
       ]
