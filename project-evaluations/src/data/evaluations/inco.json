@@ -152,8 +152,8 @@
     },
     {
       "name": "Censorship resistance",
-      "value": "Yes",
-      "notes": "Inco operates as a confidentiality layer on top of Base, riding the host chain for ordering and settlement without introducing its own sequencer or validator set that could filter transfers. The on-chain logic governs only decryption rights over ciphertexts and does not gate transaction inclusion, with no blocklist, allowlist, or sanctions screen enforced at the transfer path. Base's permissionless validator set ultimately decides inclusion.",
+      "value": "No",
+      "notes": "Inco operates as a confidentiality layer on top of a EVM network (Base). This layer is composed of a Confidential Compute Server that runs inside a TEE and a network of TEE decryption nodes that perform decryptions. These TEE nodes (Computer server and network) could censor or block transactions on their end, preventing usage of the protocol arbitrarily.",
       "citations": [
         {
           "cited_text": "The access control logic is fully programmable and onchain.",
@@ -166,6 +166,14 @@
         {
           "cited_text": "confidentiality layer for existing blockchains.",
           "source": "https://docs.inco.org/introduction"
+        },
+        {
+          "cited_text": "The Confidential Compute Server runs inside a Trusted Execution Environment (TEE) and securely handles all confidential operations in the system.",
+          "source": "https://docs.inco.org/architecture/components#confidential-compute-server"
+        },
+        {
+          "cited_text": "Each decryption network node decrypts the value",
+          "source": "https://docs.inco.org/architecture/decryption-mechanisms"
         }
       ]
     },
@@ -202,7 +210,7 @@
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "needsResearchReview": "on-chain admin slot for Inco's Base contracts not classified, EOA vs multisig unverified",
+      "needsResearchReview": "Inco is not open-source. There are no contracts to check upgradeability property.",
       "notes": "Upgrade authority for Inco's core confidentiality contracts and control over the TEE-based covalidator decryption quorum are not published in the canonical docs covering the Base mainnet deployment. The live architecture comprises a smart contract library, a confidential compute server, and a client-side JavaScript library, but the controlling key composition over those contracts and the enclave operator set is not enumerated.",
       "citations": [
         {
@@ -244,7 +252,7 @@
     {
       "name": "Implementation maturity",
       "value": "3 : Mainnet for less than 1 year",
-      "notes": "Inco Lightning went live on Base mainnet on 15 June 2026, following a Base Sepolia testnet launch in April 2025. The system was audited by Trail of Bits ahead of production release. It also runs on Base Sepolia and a Solana Devnet beta. Mainnet tenure is under one year as of the evaluation window, placing maturity at tier 3.",
+      "notes": "Inco Lightning went live on Base mainnet on 15 June 2026, following a Base Sepolia testnet launch in April 2025. The system was audited by Trail of Bits ahead of production release. It also runs on Base Sepolia and a Solana Devnet beta. Mainnet tenure is under one year as of the evaluation window, placing maturity at tier 3. It is worth highlight that there is no on-chain deployed contract nor the production audit performed by Trail of Bits available on the public domain.",
       "citations": [
         {
           "cited_text": "With this in mind, we&#x27;re excited to announce that Inco Lightning is now live on Base mainnet",
@@ -268,12 +276,8 @@
     {
       "name": "Post-quantum secure",
       "value": "No",
-      "notes": "Inco Lightning's verification path rests on covalidator signatures checked on-chain through a pre-quantum signature scheme with no lattice-based fallback. Confidential computation and decryption occur inside a Trusted Execution Environment (TEE) that handles all confidential operations, so secrecy depends on hardware enclaves rather than post-quantum cryptography. Ordering and settlement ride the host chain (Base), whose ECDSA-secured consensus is likewise vulnerable to quantum attack.",
+      "notes": "Confidential computation and decryption occur inside a Trusted Execution Environment (TEE) that handles all confidential operations, so secrecy depends on hardware enclaves rather than post-quantum cryptography. There is no mention about the encryption algorithm used so we cannot determine if it is post-quantum secure or not. For safety purposes, we decided to assume it is not post-quantum secure.",
       "citations": [
-        {
-          "cited_text": "incoVerifier (). isValidDecryptionAttestation (decryption, signatures)",
-          "source": "https://docs.inco.org/guide/verifying-attestations"
-        },
         {
           "cited_text": "The Confidential Compute Server runs inside a Trusted Execution Environment (TEE) and securely handles all confidential operations in the system.",
           "source": "https://docs.inco.org/architecture/components"
