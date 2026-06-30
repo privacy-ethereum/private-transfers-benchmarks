@@ -430,7 +430,7 @@
     },
     {
       "name": "Verifiability",
-      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
+      "value": ["Cryptographic"],
       "notes": "Aztec enforces state-transition correctness through recursive SNARKs: each epoch root proof is verified by the HonkVerifier contract on Ethereum, and each state update must carry a ZK proof that the new state was derived by correctly applying valid user transactions. Its own permissionless sequencer set, joined by staking AZTEC, orders blocks under its own proof-of-stake consensus.",
       "citations": [
         {

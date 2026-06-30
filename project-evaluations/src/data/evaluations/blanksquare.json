@@ -385,7 +385,7 @@
     {
       "name": "Access to DeFi",
       "value": ["No access to DeFi"],
-      "notes": "Blanksqaure is advertised as a composable privacy stack for wallets and DeFi apps. As of writing, no DeFI integrations are live. Accessing DeFi means withdrawing from the shielded pool. A DEX integration is planned, but not yet live.",
+      "notes": "Blanksquare is advertised as a composable privacy stack for wallets and DeFi apps. As of writing, no DeFi integrations are live. Accessing DeFi means withdrawing from the shielded pool. A DEX integration is planned, but not yet live.",
       "citations": [
         {
           "cited_text": "any public protocol can be used to trade shielded assets, such as Uniswap or Cowswap",
