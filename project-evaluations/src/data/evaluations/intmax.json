@@ -166,7 +166,7 @@
     },
     {
       "name": "Verifiability",
-      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
+      "value": ["Cryptographic"],
       "notes": "State transitions within Intmax are cryptographically verified using Plonky2 ZK proofs with FRI commitments and BN254 curve operations — an external observer can re-check the proofs against the published verifier. Additional trust concerns (contracts upgradable by a 2/4 multisig, Predicate AVS deposit gating, self-custodied balance data) are captured separately by Upgradeability and Censorship resistance rather than this property. Block production is permissionless with no privileged sequencer, and users can force inclusion via L1 if the sequencer fails.",
       "needsResearchReview": "Proving system requires citation",
       "citations": [

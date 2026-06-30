@@ -412,8 +412,8 @@
     },
     {
       "name": "Verifiability",
-      "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)"],
-      "notes": "Each state transition is verified on-chain by a CoSNARK against the prior and new Merkle roots, so a corrupt MPC network cannot forge balances or steal funds. But the protocol rests on the MPC network under an honest-threshold assumption: the current deployment needs a majority of its operators to be honest.",
+      "value": ["Cryptographic"],
+      "notes": "Each state transition is verified on-chain by a CoSNARK against the prior and new Merkle roots, so a corrupt MPC network cannot forge balances or steal funds. The honest-threshold assumption on the MPC operators governs privacy and liveness, not transaction validity.",
       "citations": [
         {
           "cited_text": "every state transition is verified by a zero-knowledge proof onchain. The system runs as a standard Solidity contract, no protocol-level modifications, no custom chain",
