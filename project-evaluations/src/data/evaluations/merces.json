@@ -103,8 +103,8 @@
     },
     {
       "name": "Number of secrets",
-      "value": "2",
-      "notes": "The user holds two secrets: their host-chain wallet key, used for the public ERC-20 deposit and withdraw legs, and a separate sender secret key for the private account whose public key is registered at an index in the on-chain ID-registry. Spends prove knowledge of the sender key, not the wallet. Per-transfer ECDH keypairs that encrypt the secret shares for the MPC nodes are sampled fresh and never persisted.",
+      "value": "1",
+      "notes": "The user manages a single secret: their host-chain wallet key. The private account keypair whose public key is registered in the on-chain ID-registry is derived from a wallet signature at onboarding — the demo connects a wallet and signs a message, with no separate seed or key to back up. Spends prove knowledge of this derived account key. Per-transfer ECDH keypairs that encrypt the secret shares for the MPC nodes are sampled fresh and never persisted.",
       "citations": [
         {
           "cited_text": "The client knows the sender secret key, for which the corresponding public key is stored at the sender index in the ID-registry.",
@@ -314,7 +314,7 @@
     {
       "name": "Enforcement entities",
       "value": "Admin",
-      "notes": "The protocol operator controls enforcement. TACEO operates the MPC network that performs disclosure, and the administrator maintains the wallet registry and the blocklist that gate transfers. Per-transaction screening is delegated to Predicate, but the administrator sets policy and the Merces contract enforces it, with a signed warrant required for disclosure.",
+      "notes": "The protocol operator controls enforcement. TACEO operates the MPC network that performs disclosure, and the administrator maintains the wallet registry and the blocklist that gate transfers. Per-transaction screening is delegated to Predicate, but the administrator sets policy and the Merces contract enforces it. A signed warrant is required to post a disclosure intent that the MPC network would execute.",
       "citations": [
         {
           "cited_text": "Registered wallets can later be restricted or added to a blocklist by the administrator, blocking transfers to or from those accounts.",
