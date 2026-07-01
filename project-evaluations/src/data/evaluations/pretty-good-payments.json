@@ -185,7 +185,7 @@
     {
       "name": "Escape hatch",
       "value": "Can exit in a time period",
-      "needsResearchReview": "forced exit under total sequencer censorship beyond the open window is unspecified",
+      "needsResearchReview": "forced exit under total sequencer censorship beyond the open window to withdraw (~18 days in mainnet) is unspecified",
       "notes": "Withdrawal is self-service after a delay: a user creates an output note where the blinding field encodes their L1 destination address and the publicKey is set to 0, then proves inclusion to the L1 contract. The contract requires the containing block be past the challenge period, the note have publicKey == 0, not have been withdrawn before, and a valid KZG proof show it exists in the blob.",
       "citations": [
         {
@@ -365,7 +365,7 @@
     {
       "name": "Selective disclosure: viewing control",
       "value": "None",
-      "notes": "The protocol exposes no viewing-key or auditor-access mechanism — notes are spent by anyone holding the preimage of the note's publicKey, with privacy resting on Poseidon commitments, nullifiers, and blinding factors. Hidden are sender, receiver, amounts, and the transaction graph, with no provision for selectively revealing any to a third party. The ethereum-keyed account mode partially exposes the sender address on L1 but is a signing variant, not a disclosure primitive.",
+      "notes": "The protocol exposes no viewing-key or auditor-access mechanism — notes are spent by anyone holding the preimage of the note's publicKey, with privacy resting on Poseidon commitments, nullifiers, and blinding factors. Hidden are sender, receiver, amounts, and the transaction graph, with no provision for selectively revealing any to a third party.",
       "citations": [
         {
           "cited_text": "### What's Hidden\n\n- Sender identity\n- Receiver identity\n- Transaction amounts\n- Transaction graph",
