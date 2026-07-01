@@ -13,15 +13,11 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "Platus runs a UTXO-style shielded pool: the master account maintains the Merkle tree of all note commitments, each note committing Poseidon over asset, amount, owner, and nonce. The JoinSplit circuit lets a user privately spend existing notes and create new notes without revealing the notes themselves, so balances and amounts stay hidden in-pool. Value is conserved in-circuit: the sum of outputs is at most the sum of inputs, blocking inflation while keeping amounts private.",
+      "notes": "Platus runs a UTXO-style shielded pool: the master account maintains the Merkle tree of all note commitments, each note committing Poseidon over asset, amount, owner, and nonce. The Action circuit lets a user privately spend existing notes and create new notes without revealing the notes themselves, so balances and amounts stay hidden in-pool. Value is conserved in-circuit: the sum of outputs is at most the sum of inputs, blocking inflation while keeping amounts private.",
       "citations": [
         {
           "cited_text": "Commitment tree: Maintains the Merkle tree of all note commitments",
           "source": "https://docs.platus.xyz/architecture/master-account"
-        },
-        {
-          "cited_text": "The JoinSplit circuit allows a user to privately spend existing notes and create new notes without revealing the notes themselves.",
-          "source": "https://docs.platus.xyz/architecture/circuits"
         },
         {
           "cited_text": "All input and output values are range-checked\n\nThe sum of output values must be less than or equal to the sum of input values",
@@ -51,7 +47,7 @@
     {
       "name": "Asset privacy",
       "value": "Yes",
-      "notes": "Notes encode the asset identifier as a hidden field of each note commitment, so observers cannot tell which token a shielded note represents. Commitments are computed as Poseidon over asset, amount, owner, and nonce and inserted into the Merkle tree, placing the asset inside the hidden preimage. The JoinSplit circuit then lets a user spend and create notes without revealing them, concealing the asset type during transfers. The asset is observable on-chain only at deposit and withdrawal.",
+      "notes": "Notes encode the asset identifier as a hidden field of each note commitment, so observers cannot tell which token a shielded note represents. Commitments are computed as Poseidon over asset, amount, owner, and nonce and inserted into the Merkle tree, placing the asset inside the hidden preimage. The Action circuit then lets a user spend and create notes without revealing them, concealing the asset type during transfers. The asset is observable on-chain only at deposit and withdrawal.",
       "citations": [
         {
           "cited_text": "Transfers assets from Deposit Manager to Master Account",
@@ -60,10 +56,6 @@
         {
           "cited_text": "Inserts commitments into the Merkle tree",
           "source": "https://docs.platus.xyz/architecture/master-account"
-        },
-        {
-          "cited_text": "The JoinSplit circuit allows a user to privately spend existing notes and create new notes without revealing the notes themselves.",
-          "source": "https://docs.platus.xyz/architecture/circuits"
         },
         {
           "cited_text": "Poseidon ​ \n\nUsed for all in-circuit hashing (commitments, nullifiers).",
@@ -101,7 +93,7 @@
     {
       "name": "Time-to-finality",
       "value": "Underlying chain",
-      "notes": "Platus is an application-layer protocol with no settlement step of its own — the bundler batches multiple operations into a single onchain transaction and submits the batched transaction to the Master Account, so transaction irreversibility follows the host EVM chain's finality. The specific host network remains unnamed, and deposits additionally sit in a mandatory 4-hour settlement queue before becoming usable, though that gate is orthogonal to chain-level finality.",
+      "notes": "Platus is an application-layer protocol with no settlement step of its own — the bundler batches multiple operations into a single onchain transaction and submits the batched transaction to the Master Account, so transaction irreversibility follows the host EVM chain's finality.",
       "citations": [
         {
           "cited_text": "Step 4: Batching and Execution ​ \n\nThe bundler collects multiple operations and batches them into a single onchain transaction and then submits the batched transaction to the Master Account.\n\n",
@@ -135,47 +127,34 @@
     },
     {
       "name": "Deposit time",
-      "value": "14400",
-      "notes": "Platus imposes a mandatory waiting period on deposits of roughly 14400 seconds (4 hours). Every deposit enters a mandatory 4 hour settlement queue, and a permissioned screener must sign approval before the funds become spendable. The delay ensures the screener has access to the most recent onchain state, and only after the signature is submitted does the deposit settle into a usable note.",
+      "value": "0",
+      "notes": "Platus does not imposes a mandatory waiting period on deposits.",
       "citations": [
         {
-          "cited_text": "Every deposit entering Platus enters a mandatory 4 hour settlement queue.",
-          "source": "https://docs.platus.xyz/compliance"
-        },
-        {
-          "cited_text": "This process occurs during the mandatory 4-hour settlement queue. The delay ensures the screener has access to the most recent onchain state.",
-          "source": "https://docs.platus.xyz/guide/deposit"
+          "cited_text": "A deposit converts public ERC-20 into a single private note owned by a stealth address.",
+          "source": "https://docs.platus.xyz/architecture/transaction-lifecycle#deposit"
         }
       ]
     },
     {
       "name": "Withdraw time",
       "value": "0",
-      "notes": "Withdrawing already-shielded notes is an ordinary on-chain transaction with no protocol-imposed delay, queue, or challenge window. The 4-hour queue applies only to incoming deposits, not to withdrawals. If a deposit is flagged or the window expires, users can immediately withdraw their funds to the depositing address. For deposits stuck before completion, forceExit on the Deposit Manager returns the funds to the original address. Post-shield withdrawal mechanics await the transact guide.",
+      "notes": "Withdrawing already-shielded notes is an ordinary on-chain transaction with no protocol-imposed delay, queue, or challenge window.",
       "citations": [
         {
-          "cited_text": "If a deposit is flagged or the settlement window expires without approval, users can immediately withdraw their funds to the depositing address.",
-          "source": "https://docs.platus.xyz/compliance"
-        },
-        {
-          "cited_text": "Call the forceExit function on the Deposit Manager contract and the funds will be returned to your original deposit address.",
-          "source": "https://docs.platus.xyz/guide/deposit"
+          "cited_text": "the client builds and proves, the bundler validates and aggregates, and the contract verifies and settles.",
+          "source": "https://docs.platus.xyz/architecture/transaction-lifecycle#transact"
         }
-      ],
-      "needsResearchReview": "no transact or withdraw guide published, so the shielded-note withdrawal path and any delay are unconfirmed"
+      ]
     },
     {
       "name": "Censorship resistance",
       "value": "No",
-      "notes": "Censorship resistance is not provided today. Platus itself states it is not guaranteed and could be solved with FOCIL. A unified mempool route is listed as future work via a Unified ERC-4337 Mempool, but this is not live. While bundlers are permissionless actors that accept and batch operations, no current mechanism prevents a bundler from refusing to include a specific valid operation, and no user-side fallback path forces inclusion.",
+      "notes": "While bundlers are permissionless actors that accept and batch operations, no current mechanism prevents a bundler from refusing to include a specific valid operation. To mitigate this, Platus allows multiple bundlers and user self-submissions.",
       "citations": [
         {
-          "cited_text": "Censorship resistance is not guaranteed: can be solved with FOCIL",
-          "source": "https://docs.platus.xyz/architecture/bundler"
-        },
-        {
-          "cited_text": "Route payments via Unified ERC-4337 Mempool",
-          "source": "https://docs.platus.xyz/architecture/bundler"
+          "cited_text": "Censorship: Mitigated by multiple bundlers, self-submission, rootHistory window",
+          "source": "https://docs.platus.xyz/architecture/security-model#residual-risks"
         }
       ]
     },
@@ -212,8 +191,14 @@
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "notes": "The master account governs asset custody, the commitment tree, and proof verification, so whoever controls its implementation holds protocol-level upgrade authority. No contract addresses are published, so the EIP-1967 admin slot, any proxy, and any multisig wiring cannot be inspected on-chain. For a pre-launch protocol from a small team, a single-admin upgrade key is the conservative reading, hence Single admin with a review flag.",
-      "needsResearchReview": "no published contract addresses or proxy wiring to confirm the upgrade authority or admin scheme"
+      "notes": "According to their technical docs and their manifesto, Platus is planning a inmutable protocol with no owner, no pause and no upgrades.",
+      "needsResearchReview": "Platus has not been deployed to mainnet or testnets so the upgradeability property is not verifiable.",
+      "citations": [
+        {
+          "cited_text": "No admin. There is no owner, no pause, no upgrade. The only privileged relationships are the onlyOrchestrator modifier on the Vault/AppAccount and the onlySelf modifier guarding executeAction",
+          "source": "https://docs.platus.xyz/contracts/overview#trust-and-immutability"
+        }
+      ]
     },
     {
       "name": "Client-side proving",
@@ -238,15 +223,11 @@
     {
       "name": "Third-party inspectability",
       "value": "No",
-      "notes": "Proving for shielded transfers rests on a zk-SNARK JoinSplit and Merkle-membership circuit verified on-chain, with no external prover or validium exposing user witnesses to a third party. Recipients are hidden via re-randomizable stealth addresses, where any third party can generate one-time addresses without the viewing key, so observers without it cannot link activity. The off-chain risk engine sees only deposit source addresses, which is public chain data, not private state.",
+      "notes": "Proving for shielded transfers rests on a zk-SNARK Action and Merkle-membership circuit verified on-chain, with no external prover or validium exposing user witnesses to a third party. Recipients are hidden via re-randomizable stealth addresses, where any third party can generate one-time addresses without the viewing key, so observers without it cannot link activity. The off-chain risk engine sees only deposit source addresses, which is public chain data, not private state.",
       "citations": [
         {
           "cited_text": "Any third party can generate one-time addresses for a recipient without knowing their viewing key or linking addresses together.",
           "source": "https://docs.platus.xyz/architecture/stealth-addresses"
-        },
-        {
-          "cited_text": "our risk engine evaluates the source address against multiple risk vectors",
-          "source": "https://docs.platus.xyz/compliance"
         }
       ]
     },
@@ -272,8 +253,8 @@
     },
     {
       "name": "Post-quantum secure",
-      "value": "No",
-      "notes": "Platus is not post-quantum secure overall. The hybrid BJJ-KEM1024 construction (classical ECDH over Baby Jubjub plus ML-KEM-1024, FIPS 203) is scoped to note encryption only, so stored note contents stay confidential against a quantum adversary. Spend authorization uses classical Schnorr-style signatures over Baby Jubjub with no post-quantum proof system named, so a quantum adversary could plausibly forge spends or break SNARK soundness even though note encryption rests on a hybrid PQ KEM.",
+      "value": "Yes",
+      "notes": "Platus is not post-quantum secure for Harvest Now Decrypt Later (HNDL) attacks. The hybrid BJJ-KEM1024 construction (classical ECDH over Baby Jubjub plus ML-KEM-1024, FIPS 203) is scoped to note encryption only, so stored note contents stay confidential against a quantum adversary. Spend authorization uses classical Schnorr-style signatures over Baby Jubjub with no post-quantum proof system named but its future upgrade will not affect HNDL.",
       "citations": [
         {
           "cited_text": "combining classical ECDH over Baby Jubjub with ML-KEM-1024 (FIPS 203) to provide post-quantum security for note encryption.",
@@ -291,82 +272,66 @@
     },
     {
       "name": "Layer of enforcement",
-      "value": "App",
-      "notes": "Compliance is enforced at the Platus protocol layer through a deposit gate, not at the underlying asset or host chain. Every deposit passes through a mandatory 4-hour settlement queue, during which the risk engine evaluates the source address against sanctions screening, exploit-linked addresses, behavioural patterns, and recently funded addresses. The screener's approval signature is required before funds enter the shielded pool, placing enforcement at the application's entry point.",
+      "value": "None",
+      "notes": "There is no compliance enforcement in the current Platus implementation. It might not be in line with their Manifesto about permissionless on-chain privacy.",
       "citations": [
         {
-          "cited_text": "Every deposit entering Platus enters a mandatory 4 hour settlement queue.",
-          "source": "https://docs.platus.xyz/compliance"
-        },
-        {
-          "cited_text": "our risk engine evaluates the source address against multiple risk vectors",
-          "source": "https://docs.platus.xyz/compliance"
+          "cited_text": "This isn't financial freedom. This is surveillance capitalism with better marketing.",
+          "source": "https://docs.platus.xyz/manifesto"
         }
       ]
     },
     {
       "name": "Enforcement entities",
-      "value": "Admin",
-      "notes": "Platus itself operates the deposit screening through an in-house risk engine run by a permissioned screener. The team curates the risk policy and renders the approve or reject verdict at the deposit gate, with no external analytics vendor, DAO vote, or asset-issuer blocklist as the dispositive party. The protocol can only evaluate whether a deposit meets its risk criteria before entry, an operational gate held by the core team.",
+      "value": "None",
+      "notes": "There is no compliance enforcement in the current Platus implementation. It might not be in line with their Manifesto about permissionless on-chain privacy.",
       "citations": [
         {
-          "cited_text": "our risk engine evaluates the source address against multiple risk vectors",
-          "source": "https://docs.platus.xyz/compliance"
-        },
-        {
-          "cited_text": "We can only evaluate whether a deposit meets our risk criteria before it enters the shielded pool.",
-          "source": "https://docs.platus.xyz/compliance"
+          "cited_text": "This isn't financial freedom. This is surveillance capitalism with better marketing.",
+          "source": "https://docs.platus.xyz/manifesto"
         }
       ]
     },
     {
       "name": "Type of compliance",
-      "value": ["Programmatic policies", "Proof of innocence (POI) / ASP"],
-      "notes": "Platus runs two screens. An off-chain risk-based deposit screen (a programmatic policy) applies before funds enter: a permissioned operator scores the source address on OFAC sanctions, exploit links, suspicious behaviour, and account age, then signs approvals. Separately, at transact time the master account checks that stealth addresses or tokens are not blacklisted, an on-chain blocklist lookup that is a POI or ASP control. No KYC or auditor disclosure is part of either gate.",
+      "value": ["Selective disclosure"],
+      "notes": "It might not be in line with their Manifesto about permissionless on-chain privacy. Users can share their viewing keys with auditors or regulators, but the protocol itself does not enforce any compliance on-chain.",
       "citations": [
         {
-          "cited_text": "Platus applies a risk-based screening process to deposits before they enter the protocol.",
-          "source": "https://docs.platus.xyz/compliance"
+          "cited_text": "This isn't financial freedom. This is surveillance capitalism with better marketing.",
+          "source": "https://docs.platus.xyz/manifesto"
         },
         {
-          "cited_text": "Check that nullifiers haven&#x27;t been spent\n\nEnsure stealth addresses or tokens aren&#x27;t blacklisted",
-          "source": "https://docs.platus.xyz/architecture/master-account"
+          "cited_text": "Only the recipient (holding ivk) or the sender can recompute ssEcdh, so the tag is uniform-random to anyone else and leaks nothing",
+          "source": "https://docs.platus.xyz/cryptography/note-encryption#view-tags-fast-scanning"
         }
       ]
     },
     {
       "name": "Point of enforcement",
-      "value": ["Deposit", "Transfer"],
-      "notes": "Compliance gates at two points. At deposit, the source address is screened during the mandatory 4-hour queue and must clear before the screener signs approval. At transact (the internal transfer path), the master account checks for each operation that stealth addresses or tokens are not blacklisted, an on-chain blocklist lookup applied to shielded transfers. Withdrawals carry no separate screening pass.",
+      "value": ["None"],
+      "notes": "There is no compliance enforcement in the current Platus implementation. It might not be in line with their Manifesto about permissionless on-chain privacy.",
       "citations": [
         {
-          "cited_text": "Every deposit entering Platus enters a mandatory 4 hour settlement queue.",
-          "source": "https://docs.platus.xyz/compliance"
-        },
-        {
-          "cited_text": "Check that nullifiers haven&#x27;t been spent\n\nEnsure stealth addresses or tokens aren&#x27;t blacklisted",
-          "source": "https://docs.platus.xyz/architecture/master-account"
+          "cited_text": "This isn't financial freedom. This is surveillance capitalism with better marketing.",
+          "source": "https://docs.platus.xyz/manifesto"
         }
       ]
     },
     {
       "name": "Selective disclosure: viewing entity",
-      "value": ["User"],
-      "notes": "Only the user themselves can view their own transaction data. The dual-key architecture cryptographically isolates viewing from spending, with viewing keys derived for the user to scan stealth addresses generated by senders. No auditor, regulator, or other third-party disclosure channel is built into the key hierarchy, and the deposit risk engine sees only source addresses against sanctions, exploit, behavioural, and temporal vectors, with no visibility into shielded transfers.",
+      "value": ["User", "Voluntary third-party disclosure"],
+      "notes": "Only the user themselves can view their own transaction data. The dual-key architecture cryptographically isolates viewing from spending, with viewing keys derived for the user to scan stealth addresses generated by senders. User can share viewing keys with third parties such as auditors or regulators.",
       "citations": [
         {
           "cited_text": "Platus implements a dual-key architecture where the ability to view transactions and the ability to spend funds are cryptographically isolated.",
           "source": "https://docs.platus.xyz/architecture/keys-and-security"
-        },
-        {
-          "cited_text": "our risk engine evaluates the source address against multiple risk vectors",
-          "source": "https://docs.platus.xyz/compliance"
         }
       ]
     },
     {
       "name": "Selective disclosure: viewing control",
-      "value": "None",
+      "value": "Pre-defined",
       "notes": "The viewing key exists solely so the holder can scan the chain for notes addressed to them: stealth addresses let any third party generate unlinkable payment addresses without knowing the recipient's private keys, and the identity key derived from it cannot authorize spending or leak transaction history. No mechanism exists for granting, revoking, or updating viewing permissions to an auditor or counterparty, so there is nothing for the user to control along that axis.",
       "citations": [
         {
@@ -382,7 +347,7 @@
     {
       "name": "Verifiability",
       "value": ["Cryptographic"],
-      "notes": "Validity rests on re-checkable zk-SNARK proofs verified on-chain by the master account, which maintains the Merkle tree of note commitments. The JoinSplit circuit enforces note ownership, Merkle membership, nullifier correctness, value conservation where outputs sum to at most inputs, and a signature made with the spending key. Double-spend prevention is cryptographic: nullifiers are checked against prior spends and proofs verified through the Verifier contract, the bundle reverting on failure.",
+      "notes": "Validity rests on re-checkable zk-SNARK proofs verified on-chain by the master account, which maintains the Merkle tree of note commitments. The Action circuit enforces note ownership, Merkle membership, nullifier correctness, value conservation where outputs sum to at most inputs, and a signature made with the spending key. Double-spend prevention is cryptographic: nullifiers are checked against prior spends and proofs verified through the Verifier contract, the bundle reverting on failure.",
       "citations": [
         {
           "cited_text": "Proof verification: Validates zk-SNARK proofs for operations\n\nOperation execution: Processes user actions via App Accounts",
@@ -443,7 +408,7 @@
     {
       "name": "Private state model",
       "value": "UTXO-based state model",
-      "notes": "Platus manages private state as a note-commitment and nullifier system: deposits produce note commitments computed as Poseidon over asset, amount, owner, and nonce and inserted into a Merkle tree. Spending occurs through a JoinSplit circuit that lets a user privately spend and create notes without revealing them, with publicly exposed nullifiers ensuring each note can only be spent once. This commitment-tree plus nullifier design matches the UTXO-style shielded-pool pattern.",
+      "notes": "Platus manages private state as a note-commitment and nullifier system: deposits produce note commitments computed as Poseidon over asset, amount, owner, and nonce and inserted into a Merkle tree. Spending occurs through a Action circuit that lets a user privately spend and create notes without revealing them, with publicly exposed nullifiers ensuring each note can only be spent once. This commitment-tree plus nullifier design matches the UTXO-style shielded-pool pattern.",
       "citations": [
         {
           "cited_text": "Transfers assets from Deposit Manager to Master Account",
@@ -452,10 +417,6 @@
         {
           "cited_text": "Inserts commitments into the Merkle tree",
           "source": "https://docs.platus.xyz/architecture/master-account"
-        },
-        {
-          "cited_text": "The JoinSplit circuit allows a user to privately spend existing notes and create new notes without revealing the notes themselves.",
-          "source": "https://docs.platus.xyz/architecture/circuits"
         },
         {
           "cited_text": "The provided nullifier is correctly derived from the note and viewing key\n\nNullifiers are exposed publicly, ensuring:\n\nEach note can only be spent once",
