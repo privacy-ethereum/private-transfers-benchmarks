@@ -51,7 +51,7 @@
     {
       "name": "Asset privacy",
       "value": "No",
-      "notes": "ERC-7984 encrypts the balance but not the asset identity. The confidential balance call returns an euint64 encrypted handle for the amount only, not for the asset type, so the encrypted fields cover the value rather than which token contract is being called. The balance stays encrypted while the asset type is not among the encrypted fields the standard protects.",
+      "notes": "ERC-7984 encrypts the balance but not the asset identity. Every confidential token needs a specific deployed token contract that users will interact with, publicly showing the asset type they are using.",
       "citations": [
         {
           "cited_text": "ERC-7984 tokens keep it encrypted, so your balance, transfer amounts, and transaction details remain private by default.",
@@ -348,8 +348,8 @@
     },
     {
       "name": "Type of compliance",
-      "value": ["Selective disclosure", "Proof of innocence (POI) / ASP"],
-      "notes": "Two mechanisms apply. Selective disclosure runs through the programmable ACL, where a per-handle access grant gives permanent decrypt rights to a specific address, letting a user hand an Observer or auditor decrypt access rather than a global viewing key. Applications define their own compliance rules within their smart contracts. Separately, any operator can pause the protocol and blacklist sanctioned addresses, a curated-set gate screening transfers against a sanctions list, the POI/ASP case.",
+      "value": ["Selective disclosure", "Proof of innocence (POI) / ASP", "Programmatic policies"],
+      "notes": "Two mechanisms apply. Selective disclosure runs through the programmable ACL, where a per-handle access grant gives permanent decrypt rights to a specific address, letting a user hand an Observer or auditor decrypt access rather than a global viewing key. Applications define their own compliance rules within their smart contracts. Separately, any operator can pause the protocol and blacklist sanctioned addresses, a curated-set gate screening transfers against a sanctions list, the ASP case.",
       "citations": [
         {
           "cited_text": "allow : Grants permanent access to an address.\n\nallowThis : Grants the current contract access to manipulate the ciphertext.",
@@ -425,7 +425,7 @@
     {
       "name": "Verifiability",
       "value": ["Cryptographic", "Honest Majority (Consensus, Threshold committee)", "Trusted hardware"],
-      "notes": "Validity rests on three layers. Encrypted inputs carry a zero-knowledge proof of knowledge each coprocessor verifies, a re-checkable cryptographic check that only well-formed inputs enter. FHE compute correctness has no validity proof and relies on a staked coprocessor majority, valid as long as more than 50% are honest. The MPC nodes run inside AWS Nitro Enclaves providing some integrity on the computation, which makes verifiability dependent on hardware security, so trusted hardware applies.",
+      "notes": "Validity rests on three layers. Encrypted inputs carry a zero-knowledge proof of knowledge each coprocessor verifies, a re-checkable cryptographic check that only well-formed inputs enter. FHE compute correctness has no validity proof and relies on a staked coprocessor majority, valid as long as the majority are honest. The MPC nodes run inside AWS Nitro Enclaves providing some integrity on the computation, which makes verifiability dependent on hardware security, so trusted hardware applies.",
       "citations": [
         {
           "cited_text": "Encrypted input verification\n\nWhen users submit encrypted values to the Gateway, each coprocessor:\n\nVerifies the associated Zero-Knowledge Proof of Knowledge (ZKPoK).\n\n",
