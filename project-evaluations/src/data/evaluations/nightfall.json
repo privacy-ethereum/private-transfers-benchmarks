@@ -2,7 +2,7 @@
   "id": "nightfall",
   "title": "Nightfall",
   "description": "Nightfall_4 is a Rust-based zero-knowledge rollup, originally built by EY, for private transfers of ERC-20, ERC-721, ERC-1155, and ERC-3525 tokens. It hides amounts and recipients using a Zcash-style commitment and nullifier UTXO model with client-side proofs, and a proposer computes a proof of correct block assembly so block correctness is enforced cryptographically on-chain with no challenge period. Participation is gated by on-chain X.509 enterprise certificates and an on-chain sanctions list.",
-  "documentation": "https://github.com/EYBlockchain/nightfall_4_CE",
+  "documentation": "https://github.com/EYBlockchain/nightfall_4_CE/blob/master/doc/nf_4.md",
   "status": "complete",
   "categories": ["Private L2", "Zero Knowledge Proofs (ZKPs)", "Shielded Pool"],
   "properties": [
@@ -218,7 +218,7 @@
     {
       "name": "Upgradeability",
       "value": "Single admin",
-      "needsResearchReview": "owner address not classified on-chain for a canonical deployment, EOA vs multisig unverified",
+      "needsResearchReview": "Nightfall_4 is not deployed in production so there is no owner address.",
       "notes": "Upgrades are performed by a single owner key that controls the core UUPS proxies. The system uses UUPS proxies (OpenZeppelin's UUPSUpgradeable + Initializable) where the proxy address is permanent, state lives in the proxy so user funds and Merkle roots survive upgrades, and each implementation gates `_authorizeUpgrade` with onlyOwner. Only the proxy owner (the address behind NF4_SIGNING_KEY) can upgrade, and one owner is the only supported configuration, with multi-sig in the future.",
       "citations": [
         {
