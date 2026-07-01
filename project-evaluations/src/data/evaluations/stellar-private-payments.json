@@ -1,0 +1,199 @@
+{
+  "id": "stellar-private-payments",
+  "title": "Stellar Private Payments",
+  "description": "Stellar Private Payments is a Nethermind-built reference implementation of a shielded pool on the Stellar network (Soroban smart contracts) that lets users deposit, privately transfer, and withdraw tokens using Groth16 zero-knowledge proofs. Funds are held as UTXO-style note commitments in an on-chain Merkle tree and spent via nullifiers, so amounts and note contents stay hidden. An Association Set Provider (ASP) layer enforces compliance: the transaction circuit proves each spent input's key belongs to an admin-curated membership Merkle tree and is absent from an exclusion Sparse Merkle Tree. It is an unaudited testnet work-in-progress with plans for production readiness.",
+  "status": "complete",
+  "documentation": "https://github.com/NethermindEth/stellar-private-payments",
+  "categories": ["Shielded Pool", "Zero Knowledge Proofs (ZKPs)"],
+  "properties": [
+    {
+      "name": "Anonymity set size",
+      "value": "",
+      "notes": "The commitment Merkle tree is fixed-depth with capacity 2^levels (the testnet pool is deployed with levels = 10, so 1024 leaves). The tree depth is a deployment parameter (--pool-levels), so the maximum anonymity set can easily be enlarged by deploying with more levels. As an explicitly-labeled testnet work-in-progress, real usage is negligible, so no meaningful anonymity set has accrued.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/merkle_with_history.rs"
+    },
+    {
+      "name": "Confidentiality",
+      "value": "Yes",
+      "notes": "Each note is a Poseidon2 commitment hash(amount, publicKey, blinding), so amounts are hidden, and note ciphertext is encrypted to the recipient's X25519 key. A balance is just the sum of a user's unspent notes and is never stored in the clear. Confidentiality holds inside the pool. At the boundary, the public amount of a deposit or withdrawal (ext_amount) is visible on-chain.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/circuits/src/policyTransaction.circom"
+    },
+    {
+      "name": "Anonymity",
+      "value": "Unlinkability",
+      "notes": "Unlinkability is the core guarantee: a nullifier proves note ownership on withdrawal without revealing the originating deposit, breaking the deposit-to-withdrawal link. In-pool transfers move notes between pseudonymous note keys, hiding sender and receiver. It holds only with good security hygiene, notably not reusing a Stellar address. Deposits and withdrawals stay public, and the optional register() call links an address to its note public key. Keys stored in the ASP are blinded.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Asset privacy",
+      "value": "No",
+      "notes": "Each pool instance is single-asset (the testnet XLM pool is deployed, and pools for different assets are supported). The token a pool handles is fixed at construction and public, so the asset being transferred is always known.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Plausible deniability",
+      "value": "No",
+      "notes": "Transacting calls the pool contract directly, which is a distinct and observable Soroban invocation. It is not indistinguishable from an ordinary Stellar payment, so usage of the privacy protocol is detectable. The team plans to explore relayers to hide the deposit operation, which would obscure the link between a user and their interaction with the pool.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Time-to-finality",
+      "value": "Underlying chain",
+      "notes": "SPP is an application on Stellar and does not define its own finality. Settlement finality is inherited from the underlying Stellar network, whose consensus protocol finalizes a ledger on close with no reorgs.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/docs/src/architecture.md"
+    },
+    {
+      "name": "Number of secrets",
+      "value": "1",
+      "notes": "The user's only secret is their Stellar wallet (Freighter) seed. The BN254 note-identity keypair and the X25519 encryption keypair are both derived deterministically from a single wallet signature over a fixed message (KEY_DERIVATION_MESSAGE) using domain-separated hashes, so only the wallet seed needs to be backed up. Deriving both keypairs from one signature keeps backup to the wallet seed alone and improves UX without materially weakening security.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/app/crates/core/prover/src/encryption.rs#L17"
+    },
+    {
+      "name": "Deposit time",
+      "value": "0",
+      "notes": "There is no protocol-enforced waiting period for a deposit. The user generates a proof locally and submits a single transact() call, and the resulting note is spendable once the Stellar transaction settles. The only latency is local proof generation, which is not measured here.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Withdraw time",
+      "value": "0",
+      "notes": "There is no protocol-enforced waiting period or vetting window for a withdrawal. The user generates a proof locally and submits a single transact() call that releases funds to the recipient once the Stellar transaction settles. The only latency is local proof generation, which is not measured here.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Censorship resistance",
+      "value": "No",
+      "notes": "A valid transfer or withdrawal also requires proving the spender key is in the admin-managed ASP membership tree and absent from the exclusion tree. The admin can withhold membership or add an exclusion to block an otherwise-valid spend, censoring users at the application layer regardless of Stellar access. A pool can also be deployed without an active ASP (empty/zero membership roots), in which case this censorship does not apply.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/asp-membership/src/lib.rs"
+    },
+    {
+      "name": "External network dependence",
+      "value": "Yes, permissioned",
+      "notes": "Beyond the Stellar network itself, every transact() call requires a proof generated against the current roots of the admin-run ASP membership and non-membership contracts, which the pool re-checks on-chain. If the admin does not include a user's key, excludes it, or stops maintaining the ASP, that user's deposits, transfers, and withdrawals are blocked, so the protocol depends on a permissioned compliance authority to authorize interactions.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/asp-membership/src/lib.rs"
+    },
+    {
+      "name": "Escape hatch",
+      "value": "No",
+      "notes": "Withdrawing requires the admin-controlled ASP policy proof, so there is no admin-independent recovery path if membership is revoked or excluded. Stellar RPC also retains events for only ~7 days, so a user who loses local state may be unable to reconstruct notes. An app-tailored, standard-RPC-compatible bootnode indexer serving events from deployment onward resolves this, with trust assumptions (integrity, censorship, request metadata) equally present in any standard RPC deployment.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/README.md"
+    },
+    {
+      "name": "Upgradeability",
+      "value": "Single admin",
+      "notes": "This reflects the current testnet stage and is a work in progress. Today a single admin address (the testnet deployer account) can rotate the admin and repoint the ASP membership and non-membership contracts, which effectively changes the enforced policy. The deployed pool exposes no WASM upgrade entrypoint and the verifier is fixed at construction. The governance and upgrade model is expected to change before any mainnet deployment.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs",
+      "needsResearchReview": "Testnet admin is a single EOA. Production governance is undefined."
+    },
+    {
+      "name": "Client-side proving",
+      "value": "Yes",
+      "notes": "Groth16 proofs are generated entirely in the browser by a dedicated WASM Prover Web Worker that loads proving artifacts in memory. There is no external proving service.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/docs/src/architecture.md"
+    },
+    {
+      "name": "Third-party inspectability",
+      "value": "No",
+      "notes": "Note contents are encrypted to the recipient's X25519 key, derived from the owner's wallet, so only the owner can decrypt and read their balances and history. Optional pool-admin view keys (view-only, with or without note traceability) are currently being developed as part of the project's phase 2 work and are not present in the current implementation.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/docs/src/architecture.md"
+    },
+    {
+      "name": "Implementation maturity",
+      "value": "2 : Public testnet",
+      "notes": "The contracts are deployed to the Stellar testnet with a live demo app, and the project is presented explicitly as a reference implementation with plans for production readiness (work-in-progress). The Groth16 trusted setup was only a small internal ceremony, and the team states a larger, more decentralized ceremony would be needed before any mainnet deployment. Documented limitations include a single 2-in/2-out circuit and reliance on a ~7-day RPC event-retention window. It is not on mainnet.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/README.md",
+      "needsResearchReview": "Unaudited testnet status is cited. Deployment date is not tied to a dated primary source."
+    },
+    {
+      "name": "Post-quantum secure",
+      "value": "No",
+      "notes": "Security rests on BN254 pairing-based Groth16 proofs and Poseidon2 hashing. The underlying pairing and discrete-log assumptions are broken by Shor's algorithm on a sufficiently large quantum computer.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/circom-groth16-verifier/src/lib.rs"
+    },
+    {
+      "name": "Layer of enforcement",
+      "value": "Protocol/chain",
+      "notes": "Enforcement is performed by the Association Set Provider (ASP) at the protocol level rather than by the underlying asset or a removable frontend. It does not require both lists. There are three scenarios: use only a membership proof that the user's key is in the ASP allow-list, use only a non-membership proof that the key is absent from the exclusion block-list, or require both proofs. The pool rejects transactions whose ASP roots do not match the current on-chain roots.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Enforcement entities",
+      "value": "Admin",
+      "notes": "An ASP admin maintains the approved-key membership tree and the exclusion Sparse Merkle Tree. Leaf insertion is admin-gated by default (AdminInsertOnly = true) and the admin can toggle it to permissionless.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/asp-membership/src/lib.rs",
+      "needsResearchReview": "Admin is a single testnet EOA. Production governance composition is undefined."
+    },
+    {
+      "name": "Type of compliance",
+      "value": ["Proof of innocence (POI) / ASP", "Selective disclosure"],
+      "notes": "An Association Set Provider model: in the evaluated setup, the transaction circuit proves for each spent input that the input key IS in an approved membership Merkle tree AND is NOT in an exclusion Sparse Merkle Tree. SPP does not require both a whitelist and a blacklist. A deployment can use only an approved set, only a disallowed set, or both. Basic voluntary selective disclosure is also live, allowing a user to reveal a specific note to a third party at their discretion.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/circuits/src/policyTransaction.circom"
+    },
+    {
+      "name": "Point of enforcement",
+      "value": ["Deposit", "Transfer", "Withdrawal"],
+      "notes": "The ASP policy is keyed on the user's public key, and the circuit forces every interaction with the pool to prove that key is currently in the membership allow-list and absent from the exclusion block-list. Because the check binds the spender's key rather than a specific deposit, it applies uniformly to deposits, in-pool transfers, and withdrawals.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/circuits/src/policyTransaction.circom"
+    },
+    {
+      "name": "Selective disclosure: viewing entity",
+      "value": ["User", "Voluntary third-party disclosure"],
+      "notes": "Owners can decrypt and view their own notes using keys derived from their wallet (self-view). A basic voluntary selective-disclosure capability is also live: a user can choose to reveal a specific note to a third party (for example, an auditor). Richer selective disclosure, where a user binds a note to a context and chooses how much to reveal, is being expanded as part of the project's phase 2 work.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/docs/src/architecture.md"
+    },
+    {
+      "name": "Selective disclosure: viewing control",
+      "value": "Pre-defined",
+      "notes": "Viewing permissions for a voluntary disclosure are fixed at the time the user makes the disclosure and cannot be updated or revoked afterwards. Programmable viewing controls (granting, revoking, or updating access over time), including pool-admin view keys, are being developed as part of the project's phase 2 work.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/docs/src/architecture.md"
+    },
+    {
+      "name": "Verifiability",
+      "value": ["Cryptographic"],
+      "notes": "Transaction validity (input ownership, nullifier correctness, Merkle membership of spent commitments, balance conservation, and the ASP membership/non-membership policy) is guaranteed by a Groth16 zk-SNARK over BN254 that is verified on-chain by the verifier contract before any state change.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Open source",
+      "value": "Yes",
+      "notes": "The source code is public on GitHub under the Apache License 2.0, with circuits/build.rs licensed separately under LGPLv3.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/LICENSE"
+    },
+    {
+      "name": "Private State Scalability",
+      "value": "Per Transaction",
+      "notes": "The spent-nullifier set kept in contract storage grows without bound as usage increases. The commitment Merkle tree is append-only with fixed capacity (2^levels), so it stops accepting deposits once full rather than pruning.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Client-side indexing",
+      "value": "Scanning",
+      "notes": "The client runs an indexer that continuously polls Stellar RPC for commitment events and trial-decrypts them to find notes addressed to the user. Discovery is constrained by Stellar RPC's ~7-day event-retention window, though an app-tailored, standard-RPC-compatible bootnode indexer can serve historical events from the deployment ledger onward, beyond that window.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/docs/src/architecture.md"
+    },
+    {
+      "name": "Private state model",
+      "value": "UTXO-based state model",
+      "notes": "Funds are notes (commitments) that are consumed via nullifiers and recreated as new commitments, forming a UTXO set rather than per-account balances. A spend nullifies input notes and creates up to two output notes (2-in/2-out circuit).",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/circuits/src/policyTransaction.circom"
+    },
+    {
+      "name": "Private Data Storage",
+      "value": ["Smart contracts"],
+      "notes": "The commitment Merkle tree and the spent-nullifier set live in the pool's Soroban contract storage. Encrypted note ciphertexts are emitted as contract events and cached client-side in OPFS-backed SQLite.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Access to DeFi",
+      "value": "No access to DeFi",
+      "notes": "It is an isolated single-asset privacy pool with no composability into other Stellar/Soroban DeFi applications. Shielded funds can only be deposited, transferred privately, and withdrawn.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/contracts/pool/src/pool.rs"
+    },
+    {
+      "name": "Programmability / Generality",
+      "value": "Only payments",
+      "notes": "The system supports only deposit, private transfer, and withdraw of a single token via one fixed 2-input/2-output circuit, with no general private smart-contract logic. The README notes that multi-circuit support is only a possible future extension.",
+      "url": "https://github.com/NethermindEth/stellar-private-payments/blob/main/README.md"
+    }
+  ]
+}
