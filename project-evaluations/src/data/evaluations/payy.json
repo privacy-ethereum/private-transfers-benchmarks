@@ -13,7 +13,7 @@
     {
       "name": "Confidentiality",
       "value": "Yes",
-      "notes": "In-pool transfers on Payy occur entirely within the privacy rollup, where payments are fully private, meaning the sender, receiver, amount and asset are all hidden. Each note is a Poseidon commitment, and the hash record states are stored in a sparse Merkle tree (Smirk), so amounts and balances are never exposed on a public ledger. The original messages can provably never be reconstructed, since hashing results in data loss.",
+      "notes": "In-pool transfers on Payy occur entirely within the privacy rollup, where payments are fully private, meaning the sender, receiver, amount and asset are all hidden. Each note is a Poseidon commitment, and the hash record states are stored in a sparse Merkle tree (called Smirk internally), so amounts and balances are never exposed on a public ledger. The original messages can provably never be reconstructed, since hashing results in data loss.",
       "citations": [
         {
           "cited_text": "Payments are fully private. That means the sender, receiver, amount and asset are all hidden. Total privacy.\n",
@@ -66,7 +66,7 @@
     {
       "name": "Plausible deniability",
       "value": "No",
-      "notes": "Entering the privacy set requires a deposit into a recognisable privacy contract: the architecture exposes a PrivacyBridge predeployed on the EVM layer that routes funds into the privacy rollup, so the on-chain entry call is an observable interaction with a known privacy protocol. Even the stealth-address flow does not hide entry, since funds are pulled to a newly minted one-time address. The opt-in shielded design makes usage distinguishable from ordinary ERC-20 transfers at deposit.",
+      "notes": "Entering the privacy set requires a deposit into a recognisable privacy contract: the architecture exposes a PrivacyBridge predeployed on the EVM layer that routes funds into the privacy rollup, so the on-chain entry call is an observable interaction with a known privacy protocol.",
       "citations": [
         {
           "cited_text": "[**PrivacyBridge**](/protocol/privacybridge.md) - a predeployed bridge to the Privacy Layer accessible from the [EVM Layer](/protocol/evm-layer.md).",
@@ -108,7 +108,7 @@
     {
       "name": "Number of secrets",
       "value": "2",
-      "notes": "The privacy key material the cited spans support is two distinct secrets: a Grumpkin Schnorr private key, whose public key the private address transport-encodes and from which owner = Poseidon(x, y) is derived, plus a nullifier key nk, a unique secret associated with each user used to compute the spend nullifier. The docs do not state these derive from a single seed, nor describe a separate host-chain wallet key, so the count rests only on these two cited protocol secrets.",
+      "notes": "The protocol requires two secrets: a Grumpkin Schnorr private key, whose transport encoding public key represents the address and from which owner = Poseidon(x, y) is derived, plus a nullifier key nk, a unique secret associated with each user used to compute the spend nullifier. The docs do not state these derive from a single seed, nor describe a separate host-chain wallet key, so the count rests only on these two cited protocol secrets.",
       "citations": [
         {
           "cited_text": "it is the transport encoding of a Grumpkin Schnorr public key. Wallets and RPCs decode it to an affine Grumpkin point `(x, y)`, derive `owner = Poseidon(x, y)`",
@@ -198,7 +198,7 @@
           "source": "https://raw.githubusercontent.com/polybase/payy/main/eth/contracts/rollup3/RollupV1.sol"
         }
       ],
-      "needsResearchReview": "Polygon admin slot not classified, EOA vs multisig unverified"
+      "needsResearchReview": "Polybase admin slot not classified, EOA vs multisig unverified"
     },
     {
       "name": "Client-side proving",
@@ -452,7 +452,7 @@
     {
       "name": "Access to DeFi",
       "value": ["External access via adapter"],
-      "notes": "Payy reaches DeFi through stealth transactions, a core privacy flow rather than roadmap. To perform a private swap, private funds are pulled from the Privacy Layer to a new one-time address, the swap is performed on the EVM Layer, and tokens are returned to the pool in a follow-up mint. The stealth-address bridge is the adapter, and privacy ends at the one-time EVM address where the swap runs, so this is external adapter access rather than an in-pool DeFi surface.",
+      "notes": "Payy reaches DeFi through stealth transactions. To perform a private swap, private funds are pulled from the Privacy Layer to a new one-time address, the swap is performed on the EVM Layer, and tokens are returned to the pool in a follow-up mint. The stealth-address bridge is the adapter, and privacy ends at the one-time EVM address where the swap runs, so this is external adapter access rather than an in-pool DeFi surface. Privacy Layer and EVM Layer are part of Payy L2.",
       "citations": [
         {
           "cited_text": "Payy enables privacy on the [EVM Layer](/protocol/evm-layer.md) by making it seamless to move funds in and out of the [Privacy Layer](/protocol/privacy-layer.md) (native ERC-20 privacy pools)",
