@@ -43,7 +43,7 @@
     {
       "name": "Asset privacy",
       "value": "No",
-      "notes": "The protocol hides transaction amounts and recipients through commitments but does not conceal asset or token type. Each output is a pair of the owner's public key and an amount, with no asset-type field. Amounts are hidden behind commitments so another party cannot learn a user's balance, and at exit the user reveals that balance so the rollup contract can return the corresponding L1 funds. No mechanism for shielding which token is transacted appears in the construction.",
+      "notes": "The protocol hides transaction amounts and recipients through commitments but does not conceal asset or token type. Each output is a pair of the owner's public key and an amount, with no asset-type field. Amounts are hidden behind commitments so another party cannot learn a user's balance, and at exit the user reveals that balance so the rollup contract can return the corresponding L1 funds. One PlasmaBlind instance per asset type needs to be deployed on-chain.",
       "citations": [
         {
           "cited_text": "A \\ac{UTXO} is denoted as $\\Utxo \\coloneqq (\\Pk, \\Amount)$, where \\Amount and \\Pk are respectively the \\ac{UTXO}'s value and the public key of the \\ac{UTXO}'s owner.",
@@ -187,7 +187,7 @@
     {
       "name": "Escape hatch",
       "value": "Instantly",
-      "notes": "Users can unilaterally withdraw without aggregator cooperation: the exit flow involves only the user and the rollup contract, so users can always exit even if the aggregator goes offline. To exit, the user reveals their balance by submitting the balance proof, verified against the latest block tree root and the user's nonce. Folding-based incremental verifiable computation keeps this proof current after each transaction, so folding enables instant exits with no mandated challenge window.",
+      "notes": "Users can unilaterally withdraw without aggregator cooperation: the exit flow involves only the user and the rollup contract, so users can always exit even if the aggregator goes offline. To exit, the user reveals their balance by submitting the balance proof, verified against the latest block tree root and the user's nonce. Folding-based incremental verifiable computation keeps this proof after each transaction, so folding enables instant exits with no mandated challenge window.",
       "citations": [
         {
           "cited_text": "users can always exit by themselves without relying on the aggregator, e.g., in case the aggregator goes offline or maliciously drops the user's transaction.\n\n",
